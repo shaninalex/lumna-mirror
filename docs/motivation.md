@@ -1,0 +1,12 @@
+I want to create simple fast and easy to manage project tracking system.
+Simple UI, fast and free.
+Jira ends subscription, Clickup too slow, Notion also slow, Trello too simple
+
+Core features:
+- tasks
+- sprints
+- assignment
+- role management
+- org registration
+- simple api
+- github/gitlab integration
