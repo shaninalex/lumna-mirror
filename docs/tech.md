@@ -1,5 +1,6 @@
 ### core part:
 - microservices on go-fiber
+- this time try use GORM like ORM, not like query builder
 - rabbitmq
 - radis
 - keto ( roles+permissions )
