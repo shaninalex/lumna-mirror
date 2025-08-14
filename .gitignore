@@ -1,0 +1,6 @@
+.idea
+.vscode
+.zed
+
+var/
+frontend/node_modules
