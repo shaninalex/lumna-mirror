@@ -13,8 +13,8 @@ type UserModel struct {
 	ID           uuid.UUID `gorm:"type:uuid;primaryKey"`
 	Name         string    `gorm:"size:255;not null"`
 	Email        string    `gorm:"size:255;uniqueIndex;not null"`
-	PasswordHash string    `gorm:"size:255;not null"`
-	Active       bool      `gorm:"default:true"`
+	PasswordHash string    `gorm:"not null"`
+	Active       bool      `gorm:"default:false"`
 
 	CreatedAt time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`
 	UpdatedAt time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`
