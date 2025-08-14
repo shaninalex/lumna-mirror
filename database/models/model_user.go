@@ -10,15 +10,14 @@ import (
 )
 
 type UserModel struct {
-	ID           uuid.UUID `gorm:"type:uuid;primaryKey"`
-	Name         string    `gorm:"size:255;not null"`
-	Email        string    `gorm:"size:255;uniqueIndex;not null"`
-	PasswordHash string    `gorm:"not null"`
-	Active       bool      `gorm:"default:false"`
-
-	CreatedAt time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`
-	UpdatedAt time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID           uuid.UUID      `gorm:"type:uuid;primaryKey"`
+	Name         string         `gorm:"size:255;not null"`
+	Email        string         `gorm:"size:255;uniqueIndex;not null"`
+	PasswordHash string         `gorm:"not null"`
+	Active       bool           `gorm:"default:false"`
+	CreatedAt    time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`
+	UpdatedAt    time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`
+	DeletedAt    gorm.DeletedAt `gorm:"index"`
 }
 
 // Implement IObject interface

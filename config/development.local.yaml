@@ -1,0 +1,6 @@
+auth:
+  port: 8000
+
+app:
+  dsn: "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+  secret_key: "very-secret-key"

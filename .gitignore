@@ -4,3 +4,5 @@
 
 var/
 frontend/node_modules
+
+config/development.yaml
