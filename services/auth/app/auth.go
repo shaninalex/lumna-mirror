@@ -1,11 +1,13 @@
 package app
 
-import "context"
+import (
+	"context"
+
+	"gitlab.com/shaninalex/jajirra/internal/domain"
+)
 
 type IAuthApi interface {
-	Register(ctx context.Context)
-	Verify(ctx context.Context)
-	Login(ctx context.Context)
-	Restore(ctx context.Context)
-	Session(ctx context.Context)
+	HookRegister(ctx context.Context, data *domain.HooksKratosPayloadDTO) error
+	HookVerify(ctx context.Context) error
+	HookLogin(ctx context.Context) error
 }

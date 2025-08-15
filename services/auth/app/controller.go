@@ -1,6 +1,11 @@
 package app
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"net/http"
+
+	"github.com/gofiber/fiber/v2"
+	"gitlab.com/shaninalex/jajirra/internal/domain"
+)
 
 func NewAuthController(router *fiber.App) {
 	controller := AuthController{router: router}
@@ -8,35 +13,35 @@ func NewAuthController(router *fiber.App) {
 }
 
 type AuthController struct {
-	router *fiber.App
+	router  *fiber.App
+	authApi IAuthApi
 }
 
 func (s *AuthController) setRoutes() {
-	s.router.Post("/api/auth/register", s.handleRegister)
-	s.router.Post("/api/auth/verify", s.handleVerify)
-	s.router.Post("/api/auth/login", s.handleLogin)
-	s.router.Post("/api/auth/restore", s.handleRestore)
-	s.router.Get("/api/auth/session", s.handleSession)
+	s.router.Post("/api/auth/hook/register", s.handleHookRegister)
+	s.router.Post("/api/auth/hook/verify", s.handleHookVerify)
+	s.router.Post("/api/auth/hook/login", s.handleHookLogin)
 }
 
-func (s *AuthController) handleRegister(ctx *fiber.Ctx) error {
+func (s *AuthController) handleHookRegister(ctx *fiber.Ctx) error {
+	var data domain.HooksKratosPayloadDTO
+	err := ctx.BodyParser(&data)
+	if err != nil {
+		return err
+	}
+	err = s.authApi.HookRegister(ctx.Context(), &data)
+	if err != nil {
+		ctx.Status(http.StatusInternalServerError)
+		return err
+	}
+	ctx.Status(http.StatusOK)
 	return nil
 }
 
-func (s *AuthController) handleVerify(ctx *fiber.Ctx) error {
+func (s *AuthController) handleHookVerify(ctx *fiber.Ctx) error {
 	return nil
 }
 
-func (s *AuthController) handleLogin(ctx *fiber.Ctx) error {
+func (s *AuthController) handleHookLogin(ctx *fiber.Ctx) error {
 	return nil
-}
-
-func (s *AuthController) handleRestore(ctx *fiber.Ctx) error {
-	return nil
-}
-
-func (s *AuthController) handleSession(ctx *fiber.Ctx) error {
-	return ctx.JSON(map[string]any{
-		"hello": "world",
-	})
 }

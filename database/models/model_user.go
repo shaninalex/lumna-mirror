@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
-	"gitlab.com/shaninalex/jajirra/internal/keto"
 	"gitlab.com/shaninalex/jajirra/internal/kratos"
 	"gorm.io/gorm"
 )
@@ -15,10 +14,13 @@ import (
 type UserModel struct {
 	gorm.Model
 
-	UserID      uuid.UUID
-	Settings    string
-	Identity    ory.Identity `gorm:"-"` // Kratos identity information
-	Permissions any          `gorm:"-"` // Keto permissions data
+	UserID   uuid.UUID
+	Settings string
+	Identity *ory.Identity `gorm:"-"` // Kratos identity information
+
+	// no need to embedd this. Permissions can be changed during request and usermodel will can have old
+	// permissions. Every time we need something from keto - ask it. Do not store!
+	//Permissions any          `gorm:"-"` // Keto permissions data
 }
 
 // Implement IObject interface
@@ -34,13 +36,11 @@ func (s *UserModel) SetID(id uint) { s.ID = id }
 type UserRepository struct {
 	Repository[*UserModel]
 	kratos kratos.IKratos
-	keto   keto.IKeto
 }
 
-func NewUserRepository(k kratos.IKratos, keto keto.IKeto) *UserRepository {
+func NewUserRepository(k kratos.IKratos) *UserRepository {
 	s := &UserRepository{
 		kratos: k,
-		keto:   keto,
 	}
 	return s
 }
@@ -53,8 +53,10 @@ func (s *UserRepository) GetUser(ctx context.Context, userID uuid.UUID) (*UserMo
 		return nil, tx.Error
 	}
 
-	user.Identity = s.kratos.Get(ctx, userID)
-	user.Permissions = s.keto.GetPermissionsTree(ctx, userID)
-
-	return nil, nil
+	identity, err := s.kratos.Get(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	user.Identity = identity
+	return &user, nil
 }

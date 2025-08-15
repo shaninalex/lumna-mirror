@@ -2,7 +2,12 @@
 .vscode
 .zed
 
+.env
+
 var/
 frontend/node_modules
 
 config/development.yaml
+config/kratos/kratos.yaml
+config/oathkeeper/access-rules.yaml
+config/oathkeeper/oathkeeper.yaml
