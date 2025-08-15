@@ -1,4 +1,4 @@
-// Copyright © 2025 Soundstream https://soundstream.shaninalex.com. All rights reserved.
+// Copyright © 2025 JaJirra https://jajirra.shaninalex.com. All rights reserved.
 
 package tdata
 

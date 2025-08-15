@@ -1,9 +1,12 @@
-package db
+// Copyright © 2025 Jajirra https://jajirra.shaninalex.com. All rights reserved.
+
+package database
 
 import (
 	"log"
 	"time"
 
+	"gitlab.com/shaninalex/jajirra/database/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -39,8 +42,13 @@ func InitDB(dsn string) *gorm.DB {
 		sqlDB.SetMaxIdleConns(10)
 		sqlDB.SetMaxOpenConns(100)
 		sqlDB.SetConnMaxLifetime(time.Hour)
-
-		log.Println("[DB]: Connected to database!")
+		err = gormDB.AutoMigrate(
+			&models.UserModel{},
+		)
+		if err != nil {
+			log.Printf("[DB]: Unable to apply migrations: %v", err)
+			panic(err)
+		}
 		return gormDB
 	}
 

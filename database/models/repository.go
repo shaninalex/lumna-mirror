@@ -5,7 +5,6 @@ package models
 import (
 	"context"
 	"errors"
-	"fmt"
 	"reflect"
 
 	"github.com/google/uuid"
@@ -13,10 +12,8 @@ import (
 )
 
 type IObject interface {
-	GetID() uuid.UUID
-	SetID(id uuid.UUID)
-	GetUserId() uuid.UUID
-	SetUserId(id uuid.UUID)
+	GetID() uint
+	SetID(id uint)
 }
 
 type Repository[T IObject] struct {
@@ -47,10 +44,6 @@ func (r *Repository[T]) GetByID(ctx context.Context, id uuid.UUID) (T, error) {
 
 // Create inserts a new record
 func (r *Repository[T]) Create(ctx context.Context, obj T) (T, error) {
-	if obj.GetID() == uuid.Nil {
-		obj.SetID(uuid.New())
-	}
-
 	if err := r.DB.WithContext(ctx).Create(obj).Error; err != nil {
 		return r.returnNil(), err
 	}
@@ -60,10 +53,6 @@ func (r *Repository[T]) Create(ctx context.Context, obj T) (T, error) {
 
 // Update modifies an existing record
 func (r *Repository[T]) Update(ctx context.Context, obj T) (T, error) {
-	if obj.GetID() == uuid.Nil {
-		return r.returnNil(), fmt.Errorf("update failed: object ID is nil")
-	}
-
 	if err := r.DB.WithContext(ctx).
 		Model(obj).
 		Where("id = ?", obj.GetID()).

@@ -1,20 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/csrf"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/internal/base"
-	"gitlab.com/shaninalex/jajirra/internal/db"
+	"gitlab.com/shaninalex/jajirra/internal/web"
+	authApp "gitlab.com/shaninalex/jajirra/services/auth/app"
 )
-
-// /api/auth/register
-// /api/auth/verify
-// /api/auth/login
-// /api/auth/restore
-// /api/auth/session
 
 func main() {
 	args := os.Args
@@ -26,18 +20,10 @@ func main() {
 	}
 
 	config := base.NewConfig(configPath)
-	database := db.InitDB(config.String("app.dsn"))
+	db := database.InitDB(config.String("app.dsn"))
 
-	app := fiber.New(fiber.Config{
-		AppName: "auth",
-	})
-	app.Use(logger.New())
-	app.Use(csrf.New())
-	app.Use(db.NewDBMiddleware(database))
+	router := web.DefaultRouter(config, db, "auth")
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
-
-	app.Listen(":3000")
+	authApp.NewAuthController(router)
+	router.Listen(fmt.Sprintf(":%s", config.String("auth.port")))
 }

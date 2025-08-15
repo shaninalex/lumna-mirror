@@ -1,6 +1,6 @@
-// Copyright © 2025 Soundstream https://soundstream.shaninalex.com. All rights reserved.
+// Copyright © 2025 Jajirra https://jajirra.shaninalex.com. All rights reserved.
 
-package db
+package database
 
 import (
 	"github.com/gofiber/fiber/v2"

@@ -1,4 +1,6 @@
-package db
+// Copyright © 2025 Jajirra https://jajirra.shaninalex.com. All rights reserved.
+
+package database
 
 import (
 	"context"
