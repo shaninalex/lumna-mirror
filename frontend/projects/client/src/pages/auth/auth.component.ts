@@ -6,10 +6,6 @@ import {RouterOutlet} from '@angular/router';
     imports: [
         RouterOutlet
     ],
-    template: `
-        <div class="d-flex vh-100 align-items-center justify-content-center">
-            <router-outlet/>
-        </div>
-    `
+    template: `<router-outlet/>`
 })
 export class AuthComponent {}

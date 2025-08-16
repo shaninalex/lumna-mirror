@@ -1,14 +1,18 @@
 import {Component, inject} from '@angular/core';
 import {UiService} from '@client/shared/ui';
 import {VerificationFormComponent} from '@client/features/auth';
+import {AuthLayoutComponent} from '../../app/layouts';
 
 @Component({
     selector: 'jr-verification',
     imports: [
-        VerificationFormComponent
+        VerificationFormComponent,
+        AuthLayoutComponent
     ],
     template: `
-        <jr-verification-form />
+        <auth-layout title="Verification">
+            <jr-verification-form />
+        </auth-layout>
     `
 })
 export class VerificationComponent {

@@ -23,7 +23,7 @@ func main() {
 	config := base.NewConfig(configPath)
 	db := database.InitDB(config.String("app.dsn"))
 
-	router := web.DefaultRouter(config, db, "auth")
+	router := web.DefaultRouter(db, "auth")
 	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
 	NewAuthApi := authApp.NewAuthApi()
 	authApp.NewAuthController(config, router, NewAuthApi, kratosClient)

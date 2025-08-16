@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/database/models"
+	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/internal/domain"
 )
 
@@ -17,12 +17,12 @@ type IAuthApi interface {
 var _ IAuthApi = &AuthApi{}
 
 type AuthApi struct {
-	userRepository *models.UserRepository
+	userRepository *database.UserRepository
 }
 
 func NewAuthApi() *AuthApi {
 	return &AuthApi{
-		userRepository: models.NewUserRepository(),
+		userRepository: database.NewUserRepository(),
 	}
 }
 
@@ -31,7 +31,7 @@ func (s *AuthApi) HookRegister(ctx context.Context, data *domain.HooksKratosPayl
 	if err != nil {
 		return err
 	}
-	_, err = s.userRepository.Create(ctx, &models.UserModel{UserID: userId})
+	_, err = s.userRepository.Create(ctx, &database.UserModel{UserID: userId})
 	if err != nil {
 		return err
 	}

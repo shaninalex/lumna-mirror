@@ -6,7 +6,6 @@ import (
 	"log"
 	"time"
 
-	"gitlab.com/shaninalex/jajirra/database/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -43,7 +42,7 @@ func InitDB(dsn string) *gorm.DB {
 		sqlDB.SetMaxOpenConns(100)
 		sqlDB.SetConnMaxLifetime(time.Hour)
 		err = gormDB.AutoMigrate(
-			&models.UserModel{},
+			&UserModel{},
 		)
 		if err != nil {
 			log.Printf("[DB]: Unable to apply migrations: %v", err)

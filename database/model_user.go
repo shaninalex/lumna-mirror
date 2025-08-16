@@ -1,6 +1,6 @@
 // Copyright © 2025 JaJirra https://jajirra.shaninalex.com. All rights reserved.
 
-package models
+package database
 
 import (
 	"github.com/google/uuid"

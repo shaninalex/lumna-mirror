@@ -21,7 +21,7 @@
 @if (node.attributes.node_type === 'input') {
     @if (attr().type === 'submit') {
         <div class="mb-3">
-            <button
+            <button class="w-full"
                     matButton="outlined"
                     [attr.disabled]="attr().disabled ? true : null" [attr.name]="attr().name"
                     [attr.type]="attr().type"
@@ -31,31 +31,32 @@
         </div>
     } @else {
         @if (attr().type === 'hidden') {
-                <input [attr.disabled]="attr().disabled ? true : null" [attr.name]="attr().name"
-                       [attr.required]="attr().required"
-                       [attr.type]="attr().type" [attr.placeholder]="node.meta.label?.text"
-                       [attr.value]="attr().value? attr().value: null"/>
+            <input [attr.disabled]="attr().disabled ? true : null" [attr.name]="attr().name"
+                   [attr.required]="attr().required"
+                   [attr.type]="attr().type" [attr.placeholder]="node.meta.label?.text"
+                   [attr.value]="attr().value? attr().value: null"/>
         } @else {
             <div class="mb-3">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="w-full">
                     <mat-label>{{ node.meta.label?.text }}</mat-label>
                     <input matInput
-                           [attr.disabled]="attr().disabled ? true : null" [attr.autocomplete]="attr().autocomplete"
-                           [attr.name]="attr().name" [attr.type]="attr().type"
-                           [attr.placeholder]="node.meta.label?.text" [attr.value]="attr().value? attr().value: null"/>
+                           [disabled]="attr().disabled ? true : null"
+                           [autocomplete]="attr().autocomplete"
+                           [name]="attr().name"
+                           [type]="attr().type"
+                           [value]="attr().value? attr().value: null"/>
                     @for (message of node.messages; track message) {
-                        <div class="alert alert-danger" [class.text-danger]="message.type === 'error'"
-                             [class.text-info]="message.type === 'info'"
-                             [class.text-success]="message.type === 'success'">
-                            {{ message.text }}
-                        </div>
+                        @if (message.type === 'error') {
+                            <mat-error>{{ message.text }}</mat-error>
+                        } @else {
+                            <mat-hint>{{ message.text }}</mat-hint>
+                        }
                     }
                 </mat-form-field>
             </div>
         }
     }
 }
-<!-- script (not implemented) -->
 
 <!-- text -->
 @if (node.type === 'text') {

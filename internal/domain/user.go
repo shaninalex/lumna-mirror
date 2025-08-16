@@ -11,6 +11,6 @@ type UserTraits struct {
 }
 
 type HooksKratosPayloadDTO struct {
-	UserID string     `json:"userID"`
+	UserID string     `json:"userId"`
 	Traits UserTraits `json:"traits"`
 }
