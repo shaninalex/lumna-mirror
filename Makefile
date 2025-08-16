@@ -1,7 +1,23 @@
 start:
 	docker compose \
-		-f docker/docker-compose.yaml \
+		-f docker/base.yml \
+		-f docker/database.yml \
+		-f docker/kratos.yml \
  		up -d --build
+
+clear:
+	docker compose \
+		-f docker/base.yml \
+		-f docker/database.yml \
+		-f docker/kratos.yml \
+ 		down -v
+
+start_base:
+	docker compose \
+		-f docker/base.yml \
+		-f docker/database.yml \
+ 		up -d --build
+
 
 migrate_create:
 	~/go/bin/migrate create -ext sql -dir ./database/migrations -format "20060102150405" $(name)

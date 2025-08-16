@@ -1,0 +1,133 @@
+version: "2"
+linters:
+    enable:
+        - bodyclose
+        - errorlint
+        - funlen
+        - gocritic
+        - gocyclo
+        - godox
+        - goheader
+        - maintidx
+        - revive
+        - unparam
+        - whitespace
+    settings:
+        dupl:
+            threshold: 100
+        errorlint:
+            asserts: false
+        funlen:
+            lines: -1
+            statements: 50
+        gocritic:
+            disabled-checks:
+                - dupImport
+                - ifElseChain
+                - octalLiteral
+                - whyNoLint
+                - commentFormatting
+                - commentedOutCode
+                - importShadow
+                - rangeValCopy
+                - typeAssertChain
+                - builtinShadow
+            enabled-tags:
+                - diagnostic
+                - experimental
+                - opinionated
+                - performance
+                - style
+        gocyclo:
+            min-complexity: 60
+        godox:
+            keywords:
+                - TEMP
+        goheader:
+            template: Copyright © 2025 JaJira https://jajira.shaninalex.com. All rights reserved.
+        maintidx:
+            under: 12
+        revive:
+            rules:
+                - name: exported
+                  arguments:
+                      - disableStutteringCheck
+        unparam:
+            check-exported: true
+        unused:
+            field-writes-are-uses: false
+            post-statements-are-reads: true
+            exported-fields-are-used: false
+            local-variables-are-used: false
+            generated-is-used: false
+    exclusions:
+        generated: lax
+        presets:
+            - common-false-positives
+            - legacy
+            - std-error-handling
+        rules:
+            - path: (.+)\.go$
+              text: comment on exported const (.+) should
+            - path: (.+)\.go$
+              text: exported const (.+) should have comment
+            - path: (.+)\.go$
+              text: exported type (.+) should have comment
+            - path: (.+)\.go$
+              text: exported function New(.+) should have comment
+            - path: (.+)\.go$
+              text: exported var Wire should have comment or be unexported
+            - path: (.+)\.go$
+              text: HTML should have comment or be unexported
+            - path: (.+)\.go$
+              text: \(error\) is always nil
+            - path: (.+)\.go$
+              text: should not use dot imports
+            - path: (.+)\.go$
+              text: error strings should not be capitalized
+            - path: (.+)\.go$
+              text: error strings should not end with punctuation or newlines
+            - path: (.+)\.go$
+              text: comment on exported const (.+) should
+            - path: (.+)\.go$
+              text: exported const (.+) should have comment
+            - path: (.+)\.go$
+              text: exported type (.+) should have comment
+            - path: (.+)\.go$
+              text: exported var (.+) should have comment
+            - path: (.+)\.go$
+              text: exported function New(.+) should have comment
+            - path: (.+)\.go$
+              text: ID' should not be capitalized
+            - path: (.+)\.go$
+              text: Convert - result 1 \(error\) is always nil
+            - path: (.+)\.go$
+              text: var `localWire` is unused
+            - path: (.+)\.go$
+              text: exported method Factory\.New
+            - path: (.+)\.go$
+              text: "ctx is unused"
+            - path: (.+)\.go$
+              text: "t is unused"
+            - path: (.+)\.go$
+              text: SA1029
+            - path: (.+)\.go$
+              text: SA1019
+        paths:
+            - webclient/
+            - tdata/
+formatters:
+    enable:
+        - gofmt
+    settings:
+        gofmt:
+            simplify: true
+            rewrite-rules:
+                - pattern: interface{}
+                  replacement: any
+    exclusions:
+        generated: lax
+        paths:
+            - third_party$
+            - builtin$
+            - examples$

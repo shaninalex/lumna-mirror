@@ -1,0 +1,67 @@
+<!-- a -->
+@if (node.type === 'a') {
+    <div class="mb-3">
+        <a matButton="outlined"
+           [attr.id]="attr().id" [attr.href]="attr().href">
+            {{ node.meta.label?.text }}
+        </a>
+    </div>
+}
+
+<!-- image -->
+@if (node.type === 'img') {
+    <div class="mb-3">
+        <p>{{ node.meta.label?.text }}</p>
+        <img class="img-fluid" [attr.id]="attr().id" [attr.alt]="attr().name" [attr.width]="attr().width"
+             [attr.height]="attr().height" [attr.src]="attr().src"/>
+    </div>
+}
+
+<!-- input -->
+@if (node.attributes.node_type === 'input') {
+    @if (attr().type === 'submit') {
+        <div class="mb-3">
+            <button class="w-full"
+                    matButton="outlined"
+                    [attr.disabled]="attr().disabled ? true : null" [attr.name]="attr().name"
+                    [attr.type]="attr().type"
+                    [attr.value]="attr().value">
+                {{ node.meta.label?.text }}
+            </button>
+        </div>
+    } @else {
+        @if (attr().type === 'hidden') {
+            <input [attr.disabled]="attr().disabled ? true : null" [attr.name]="attr().name"
+                   [attr.required]="attr().required"
+                   [attr.type]="attr().type" [attr.placeholder]="node.meta.label?.text"
+                   [attr.value]="attr().value? attr().value: null"/>
+        } @else {
+            <div class="mb-3">
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>{{ node.meta.label?.text }}</mat-label>
+                    <input matInput
+                           [disabled]="attr().disabled ? true : null"
+                           [autocomplete]="attr().autocomplete"
+                           [name]="attr().name"
+                           [type]="attr().type"
+                           [value]="attr().value? attr().value: null"/>
+                    @for (message of node.messages; track message) {
+                        @if (message.type === 'error') {
+                            <mat-error>{{ message.text }}</mat-error>
+                        } @else {
+                            <mat-hint>{{ message.text }}</mat-hint>
+                        }
+                    }
+                </mat-form-field>
+            </div>
+        }
+    }
+}
+
+<!-- text -->
+@if (node.type === 'text') {
+    <div class="alert alert-info" role="alert">
+        <h4 [id]="attr().id" class="alert-heading">{{ attr().text.text }}</h4>
+        <p [id]="node.meta.label?.id">{{ node.meta.label?.text }}</p>
+    </div>
+}

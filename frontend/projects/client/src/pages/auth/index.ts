@@ -1,0 +1,6 @@
+export * from "./auth.component"
+export * from "./error.component"
+export * from "./login.component"
+export * from "./recovery.component"
+export * from "./registration.component"
+export * from "./verification.component"

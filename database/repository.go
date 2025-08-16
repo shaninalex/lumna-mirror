@@ -1,11 +1,10 @@
 // Copyright © 2025 JaJirra https://jajirra.shaninalex.com. All rights reserved.
 
-package models
+package database
 
 import (
 	"context"
 	"errors"
-	"fmt"
 	"reflect"
 
 	"github.com/google/uuid"
@@ -13,10 +12,8 @@ import (
 )
 
 type IObject interface {
-	GetID() uuid.UUID
-	SetID(id uuid.UUID)
-	GetUserId() uuid.UUID
-	SetUserId(id uuid.UUID)
+	GetID() uint
+	SetID(id uint)
 }
 
 type Repository[T IObject] struct {
@@ -31,7 +28,7 @@ func NewRepository[T IObject](db *gorm.DB) *Repository[T] {
 // GetByID retrieves a record by ID
 func (r *Repository[T]) GetByID(ctx context.Context, id uuid.UUID) (T, error) {
 	obj := r.newObject()
-	err := r.DB.WithContext(ctx).
+	err := GetDB(ctx).WithContext(ctx).
 		Where("id = ?", id).
 		First(obj).Error
 
@@ -47,11 +44,7 @@ func (r *Repository[T]) GetByID(ctx context.Context, id uuid.UUID) (T, error) {
 
 // Create inserts a new record
 func (r *Repository[T]) Create(ctx context.Context, obj T) (T, error) {
-	if obj.GetID() == uuid.Nil {
-		obj.SetID(uuid.New())
-	}
-
-	if err := r.DB.WithContext(ctx).Create(obj).Error; err != nil {
+	if err := GetDB(ctx).WithContext(ctx).Create(obj).Error; err != nil {
 		return r.returnNil(), err
 	}
 
@@ -60,11 +53,7 @@ func (r *Repository[T]) Create(ctx context.Context, obj T) (T, error) {
 
 // Update modifies an existing record
 func (r *Repository[T]) Update(ctx context.Context, obj T) (T, error) {
-	if obj.GetID() == uuid.Nil {
-		return r.returnNil(), fmt.Errorf("update failed: object ID is nil")
-	}
-
-	if err := r.DB.WithContext(ctx).
+	if err := GetDB(ctx).WithContext(ctx).
 		Model(obj).
 		Where("id = ?", obj.GetID()).
 		Updates(obj).Error; err != nil {
@@ -77,7 +66,7 @@ func (r *Repository[T]) Update(ctx context.Context, obj T) (T, error) {
 // List retrieves multiple records with optional query customization
 func (r *Repository[T]) List(ctx context.Context, opts ...func(*gorm.DB) *gorm.DB) ([]T, error) {
 	var results []T
-	dbQuery := r.DB.WithContext(ctx).Model(new(T))
+	dbQuery := GetDB(ctx).WithContext(ctx).Model(new(T))
 
 	for _, opt := range opts {
 		dbQuery = opt(dbQuery)
@@ -93,7 +82,7 @@ func (r *Repository[T]) List(ctx context.Context, opts ...func(*gorm.DB) *gorm.D
 // GetBy retrieves a single record with custom query options
 func (r *Repository[T]) GetBy(ctx context.Context, opts ...func(*gorm.DB) *gorm.DB) (T, error) {
 	obj := r.newObject()
-	dbQuery := r.DB.WithContext(ctx).Model(obj)
+	dbQuery := GetDB(ctx).WithContext(ctx).Model(obj)
 
 	for _, opt := range opts {
 		dbQuery = opt(dbQuery)
@@ -112,7 +101,7 @@ func (r *Repository[T]) GetBy(ctx context.Context, opts ...func(*gorm.DB) *gorm.
 // DeleteByID removes a record by ID
 func (r *Repository[T]) DeleteByID(ctx context.Context, id uuid.UUID) error {
 	obj := r.newObject()
-	if err := r.DB.WithContext(ctx).
+	if err := GetDB(ctx).WithContext(ctx).
 		Where("id = ?", id).
 		Delete(obj).Error; err != nil {
 		return err

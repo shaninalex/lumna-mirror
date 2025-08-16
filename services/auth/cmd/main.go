@@ -1,19 +1,34 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"fmt"
+	"os"
 
-// /api/auth/register
-// /api/auth/verify
-// /api/auth/login
-// /api/auth/restore
-// /api/auth/session
+	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/jajirra/internal/base"
+	"gitlab.com/shaninalex/jajirra/internal/kratos"
+	"gitlab.com/shaninalex/jajirra/internal/web"
+	authApp "gitlab.com/shaninalex/jajirra/services/auth/app"
+)
 
 func main() {
-	app := fiber.New()
+	args := os.Args
+	var configPath string
+	if len(args) < 2 || os.Getenv("CONFIG_PATH") != "" {
+		configPath = os.Getenv("CONFIG_PATH")
+	} else {
+		configPath = args[1]
+	}
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+	config := base.NewConfig(configPath)
+	db := database.InitDB(config.String("app.dsn"))
 
-	app.Listen(":3000")
+	router := web.DefaultRouter(db, "auth")
+	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
+	NewAuthApi := authApp.NewAuthApi()
+	authApp.NewAuthController(config, router, NewAuthApi, kratosClient)
+
+	if err := router.Listen(fmt.Sprintf(":%s", config.String("auth.port"))); err != nil {
+		panic(err)
+	}
 }
