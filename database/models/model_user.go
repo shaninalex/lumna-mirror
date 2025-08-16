@@ -3,11 +3,8 @@
 package models
 
 import (
-	"context"
-
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
-	"gitlab.com/shaninalex/jajirra/internal/kratos"
 	"gorm.io/gorm"
 )
 
@@ -35,28 +32,28 @@ func (s *UserModel) SetID(id uint) { s.ID = id }
 
 type UserRepository struct {
 	Repository[*UserModel]
-	kratos kratos.IKratos
 }
 
-func NewUserRepository(k kratos.IKratos) *UserRepository {
-	s := &UserRepository{
-		kratos: k,
-	}
+func NewUserRepository() *UserRepository {
+	s := &UserRepository{}
 	return s
 }
 
-// GetUser main method to get fully defined user model
-func (s *UserRepository) GetUser(ctx context.Context, userID uuid.UUID) (*UserModel, error) {
-	var user UserModel
-	tx := s.DB.Where("user_id = ?", userID.String()).First(&user)
-	if tx.Error != nil {
-		return nil, tx.Error
-	}
-
-	identity, err := s.kratos.Get(ctx, userID)
-	if err != nil {
-		return nil, err
-	}
-	user.Identity = identity
-	return &user, nil
-}
+// This method requires kratos client dependency which is quite bad for UserRepository
+// Instead we need to create UserService which will provide userRepository methods
+// and GetUser with kratos service method
+//// GetUser main method to get fully defined user model
+//func (s *UserRepository) GetUser(ctx context.Context, userID uuid.UUID) (*UserModel, error) {
+//	var user UserModel
+//	tx := s.DB.Where("user_id = ?", userID.String()).First(&user)
+//	if tx.Error != nil {
+//		return nil, tx.Error
+//	}
+//
+//	identity, _, err := s.kratos.GetIdentity(ctx, userID.String())
+//	if err != nil {
+//		return nil, err
+//	}
+//	user.Identity = identity
+//	return &user, nil
+//}

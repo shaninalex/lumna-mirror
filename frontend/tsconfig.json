@@ -3,6 +3,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strictPropertyInitialization": false,
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -13,7 +14,27 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "paths": {
+      "@client/app/*": [
+        "./project/client/src/app/*",
+      ],
+      "@client/entities/*": [
+        "./projects/client/src/entities/*",
+      ],
+      "@client/features/*": [
+        "./projects/client/src/features/*",
+      ],
+      "@client/pages/*": [
+        "./projects/client/src/pages/*",
+      ],
+      "@client/shared/*": [
+        "./projects/client/src/shared/*",
+      ],
+      "@client/environments/*": [
+        "./projects/client/src/environments/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

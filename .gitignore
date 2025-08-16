@@ -7,7 +7,7 @@
 var/
 frontend/node_modules
 
-config/development.yaml
-config/kratos/kratos.yaml
-config/oathkeeper/access-rules.yaml
-config/oathkeeper/oathkeeper.yaml
+config/development.yml
+config/kratos/kratos.yml
+config/oathkeeper/access-rules.yml
+config/oathkeeper/oathkeeper.yml

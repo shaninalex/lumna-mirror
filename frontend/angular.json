@@ -12,7 +12,7 @@
       },
       "root": "projects/client",
       "sourceRoot": "projects/client/src",
-      "prefix": "jj",
+      "prefix": "jr",
       "architect": {
         "build": {
           "builder": "@angular/build:application",

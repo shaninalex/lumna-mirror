@@ -7,7 +7,7 @@ services:
       - ../.env
     volumes:
       - ../config/kratos:/etc/config/kratos
-    command: -c /etc/config/kratos/kratos.yaml migrate sql -e --yes
+    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
 
   kratos:
     image: oryd/kratos:v1.3.1
@@ -18,6 +18,6 @@ services:
       - '4434:4434'
     volumes:
       - ../config/kratos:/etc/config/kratos
-    command: serve -c /etc/config/kratos/kratos.yaml --dev --watch-courier
+    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
     extra_hosts:
       - "host.docker.internal:host-gateway"

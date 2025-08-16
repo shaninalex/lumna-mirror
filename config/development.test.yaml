@@ -1,7 +1,0 @@
-auth:
-  port: 8000
-
-app:
-  dsn: "postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable"
-  secret_key: "very-secret-key"
-  smtp: "smtps://test:test@mailslurper:1025/?skip_ssl_verify=true"

@@ -6,6 +6,7 @@ import (
 
 	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/internal/base"
+	"gitlab.com/shaninalex/jajirra/internal/kratos"
 	"gitlab.com/shaninalex/jajirra/internal/web"
 	authApp "gitlab.com/shaninalex/jajirra/services/auth/app"
 )
@@ -23,7 +24,11 @@ func main() {
 	db := database.InitDB(config.String("app.dsn"))
 
 	router := web.DefaultRouter(config, db, "auth")
+	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
+	NewAuthApi := authApp.NewAuthApi()
+	authApp.NewAuthController(config, router, NewAuthApi, kratosClient)
 
-	authApp.NewAuthController(router)
-	router.Listen(fmt.Sprintf(":%s", config.String("auth.port")))
+	if err := router.Listen(fmt.Sprintf(":%s", config.String("auth.port"))); err != nil {
+		panic(err)
+	}
 }
