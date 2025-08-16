@@ -5,6 +5,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconButton} from '@angular/material/button';
 import {UiService} from '@client/shared/ui';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {RouterLink} from '@angular/router';
 
 @Component({
     selector: "ts-header",
@@ -16,14 +17,15 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
         MatMenuTrigger,
         MatMenu,
         MatMenuItem,
+        RouterLink,
     ],
     template: `
-        <mat-toolbar class="items-center shadow">
+        <mat-toolbar class="items-center border-b border-slate-200 relative z-100">
             <div class="flex gap-4 items-center">
-                <div class="flex gap-2 items-center">
+                <a [routerLink]="['/']" class="flex gap-2 items-center">
                     <img src="/assets/img/logo-simple.png" alt="" class="h-8">
                     <h3><span class="font-bold">Taskiro</span></h3>
-                </div>
+                </a>
                 <button matIconButton (click)="sidebarToggle()">
                     <mat-icon>menu</mat-icon>
                 </button>

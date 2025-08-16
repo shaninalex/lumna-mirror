@@ -12,11 +12,10 @@ import {HeaderComponent, SidebarComponent} from './components';
             <ts-header />
             <div class="flex flex-grow">
                 <ts-sidebar />
-                <div class="flex-grow bg-slate-200 p-4">
+                <div class="flex-grow bg-slate-100 p-4">
                     <ng-content></ng-content>
                 </div>
             </div>
         </div>`
 })
-export class PrimaryLayoutComponent {
-}
+export class PrimaryLayoutComponent {}
