@@ -24,12 +24,6 @@ type UserModel struct {
 func (s *UserModel) GetID() uint   { return s.ID }
 func (s *UserModel) SetID(id uint) { s.ID = id }
 
-// func (s *UserModel) AfterFind(tx *gorm.DB) (err error) {
-// 	// set user data from kratos
-// 	// set permission data from keto
-// 	return
-// }
-
 type UserRepository struct {
 	Repository[*UserModel]
 }

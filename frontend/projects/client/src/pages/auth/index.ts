@@ -1,3 +1,4 @@
+export * from "./routes"
 export * from "./auth.component"
 export * from "./error.component"
 export * from "./login.component"
