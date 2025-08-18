@@ -7,9 +7,9 @@ export interface Issue {
     sprintId?: number;
     type: IssueType;
     title: string;
-    description: string;
+    description?: string;
     status: IssueStatus;
     assignee?: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }

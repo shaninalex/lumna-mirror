@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {PageTitleSetter} from '@client/shared/ui';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTabsModule} from '@angular/material/tabs';
+import {BacklogViewComponent} from '@client/pages/main/projects/detail/components';
 
 @Component({
     selector: "ts-project-detail-page",
@@ -31,21 +32,35 @@ import {MatTabsModule} from '@angular/material/tabs';
                 </mat-menu>
             </div>
 
-            <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+            <!--
+                selectIndex should come's from localStorage.
+                Save latest open tab.
+             -->
+            <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" selectedIndex="1">
                 <mat-tab label="Summary">
-                    content Summary
+                    <div class="py-4">
+                        content Summary
+                    </div>
                 </mat-tab>
                 <mat-tab label="Backlog">
-                    content Backlog
+                    <div class="py-4">
+                        <ts-backlog-view/>
+                    </div>
                 </mat-tab>
                 <mat-tab label="Board">
-                    content Board
+                    <div class="py-4">
+                        content Board
+                    </div>
                 </mat-tab>
                 <mat-tab label="Timeline">
-                    content Timeline
+                    <div class="py-4">
+                        content Timeline
+                    </div>
                 </mat-tab>
                 <mat-tab label="Pages">
-                    content Pages
+                    <div class="py-4">
+                        content Pages
+                    </div>
                 </mat-tab>
             </mat-tab-group>
 
@@ -56,8 +71,9 @@ import {MatTabsModule} from '@angular/material/tabs';
         MatIconModule,
         MatIconButton,
         MatTabsModule,
+        BacklogViewComponent,
     ]
 })
-export class ProjectDetailPageComponent extends PageTitleSetter implements OnInit {
+export class ProjectDetailPageComponent extends PageTitleSetter {
     pageTitle = "Taskiro";
 }
