@@ -31,7 +31,7 @@ func (s *AuthApi) HookRegister(ctx context.Context, data *domain.HooksKratosPayl
 	if err != nil {
 		return err
 	}
-	_, err = s.userRepository.Create(ctx, &database.UserModel{UserID: userId})
+	_, err = s.userRepository.Create(ctx, &database.User{ID: userId})
 	if err != nil {
 		return err
 	}

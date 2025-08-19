@@ -41,16 +41,25 @@ func InitDB(dsn string) *gorm.DB {
 		sqlDB.SetMaxIdleConns(10)
 		sqlDB.SetMaxOpenConns(100)
 		sqlDB.SetConnMaxLifetime(time.Hour)
-		err = gormDB.AutoMigrate(
-			&UserModel{},
-		)
-		if err != nil {
-			log.Printf("[DB]: Unable to apply migrations: %v", err)
-			panic(err)
-		}
+		ApplyMigrations(gormDB)
 		return gormDB
 	}
 
 	log.Fatalf("[DB]: Failed to connect after %d attempts: %v", maxRetries, err)
 	return nil
+}
+
+// ApplyMigrations applying migrations
+func ApplyMigrations(db *gorm.DB) {
+	err := db.AutoMigrate(
+		&User{},
+		&Issue{},
+		&Epic{},
+		&Sprint{},
+		&Organization{},
+	)
+	if err != nil {
+		log.Printf("[DB]: Unable to apply migrations: %v", err)
+		panic(err)
+	}
 }

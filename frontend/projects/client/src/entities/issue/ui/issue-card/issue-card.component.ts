@@ -8,7 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
     template: `
         <mat-card appearance="outlined">
             <mat-card-header>
-                <h4 class="text-lg">[#{{ id }}] Create basic layout structure</h4>
+                <h4 class="text-base">[#{{ id }}] Create basic layout structure</h4>
             </mat-card-header>
             <!-- <mat-card-content></mat-card-content> -->
             <mat-card-footer class="p-4 flex items-center gap-2">

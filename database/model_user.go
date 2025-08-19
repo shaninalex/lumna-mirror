@@ -3,17 +3,20 @@
 package database
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
 	"gorm.io/gorm"
 )
 
-type UserModel struct {
-	gorm.Model
-
-	UserID   uuid.UUID
-	Settings string
-	Identity *ory.Identity `gorm:"-"` // Kratos identity information
+type User struct {
+	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
+	Settings  string
+	Identity  *ory.Identity `gorm:"-"` // ignored by GORM
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	// no need to embedd this. Permissions can be changed during request and usermodel will can have old
 	// permissions. Every time we need something from keto - ask it. Do not store!
@@ -21,11 +24,12 @@ type UserModel struct {
 }
 
 // Implement IObject interface
-func (s *UserModel) GetID() uint   { return s.ID }
-func (s *UserModel) SetID(id uint) { s.ID = id }
+
+func (s *User) GetID() uuid.UUID   { return s.ID }
+func (s *User) SetID(id uuid.UUID) { s.ID = id }
 
 type UserRepository struct {
-	Repository[*UserModel]
+	Repository[*User]
 }
 
 func NewUserRepository() *UserRepository {

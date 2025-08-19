@@ -28,7 +28,7 @@ import {
                     #todoList="cdkDropList"
                     [cdkDropListData]="todo"
                     [cdkDropListConnectedTo]="[progressList, doneList]"
-                    class="flex flex-col gap-2"
+                    class="flex flex-col gap-2 min-h-20"
                     (cdkDropListDropped)="drop($event)">
                     @for (item of todo; track item) {
                         <ts-issue-card cdkDrag [id]="item"/>
@@ -45,7 +45,7 @@ import {
                     #progressList="cdkDropList"
                     [cdkDropListData]="progress"
                     [cdkDropListConnectedTo]="[todoList, doneList]"
-                    class="flex flex-col gap-2"
+                    class="flex flex-col gap-2 min-h-20"
                     (cdkDropListDropped)="drop($event)">
                     @for (item of progress; track item) {
                         <ts-issue-card cdkDrag [id]="item"/>
@@ -63,7 +63,7 @@ import {
                     #doneList="cdkDropList"
                     [cdkDropListData]="done"
                     [cdkDropListConnectedTo]="[todoList, progressList]"
-                    class="flex flex-col gap-2"
+                    class="flex flex-col gap-2 min-h-20"
                     (cdkDropListDropped)="drop($event)">
                     @for (item of done; track item) {
                         <div class="example-box" cdkDrag>

@@ -12,8 +12,8 @@ import (
 )
 
 type IObject interface {
-	GetID() uint
-	SetID(id uint)
+	GetID() uuid.UUID
+	SetID(id uuid.UUID)
 }
 
 type Repository[T IObject] struct {
