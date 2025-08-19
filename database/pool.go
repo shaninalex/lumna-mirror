@@ -57,6 +57,7 @@ func ApplyMigrations(db *gorm.DB) {
 		&Epic{},
 		&Sprint{},
 		&Organization{},
+		&Project{},
 	)
 	if err != nil {
 		log.Printf("[DB]: Unable to apply migrations: %v", err)

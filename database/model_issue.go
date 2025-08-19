@@ -30,6 +30,9 @@ type Issue struct {
 	SprintID uuid.UUID
 	Sprint   Sprint
 
+	ProjectID uuid.UUID
+	Project   Project
+
 	Assignee string // TODO: issue_assignee separate relation table
 
 	Type        IssueType

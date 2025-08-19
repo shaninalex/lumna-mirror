@@ -58,8 +58,6 @@ import {CdkMenuModule} from '@angular/cdk/menu';
                     </div>
                 </mat-tab>
             </mat-tab-group>
-
-
         </div>`,
     imports: [
         MatMenuModule,

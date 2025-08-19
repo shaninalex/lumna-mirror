@@ -13,6 +13,9 @@ type Epic struct {
 	UserID uuid.UUID
 	User   User
 
+	ProjectID uuid.UUID
+	Project   Project
+
 	Title       string
 	Description string
 	CreatedAt   time.Time

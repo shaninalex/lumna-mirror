@@ -5,7 +5,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/internal/web/middlewares"
 	"gorm.io/gorm"
 )
 
@@ -16,6 +15,6 @@ func DefaultRouter(db *gorm.DB, name string) *fiber.App {
 	router.Use(recover.New())
 	router.Use(logger.New())
 	router.Use(database.NewDBMiddleware(db))
-	router.Use(middlewares.NewCommmonMiddleware())
+	router.Use(NewCommonMiddleware())
 	return router
 }

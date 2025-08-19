@@ -5,6 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
+	ory "github.com/ory/kratos-client-go"
+	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/internal/base"
 	"gitlab.com/shaninalex/jajirra/internal/domain"
 )
@@ -33,4 +36,19 @@ func ReturnJson(ctx *fiber.Ctx, status int, data any, params ...any) error {
 // Success return api response based on statuses
 func Success(ctx *fiber.Ctx, data any, params ...any) error {
 	return ReturnJson(ctx, http.StatusOK, data, params)
+}
+
+func GetUserId(ctx *fiber.Ctx) uuid.UUID {
+	id, _ := ctx.Locals(base.ContextUserID).(uuid.UUID)
+	return id
+}
+
+func GetUser(ctx *fiber.Ctx) *database.User {
+	user, _ := ctx.Locals(base.ContextUser).(*database.User)
+	return user
+}
+
+func GetSession(ctx *fiber.Ctx) *ory.Session {
+	session, _ := ctx.Locals(base.ContextUserID).(*ory.Session)
+	return session
 }

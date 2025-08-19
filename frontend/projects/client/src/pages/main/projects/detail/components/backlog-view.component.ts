@@ -35,16 +35,11 @@ import {SprintEditListCardComponent} from '@client/features/sprint';
                           clip-rule="evenodd"></path>
                 </svg>
             </div>
-
         </div>
 
-        <div>
-            <div>Sprints "action-list" ordered by date asc</div>
-
-            <div class="flex flex-col gap-4">
-                <ts-sprint-edit-list-card/>
-                <ts-sprint-edit-list-card/>
-            </div>
+        <div class="flex flex-col gap-4">
+            <ts-sprint-edit-list-card/>
+            <ts-sprint-edit-list-card/>
         </div>
     `
 })

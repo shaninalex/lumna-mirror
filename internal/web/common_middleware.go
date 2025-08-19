@@ -1,18 +1,18 @@
-package middlewares
+package web
 
 import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type CommmonMiddleware struct {
+type CommonMiddleware struct {
 }
 
-func NewCommmonMiddleware() fiber.Handler {
-	m := &CommmonMiddleware{}
+func NewCommonMiddleware() fiber.Handler {
+	m := &CommonMiddleware{}
 	return m.Wrap()
 }
 
-func (m *CommmonMiddleware) Wrap() fiber.Handler {
+func (m *CommonMiddleware) Wrap() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		ctx.Locals("ip", ctx.IP())
 		// Other custom variables

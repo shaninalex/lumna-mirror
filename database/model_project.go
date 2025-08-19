@@ -7,19 +7,16 @@ import (
 	"gorm.io/gorm"
 )
 
-type Sprint struct {
+type Project struct {
 	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
 
-	UserID uuid.UUID
+	UserID uuid.UUID // Owner
 	User   User
 
 	OrganizationID uuid.UUID
 	Organization   Organization
 
-	Title       string
-	Description string
-	StartDate   time.Time
-	EndDate     time.Time
+	Title string
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -28,14 +25,14 @@ type Sprint struct {
 
 // Implement IObject interface
 
-func (s *Sprint) GetID() uuid.UUID   { return s.ID }
-func (s *Sprint) SetID(id uuid.UUID) { s.ID = id }
+func (s *Project) GetID() uuid.UUID   { return s.ID }
+func (s *Project) SetID(id uuid.UUID) { s.ID = id }
 
-type SprintRepository struct {
-	Repository[*Sprint]
+type ProjectRepository struct {
+	Repository[*Project]
 }
 
-func NewSprintRepository() *SprintRepository {
-	s := &SprintRepository{}
+func NewProjectRepository() *ProjectRepository {
+	s := &ProjectRepository{}
 	return s
 }

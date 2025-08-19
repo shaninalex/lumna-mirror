@@ -1,5 +1,3 @@
-// Copyright © 2025 JaJirra https://jajirra.shaninalex.com. All rights reserved.
-
 package database
 
 import (
