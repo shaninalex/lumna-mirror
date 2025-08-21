@@ -19,7 +19,7 @@ RUN go mod tidy
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o project_service services/project/cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o project_service apps/project/cmd/main.go
 
 # Stage 3: Minimal Alpine image
 FROM alpine:latest

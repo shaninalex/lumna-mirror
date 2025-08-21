@@ -37,7 +37,7 @@ migrate_down:
 		-verbose down $(N)
 
 start_auth:
-	go run services/auth/cmd/main.go ./config/development.local.yml
+	go run apps/auth/cmd/main.go ./config/development.local.yml
 
 start_project:
-	go run services/project/cmd/main.go ./config/development.local.yml
+	go run apps/project/cmd/main.go ./config/development.local.yml

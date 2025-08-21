@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	taskApp "gitlab.com/shaninalex/jajirra/apps/project/app"
 	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/internal/base"
 	"gitlab.com/shaninalex/jajirra/internal/kratos"
 	"gitlab.com/shaninalex/jajirra/internal/web"
-	taskApp "gitlab.com/shaninalex/jajirra/services/project/app"
 )
 
 func main() {
