@@ -3,6 +3,8 @@
 package tdata
 
 import (
+	"context"
+
 	"gitlab.com/shaninalex/jajirra/database"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -20,19 +22,13 @@ func InitTestDatabase() *gorm.DB {
 	return db
 }
 
-func clearDatabase() {
-	tables := []any{
-		&database.User{},
-		&database.Issue{},
-		&database.Epic{},
-		&database.Sprint{},
-		&database.Organization{},
-		&database.Project{},
-	}
-	for _, t := range tables {
-		// AllowGlobalUpdate ensures DELETE without WHERE is permitted
-		if err := db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(t).Error; err != nil {
-			panic(err)
-		}
+func clearDatabase(ctx context.Context) {
+	_db := database.GetDB(ctx)
+	if err := _db.Exec(`
+		TRUNCATE TABLE 
+			users, issues, epics, sprints, organizations, projects 
+		RESTART IDENTITY CASCADE
+	`).Error; err != nil {
+		panic(err)
 	}
 }

@@ -43,6 +43,6 @@ func Config() base.IConfig {
 	return config
 }
 
-func Clear() {
-	clearDatabase()
+func Clear(ctx context.Context) {
+	clearDatabase(ctx)
 }
