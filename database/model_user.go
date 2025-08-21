@@ -16,6 +16,8 @@ type User struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
+	// TODO: need to create user public code like @user123 . Save it in ory.Identity or in that model
+
 	// no need to embedd this. Permissions can be changed during request and usermodel will can have old
 	// permissions. Every time we need something from keto - ask it. Do not store!
 	//Permissions any          `gorm:"-"` // Keto permissions data

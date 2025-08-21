@@ -21,6 +21,8 @@ type Project struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	Issues []Issue `gorm:"foreignKey:ProjectID"`
 }
 
 // Implement IObject interface

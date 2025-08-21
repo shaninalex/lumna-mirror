@@ -25,7 +25,7 @@ func main() {
 	router := web.DefaultRouter(db, "task")
 	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
 	router.Use(web.NewAuthMiddleware(kratosClient))
-	taskApp.NewTaskController(config, router)
+	taskApp.NewTaskController(router)
 	if err := router.Listen(fmt.Sprintf(":%s", config.String("task.port"))); err != nil {
 		panic(err)
 	}

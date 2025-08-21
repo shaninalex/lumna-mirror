@@ -35,3 +35,9 @@ migrate_down:
 		-path ./database/migrations/ \
 		-database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" \
 		-verbose down $(N)
+
+start_auth:
+	go run services/auth/cmd/main.go ./config/development.local.yml
+
+start_project:
+	go run services/project/cmd/main.go ./config/development.local.yml
