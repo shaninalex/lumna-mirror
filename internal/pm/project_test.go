@@ -11,6 +11,7 @@ import (
 )
 
 func Test_ProjectList(t *testing.T) {
+	tdata.Clear()
 	ctx := tdata.Ctx()
 	user := createUser(ctx)
 	assert.NotNil(t, user)

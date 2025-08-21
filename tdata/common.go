@@ -42,3 +42,7 @@ func Ctx() context.Context {
 func Config() base.IConfig {
 	return config
 }
+
+func Clear() {
+	clearDatabase()
+}
