@@ -20,6 +20,7 @@ func Test_ProjectList(t *testing.T) {
 
 	assert.NotNil(t, user)
 	assert.NotNil(t, project)
+	assert.Equal(t, org.UserID, user.ID)
 }
 
 func createOrganisation(ctx context.Context, user *database.User) *database.Organization {
