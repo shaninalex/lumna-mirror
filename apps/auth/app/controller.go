@@ -36,6 +36,7 @@ func (s *AuthController) setRoutes() {
 	s.router.Get("/api/auth/form/recovery", s.HandleFormRecovery)
 
 	// hooks
+	// TODO: we can authenticate hooks by "ory_kratos_continuity" cookie
 	s.router.Post("/api/auth/hook/registration", s.HandleHookRegister)
 	s.router.Post("/api/auth/hook/verify", s.HandleHookVerify)
 	s.router.Post("/api/auth/hook/login", s.HandleHookLogin)
