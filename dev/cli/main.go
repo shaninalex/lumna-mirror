@@ -91,9 +91,9 @@ func RunTypesScriptify() {
 export const ERRORS: Record<string, AppError> = ` + string(data) + "\n"
 
 	// write to file
-	if err := os.WriteFile("frontend/errors.ts", []byte(ts), 0644); err != nil {
+	if err := os.WriteFile("frontend/projects/lib/src/lib/errors.ts", []byte(ts), 0644); err != nil {
 		panic(err)
 	}
 
-	fmt.Println("Generated frontend/errors.ts")
+	fmt.Println("Generated frontend/projects/lib/src/lib/errors.ts")
 }

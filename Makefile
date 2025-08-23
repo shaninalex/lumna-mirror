@@ -18,6 +18,8 @@ start_base:
 		-f docker/database.yml \
  		up -d --build
 
+types:
+	go run ./dev/cli/main.go --action=types
 
 migrate_create:
 	~/go/bin/migrate create -ext sql -dir ./database/migrations -format "20060102150405" $(name)
