@@ -1,42 +1,31 @@
-// Copyright © 2025 JaJirra https://jajirra.shaninalex.com. All rights reserved.
-
 package database
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
 	"gorm.io/gorm"
 )
 
-type UserModel struct {
-	gorm.Model
+type User struct {
+	ID             uuid.UUID `gorm:"type:uuid;primaryKey"`
+	OrganizationID *uuid.UUID
+	Organization   *Organization `gorm:"foreignKey:OrganizationID;references:ID"`
 
-	UserID   uuid.UUID
 	Settings string
-	Identity *ory.Identity `gorm:"-"` // Kratos identity information
+	Identity *ory.Identity `gorm:"-"` // ignored by GORM
+	Code     string        `gorm:"uniqueIndex"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	// TODO: need to create user public code like @user123 . Save it in ory.Identity or in that model
 
 	// no need to embedd this. Permissions can be changed during request and usermodel will can have old
 	// permissions. Every time we need something from keto - ask it. Do not store!
 	//Permissions any          `gorm:"-"` // Keto permissions data
-}
-
-// Implement IObject interface
-func (s *UserModel) GetID() uint   { return s.ID }
-func (s *UserModel) SetID(id uint) { s.ID = id }
-
-// func (s *UserModel) AfterFind(tx *gorm.DB) (err error) {
-// 	// set user data from kratos
-// 	// set permission data from keto
-// 	return
-// }
-
-type UserRepository struct {
-	Repository[*UserModel]
-}
-
-func NewUserRepository() *UserRepository {
-	s := &UserRepository{}
-	return s
 }
 
 // This method requires kratos client dependency which is quite bad for UserRepository
@@ -57,3 +46,48 @@ func NewUserRepository() *UserRepository {
 //	user.Identity = identity
 //	return &user, nil
 //}
+
+// User builder pattern code
+type UserBuilder struct {
+	user *User
+}
+
+func NewUserBuilder() *UserBuilder {
+	user := &User{}
+	b := &UserBuilder{user: user}
+	return b
+}
+
+func (b *UserBuilder) ID(iD uuid.UUID) *UserBuilder {
+	b.user.ID = iD
+	return b
+}
+
+func (b *UserBuilder) Settings(settings string) *UserBuilder {
+	b.user.Settings = settings
+	return b
+}
+
+func (b *UserBuilder) Code(code string) *UserBuilder {
+	b.user.Code = code
+	return b
+}
+
+func (b *UserBuilder) Identity(identity *ory.Identity) *UserBuilder {
+	b.user.Identity = identity
+	return b
+}
+
+func (b *UserBuilder) CreatedAt(createdAt time.Time) *UserBuilder {
+	b.user.CreatedAt = createdAt
+	return b
+}
+
+func (b *UserBuilder) UpdatedAt(updatedAt time.Time) *UserBuilder {
+	b.user.UpdatedAt = updatedAt
+	return b
+}
+
+func (b *UserBuilder) Build() *User {
+	return b.user
+}

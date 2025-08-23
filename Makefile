@@ -18,6 +18,13 @@ start_base:
 		-f docker/database.yml \
  		up -d --build
 
+types:
+	go run ./dev/cli/main.go --action=types
+
+# usage:
+# 	make seed id=8b8a6994-c474-4bf9-bc2c-a2eedcc4cb1d
+seed:
+	go run ./dev/cli/main.go --action=seed --userID=$(id)
 
 migrate_create:
 	~/go/bin/migrate create -ext sql -dir ./database/migrations -format "20060102150405" $(name)
@@ -35,3 +42,12 @@ migrate_down:
 		-path ./database/migrations/ \
 		-database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" \
 		-verbose down $(N)
+
+start_auth:
+	go run apps/auth/cmd/main.go ./config/development.local.yml
+
+start_project:
+	go run apps/project/cmd/main.go ./config/development.local.yml
+
+start_org:
+	go run apps/org/cmd/main.go ./config/development.local.yml

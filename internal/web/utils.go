@@ -1,10 +1,15 @@
 package web
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
+	ory "github.com/ory/kratos-client-go"
+	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/jajirra/internal/apperrors"
 	"gitlab.com/shaninalex/jajirra/internal/base"
 	"gitlab.com/shaninalex/jajirra/internal/domain"
 )
@@ -16,21 +21,66 @@ func GetKratosRedirectUrl(c base.IConfig, path string) string {
 
 // ReturnJson return api response based on statuses
 func ReturnJson(ctx *fiber.Ctx, status int, data any, params ...any) error {
-	_data := domain.NewApiResponse(data)
+	resp := domain.NewApiResponse(data)
 	if status >= 400 {
-		_data.Status = false
+		resp.Status = false
 	}
+
+	// separate messages vs app errors
 	for _, p := range params {
-		if msg, ok := p.(string); ok {
-			_data.Messages = append(_data.Messages, msg)
+		switch v := p.(type) {
+		case string:
+			// general user-facing message
+			resp.Messages = append(resp.Messages, v)
+		case apperrors.AppError:
+			// structured app error
+			resp.Errors = append(resp.Errors, v)
+		case error:
+			// try to extract AppError if wrapped
+			var appErr apperrors.AppError
+			if errors.As(v, &appErr) {
+				resp.Errors = append(resp.Errors, appErr)
+			} else {
+				// fallback: put error string in messages
+				resp.Messages = append(resp.Messages, v.Error())
+			}
 		}
 	}
 
 	ctx.Status(status)
-	return ctx.JSON(_data)
+	return ctx.JSON(resp)
 }
 
 // Success return api response based on statuses
 func Success(ctx *fiber.Ctx, data any, params ...any) error {
-	return ReturnJson(ctx, http.StatusOK, data, params)
+	return ReturnJson(ctx, http.StatusOK, data, params...)
+}
+
+// Error return api response based on statuses
+func Error(ctx *fiber.Ctx, status int, err error) error {
+	return ReturnJson(ctx, status, nil, err)
+}
+
+func GetUserId(ctx *fiber.Ctx) uuid.UUID {
+	if id, ok := ctx.Locals(base.ContextUserID).(uuid.UUID); ok {
+		return id
+	}
+	return uuid.Nil
+}
+
+func GetOrganizationId(ctx *fiber.Ctx) uuid.UUID {
+	if id, ok := ctx.Locals(base.ContextOrgID).(uuid.UUID); ok {
+		return id
+	}
+	return uuid.Nil
+}
+
+func GetUser(ctx *fiber.Ctx) *database.User {
+	user, _ := ctx.Locals(base.ContextUser).(*database.User)
+	return user
+}
+
+func GetSession(ctx *fiber.Ctx) *ory.Session {
+	session, _ := ctx.Locals(base.ContextUserID).(*ory.Session)
+	return session
 }

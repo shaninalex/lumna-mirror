@@ -21,6 +21,7 @@ func init() {
 }
 
 type TestManager struct {
+	DB *gorm.DB
 }
 
 func newTestManager() {
@@ -30,7 +31,9 @@ func newTestManager() {
 	m = &TestManager{}
 }
 
-func Manager() *TestManager { return m }
+func Manager() *TestManager {
+	return m
+}
 
 func Ctx() context.Context {
 	return ctx
@@ -38,4 +41,8 @@ func Ctx() context.Context {
 
 func Config() base.IConfig {
 	return config
+}
+
+func Clear(ctx context.Context) {
+	clearDatabase(ctx)
 }

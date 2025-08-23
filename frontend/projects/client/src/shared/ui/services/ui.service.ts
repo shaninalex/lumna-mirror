@@ -9,6 +9,7 @@ export class UiService implements OnDestroy {
     public headerTitle: BehaviorSubject<string> = new BehaviorSubject<string>("");
     public darkTheme: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     public loading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+    public sidebar: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     public appLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
     private subscriptions: Subscription = new Subscription();
 
@@ -19,10 +20,11 @@ export class UiService implements OnDestroy {
         this.subscriptions.add(
             this.title.subscribe({
                 next: (title: string) => {
-                    document.title = `JaJira - ${title}`;
+                    document.title = `Taskiro - ${title}`;
                 }
             })
         );
+
         this.subscriptions.add(
             this.darkTheme.subscribe(isDarkTheme => {
                 if (isDarkTheme) {
@@ -47,6 +49,10 @@ export class UiService implements OnDestroy {
     public setTitle(label: string): void {
         this.title.next(label);
         this.headerTitle.next(label);
+    }
+
+    public toggleSidebar(): void {
+        this.sidebar.next(!this.sidebar.value);
     }
 }
 

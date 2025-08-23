@@ -1,16 +1,13 @@
 package apperrors
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
 )
 
 type AppError struct {
-	ID         string `json:"id"`
-	Key        string `json:"key"`
-	Message    string `json:"message"`
-	HTTPStatus int    `json:"-"`
+	ID      string `json:"id"`
+	Key     string `json:"key"`
+	Message string `json:"message"`
 }
 
 func (e AppError) Error() string {
@@ -18,21 +15,29 @@ func (e AppError) Error() string {
 }
 
 var (
-	InvalidCredentials = AppError{"AUTH001", "invalid_credentials", "Invalid username or password", http.StatusUnauthorized}
-	TokenExpired       = AppError{"AUTH002", "token_expired", "Authentication token expired", http.StatusUnauthorized}
-	UserNotFound       = AppError{"USER001", "user_not_found", "User not found", http.StatusNotFound}
-	UserNotActive      = AppError{"USER002", "user_not_active", "User is not active", http.StatusUnauthorized}
-	DBConnectionFailed = AppError{"DB001", "db_connection_failed", "Database connection failed", http.StatusInternalServerError}
+	Default              = AppError{"APP000", "generic_error", "Something went wrong"}
+	InvalidCredentials   = AppError{"AUTH001", "invalid_credentials", "Invalid username or password"}
+	TokenExpired         = AppError{"AUTH002", "token_expired", "Authentication token expired"}
+	SessionNotFound      = AppError{"AUTH003", "session_not_found", "Session not found"}
+	UserNotFound         = AppError{"USER001", "user_not_found", "User not found"}
+	UserNotActive        = AppError{"USER002", "user_not_active", "User is not active"}
+	UserIdentityNotFound = AppError{"USER003", "identity_not_found", "Identity not found"}
+	UserOrgNotAttached   = AppError{"USER004", "org_not_attached", "user does not attach to any organizations"}
+	DBConnectionFailed   = AppError{"DB001", "db_connection_failed", "Database connection failed"}
+	OrgNotFound          = AppError{"ORG001", "org_not_found", "Organization not found"}
+	ProjectNotFound      = AppError{"PRJ001", "prj_not_found", "Project not found"}
 )
 
-func WriteError(w http.ResponseWriter, err AppError) {
-	// TODO: event send to prometheus
-	resp := map[string]any{
-		"status":   false,
-		"data":     err,
-		"messages": make([]string, 0),
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(err.HTTPStatus)
-	_ = json.NewEncoder(w).Encode(resp)
+var AllErrors = []AppError{
+	Default,
+	InvalidCredentials,
+	TokenExpired,
+	SessionNotFound,
+	UserNotFound,
+	UserNotActive,
+	UserIdentityNotFound,
+	UserOrgNotAttached,
+	DBConnectionFailed,
+	OrgNotFound,
+	ProjectNotFound,
 }
