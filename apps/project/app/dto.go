@@ -76,29 +76,31 @@ func NewIssuesDto(ii []*models.Issue) []*IssueDto {
 }
 
 type IssueStatusDto struct {
+	ID          uuid.UUID                 `json:"id"`
 	Title       string                    `json:"title"`
 	Description string                    `json:"description"`
 	Complete    bool                      `json:"complete"`
 	Index       uint                      `json:"index"`
 	Config      *models.IssueStatusConfig `json:"config"`
-	Issues      []*IssueDto               `json:"issues"`
+	//Issues      []*IssueDto               `json:"issues"`
 }
 
 func NewIssueStatusDto(i *models.IssueStatus) *IssueStatusDto {
 	return &IssueStatusDto{
+		ID:          i.GetID(),
 		Title:       i.Title,
 		Description: i.Description,
 		Complete:    i.Complete,
 		Index:       i.Index,
 		Config:      i.GetConfig(),
-		Issues:      NewIssuesDto(i.Issues),
+		//Issues:      NewIssuesDto(i.Issues),
 	}
 }
 
-func NewIssuesStatusDto(statuses []*models.IssueStatus) map[int]*IssueStatusDto {
-	dtos := make(map[int]*IssueStatusDto)
-	for _, status := range statuses {
-		dtos[int(status.Index)] = NewIssueStatusDto(status)
+func NewIssuesStatusDto(statuses []*models.IssueStatus) []*IssueStatusDto {
+	dtos := make([]*IssueStatusDto, len(statuses))
+	for i, status := range statuses {
+		dtos[i] = NewIssueStatusDto(status)
 	}
 	return dtos
 }

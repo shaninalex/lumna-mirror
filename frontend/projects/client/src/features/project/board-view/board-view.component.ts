@@ -1,10 +1,11 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {Issue, IssueCardComponent, TaskService} from '@client/entities/issue';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem,} from '@angular/cdk/drag-drop';
-import {AsyncPipe} from '@angular/common';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {Observable, tap} from 'rxjs';
+import {Subscription, tap} from 'rxjs';
 import {BoardViewApiService} from './board-view-api.service';
+import {Status} from '@client/entities/project';
+import {StatusColumn} from './board.model';
 
 @Component({
     selector: "ts-board-view",
@@ -12,30 +13,25 @@ import {BoardViewApiService} from './board-view-api.service';
         IssueCardComponent,
         CdkDropList,
         CdkDrag,
-        AsyncPipe,
         MatProgressSpinnerModule,
     ],
     providers: [BoardViewApiService],
     styleUrl: './board-view.component.scss',
     templateUrl: './board-view.component.html'
 })
-export class BoardViewComponent implements OnInit {
+export class BoardViewComponent implements OnInit, OnDestroy {
     @Input() projectKey: string;
-    api = inject(TaskService)
-    boardService = inject(BoardViewApiService)
-    tasks: Observable<Issue[]>
+    private _taskApi = inject(TaskService)
+    private _boardApi = inject(BoardViewApiService)
+    private _sub = new Subscription()
+
+    tasks: Issue[]
+    statuses: Status[]
+    columns: StatusColumn[]
 
     todo = ['1', '2', '3'];
     progress = ['7', '6', '5', '4'];
     done = ['8', '9', '10'];
-
-    ngOnInit() {
-        // TODO: rewrite with rxjs Observables
-        this.tasks = this.api.List(this.projectKey)
-        this.boardService.BoardView(this.projectKey).pipe(
-            tap(data => console.log(data))
-        ).subscribe()
-    }
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
@@ -49,5 +45,26 @@ export class BoardViewComponent implements OnInit {
             );
         }
         console.log("Drop completed", event)
+    }
+
+    ngOnInit() {
+        // TODO:
+        //  - build columns
+        //  - update template
+        //  - update this.drop() function
+        this._sub.add(
+            this._taskApi.List(this.projectKey).pipe(
+                tap(tasks => this.tasks = tasks),
+            ).subscribe()
+        )
+        this._sub.add(
+            this._boardApi.Statuses(this.projectKey).pipe(
+                tap(statuses => this.statuses = statuses),
+            ).subscribe(),
+        )
+    }
+
+    ngOnDestroy() {
+        this._sub.unsubscribe()
     }
 }

@@ -1,4 +1,6 @@
-@if (tasks | async; as tasks) {
+@if (statuses.length === 0) {
+    <mat-spinner diameter="50"/>
+} @else {
     <div class="flex flex-row no-wrap gap-4">
         <div class="bg-slate-200 w-sm rounded p-4">
             <div class="mb-2">
@@ -53,6 +55,4 @@
             </div>
         </div>
     </div>
-} @else {
-    <mat-spinner diameter="50" />
 }

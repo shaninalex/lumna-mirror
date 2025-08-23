@@ -25,7 +25,7 @@ type ProjectController struct {
 
 func (s *ProjectController) setRoutes() {
 	s.router.Get("/api/project/list", s.HandleProjectsList)
-	s.router.Get("/api/project/:projectKey/board", s.HandleProjectBoard)
+	s.router.Get("/api/project/:projectKey/statuses", s.HandleProjectStatuses)
 	s.router.Get("/api/project/tasks", s.HandleTasksList)
 }
 
@@ -54,7 +54,7 @@ func (s *ProjectController) HandleTasksList(ctx *fiber.Ctx) error {
 	return web.Success(ctx, NewIssuesDto(issues))
 }
 
-func (s *ProjectController) HandleProjectBoard(ctx *fiber.Ctx) error {
+func (s *ProjectController) HandleProjectStatuses(ctx *fiber.Ctx) error {
 	projectKey := ctx.Params("projectKey")
 	statuses, err := s.projectApi.Statuses(ctx.Context(), web.GetOrganizationId(ctx), projectKey)
 	if err != nil {
