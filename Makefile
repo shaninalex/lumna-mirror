@@ -21,6 +21,11 @@ start_base:
 types:
 	go run ./dev/cli/main.go --action=types
 
+# usage:
+# 	make seed id=8b8a6994-c474-4bf9-bc2c-a2eedcc4cb1d
+seed:
+	go run ./dev/cli/main.go --action=seed --userID=$(id)
+
 migrate_create:
 	~/go/bin/migrate create -ext sql -dir ./database/migrations -format "20060102150405" $(name)
 

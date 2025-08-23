@@ -53,7 +53,7 @@ func main() {
 	case DevCliActionSeed:
 		RunSeeder(userIDStr)
 	case DevCliActionTypes:
-		RunTypesScriptify()
+		RunTypeScriptify()
 	}
 }
 
@@ -68,7 +68,7 @@ func RunSeeder(strID string) {
 	fmt.Println("Seed completed!")
 }
 
-func RunTypesScriptify() {
+func RunTypeScriptify() {
 	fmt.Print("Generate appErrors... ")
 	errorsMap := map[string]apperrors.AppError{}
 	for _, e := range apperrors.AllErrors {
