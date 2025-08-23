@@ -19,9 +19,13 @@ func InitTestDatabase() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
+
 	db.Exec("CREATE SCHEMA IF NOT EXISTS kratos")
 	db.Exec("CREATE SCHEMA IF NOT EXISTS keto")
+	db.Exec("CREATE SCHEMA IF NOT EXISTS testing")
+
+	db.Exec("SET search_path='testing'")
+
 	database.ApplyMigrations(db)
 	return db
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type Epic struct {
-	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 
 	UserID uuid.UUID
 	User   User

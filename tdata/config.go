@@ -7,7 +7,7 @@ import "gitlab.com/shaninalex/jajirra/internal/base"
 func newTestConfig() base.IConfig {
 	conf = &testConfig{
 		storage: map[string]any{
-			"app.dsn": "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable",
+			"app.dsn": "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable&search_path=test",
 		},
 	}
 	return conf
