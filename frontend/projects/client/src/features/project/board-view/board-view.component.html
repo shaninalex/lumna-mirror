@@ -14,7 +14,7 @@
                 class="flex flex-col gap-2 min-h-20"
                 (cdkDropListDropped)="drop($event)">
                 @for (item of todo; track item) {
-                    <ts-issue-card cdkDrag [id]="item"/>
+                    <ts-issue-card cdkDrag [task]="item"/>
                 }
             </div>
         </div>
@@ -31,7 +31,7 @@
                 class="flex flex-col gap-2 min-h-20"
                 (cdkDropListDropped)="drop($event)">
                 @for (item of progress; track item) {
-                    <ts-issue-card cdkDrag [id]="item"/>
+                    <ts-issue-card cdkDrag [task]="item"/>
                 }
             </div>
         </div>
@@ -49,7 +49,7 @@
                 (cdkDropListDropped)="drop($event)">
                 @for (item of done; track item) {
                     <div class="example-box" cdkDrag>
-                        <ts-issue-card [id]="item"/>
+                        <ts-issue-card [task]="item"/>
                     </div>
                 }
             </div>

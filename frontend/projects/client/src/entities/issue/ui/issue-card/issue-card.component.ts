@@ -2,13 +2,14 @@ import {Component, Input} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
+import {Issue} from '@client/entities/issue';
 
 @Component({
     selector: "ts-issue-card",
     template: `
         <mat-card appearance="outlined">
             <mat-card-header>
-                <h4 class="text-base">[#{{ id }}] Create basic layout structure</h4>
+                <h4 class="text-base">{{ task.title }}</h4>
             </mat-card-header>
             <!-- <mat-card-content></mat-card-content> -->
             <mat-card-footer class="p-4 flex items-center gap-2">
@@ -25,5 +26,5 @@ import {MatIconModule} from '@angular/material/icon';
     imports: [MatCardModule, MatChipsModule, MatIconModule]
 })
 export class IssueCardComponent {
-    @Input() id: string
+    @Input() task: Issue
 }

@@ -29,11 +29,11 @@ export class BoardViewComponent implements OnInit, OnDestroy {
     statuses: Status[]
     columns: StatusColumn[]
 
-    todo = ['1', '2', '3'];
-    progress = ['7', '6', '5', '4'];
-    done = ['8', '9', '10'];
+    todo: Issue[] = [];
+    progress: Issue[] = [];
+    done: Issue[] = [];
 
-    drop(event: CdkDragDrop<string[]>) {
+    drop(event: CdkDragDrop<Issue[]>) {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
