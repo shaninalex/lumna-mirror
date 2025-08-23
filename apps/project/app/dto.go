@@ -25,8 +25,8 @@ func NewProjectDto(p *database.Project) *ProjectDto {
 
 func NewProjectsDto(ps []*database.Project) []*ProjectDto {
 	dtos := make([]*ProjectDto, len(ps))
-	for _, p := range ps {
-		dtos = append(dtos, NewProjectDto(p))
+	for i, p := range ps {
+		dtos[i] = NewProjectDto(p)
 	}
 	return dtos
 }
@@ -67,8 +67,8 @@ func NewIssueDto(i *database.Issue) *IssueDto {
 
 func NewIssuesDto(ii []*database.Issue) []*IssueDto {
 	dtos := make([]*IssueDto, len(ii))
-	for _, i := range ii {
-		dtos = append(dtos, NewIssueDto(i))
+	for i, issue := range ii {
+		dtos[i] = NewIssueDto(issue)
 	}
 	return dtos
 }

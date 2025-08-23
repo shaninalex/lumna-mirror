@@ -24,6 +24,7 @@ var (
 	UserNotActive      = AppError{"USER002", "user_not_active", "User is not active", http.StatusUnauthorized}
 	DBConnectionFailed = AppError{"DB001", "db_connection_failed", "Database connection failed", http.StatusInternalServerError}
 	OrgNotFound        = AppError{"ORG001", "org_not_found", "Organization not found", http.StatusNotFound}
+	ProjectNotFound    = AppError{"PRJ001", "prj_not_found", "Project not found", http.StatusNotFound}
 )
 
 func WriteError(w http.ResponseWriter, err AppError) {
