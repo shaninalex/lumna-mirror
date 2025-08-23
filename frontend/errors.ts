@@ -1,0 +1,48 @@
+export interface AppError {
+	id: string
+	key: string
+	message: string
+}
+
+export const ERRORS: Record<string, AppError> = {
+	"db_connection_failed": {
+		"id": "DB001",
+		"key": "db_connection_failed",
+		"message": "Database connection failed"
+	},
+	"generic_error": {
+		"id": "APP000",
+		"key": "generic_error",
+		"message": "Something went wrong"
+	},
+	"invalid_credentials": {
+		"id": "AUTH001",
+		"key": "invalid_credentials",
+		"message": "Invalid username or password"
+	},
+	"org_not_found": {
+		"id": "ORG001",
+		"key": "org_not_found",
+		"message": "Organization not found"
+	},
+	"prj_not_found": {
+		"id": "PRJ001",
+		"key": "prj_not_found",
+		"message": "Project not found"
+	},
+	"token_expired": {
+		"id": "AUTH002",
+		"key": "token_expired",
+		"message": "Authentication token expired"
+	},
+	"user_not_active": {
+		"id": "USER002",
+		"key": "user_not_active",
+		"message": "User is not active"
+	},
+	"user_not_found": {
+		"id": "USER001",
+		"key": "user_not_found",
+		"message": "User not found"
+	}
+}

@@ -1,7 +1,6 @@
 package apperrors
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -18,6 +17,7 @@ func (e AppError) Error() string {
 }
 
 var (
+	Default            = AppError{"APP000", "generic_error", "Something went wrong", http.StatusBadRequest}
 	InvalidCredentials = AppError{"AUTH001", "invalid_credentials", "Invalid username or password", http.StatusUnauthorized}
 	TokenExpired       = AppError{"AUTH002", "token_expired", "Authentication token expired", http.StatusUnauthorized}
 	UserNotFound       = AppError{"USER001", "user_not_found", "User not found", http.StatusNotFound}
@@ -27,14 +27,13 @@ var (
 	ProjectNotFound    = AppError{"PRJ001", "prj_not_found", "Project not found", http.StatusNotFound}
 )
 
-func WriteError(w http.ResponseWriter, err AppError) {
-	// TODO: event send to prometheus
-	resp := map[string]any{
-		"status":   false,
-		"data":     err,
-		"messages": make([]string, 0),
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(err.HTTPStatus)
-	_ = json.NewEncoder(w).Encode(resp)
+var AllErrors = []AppError{
+	Default,
+	InvalidCredentials,
+	TokenExpired,
+	UserNotFound,
+	UserNotActive,
+	DBConnectionFailed,
+	OrgNotFound,
+	ProjectNotFound,
 }

@@ -21,32 +21,39 @@ func GetKratosRedirectUrl(c base.IConfig, path string) string {
 
 // ReturnJson return api response based on statuses
 func ReturnJson(ctx *fiber.Ctx, status int, data any, params ...any) error {
-	_data := domain.NewApiResponse(data)
+	resp := domain.NewApiResponse(data)
 	if status >= 400 {
-		_data.Status = false
+		resp.Status = false
 	}
+
+	// separate messages vs app errors
 	for _, p := range params {
-		if msg, ok := p.(string); ok {
-			_data.Messages = append(_data.Messages, msg)
-		}
-		if err, ok := p.(error); ok {
-			var appError apperrors.AppError
-			if errors.As(err, &appError) {
-				_data.Messages = append(
-					_data.Messages,
-					fmt.Sprintf("[%s] %s", appError.ID, appError.Message),
-				)
+		switch v := p.(type) {
+		case string:
+			// general user-facing message
+			resp.Messages = append(resp.Messages, v)
+		case apperrors.AppError:
+			// structured app error
+			resp.Errors = append(resp.Errors, v)
+		case error:
+			// try to extract AppError if wrapped
+			var appErr apperrors.AppError
+			if errors.As(v, &appErr) {
+				resp.Errors = append(resp.Errors, appErr)
+			} else {
+				// fallback: put error string in messages
+				resp.Messages = append(resp.Messages, v.Error())
 			}
 		}
 	}
 
 	ctx.Status(status)
-	return ctx.JSON(_data)
+	return ctx.JSON(resp)
 }
 
 // Success return api response based on statuses
 func Success(ctx *fiber.Ctx, data any, params ...any) error {
-	return ReturnJson(ctx, http.StatusOK, data, params)
+	return ReturnJson(ctx, http.StatusOK, data, params...)
 }
 
 // Error return api response based on statuses
