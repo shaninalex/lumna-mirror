@@ -43,7 +43,7 @@ type IssueDto struct {
 	Type        models.IssueType `json:"type"`
 	Title       string           `json:"title"`
 	Description string           `json:"description"`
-	Status      string           `json:"status"`
+	StatusID    uuid.UUID        `json:"status"`
 	CreatedAt   time.Time        `json:"created_at"`
 	UpdatedAt   time.Time        `json:"updated_at"`
 	DeletedAt   *time.Time       `json:"deleted_at,omitempty"`
@@ -60,7 +60,7 @@ func NewIssueDto(i *models.Issue) *IssueDto {
 		Type:        i.Type,
 		Title:       i.Title,
 		Description: i.Description,
-		Status:      i.Status,
+		StatusID:    i.IssueStatusID,
 		CreatedAt:   i.CreatedAt,
 		UpdatedAt:   i.UpdatedAt,
 		DeletedAt:   &i.DeletedAt.Time,
@@ -71,6 +71,34 @@ func NewIssuesDto(ii []*models.Issue) []*IssueDto {
 	dtos := make([]*IssueDto, len(ii))
 	for i, issue := range ii {
 		dtos[i] = NewIssueDto(issue)
+	}
+	return dtos
+}
+
+type IssueStatusDto struct {
+	Title       string                    `json:"title"`
+	Description string                    `json:"description"`
+	Complete    bool                      `json:"complete"`
+	Index       uint                      `json:"index"`
+	Config      *models.IssueStatusConfig `json:"config"`
+	Issues      []*IssueDto               `json:"issues"`
+}
+
+func NewIssueStatusDto(i *models.IssueStatus) *IssueStatusDto {
+	return &IssueStatusDto{
+		Title:       i.Title,
+		Description: i.Description,
+		Complete:    i.Complete,
+		Index:       i.Index,
+		Config:      i.GetConfig(),
+		Issues:      NewIssuesDto(i.Issues),
+	}
+}
+
+func NewIssuesStatusDto(statuses []*models.IssueStatus) map[int]*IssueStatusDto {
+	dtos := make(map[int]*IssueStatusDto)
+	for _, status := range statuses {
+		dtos[int(status.Index)] = NewIssueStatusDto(status)
 	}
 	return dtos
 }

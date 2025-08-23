@@ -33,12 +33,14 @@ type Issue struct {
 	ProjectID uuid.UUID
 	Project   *Project
 
+	IssueStatusID uuid.UUID
+	IssueStatus   *IssueStatus `gorm:"foreignKey:IssueStatusID;references:ID"`
+
 	Assignee string // TODO: issue_assignee separate relation table
 
 	Type        IssueType
 	Title       string
 	Description string
-	Status      string // in_progress, done, todo...
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`

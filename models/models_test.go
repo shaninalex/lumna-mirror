@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/models"
+	"gitlab.com/shaninalex/jajirra/models/builders"
 	"gitlab.com/shaninalex/jajirra/tdata"
 )
 
@@ -17,7 +18,7 @@ func Test_ModelsBuilders(t *testing.T) {
 	assert.NotNil(t, user)
 	assert.NotNil(t, project)
 	assert.Equal(t, org.UserID, user.ID)
-	issue := models.NewIssueBuilder().
+	issue := builders.NewIssueBuilder().
 		User(*user).
 		Organization(*org).
 		Project(*project).

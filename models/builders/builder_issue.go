@@ -1,18 +1,19 @@
-package models
+package builders
 
 import (
 	"time"
 
 	"github.com/google/uuid"
+	"gitlab.com/shaninalex/jajirra/models"
 )
 
 // IssueBuilder builder pattern code
 type IssueBuilder struct {
-	issue *Issue
+	issue *models.Issue
 }
 
 func NewIssueBuilder() *IssueBuilder {
-	issue := &Issue{}
+	issue := &models.Issue{}
 	b := &IssueBuilder{issue: issue}
 	return b
 }
@@ -27,7 +28,7 @@ func (b *IssueBuilder) UserID(userID uuid.UUID) *IssueBuilder {
 	return b
 }
 
-func (b *IssueBuilder) User(user User) *IssueBuilder {
+func (b *IssueBuilder) User(user models.User) *IssueBuilder {
 	b.issue.User = &user
 	return b
 }
@@ -37,7 +38,7 @@ func (b *IssueBuilder) EpicID(epicID uuid.UUID) *IssueBuilder {
 	return b
 }
 
-func (b *IssueBuilder) Epic(epic Epic) *IssueBuilder {
+func (b *IssueBuilder) Epic(epic models.Epic) *IssueBuilder {
 	b.issue.Epic = &epic
 	return b
 }
@@ -47,7 +48,7 @@ func (b *IssueBuilder) OrganizationID(organizationID uuid.UUID) *IssueBuilder {
 	return b
 }
 
-func (b *IssueBuilder) Organization(organization Organization) *IssueBuilder {
+func (b *IssueBuilder) Organization(organization models.Organization) *IssueBuilder {
 	b.issue.Organization = &organization
 	return b
 }
@@ -57,7 +58,7 @@ func (b *IssueBuilder) SprintID(sprintID uuid.UUID) *IssueBuilder {
 	return b
 }
 
-func (b *IssueBuilder) Sprint(sprint Sprint) *IssueBuilder {
+func (b *IssueBuilder) Sprint(sprint models.Sprint) *IssueBuilder {
 	b.issue.Sprint = &sprint
 	return b
 }
@@ -67,7 +68,7 @@ func (b *IssueBuilder) ProjectID(projectID uuid.UUID) *IssueBuilder {
 	return b
 }
 
-func (b *IssueBuilder) Project(project Project) *IssueBuilder {
+func (b *IssueBuilder) Project(project models.Project) *IssueBuilder {
 	b.issue.Project = &project
 	return b
 }
@@ -77,7 +78,7 @@ func (b *IssueBuilder) Assignee(assignee string) *IssueBuilder {
 	return b
 }
 
-func (b *IssueBuilder) Type(t IssueType) *IssueBuilder {
+func (b *IssueBuilder) Type(t models.IssueType) *IssueBuilder {
 	b.issue.Type = t
 	return b
 }
@@ -92,11 +93,6 @@ func (b *IssueBuilder) Description(description string) *IssueBuilder {
 	return b
 }
 
-func (b *IssueBuilder) Status(status string) *IssueBuilder {
-	b.issue.Status = status
-	return b
-}
-
 func (b *IssueBuilder) CreatedAt(createdAt time.Time) *IssueBuilder {
 	b.issue.CreatedAt = createdAt
 	return b
@@ -107,6 +103,6 @@ func (b *IssueBuilder) UpdatedAt(updatedAt time.Time) *IssueBuilder {
 	return b
 }
 
-func (b *IssueBuilder) Build() *Issue {
+func (b *IssueBuilder) Build() *models.Issue {
 	return b.issue
 }

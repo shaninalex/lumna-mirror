@@ -1,19 +1,20 @@
-package models
+package builders
 
 import (
 	"time"
 
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
+	"gitlab.com/shaninalex/jajirra/models"
 )
 
 // UserBuilder builder pattern code
 type UserBuilder struct {
-	user *User
+	user *models.User
 }
 
 func NewUserBuilder() *UserBuilder {
-	user := &User{}
+	user := &models.User{}
 	b := &UserBuilder{user: user}
 	return b
 }
@@ -48,6 +49,6 @@ func (b *UserBuilder) UpdatedAt(updatedAt time.Time) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) Build() *User {
+func (b *UserBuilder) Build() *models.User {
 	return b.user
 }

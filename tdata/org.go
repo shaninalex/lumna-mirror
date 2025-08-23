@@ -6,10 +6,11 @@ import (
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/models"
+	"gitlab.com/shaninalex/jajirra/models/builders"
 )
 
 func CreateOrganisation(ctx context.Context, user *models.User) *models.Organization {
-	organization := models.NewOrganizationBuilder().
+	organization := builders.NewOrganizationBuilder().
 		User(*user).UserID(user.ID).
 		Title(uuid.NewString()).
 		Build()
@@ -21,7 +22,7 @@ func CreateOrganisation(ctx context.Context, user *models.User) *models.Organiza
 }
 
 func CreateUser(ctx context.Context) *models.User {
-	user := models.NewUserBuilder().ID(uuid.New()).Code(uuid.NewString()).Build()
+	user := builders.NewUserBuilder().ID(uuid.New()).Code(uuid.NewString()).Build()
 	result := database.GetDB(ctx).Create(&user)
 	if result.Error != nil {
 		panic(result.Error)
@@ -30,7 +31,7 @@ func CreateUser(ctx context.Context) *models.User {
 }
 
 func CreateProject(ctx context.Context, org *models.Organization, user *models.User) *models.Project {
-	project := models.NewProjectBuilder().
+	project := builders.NewProjectBuilder().
 		User(*user).UserID(user.ID).
 		Organization(*org).OrganizationID(org.ID).
 		Title(uuid.NewString()).

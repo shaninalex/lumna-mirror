@@ -1,0 +1,58 @@
+@if (tasks | async; as tasks) {
+    <div class="flex flex-row no-wrap gap-4">
+        <div class="bg-slate-200 w-sm rounded p-4">
+            <div class="mb-2">
+                <div class="font-bold text-slate-500">TODO</div>
+            </div>
+            <div
+                cdkDropList
+                #todoList="cdkDropList"
+                [cdkDropListData]="todo"
+                [cdkDropListConnectedTo]="[progressList, doneList]"
+                class="flex flex-col gap-2 min-h-20"
+                (cdkDropListDropped)="drop($event)">
+                @for (item of todo; track item) {
+                    <ts-issue-card cdkDrag [id]="item"/>
+                }
+            </div>
+        </div>
+
+        <div class="bg-slate-200 w-sm rounded p-4">
+            <div class="mb-2">
+                <div class="font-bold text-slate-500">IN PROGRESS</div>
+            </div>
+            <div
+                cdkDropList
+                #progressList="cdkDropList"
+                [cdkDropListData]="progress"
+                [cdkDropListConnectedTo]="[todoList, doneList]"
+                class="flex flex-col gap-2 min-h-20"
+                (cdkDropListDropped)="drop($event)">
+                @for (item of progress; track item) {
+                    <ts-issue-card cdkDrag [id]="item"/>
+                }
+            </div>
+        </div>
+
+        <div class="bg-slate-200 w-sm rounded p-4">
+            <div class="mb-2">
+                <div class="font-bold text-slate-500">DONE</div>
+            </div>
+            <div
+                cdkDropList
+                #doneList="cdkDropList"
+                [cdkDropListData]="done"
+                [cdkDropListConnectedTo]="[todoList, progressList]"
+                class="flex flex-col gap-2 min-h-20"
+                (cdkDropListDropped)="drop($event)">
+                @for (item of done; track item) {
+                    <div class="example-box" cdkDrag>
+                        <ts-issue-card [id]="item"/>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+} @else {
+    <mat-spinner diameter="50" />
+}

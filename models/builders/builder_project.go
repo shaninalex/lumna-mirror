@@ -1,18 +1,19 @@
-package models
+package builders
 
 import (
 	"time"
 
 	"github.com/google/uuid"
+	"gitlab.com/shaninalex/jajirra/models"
 )
 
 // ProjectBuilder builder pattern code
 type ProjectBuilder struct {
-	project *Project
+	project *models.Project
 }
 
 func NewProjectBuilder() *ProjectBuilder {
-	project := &Project{}
+	project := &models.Project{}
 	b := &ProjectBuilder{project: project}
 	return b
 }
@@ -27,7 +28,7 @@ func (b *ProjectBuilder) UserID(userID uuid.UUID) *ProjectBuilder {
 	return b
 }
 
-func (b *ProjectBuilder) User(user User) *ProjectBuilder {
+func (b *ProjectBuilder) User(user models.User) *ProjectBuilder {
 	b.project.User = &user
 	return b
 }
@@ -37,7 +38,7 @@ func (b *ProjectBuilder) OrganizationID(organizationID uuid.UUID) *ProjectBuilde
 	return b
 }
 
-func (b *ProjectBuilder) Organization(organization Organization) *ProjectBuilder {
+func (b *ProjectBuilder) Organization(organization models.Organization) *ProjectBuilder {
 	b.project.Organization = organization
 	return b
 }
@@ -57,6 +58,6 @@ func (b *ProjectBuilder) UpdatedAt(updatedAt time.Time) *ProjectBuilder {
 	return b
 }
 
-func (b *ProjectBuilder) Build() *Project {
+func (b *ProjectBuilder) Build() *models.Project {
 	return b.project
 }

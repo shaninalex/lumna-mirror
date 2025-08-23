@@ -22,7 +22,7 @@ func main() {
 	config := base.NewConfig(configPath)
 	db := database.InitDB(config.String("app.dsn"))
 	router := web.AuthRouter(config, db, "org")
-	projectApp.NewTaskController(router)
+	projectApp.NewProjectController(router)
 	if err := router.Listen(fmt.Sprintf(":%s", config.String("project.port"))); err != nil {
 		panic(err)
 	}

@@ -10,25 +10,26 @@ import (
 	"gitlab.com/shaninalex/jajirra/internal/web"
 )
 
-func NewTaskController(router *fiber.App) {
-	controller := TaskController{
+func NewProjectController(router *fiber.App) {
+	controller := ProjectController{
 		router:     router,
-		projectApi: pm.NewProjects(),
+		projectApi: pm.NewProjectManagement(),
 	}
 	controller.setRoutes()
 }
 
-type TaskController struct {
+type ProjectController struct {
 	router     *fiber.App
-	projectApi *pm.Projects
+	projectApi *pm.ProjectManagement
 }
 
-func (s *TaskController) setRoutes() {
+func (s *ProjectController) setRoutes() {
 	s.router.Get("/api/project/list", s.HandleProjectsList)
+	s.router.Get("/api/project/:projectKey/board", s.HandleProjectBoard)
 	s.router.Get("/api/project/tasks", s.HandleTasksList)
 }
 
-func (s *TaskController) HandleProjectsList(ctx *fiber.Ctx) error {
+func (s *ProjectController) HandleProjectsList(ctx *fiber.Ctx) error {
 	// TODO: check user permission ( user should not see project he do not allowed to see )
 	projects, err := s.projectApi.List(ctx.Context(), web.GetOrganizationId(ctx))
 	if err != nil {
@@ -40,15 +41,30 @@ func (s *TaskController) HandleProjectsList(ctx *fiber.Ctx) error {
 	return web.Success(ctx, NewProjectsDto(projects))
 }
 
-func (s *TaskController) HandleTasksList(ctx *fiber.Ctx) error {
+func (s *ProjectController) HandleTasksList(ctx *fiber.Ctx) error {
 	// TODO: check user permission. On error: 403 ( user should not get tasks of the project he do not allowed to get )
-	q := new(TaskFilter)
-	if err := ctx.QueryParser(q); err != nil {
-		return web.Error(ctx, http.StatusBadRequest, errors.New("provide filter conditions"))
+	q, err := s.getFilterParams(ctx)
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, errors.New("provide proper filter conditions"))
 	}
-	issues, err := s.projectApi.ProjectTasks(ctx.Context(), web.GetOrganizationId(ctx), q.Project)
+	issues, err := s.projectApi.Issues(ctx.Context(), web.GetOrganizationId(ctx), q.Project)
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	return web.Success(ctx, NewIssuesDto(issues))
+}
+
+func (s *ProjectController) HandleProjectBoard(ctx *fiber.Ctx) error {
+	projectKey := ctx.Params("projectKey")
+	statuses, err := s.projectApi.Statuses(ctx.Context(), web.GetOrganizationId(ctx), projectKey)
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	return web.Success(ctx, NewIssuesStatusDto(statuses))
+}
+
+func (s *ProjectController) getFilterParams(ctx *fiber.Ctx) (*TaskFilter, error) {
+	q := new(TaskFilter)
+	err := ctx.QueryParser(q)
+	return q, err
 }

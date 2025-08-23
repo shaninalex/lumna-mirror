@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/jajirra/models"
+	"gitlab.com/shaninalex/jajirra/models/builders"
 	"gorm.io/gorm"
 )
 
@@ -42,6 +43,24 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		UpdatedAt:      now,
 	}
 	if err := db.Create(&project).Error; err != nil {
+		return err
+	}
+
+	// Create project statuses ( board columns )
+	statusTodo := builders.NewIssueStatusBuilder().
+		Project(&project).ID(uuid.New()).ProjectID(project.GetID()).
+		Title("Todo").Index(0).Build()
+	statusInProgress := builders.NewIssueStatusBuilder().
+		Project(&project).ID(uuid.New()).ProjectID(project.GetID()).
+		Title("In Progress").Index(1).Build()
+	statusTest := builders.NewIssueStatusBuilder().
+		Project(&project).ID(uuid.New()).ProjectID(project.GetID()).
+		Title("Testing").Index(2).Build()
+	statusDone := builders.NewIssueStatusBuilder().
+		Project(&project).ID(uuid.New()).ProjectID(project.GetID()).
+		Title("Done").Index(3).Complete(true).Build()
+	statuses := []*models.IssueStatus{statusTodo, statusInProgress, statusTest, statusDone}
+	if err := db.Create(&statuses).Error; err != nil {
 		return err
 	}
 
@@ -117,7 +136,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Type:           "feature",
 			Title:          "Use only Material SDK",
 			Description:    "Replace default material components with SDK and manual created ui elements",
-			Status:         "todo",
+			IssueStatusID:  statusTodo.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -132,7 +151,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Type:           "feature",
 			Title:          "Implement authentication (login/register)",
 			Description:    "Use Ory Kratos for identity management",
-			Status:         "done",
+			IssueStatusID:  statusDone.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -147,7 +166,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Type:           "feature",
 			Title:          "Add user profile & settings page",
 			Description:    "Allow users to update their information",
-			Status:         "in_progress",
+			IssueStatusID:  statusTodo.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -162,7 +181,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Type:           "feature",
 			Title:          "Create projects & organizations",
 			Description:    "Implement CRUD for projects/organizations",
-			Status:         "todo",
+			IssueStatusID:  statusTest.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -177,7 +196,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Type:           "feature",
 			Title:          "Add issues & epics",
 			Description:    "Core task tracking functionality",
-			Status:         "todo",
+			IssueStatusID:  statusInProgress.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -192,7 +211,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Type:           "improvement",
 			Title:          "Polish dashboard UI",
 			Description:    "Make Taskiro visually appealing with Tailwind & animations",
-			Status:         "todo",
+			IssueStatusID:  statusTodo.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
