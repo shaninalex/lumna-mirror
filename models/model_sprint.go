@@ -1,4 +1,4 @@
-package database
+package models
 
 import (
 	"time"
@@ -26,7 +26,7 @@ type Sprint struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-// Implement IObject interface
-
-func (s *Sprint) GetID() uuid.UUID   { return s.ID }
-func (s *Sprint) SetID(id uuid.UUID) { s.ID = id }
+func (s *Sprint) GetID() uuid.UUID      { return s.ID }
+func (s *Sprint) SetID(id uuid.UUID)    { s.ID = id }
+func (s *Sprint) GetOwner() IUser       { return s.User }
+func (s *Sprint) GetOwnerID() uuid.UUID { return s.UserID }

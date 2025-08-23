@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"gitlab.com/shaninalex/jajirra/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -52,12 +53,12 @@ func InitDB(dsn string) *gorm.DB {
 // ApplyMigrations applying migrations
 func ApplyMigrations(db *gorm.DB) {
 	err := db.AutoMigrate(
-		&User{},
-		&Issue{},
-		&Epic{},
-		&Sprint{},
-		&Organization{},
-		&Project{},
+		&models.User{},
+		&models.Issue{},
+		&models.Epic{},
+		&models.Sprint{},
+		&models.Organization{},
+		&models.Project{},
 	)
 	if err != nil {
 		log.Printf("[DB]: Unable to apply migrations: %v", err)

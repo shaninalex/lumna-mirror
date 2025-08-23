@@ -1,4 +1,4 @@
-package database
+package models
 
 import (
 	"time"
@@ -22,3 +22,8 @@ type Epic struct {
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
+
+func (s *Epic) GetID() uuid.UUID      { return s.ID }
+func (s *Epic) SetID(id uuid.UUID)    { s.ID = id }
+func (s *Epic) GetOwner() IUser       { return s.User }
+func (s *Epic) GetOwnerID() uuid.UUID { return s.UserID }

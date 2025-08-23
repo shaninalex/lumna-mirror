@@ -5,10 +5,11 @@ import (
 
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/jajirra/models"
 )
 
-func CreateOrganisation(ctx context.Context, user *database.User) *database.Organization {
-	organization := database.NewOrganizationBuilder().
+func CreateOrganisation(ctx context.Context, user *models.User) *models.Organization {
+	organization := models.NewOrganizationBuilder().
 		User(*user).UserID(user.ID).
 		Title(uuid.NewString()).
 		Build()
@@ -19,8 +20,8 @@ func CreateOrganisation(ctx context.Context, user *database.User) *database.Orga
 	return organization
 }
 
-func CreateUser(ctx context.Context) *database.User {
-	user := database.NewUserBuilder().ID(uuid.New()).Code(uuid.NewString()).Build()
+func CreateUser(ctx context.Context) *models.User {
+	user := models.NewUserBuilder().ID(uuid.New()).Code(uuid.NewString()).Build()
 	result := database.GetDB(ctx).Create(&user)
 	if result.Error != nil {
 		panic(result.Error)
@@ -28,8 +29,8 @@ func CreateUser(ctx context.Context) *database.User {
 	return user
 }
 
-func CreateProject(ctx context.Context, org *database.Organization, user *database.User) *database.Project {
-	project := database.NewProjectBuilder().
+func CreateProject(ctx context.Context, org *models.Organization, user *models.User) *models.Project {
+	project := models.NewProjectBuilder().
 		User(*user).UserID(user.ID).
 		Organization(*org).OrganizationID(org.ID).
 		Title(uuid.NewString()).
@@ -45,7 +46,7 @@ func CreateProject(ctx context.Context, org *database.Organization, user *databa
 // - every user should be belonging to Organization
 // - every project should be belonging to Organization
 // - every organization should be created by some user
-func CreatePack(ctx context.Context) (*database.Organization, *database.User, *database.Project) {
+func CreatePack(ctx context.Context) (*models.Organization, *models.User, *models.Project) {
 	user := CreateUser(ctx)
 	org := CreateOrganisation(ctx, user)
 	project := CreateProject(ctx, org, user)

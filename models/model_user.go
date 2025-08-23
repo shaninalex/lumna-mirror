@@ -1,6 +1,7 @@
-package database
+package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -28,6 +29,16 @@ type User struct {
 	//Permissions any          `gorm:"-"` // Keto permissions data
 }
 
+func (s *User) GetID() uuid.UUID       { return s.ID }
+func (s *User) SetID(id uuid.UUID)     { s.ID = id }
+func (s *User) GetTraits() interface{} { return s.GetIdentity().GetTraits() }
+func (s *User) GetIdentity() *ory.Identity {
+	if s.Identity == nil {
+		panic(fmt.Errorf("user without identity"))
+	}
+	return s.Identity
+}
+
 // This method requires kratos client dependency which is quite bad for UserRepository
 // Instead we need to create UserService which will provide userRepository methods
 // and GetUser with kratos service method
@@ -46,48 +57,3 @@ type User struct {
 //	user.Identity = identity
 //	return &user, nil
 //}
-
-// User builder pattern code
-type UserBuilder struct {
-	user *User
-}
-
-func NewUserBuilder() *UserBuilder {
-	user := &User{}
-	b := &UserBuilder{user: user}
-	return b
-}
-
-func (b *UserBuilder) ID(iD uuid.UUID) *UserBuilder {
-	b.user.ID = iD
-	return b
-}
-
-func (b *UserBuilder) Settings(settings string) *UserBuilder {
-	b.user.Settings = settings
-	return b
-}
-
-func (b *UserBuilder) Code(code string) *UserBuilder {
-	b.user.Code = code
-	return b
-}
-
-func (b *UserBuilder) Identity(identity *ory.Identity) *UserBuilder {
-	b.user.Identity = identity
-	return b
-}
-
-func (b *UserBuilder) CreatedAt(createdAt time.Time) *UserBuilder {
-	b.user.CreatedAt = createdAt
-	return b
-}
-
-func (b *UserBuilder) UpdatedAt(updatedAt time.Time) *UserBuilder {
-	b.user.UpdatedAt = updatedAt
-	return b
-}
-
-func (b *UserBuilder) Build() *User {
-	return b.user
-}

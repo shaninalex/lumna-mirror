@@ -1,4 +1,4 @@
-package database_test
+package models_test
 
 import (
 	"testing"
@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/jajirra/models"
 	"gitlab.com/shaninalex/jajirra/tdata"
 )
 
@@ -16,14 +17,14 @@ func Test_ModelsBuilders(t *testing.T) {
 	assert.NotNil(t, user)
 	assert.NotNil(t, project)
 	assert.Equal(t, org.UserID, user.ID)
-	issue := database.NewIssueBuilder().
+	issue := models.NewIssueBuilder().
 		User(*user).
 		Organization(*org).
 		Project(*project).
 		Title(uuid.NewString()).
 		Description(uuid.NewString()).
 		Status("todo").
-		Type(database.IssueTypeTask).
+		Type(models.IssueTypeTask).
 		Build()
 	result := database.GetDB(ctx).Create(&issue)
 	assert.NoError(t, result.Error)

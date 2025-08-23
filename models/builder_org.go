@@ -1,28 +1,10 @@
-package database
+package models
 
 import (
 	"time"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
-
-type Organization struct {
-	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-
-	// Creator of an Organization
-	UserID uuid.UUID
-	User   *User
-
-	Title       string
-	Description string
-
-	Users []*User `gorm:"foreignKey:OrganizationID;references:ID"`
-
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
-}
 
 // OrganizationBuilder builder pattern code
 type OrganizationBuilder struct {

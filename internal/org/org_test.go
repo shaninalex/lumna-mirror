@@ -16,10 +16,10 @@ func Test_GetOrganizationByUserID(t *testing.T) {
 	_org := tdata.CreateOrganisation(ctx, user)
 
 	api := org.NewOrganizationApi()
-	organization, err := api.Get(ctx, user.GetID())
+	organization, err := api.Get(ctx, user.ID)
 
 	assert.NoError(t, err)
-	assert.Equal(t, _org.GetID(), organization.GetID())
+	assert.Equal(t, _org.ID, organization.ID)
 }
 
 func Test_GetOrganizationNotFound(t *testing.T) {
@@ -28,7 +28,7 @@ func Test_GetOrganizationNotFound(t *testing.T) {
 	user := tdata.CreateUser(ctx)
 
 	api := org.NewOrganizationApi()
-	organization, err := api.Get(ctx, user.GetID())
+	organization, err := api.Get(ctx, user.ID)
 
 	assert.Error(t, err)
 	assert.ErrorIs(t, err, apperrors.OrgNotFound)

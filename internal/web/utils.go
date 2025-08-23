@@ -8,10 +8,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
-	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/internal/apperrors"
 	"gitlab.com/shaninalex/jajirra/internal/base"
 	"gitlab.com/shaninalex/jajirra/internal/domain"
+	"gitlab.com/shaninalex/jajirra/models"
 )
 
 // GetKratosRedirectUrl return redirect with kratos base url from config
@@ -75,8 +75,8 @@ func GetOrganizationId(ctx *fiber.Ctx) uuid.UUID {
 	return uuid.Nil
 }
 
-func GetUser(ctx *fiber.Ctx) *database.User {
-	user, _ := ctx.Locals(base.ContextUser).(*database.User)
+func GetUser(ctx *fiber.Ctx) *models.User {
+	user, _ := ctx.Locals(base.ContextUser).(*models.User)
 	return user
 }
 

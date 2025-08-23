@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/jajirra/models"
 )
 
 type ProjectDto struct {
@@ -15,7 +15,7 @@ type ProjectDto struct {
 	UpdatedAt  time.Time `json:"updated_at"`
 }
 
-func NewProjectDto(p *database.Project) *ProjectDto {
+func NewProjectDto(p *models.Project) *ProjectDto {
 	return &ProjectDto{
 		ID:         p.ID,
 		Title:      p.Title,
@@ -25,7 +25,7 @@ func NewProjectDto(p *database.Project) *ProjectDto {
 	}
 }
 
-func NewProjectsDto(ps []*database.Project) []*ProjectDto {
+func NewProjectsDto(ps []*models.Project) []*ProjectDto {
 	dtos := make([]*ProjectDto, len(ps))
 	for i, p := range ps {
 		dtos[i] = NewProjectDto(p)
@@ -34,22 +34,22 @@ func NewProjectsDto(ps []*database.Project) []*ProjectDto {
 }
 
 type IssueDto struct {
-	ID          uuid.UUID          `json:"id"`
-	UserID      uuid.UUID          `json:"User_id"`
-	EpicID      *uuid.UUID         `json:"Epic_id"`
-	SprintID    *uuid.UUID         `json:"Sprint_id"`
-	ProjectID   uuid.UUID          `json:"Project_id"`
-	Assignee    string             `json:"assignee"`
-	Type        database.IssueType `json:"type"`
-	Title       string             `json:"title"`
-	Description string             `json:"description"`
-	Status      string             `json:"status"`
-	CreatedAt   time.Time          `json:"created_at"`
-	UpdatedAt   time.Time          `json:"updated_at"`
-	DeletedAt   time.Time          `json:"deleted_at"`
+	ID          uuid.UUID        `json:"id"`
+	UserID      uuid.UUID        `json:"User_id"`
+	EpicID      *uuid.UUID       `json:"Epic_id"`
+	SprintID    *uuid.UUID       `json:"Sprint_id"`
+	ProjectID   uuid.UUID        `json:"Project_id"`
+	Assignee    string           `json:"assignee"`
+	Type        models.IssueType `json:"type"`
+	Title       string           `json:"title"`
+	Description string           `json:"description"`
+	Status      string           `json:"status"`
+	CreatedAt   time.Time        `json:"created_at"`
+	UpdatedAt   time.Time        `json:"updated_at"`
+	DeletedAt   time.Time        `json:"deleted_at"`
 }
 
-func NewIssueDto(i *database.Issue) *IssueDto {
+func NewIssueDto(i *models.Issue) *IssueDto {
 	return &IssueDto{
 		ID:          i.ID,
 		UserID:      i.UserID,
@@ -67,7 +67,7 @@ func NewIssueDto(i *database.Issue) *IssueDto {
 	}
 }
 
-func NewIssuesDto(ii []*database.Issue) []*IssueDto {
+func NewIssuesDto(ii []*models.Issue) []*IssueDto {
 	dtos := make([]*IssueDto, len(ii))
 	for i, issue := range ii {
 		dtos[i] = NewIssueDto(issue)

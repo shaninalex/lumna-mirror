@@ -1,34 +1,10 @@
-package database
+package models
 
 import (
 	"time"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
-
-type Project struct {
-	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-
-	UserID uuid.UUID // Owner
-	User   User
-
-	OrganizationID uuid.UUID `gorm:"uniqueIndex:project_key_uniq"`
-	Organization   Organization
-	Issues         []Issue `gorm:"foreignKey:ProjectID"`
-
-	Title      string
-	ProjectKey string `gorm:"uniqueIndex:project_key_uniq"`
-
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
-}
-
-// Implement IObject interface
-
-func (s *Project) GetID() uuid.UUID   { return s.ID }
-func (s *Project) SetID(id uuid.UUID) { s.ID = id }
 
 // ProjectBuilder builder pattern code
 type ProjectBuilder struct {
@@ -52,7 +28,7 @@ func (b *ProjectBuilder) UserID(userID uuid.UUID) *ProjectBuilder {
 }
 
 func (b *ProjectBuilder) User(user User) *ProjectBuilder {
-	b.project.User = user
+	b.project.User = &user
 	return b
 }
 

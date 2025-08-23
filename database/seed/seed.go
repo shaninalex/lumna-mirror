@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/jajirra/models"
 	"gorm.io/gorm"
 )
 
@@ -12,7 +12,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 	now := time.Now()
 
 	// Create organization
-	org := database.Organization{
+	org := models.Organization{
 		ID:          uuid.New(),
 		UserID:      userID,
 		Title:       "Self Org",
@@ -25,14 +25,14 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 	}
 
 	// Attach user to this org
-	if err := db.Model(&database.User{}).
+	if err := db.Model(&models.User{}).
 		Where("id = ?", userID).
 		Update("organization_id", org.ID).Error; err != nil {
 		return err
 	}
 
 	// Create project "Taskiro"
-	project := database.Project{
+	project := models.Project{
 		ID:             uuid.New(),
 		UserID:         userID,
 		OrganizationID: org.ID,
@@ -46,7 +46,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 	}
 
 	// Create sprints
-	sprint1 := database.Sprint{
+	sprint1 := models.Sprint{
 		ID:             uuid.New(),
 		UserID:         userID,
 		OrganizationID: org.ID,
@@ -57,7 +57,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}
-	sprint2 := database.Sprint{
+	sprint2 := models.Sprint{
 		ID:             uuid.New(),
 		UserID:         userID,
 		OrganizationID: org.ID,
@@ -68,12 +68,12 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}
-	if err := db.Create(&[]database.Sprint{sprint1, sprint2}).Error; err != nil {
+	if err := db.Create(&[]models.Sprint{sprint1, sprint2}).Error; err != nil {
 		return err
 	}
 
 	// Create epics
-	epicUserMgmt := database.Epic{
+	epicUserMgmt := models.Epic{
 		ID:          uuid.New(),
 		UserID:      userID,
 		ProjectID:   project.ID,
@@ -82,7 +82,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}
-	epicCorePM := database.Epic{
+	epicCorePM := models.Epic{
 		ID:          uuid.New(),
 		UserID:      userID,
 		ProjectID:   project.ID,
@@ -91,7 +91,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}
-	epicUI := database.Epic{
+	epicUI := models.Epic{
 		ID:          uuid.New(),
 		UserID:      userID,
 		ProjectID:   project.ID,
@@ -100,12 +100,12 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}
-	if err := db.Create(&[]database.Epic{epicUserMgmt, epicCorePM, epicUI}).Error; err != nil {
+	if err := db.Create(&[]models.Epic{epicUserMgmt, epicCorePM, epicUI}).Error; err != nil {
 		return err
 	}
 
 	// Create issues
-	issues := []database.Issue{
+	issues := []models.Issue{
 		{
 			ID:             uuid.New(),
 			UserID:         userID,

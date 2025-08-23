@@ -14,7 +14,7 @@ func DefaultRouter(db *gorm.DB, name string) *fiber.App {
 	})
 	router.Use(recover.New())
 	router.Use(logger.New())
-	router.Use(database.NewDBMiddleware(db))
+	router.Use(database.NewDbMiddleware(db))
 	router.Use(NewCommonMiddleware())
 	return router
 }

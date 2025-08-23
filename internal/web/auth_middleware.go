@@ -10,6 +10,7 @@ import (
 	"gitlab.com/shaninalex/jajirra/internal/apperrors"
 	"gitlab.com/shaninalex/jajirra/internal/base"
 	"gitlab.com/shaninalex/jajirra/internal/kratos"
+	"gitlab.com/shaninalex/jajirra/models"
 )
 
 type AuthMiddleware struct {
@@ -41,7 +42,7 @@ func (s *AuthMiddleware) Wrap() fiber.Handler {
 		}
 		ctx.Locals(base.ContextSession, session)
 
-		user := &database.User{ID: userID}
+		user := &models.User{ID: userID}
 		db := database.GetDB(ctx.Context())
 		tx := db.First(&user)
 		if tx.Error != nil {
