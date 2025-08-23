@@ -24,6 +24,13 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		return err
 	}
 
+	// Attach user to this org
+	if err := db.Model(&database.User{}).
+		Where("id = ?", userID).
+		Update("organization_id", org.ID).Error; err != nil {
+		return err
+	}
+
 	// Create project "Taskiro"
 	project := database.Project{
 		ID:             uuid.New(),

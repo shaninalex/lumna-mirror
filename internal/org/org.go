@@ -2,10 +2,12 @@ package org
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/internal/apperrors"
+	"gorm.io/gorm"
 )
 
 type OrganizationApi struct {
@@ -16,16 +18,17 @@ func NewOrganizationApi() *OrganizationApi {
 }
 
 func (s *OrganizationApi) Get(ctx context.Context, userID uuid.UUID) (*database.Organization, error) {
-	organization := &database.Organization{
-		UserID: userID,
-	}
-	db := database.GetDB(ctx)
-	result := db.First(&organization)
-	if result.Error != nil {
-		if result.Error.Error() == "record not found" {
+	var user database.User
+	if err := database.GetDB(ctx).Preload("Organization").First(&user, "id = ?", userID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, apperrors.OrgNotFound
 		}
-		return nil, result.Error
+		return nil, err
 	}
-	return organization, nil
+
+	if user.Organization == nil {
+		return nil, apperrors.OrgNotFound
+	}
+
+	return user.Organization, nil
 }

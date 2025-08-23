@@ -5,12 +5,11 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/jajirra/internal/apperrors"
 	"gitlab.com/shaninalex/jajirra/internal/base"
 	"gitlab.com/shaninalex/jajirra/internal/kratos"
-	"gorm.io/gorm"
 )
 
 type AuthMiddleware struct {
@@ -32,6 +31,7 @@ func (s *AuthMiddleware) Wrap() fiber.Handler {
 		if id == "" {
 			return Error(ctx, http.StatusUnauthorized, fmt.Errorf("user is empty"))
 		}
+
 		userID, err := uuid.Parse(id)
 		if err != nil {
 			return Error(ctx, http.StatusUnauthorized, fmt.Errorf("user id is invalid"))
@@ -39,35 +39,31 @@ func (s *AuthMiddleware) Wrap() fiber.Handler {
 
 		session, _, err := s.kratosService.GetSession(ctx.Context(), ctx.Get("cookie"))
 		if err != nil {
-			return Error(ctx, http.StatusUnauthorized, fmt.Errorf("session not set"))
+			return Error(ctx, http.StatusUnauthorized, apperrors.SessionNotFound)
 		}
 		ctx.Locals(base.ContextSession, session)
 
-		user, err := s.userRepository.GetByID(ctx.Context(), userID)
-		if err != nil {
-			return Error(ctx, http.StatusUnauthorized, fmt.Errorf("user not found"))
+		user := &database.User{ID: userID}
+		db := database.GetDB(ctx.Context())
+		tx := db.First(&user)
+		if tx.Error != nil {
+			return Error(ctx, http.StatusUnauthorized, apperrors.UserNotFound)
 		}
 
 		identity, _, err := s.kratosService.GetIdentity(ctx.Context(), id)
 		if err != nil {
-			return Error(ctx, http.StatusUnauthorized, fmt.Errorf("identity not found"))
+			return Error(ctx, http.StatusUnauthorized, apperrors.UserIdentityNotFound)
 		}
 
 		user.Identity = identity
 
 		ctx.Locals(base.ContextUser, user)
 		ctx.Locals(base.ContextUserID, userID)
-		db := database.GetDB(ctx.Context())
 
-		orgIDResult, err := gorm.G[string](db).Raw("SELECT id FROM organizations WHERE user_id = ?", userID).First(ctx.Context())
-		if err != nil {
-			log.Error("user does not attach to any organizations")
+		if user.OrganizationID == nil {
+			return Error(ctx, http.StatusForbidden, apperrors.UserOrgNotAttached)
 		}
-		orgID, err := uuid.Parse(orgIDResult)
-		if err != nil {
-			return Error(ctx, http.StatusUnauthorized, fmt.Errorf("org id \"%s\" is in invalid format. Err: %v", orgIDResult, err))
-		}
-		ctx.Locals(base.ContextOrgID, orgID)
+		ctx.Locals(base.ContextOrgID, *user.OrganizationID)
 
 		return ctx.Next()
 	}

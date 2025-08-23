@@ -9,9 +9,13 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
-	Settings  string
-	Identity  *ory.Identity `gorm:"-"` // ignored by GORM
+	ID       uuid.UUID `gorm:"type:uuid;primaryKey"`
+	Settings string
+	Identity *ory.Identity `gorm:"-"` // ignored by GORM
+
+	OrganizationID *uuid.UUID
+	Organization   *Organization `gorm:"foreignKey:OrganizationID;references:ID"`
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
