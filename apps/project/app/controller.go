@@ -35,7 +35,7 @@ func (s *TaskController) HandleProjectsList(ctx *fiber.Ctx) error {
 		if errors.Is(err, apperrors.ProjectNotFound) {
 			return web.Success(ctx, NewProjectsDto(nil))
 		}
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err)
+		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	return web.Success(ctx, NewProjectsDto(projects))
 }
@@ -44,11 +44,11 @@ func (s *TaskController) HandleTasksList(ctx *fiber.Ctx) error {
 	// TODO: check user permission. On error: 403 ( user should not get tasks of the project he do not allowed to get )
 	q := new(TaskFilter)
 	if err := ctx.QueryParser(q); err != nil {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, errors.New("provide filter conditions"))
+		return web.Error(ctx, http.StatusBadRequest, errors.New("provide filter conditions"))
 	}
 	issues, err := s.projectApi.ProjectTasks(ctx.Context(), web.GetOrganizationId(ctx), q.Project)
 	if err != nil {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err)
+		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	return web.Success(ctx, NewIssuesDto(issues))
 }
