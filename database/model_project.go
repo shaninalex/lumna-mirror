@@ -30,16 +30,7 @@ type Project struct {
 func (s *Project) GetID() uuid.UUID   { return s.ID }
 func (s *Project) SetID(id uuid.UUID) { s.ID = id }
 
-type ProjectRepository struct {
-	Repository[*Project]
-}
-
-func NewProjectRepository() *ProjectRepository {
-	s := &ProjectRepository{}
-	return s
-}
-
-// Project builder pattern code
+// ProjectBuilder builder pattern code
 type ProjectBuilder struct {
 	project *Project
 }

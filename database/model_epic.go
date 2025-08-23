@@ -22,17 +22,3 @@ type Epic struct {
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
-
-// Implement IObject interface
-
-func (s *Epic) GetID() uuid.UUID   { return s.ID }
-func (s *Epic) SetID(id uuid.UUID) { s.ID = id }
-
-type EpicRepository struct {
-	Repository[*Epic]
-}
-
-func NewEpicRepository() *EpicRepository {
-	s := &EpicRepository{}
-	return s
-}

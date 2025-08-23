@@ -13,14 +13,12 @@ import (
 )
 
 type AuthMiddleware struct {
-	kratosService  kratos.IKratos
-	userRepository *database.UserRepository
+	kratosService kratos.IKratos
 }
 
 func NewAuthMiddleware(kratosService kratos.IKratos) fiber.Handler {
 	m := &AuthMiddleware{
-		kratosService:  kratosService,
-		userRepository: database.NewUserRepository(),
+		kratosService: kratosService,
 	}
 	return m.Wrap()
 }

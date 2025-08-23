@@ -27,20 +27,6 @@ type User struct {
 	//Permissions any          `gorm:"-"` // Keto permissions data
 }
 
-// Implement IObject interface
-
-func (s *User) GetID() uuid.UUID   { return s.ID }
-func (s *User) SetID(id uuid.UUID) { s.ID = id }
-
-type UserRepository struct {
-	Repository[*User]
-}
-
-func NewUserRepository() *UserRepository {
-	s := &UserRepository{}
-	return s
-}
-
 // This method requires kratos client dependency which is quite bad for UserRepository
 // Instead we need to create UserService which will provide userRepository methods
 // and GetUser with kratos service method

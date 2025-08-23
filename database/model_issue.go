@@ -44,21 +44,7 @@ type Issue struct {
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
 
-// Implement IObject interface
-
-func (s *Issue) GetID() uuid.UUID   { return s.ID }
-func (s *Issue) SetID(id uuid.UUID) { s.ID = id }
-
-type IssueRepository struct {
-	Repository[*Issue]
-}
-
-func NewIssueRepository() *IssueRepository {
-	s := &IssueRepository{}
-	return s
-}
-
-// Issue builder pattern code
+// IssueBuilder builder pattern code
 type IssueBuilder struct {
 	issue *Issue
 }

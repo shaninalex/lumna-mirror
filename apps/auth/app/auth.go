@@ -17,13 +17,10 @@ type IAuthApi interface {
 var _ IAuthApi = &AuthApi{}
 
 type AuthApi struct {
-	userRepository *database.UserRepository
 }
 
 func NewAuthApi() *AuthApi {
-	return &AuthApi{
-		userRepository: database.NewUserRepository(),
-	}
+	return &AuthApi{}
 }
 
 func (s *AuthApi) HookRegister(ctx context.Context, data *domain.HooksKratosPayloadDTO) error {
@@ -31,19 +28,23 @@ func (s *AuthApi) HookRegister(ctx context.Context, data *domain.HooksKratosPayl
 	if err != nil {
 		return err
 	}
-	_, err = s.userRepository.Create(ctx, &database.User{ID: userId})
-	if err != nil {
+
+	// TODO: move to user service
+	tx := database.GetDB(ctx).Create(&database.User{ID: userId})
+	if tx.Error != nil {
 		return err
 	}
 	return nil
 }
 
 func (s *AuthApi) HookVerify(ctx context.Context) error {
-	//TODO implement me
+	// TODO: notify about Verify
+	// TODO implement me
 	panic("implement me")
 }
 
 func (s *AuthApi) HookLogin(ctx context.Context) error {
-	//TODO implement me
+	// TODO: notify about Login
+	// TODO implement me
 	panic("implement me")
 }

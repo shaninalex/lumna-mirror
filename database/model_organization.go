@@ -24,21 +24,7 @@ type Organization struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-// Implement IObject interface
-
-func (s *Organization) GetID() uuid.UUID   { return s.ID }
-func (s *Organization) SetID(id uuid.UUID) { s.ID = id }
-
-type OrganizationRepository struct {
-	Repository[*Organization]
-}
-
-func NewOrganizationRepository() *OrganizationRepository {
-	s := &OrganizationRepository{}
-	return s
-}
-
-// Organization builder pattern code
+// OrganizationBuilder builder pattern code
 type OrganizationBuilder struct {
 	organization *Organization
 }

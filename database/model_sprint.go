@@ -30,12 +30,3 @@ type Sprint struct {
 
 func (s *Sprint) GetID() uuid.UUID   { return s.ID }
 func (s *Sprint) SetID(id uuid.UUID) { s.ID = id }
-
-type SprintRepository struct {
-	Repository[*Sprint]
-}
-
-func NewSprintRepository() *SprintRepository {
-	s := &SprintRepository{}
-	return s
-}
