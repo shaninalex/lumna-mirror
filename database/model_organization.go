@@ -11,7 +11,7 @@ type Organization struct {
 	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 
 	UserID uuid.UUID
-	User   User
+	User   *User
 
 	Title       string
 	Description string
@@ -57,7 +57,7 @@ func (b *OrganizationBuilder) UserID(userID uuid.UUID) *OrganizationBuilder {
 }
 
 func (b *OrganizationBuilder) User(user User) *OrganizationBuilder {
-	b.organization.User = user
+	b.organization.User = &user
 	return b
 }
 

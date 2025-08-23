@@ -15,6 +15,7 @@ type Project struct {
 
 	OrganizationID uuid.UUID `gorm:"uniqueIndex:project_key_uniq"`
 	Organization   Organization
+	Issues         []Issue `gorm:"foreignKey:ProjectID"`
 
 	Title      string
 	ProjectKey string `gorm:"uniqueIndex:project_key_uniq"`

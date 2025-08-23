@@ -11,10 +11,10 @@ type Sprint struct {
 	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 
 	UserID uuid.UUID
-	User   User
+	User   *User
 
 	OrganizationID uuid.UUID
-	Organization   Organization
+	Organization   *Organization
 
 	Title       string
 	Description string

@@ -15,8 +15,10 @@ func main() {
 		panic("not enough args")
 	}
 	userIDStr := args[1]
-
 	userID := uuid.MustParse(userIDStr)
+
+	// !IMPORTANT! Postgres DSN should be hardcoded.
+	// To prevent to create dummy data for dev/prod environments
 	db := database.InitDB("postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
 	err := seed.Seed(db, userID)
 	if err != nil {

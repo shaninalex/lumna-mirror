@@ -25,28 +25,30 @@ type TaskController struct {
 
 func (s *TaskController) setRoutes() {
 	s.router.Get("/api/project/list", s.HandleProjectsList)
-	s.router.Get("/api/project/:projectKey/tasks", s.HandleProjectTasks)
+	s.router.Get("/api/project/tasks", s.HandleTasksList)
 }
 
 func (s *TaskController) HandleProjectsList(ctx *fiber.Ctx) error {
+	// TODO: check user permission ( user should not see project he do not allowed to see )
 	projects, err := s.projectApi.List(ctx.Context(), web.GetOrganizationId(ctx))
 	if err != nil {
 		if errors.Is(err, apperrors.ProjectNotFound) {
 			return web.Success(ctx, NewProjectsDto(nil))
 		}
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
+		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err)
 	}
 	return web.Success(ctx, NewProjectsDto(projects))
 }
 
-func (s *TaskController) HandleProjectTasks(ctx *fiber.Ctx) error {
-	projectKey := ctx.Params("projectKey")
-	issues, err := s.projectApi.ProjectTasks(ctx.Context(), web.GetOrganizationId(ctx), projectKey)
+func (s *TaskController) HandleTasksList(ctx *fiber.Ctx) error {
+	// TODO: check user permission. On error: 403 ( user should not get tasks of the project he do not allowed to get )
+	q := new(TaskFilter)
+	if err := ctx.QueryParser(q); err != nil {
+		return web.ReturnJson(ctx, http.StatusBadRequest, nil, errors.New("provide filter conditions"))
+	}
+	issues, err := s.projectApi.ProjectTasks(ctx.Context(), web.GetOrganizationId(ctx), q.Project)
 	if err != nil {
-		if errors.Is(err, apperrors.ProjectNotFound) {
-			return web.Success(ctx, NewIssuesDto(nil))
-		}
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
+		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err)
 	}
 	return web.Success(ctx, NewIssuesDto(issues))
 }

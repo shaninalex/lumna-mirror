@@ -41,6 +41,10 @@ func CreateProject(ctx context.Context, org *database.Organization, user *databa
 	return project
 }
 
+// CreatePack create a set of required fields
+// - every user should be belonging to Organization
+// - every project should be belonging to Organization
+// - every organization should be created by some user
 func CreatePack(ctx context.Context) (*database.Organization, *database.User, *database.Project) {
 	user := CreateUser(ctx)
 	org := CreateOrganisation(ctx, user)

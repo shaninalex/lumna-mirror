@@ -19,19 +19,19 @@ type Issue struct {
 	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 
 	UserID uuid.UUID
-	User   User
+	User   *User
 
 	EpicID *uuid.UUID
 	Epic   *Epic
 
 	OrganizationID uuid.UUID
-	Organization   Organization
+	Organization   *Organization
 
 	SprintID *uuid.UUID
 	Sprint   *Sprint
 
 	ProjectID uuid.UUID
-	Project   Project
+	Project   *Project
 
 	Assignee string // TODO: issue_assignee separate relation table
 
@@ -80,7 +80,7 @@ func (b *IssueBuilder) UserID(userID uuid.UUID) *IssueBuilder {
 }
 
 func (b *IssueBuilder) User(user User) *IssueBuilder {
-	b.issue.User = user
+	b.issue.User = &user
 	return b
 }
 
@@ -100,7 +100,7 @@ func (b *IssueBuilder) OrganizationID(organizationID uuid.UUID) *IssueBuilder {
 }
 
 func (b *IssueBuilder) Organization(organization Organization) *IssueBuilder {
-	b.issue.Organization = organization
+	b.issue.Organization = &organization
 	return b
 }
 
@@ -120,7 +120,7 @@ func (b *IssueBuilder) ProjectID(projectID uuid.UUID) *IssueBuilder {
 }
 
 func (b *IssueBuilder) Project(project Project) *IssueBuilder {
-	b.issue.Project = project
+	b.issue.Project = &project
 	return b
 }
 

@@ -11,10 +11,10 @@ type Epic struct {
 	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 
 	UserID uuid.UUID
-	User   User
+	User   *User
 
 	ProjectID uuid.UUID
-	Project   Project
+	Project   *Project
 
 	Title       string
 	Description string

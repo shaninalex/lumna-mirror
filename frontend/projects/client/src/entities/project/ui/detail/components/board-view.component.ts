@@ -1,12 +1,7 @@
-import {Component} from '@angular/core';
-import {IssueCardComponent} from '@client/entities/issue';
-import {
-    CdkDragDrop,
-    moveItemInArray,
-    transferArrayItem,
-    CdkDrag,
-    CdkDropList,
-} from '@angular/cdk/drag-drop';
+import {Component, inject, Input, OnInit} from '@angular/core';
+import {IssueCardComponent, TaskService} from '@client/entities/issue';
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem,} from '@angular/cdk/drag-drop';
+import {AsyncPipe, JsonPipe} from '@angular/common';
 
 @Component({
     selector: "ts-board-view",
@@ -14,9 +9,13 @@ import {
         IssueCardComponent,
         CdkDropList,
         CdkDrag,
+        AsyncPipe,
+        JsonPipe,
     ],
-    styleUrl: 'exmple-board-view.component.scss',
+    styleUrl: 'example-board-view.component.scss',
     template: `
+        {{ tasks | async | json }}
+
         <div class="flex flex-row no-wrap gap-4">
 
             <div class="bg-slate-200 w-sm rounded p-4">
@@ -75,25 +74,19 @@ import {
         </div>
     `
 })
-export class BoardViewComponent {
-    todo = [
-        '1',
-        '2',
-        '3',
-    ];
+export class BoardViewComponent implements OnInit {
+    @Input() projectKey: string;
+    api = inject(TaskService)
+    tasks: any
 
-    progress = [
-        '7',
-        '6',
-        '5',
-        '4',
-    ];
+    todo = ['1', '2', '3'];
+    progress = ['7', '6', '5', '4'];
+    done = ['8', '9', '10'];
 
-    done = [
-        '8',
-        '9',
-        '10',
-    ];
+    ngOnInit() {
+        // TODO: rewrite with rxjs Observables
+        this.tasks = this.api.List(this.projectKey)
+    }
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {

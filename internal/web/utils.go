@@ -1,6 +1,7 @@
 package web
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
 	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/jajirra/internal/apperrors"
 	"gitlab.com/shaninalex/jajirra/internal/base"
 	"gitlab.com/shaninalex/jajirra/internal/domain"
 )
@@ -27,6 +29,15 @@ func ReturnJson(ctx *fiber.Ctx, status int, data any, params ...any) error {
 		if msg, ok := p.(string); ok {
 			_data.Messages = append(_data.Messages, msg)
 		}
+		if err, ok := p.(error); ok {
+			var appError apperrors.AppError
+			if errors.As(err, &appError) {
+				_data.Messages = append(
+					_data.Messages,
+					fmt.Sprintf("[%s] %s", appError.ID, appError.Message),
+				)
+			}
+		}
 	}
 
 	ctx.Status(status)
@@ -38,15 +49,20 @@ func Success(ctx *fiber.Ctx, data any, params ...any) error {
 	return ReturnJson(ctx, http.StatusOK, data, params)
 }
 
+// Error return api response based on statuses
+func Error(ctx *fiber.Ctx, status int, err error) error {
+	return ReturnJson(ctx, status, nil, err)
+}
+
 func GetUserId(ctx *fiber.Ctx) uuid.UUID {
-	if id, ok := ctx.Locals(base.ContextUserID).(uuid.UUID); !ok {
+	if id, ok := ctx.Locals(base.ContextUserID).(uuid.UUID); ok {
 		return id
 	}
 	return uuid.Nil
 }
 
 func GetOrganizationId(ctx *fiber.Ctx) uuid.UUID {
-	if id, ok := ctx.Locals(base.ContextOrgID).(uuid.UUID); !ok {
+	if id, ok := ctx.Locals(base.ContextOrgID).(uuid.UUID); ok {
 		return id
 	}
 	return uuid.Nil

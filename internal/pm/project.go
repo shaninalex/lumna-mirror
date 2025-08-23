@@ -31,10 +31,17 @@ func (s *Projects) ProjectTasks(ctx context.Context, orgID uuid.UUID, projectKey
 	db := database.GetDB(ctx)
 	var issues []*database.Issue
 	var project *database.Project
-	db.First(&project, "project_key = ? AND organization_id = ?", projectKey, orgID)
-	err := db.Model(&project).Association("Issues").Find(&issues)
-	if err != nil {
-		return nil, err
+	tx := db.First(&project, "project_key = ? AND organization_id = ?", projectKey, orgID)
+	if tx.Error != nil {
+		if tx.Error.Error() == "record not found" {
+			return nil, apperrors.ProjectNotFound
+		}
+		return nil, tx.Error
+	}
+
+	tx = db.Where("project_id = ?", project.ID).Find(&issues)
+	if tx.Error != nil {
+		return nil, tx.Error
 	}
 	return issues, nil
 }

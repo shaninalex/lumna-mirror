@@ -8,7 +8,7 @@ export const projectRoutes: Routes = [
         component: ProjectListPageComponent,
     },
     {
-        path: 'projects/:id',
+        path: 'projects/:projectKey',
         component: ProjectDetailPageComponent,
     },
 ];
