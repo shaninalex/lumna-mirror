@@ -6,7 +6,9 @@ import "gitlab.com/shaninalex/jajirra/internal/base"
 
 func newTestConfig() base.IConfig {
 	conf = &testConfig{
-		storage: make(map[string]any),
+		storage: map[string]any{
+			"app.dsn": "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable",
+		},
 	}
 	return conf
 }
@@ -17,7 +19,9 @@ type testConfig struct {
 	storage map[string]any
 }
 
-func (s *testConfig) ReadConfig(path string) {}
+func (s *testConfig) ReadConfig(path string) {
+	// TODO: read from test config file
+}
 
 func (s *testConfig) Env() string { return base.ENV_TESTING }
 

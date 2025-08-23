@@ -1,4 +1,4 @@
-package pm_test
+package database_test
 
 import (
 	"testing"
@@ -9,21 +9,13 @@ import (
 	"gitlab.com/shaninalex/jajirra/tdata"
 )
 
-func Test_ProjectList(t *testing.T) {
+func Test_ModelsBuilders(t *testing.T) {
 	ctx := tdata.Ctx()
 	tdata.Clear(ctx)
-
 	org, user, project := tdata.CreatePack(ctx)
-
 	assert.NotNil(t, user)
 	assert.NotNil(t, project)
 	assert.Equal(t, org.UserID, user.ID)
-}
-
-func Test_CreateIssue(t *testing.T) {
-	ctx := tdata.Ctx()
-	tdata.Clear(ctx)
-	org, user, project := tdata.CreatePack(ctx)
 	issue := database.NewIssueBuilder().
 		User(*user).
 		Organization(*org).

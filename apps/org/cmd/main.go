@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	projectApp "gitlab.com/shaninalex/jajirra/apps/project/app"
+	orgApp "gitlab.com/shaninalex/jajirra/apps/org/app"
 	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/internal/base"
 	"gitlab.com/shaninalex/jajirra/internal/kratos"
@@ -22,11 +22,11 @@ func main() {
 
 	config := base.NewConfig(configPath)
 	db := database.InitDB(config.String("app.dsn"))
-	router := web.DefaultRouter(db, "project")
+	router := web.DefaultRouter(db, "org")
 	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
 	router.Use(web.NewAuthMiddleware(kratosClient))
-	projectApp.NewTaskController(router)
-	if err := router.Listen(fmt.Sprintf(":%s", config.String("project.port"))); err != nil {
+	orgApp.NewOrganizationController(router)
+	if err := router.Listen(fmt.Sprintf(":%s", config.String("org.port"))); err != nil {
 		panic(err)
 	}
 }

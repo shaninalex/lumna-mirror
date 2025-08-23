@@ -8,10 +8,14 @@ import (
 	"gitlab.com/shaninalex/jajirra/database"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func InitTestDatabase() *gorm.DB {
-	db, err := gorm.Open(postgres.Open("postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"), &gorm.Config{})
+	var err error
+	db, err = gorm.Open(postgres.Open(config.String("app.dsn")), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent),
+	})
 	if err != nil {
 		panic(err)
 	}
