@@ -35,10 +35,10 @@ func NewProjectsDto(ps []*models.Project) []*ProjectDto {
 
 type IssueDto struct {
 	ID          uuid.UUID        `json:"id"`
-	UserID      uuid.UUID        `json:"User_id"`
-	EpicID      *uuid.UUID       `json:"Epic_id"`
-	SprintID    *uuid.UUID       `json:"Sprint_id"`
-	ProjectID   uuid.UUID        `json:"Project_id"`
+	UserID      uuid.UUID        `json:"creator_id"`
+	EpicID      *uuid.UUID       `json:"epic_id"`
+	SprintID    *uuid.UUID       `json:"sprint_id"`
+	ProjectID   uuid.UUID        `json:"project_id"`
 	Assignee    string           `json:"assignee"`
 	Type        models.IssueType `json:"type"`
 	Title       string           `json:"title"`
@@ -46,7 +46,7 @@ type IssueDto struct {
 	Status      string           `json:"status"`
 	CreatedAt   time.Time        `json:"created_at"`
 	UpdatedAt   time.Time        `json:"updated_at"`
-	DeletedAt   time.Time        `json:"deleted_at"`
+	DeletedAt   *time.Time       `json:"deleted_at,omitempty"`
 }
 
 func NewIssueDto(i *models.Issue) *IssueDto {
@@ -63,7 +63,7 @@ func NewIssueDto(i *models.Issue) *IssueDto {
 		Status:      i.Status,
 		CreatedAt:   i.CreatedAt,
 		UpdatedAt:   i.UpdatedAt,
-		DeletedAt:   i.DeletedAt.Time,
+		DeletedAt:   &i.DeletedAt.Time,
 	}
 }
 

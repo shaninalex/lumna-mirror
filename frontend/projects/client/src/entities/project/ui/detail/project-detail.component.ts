@@ -3,7 +3,8 @@ import {CdkMenuModule} from '@angular/cdk/menu';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {BacklogViewComponent, BoardViewComponent} from '@client/entities/project/ui/detail/components';
+import {BacklogViewComponent} from '@client/entities/project/ui/detail/components';
+import {BoardViewComponent} from '@client/features/project';
 
 @Component({
     selector: "ts-project-detail",
