@@ -15,10 +15,20 @@ export const ERRORS: Record<string, AppError> = {
 		"key": "generic_error",
 		"message": "Something went wrong"
 	},
+	"identity_not_found": {
+		"id": "USER003",
+		"key": "identity_not_found",
+		"message": "Identity not found"
+	},
 	"invalid_credentials": {
 		"id": "AUTH001",
 		"key": "invalid_credentials",
 		"message": "Invalid username or password"
+	},
+	"org_not_attached": {
+		"id": "USER004",
+		"key": "org_not_attached",
+		"message": "user does not attach to any organizations"
 	},
 	"org_not_found": {
 		"id": "ORG001",
@@ -29,6 +39,11 @@ export const ERRORS: Record<string, AppError> = {
 		"id": "PRJ001",
 		"key": "prj_not_found",
 		"message": "Project not found"
+	},
+	"session_not_found": {
+		"id": "AUTH003",
+		"key": "session_not_found",
+		"message": "Session not found"
 	},
 	"token_expired": {
 		"id": "AUTH002",

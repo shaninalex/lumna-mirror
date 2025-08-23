@@ -1,9 +1,10 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {catchError, EMPTY, finalize, Observable, shareReplay} from "rxjs";
+import {catchError, EMPTY, finalize, map, Observable, shareReplay} from "rxjs";
 import {ApiResponse} from '@client/shared/models';
 import {UiService} from '@client/shared/ui';
 import {environment as env} from '@client/environments/environment.development'
+import {Project} from '@client/entities/project';
 
 export const PROJECT_URLS = {
     List: `${env.API_ROOT}/api/project/list`,
@@ -14,8 +15,10 @@ export class ProjectService {
     http: HttpClient = inject(HttpClient)
     uiService: UiService = inject(UiService)
 
-    public List(): Observable<ApiResponse<any>> {
-        return this.getForm<any>(PROJECT_URLS.List);
+    public List(): Observable<Array<Project>> {
+        return this.getForm<Array<Project>>(PROJECT_URLS.List).pipe(
+            map(data => data.data),
+        );
     }
 
     private getForm<T>(url: string): Observable<ApiResponse<T>> {
