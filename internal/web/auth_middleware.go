@@ -4,10 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/internal/base"
 	"gitlab.com/shaninalex/jajirra/internal/kratos"
+	"gorm.io/gorm"
 )
 
 type AuthMiddleware struct {
@@ -54,7 +56,13 @@ func (s *AuthMiddleware) Wrap() fiber.Handler {
 
 		ctx.Locals(base.ContextUser, user)
 		ctx.Locals(base.ContextUserID, userID)
-		// TODO: set user organization id
+		db := database.GetDB(ctx.Context())
+
+		orgID, err := gorm.G[string](db).Raw("SELECT id FROM organizations WHERE user_id = ?", userID).Find(ctx.Context())
+		if err != nil {
+			log.Error("user does not attach to any organizations")
+		}
+		ctx.Locals(base.ContextOrgID, orgID)
 
 		return ctx.Next()
 	}

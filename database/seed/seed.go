@@ -30,6 +30,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		UserID:         userID,
 		OrganizationID: org.ID,
 		Title:          "Taskiro",
+		ProjectKey:     "taskiro",
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}

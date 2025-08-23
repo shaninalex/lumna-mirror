@@ -39,8 +39,17 @@ func Success(ctx *fiber.Ctx, data any, params ...any) error {
 }
 
 func GetUserId(ctx *fiber.Ctx) uuid.UUID {
-	id, _ := ctx.Locals(base.ContextUserID).(uuid.UUID)
-	return id
+	if id, ok := ctx.Locals(base.ContextUserID).(uuid.UUID); !ok {
+		return id
+	}
+	return uuid.Nil
+}
+
+func GetOrganizationId(ctx *fiber.Ctx) uuid.UUID {
+	if id, ok := ctx.Locals(base.ContextOrgID).(uuid.UUID); !ok {
+		return id
+	}
+	return uuid.Nil
 }
 
 func GetUser(ctx *fiber.Ctx) *database.User {

@@ -13,16 +13,15 @@ type Project struct {
 	UserID uuid.UUID // Owner
 	User   User
 
-	OrganizationID uuid.UUID
+	OrganizationID uuid.UUID `gorm:"uniqueIndex:project_key_uniq"`
 	Organization   Organization
 
-	Title string
+	Title      string
+	ProjectKey string `gorm:"uniqueIndex:project_key_uniq"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
-
-	Issues []Issue `gorm:"foreignKey:ProjectID"`
 }
 
 // Implement IObject interface
@@ -87,11 +86,6 @@ func (b *ProjectBuilder) CreatedAt(createdAt time.Time) *ProjectBuilder {
 
 func (b *ProjectBuilder) UpdatedAt(updatedAt time.Time) *ProjectBuilder {
 	b.project.UpdatedAt = updatedAt
-	return b
-}
-
-func (b *ProjectBuilder) Issues(issues []Issue) *ProjectBuilder {
-	b.project.Issues = issues
 	return b
 }
 

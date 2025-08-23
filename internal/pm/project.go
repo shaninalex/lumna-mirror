@@ -14,10 +14,10 @@ func NewProjects() *Projects {
 	return &Projects{}
 }
 
-func (s *Projects) List(ctx context.Context, userId uuid.UUID) ([]*database.Project, error) {
+func (s *Projects) List(ctx context.Context, orgID uuid.UUID) ([]*database.Project, error) {
 	db := database.GetDB(ctx)
 	var projects []*database.Project
-	result := db.Find(&projects).Where("user_id = ?", userId)
+	result := db.Find(&projects).Where("organization_id = ?", orgID)
 	if result.Error != nil {
 		if result.Error.Error() == "record not found" {
 			return nil, apperrors.ProjectNotFound
@@ -27,11 +27,11 @@ func (s *Projects) List(ctx context.Context, userId uuid.UUID) ([]*database.Proj
 	return projects, nil
 }
 
-func (s *Projects) ProjectTasks(ctx context.Context, userID, projectID uuid.UUID) ([]*database.Issue, error) {
+func (s *Projects) ProjectTasks(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*database.Issue, error) {
 	db := database.GetDB(ctx)
 	var issues []*database.Issue
 	var project *database.Project
-	db.First(&project, "id = ? AND user_id = ?", projectID, userID)
+	db.First(&project, "project_key = ? AND organization_id = ?", projectKey, orgID)
 	err := db.Model(&project).Association("Issues").Find(&issues)
 	if err != nil {
 		return nil, err

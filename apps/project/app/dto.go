@@ -8,18 +8,20 @@ import (
 )
 
 type ProjectDto struct {
-	ID        uuid.UUID `json:"id"`
-	Title     string    `json:"title"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID         uuid.UUID `json:"id"`
+	Title      string    `json:"title"`
+	ProjectKey string    `json:"project_key"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 func NewProjectDto(p *database.Project) *ProjectDto {
 	return &ProjectDto{
-		ID:        p.ID,
-		Title:     p.Title,
-		CreatedAt: p.CreatedAt,
-		UpdatedAt: p.UpdatedAt,
+		ID:         p.ID,
+		Title:      p.Title,
+		ProjectKey: p.ProjectKey,
+		CreatedAt:  p.CreatedAt,
+		UpdatedAt:  p.UpdatedAt,
 	}
 }
 
