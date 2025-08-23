@@ -1,8 +1,11 @@
 auth:
   port: 8000
 
-task:
+project:
   port: 8001
+
+org:
+  port: 8002
 
 app:
   dsn: "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"

@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -32,14 +33,9 @@ func (s *TaskController) HandleProjectsList(ctx *fiber.Ctx) error {
 	if err != nil {
 		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
 	}
-	return web.Success(ctx, projects)
+	return web.Success(ctx, NewProjectsDto(projects))
 }
 
 func (s *TaskController) HandleProjectTasks(ctx *fiber.Ctx) error {
-	id := web.GetUserId(ctx)
-	projects, err := s.projectApi.List(ctx.Context(), id)
-	if err != nil {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
-	}
-	return web.Success(ctx, projects)
+	return web.ReturnJson(ctx, http.StatusNotImplemented, nil, fmt.Errorf("endpoint is not implemented yet"))
 }

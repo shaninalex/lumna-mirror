@@ -1,5 +1,5 @@
 import {inject, Injectable} from "@angular/core";
-import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, EMPTY, finalize, Observable, shareReplay} from "rxjs";
 import {ApiResponse} from '@client/shared/models';
 import {UiService} from '@client/shared/ui';
@@ -17,6 +17,7 @@ export class ProjectService {
     public List(): Observable<ApiResponse<any>> {
         return this.getForm<any>(PROJECT_URLS.List);
     }
+
     private getForm<T>(url: string): Observable<ApiResponse<T>> {
         this.uiService.loading.next(true);
         return this.http.get<ApiResponse<T>>(url, {withCredentials: true}).pipe(

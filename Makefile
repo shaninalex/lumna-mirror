@@ -41,3 +41,6 @@ start_auth:
 
 start_project:
 	go run apps/project/cmd/main.go ./config/development.local.yml
+
+start_org:
+	go run apps/org/cmd/main.go ./config/development.local.yml

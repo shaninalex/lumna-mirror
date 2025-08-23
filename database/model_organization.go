@@ -17,7 +17,8 @@ type Organization struct {
 	Description string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	DeletedAt   gorm.DeletedAt `gorm:"index"`
+
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
 // Implement IObject interface
