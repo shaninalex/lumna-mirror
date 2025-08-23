@@ -26,7 +26,18 @@ type Sprint struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (s *Sprint) GetID() uuid.UUID      { return s.ID }
-func (s *Sprint) SetID(id uuid.UUID)    { s.ID = id }
-func (s *Sprint) GetOwner() IUser       { return s.User }
-func (s *Sprint) GetOwnerID() uuid.UUID { return s.UserID }
+func (s *Sprint) GetID() uuid.UUID             { return s.ID }
+func (s *Sprint) SetID(id uuid.UUID)           { s.ID = id }
+func (s *Sprint) GetOwner() AuthUser           { return s.User }
+func (s *Sprint) GetOwnerID() uuid.UUID        { return s.UserID }
+func (s *Sprint) IsOwner(entity AuthUser) bool { return entity.GetID() == s.GetOwnerID() }
+func (s *Sprint) GetCreatedAt() time.Time      { return s.CreatedAt }
+func (s *Sprint) GetUpdatedAt() time.Time      { return s.UpdatedAt }
+func (s *Sprint) GetDeletedAt() *time.Time {
+	if s.DeletedAt.Valid {
+		return &s.DeletedAt.Time
+	}
+	return nil
+}
+func (s *Sprint) IsDeleted() bool         { return s.DeletedAt.Valid }
+func (s *Sprint) GetCreatedBy() uuid.UUID { return s.GetOwnerID() }

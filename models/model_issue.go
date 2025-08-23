@@ -44,7 +44,18 @@ type Issue struct {
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
 
-func (s *Issue) GetID() uuid.UUID      { return s.ID }
-func (s *Issue) SetID(id uuid.UUID)    { s.ID = id }
-func (s *Issue) GetOwner() IUser       { return s.User }
-func (s *Issue) GetOwnerID() uuid.UUID { return s.UserID }
+func (s *Issue) GetID() uuid.UUID             { return s.ID }
+func (s *Issue) SetID(id uuid.UUID)           { s.ID = id }
+func (s *Issue) GetOwner() AuthUser           { return s.User }
+func (s *Issue) GetOwnerID() uuid.UUID        { return s.UserID }
+func (s *Issue) IsOwner(entity AuthUser) bool { return entity.GetID() == s.GetOwnerID() }
+func (s *Issue) GetCreatedAt() time.Time      { return s.CreatedAt }
+func (s *Issue) GetUpdatedAt() time.Time      { return s.UpdatedAt }
+func (s *Issue) GetDeletedAt() *time.Time {
+	if s.DeletedAt.Valid {
+		return &s.DeletedAt.Time
+	}
+	return nil
+}
+func (s *Issue) IsDeleted() bool         { return s.DeletedAt.Valid }
+func (s *Issue) GetCreatedBy() uuid.UUID { return s.GetOwnerID() }

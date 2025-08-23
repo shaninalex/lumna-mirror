@@ -4,28 +4,39 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	ory "github.com/ory/kratos-client-go"
 )
 
-type Model interface {
+// Identifiable each database model has ID and can set/get its
+type Identifiable interface {
 	GetID() uuid.UUID
 	SetID(uuid.UUID)
 }
 
-type IUser interface {
-	Model
-	GetIdentity() *ory.Identity
-	GetTraits() interface{}
+// AuthUser describe an authenticated model interface that should has Traits ( email, name, code etc )
+// and can be active/inactive
+type AuthUser interface {
+	Identifiable
+	GetTraits() any
+	IsActive() bool
 }
 
+// Ownable has an owner and can validate other
 type Ownable interface {
-	Model
+	Identifiable
 	GetOwnerID() uuid.UUID
-	GetOwner() IUser
+	GetOwner() AuthUser
+	IsOwner(entity AuthUser) bool
 }
 
+// Timestamped is a model that has timestamped fields
 type Timestamped interface {
-	Model
+	Identifiable
 	GetCreatedAt() time.Time
 	GetUpdatedAt() time.Time
+	GetDeletedAt() *time.Time // optional for soft-delete
+	IsDeleted() bool
+}
+
+type Auditable interface {
+	GetCreatedBy() uuid.UUID
 }
