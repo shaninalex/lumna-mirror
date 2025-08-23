@@ -20,7 +20,7 @@ func CreateOrganisation(ctx context.Context, user *database.User) *database.Orga
 }
 
 func CreateUser(ctx context.Context) *database.User {
-	user := database.NewUserBuilder().ID(uuid.New()).Build()
+	user := database.NewUserBuilder().ID(uuid.New()).Code(uuid.NewString()).Build()
 	result := database.GetDB(ctx).Create(&user)
 	if result.Error != nil {
 		panic(result.Error)

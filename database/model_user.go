@@ -9,12 +9,13 @@ import (
 )
 
 type User struct {
-	ID       uuid.UUID `gorm:"type:uuid;primaryKey"`
-	Settings string
-	Identity *ory.Identity `gorm:"-"` // ignored by GORM
-
+	ID             uuid.UUID `gorm:"type:uuid;primaryKey"`
 	OrganizationID *uuid.UUID
 	Organization   *Organization `gorm:"foreignKey:OrganizationID;references:ID"`
+
+	Settings string
+	Identity *ory.Identity `gorm:"-"` // ignored by GORM
+	Code     string        `gorm:"uniqueIndex"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -64,6 +65,11 @@ func (b *UserBuilder) ID(iD uuid.UUID) *UserBuilder {
 
 func (b *UserBuilder) Settings(settings string) *UserBuilder {
 	b.user.Settings = settings
+	return b
+}
+
+func (b *UserBuilder) Code(code string) *UserBuilder {
+	b.user.Code = code
 	return b
 }
 

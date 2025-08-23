@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"log"
 
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/jajirra/database"
@@ -30,7 +31,17 @@ func (s *AuthApi) HookRegister(ctx context.Context, data *domain.HooksKratosPayl
 	}
 
 	// TODO: move to user service
-	tx := database.GetDB(ctx).Create(&database.User{ID: userId})
+	db := database.GetDB(ctx)
+	userCode, err := database.GenerateUniqueUserCode(ctx, db, 5)
+	if err != nil {
+		log.Printf("unable to generate username code: %v\n", err)
+		userCode = uuid.NewString()
+	}
+	user := &database.User{
+		ID:   userId,
+		Code: userCode,
+	}
+	tx := db.Create(&user)
 	if tx.Error != nil {
 		return err
 	}
