@@ -47,7 +47,8 @@ cleanup() {
 trap cleanup EXIT
 
 # apply migrations to kratos database
-kratos migrate -c "$path/config/kratos/kratos.yml" sql -e --yes
+# NOTE: backup used.
+#kratos migrate -c "$path/config/kratos/kratos.yml" sql -e --yes
 
 # apply migrations to database
 #migrate \
