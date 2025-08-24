@@ -40,3 +40,8 @@ type Timestamped interface {
 type Auditable interface {
 	GetCreatedBy() uuid.UUID
 }
+
+type Coded interface {
+	SetCode(string)
+	GetCode() string
+}

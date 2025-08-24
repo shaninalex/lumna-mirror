@@ -38,6 +38,9 @@ type Task struct {
 	// ListIndex - where in a list of statuses it's currently in
 	ListIndex uint
 
+	// Code - short task code like "task-123123".
+	Code string
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
@@ -58,3 +61,5 @@ func (s *Task) GetDeletedAt() *time.Time {
 }
 func (s *Task) IsDeleted() bool         { return s.DeletedAt.Valid }
 func (s *Task) GetCreatedBy() uuid.UUID { return s.GetOwnerID() }
+func (s *Task) SetCode(code string)     { s.Code = code }
+func (s *Task) GetCode() string         { return s.Code }

@@ -45,27 +45,29 @@ type TaskDto struct {
 	Description string     `json:"description"`
 	StatusID    uuid.UUID  `json:"status"`
 	ListIdx     uint       `json:"list_idx"`
+	Code        string     `json:"code"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
-func NewTaskDto(i *models.Task) *TaskDto {
+func NewTaskDto(t *models.Task) *TaskDto {
 	return &TaskDto{
-		ID:          i.ID,
-		UserID:      i.UserID,
-		EpicID:      i.EpicID,
-		SprintID:    i.SprintID,
-		ProjectID:   i.ProjectID,
-		Assignee:    i.Assignee,
-		Completed:   i.Completed,
-		Title:       i.Title,
-		Description: i.Description,
-		StatusID:    i.TaskStatusID,
-		ListIdx:     i.ListIndex,
-		CreatedAt:   i.CreatedAt,
-		UpdatedAt:   i.UpdatedAt,
-		DeletedAt:   &i.DeletedAt.Time,
+		ID:          t.ID,
+		UserID:      t.UserID,
+		EpicID:      t.EpicID,
+		SprintID:    t.SprintID,
+		ProjectID:   t.ProjectID,
+		Assignee:    t.Assignee,
+		Completed:   t.Completed,
+		Title:       t.Title,
+		Description: t.Description,
+		StatusID:    t.TaskStatusID,
+		ListIdx:     t.ListIndex,
+		Code:        t.Code,
+		CreatedAt:   t.CreatedAt,
+		UpdatedAt:   t.UpdatedAt,
+		DeletedAt:   &t.DeletedAt.Time,
 	}
 }
 

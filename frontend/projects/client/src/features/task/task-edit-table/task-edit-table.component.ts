@@ -16,6 +16,7 @@ const ELEMENT_DATA: Task[] = [
         completed: false,
         title: "Implement authentication (login/register)",
         list_idx: 0,
+        code: "task-385934",
         description: "Use Ory Kratos for identity management",
         status: "ef64b8a3-d8a1-478e-a8b4-a70ecf0ca3f2",
         created_at: new Date("2025-08-24T15:39:09.654941+03:00"),
@@ -30,6 +31,7 @@ const ELEMENT_DATA: Task[] = [
         <table class="w-full">
             @for (row of ELEMENT_DATA; track row.id) {
                 <tr>
+                    <td class="p-2">{{ row.code }}</td>
                     <td class="p-2">{{ row.title }}</td>
                     <td class="p-2">{{ row.status }}</td>
                     <td class="p-2">{{ row.assignee }}</td>

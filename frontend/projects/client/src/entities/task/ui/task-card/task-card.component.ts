@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {Task} from '@client/entities/task';
 import {DatePipe} from '@angular/common';
@@ -8,10 +8,13 @@ import {DatePipe} from '@angular/common';
     template: `
         <mat-card appearance="outlined">
             <mat-card-header>
-                <h4 class="text-sm">{{ task.title }}</h4>
+                <mat-card-title>{{ task.title }}</mat-card-title>
             </mat-card-header>
             <mat-card-footer class="p-4 flex items-center gap-2">
-                <div class="text-sm">{{ task.created_at | date }}</div>
+                <div class="text-sm">
+                    {{ task.created_at | date }} <br>
+                    <small class="text-slate-500">{{ task.code }}</small>
+                </div>
                 <div class="ms-auto">
                     <img src="/assets/img/1.png" class="rounded-full w-6 border border-1 border-slate-400">
                 </div>
@@ -20,10 +23,6 @@ import {DatePipe} from '@angular/common';
     `,
     imports: [MatCardModule, DatePipe]
 })
-export class TaskCardComponent implements OnInit {
+export class TaskCardComponent {
     @Input() task: Task
-
-    ngOnInit() {
-        console.log(this.task.created_at)
-    }
 }

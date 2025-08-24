@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gitlab.com/shaninalex/jajirra/internal/utils"
 	"gitlab.com/shaninalex/jajirra/models"
 	"gitlab.com/shaninalex/jajirra/models/builders"
 	"gorm.io/gorm"
@@ -133,6 +134,8 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint1.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
+			ListIndex:      1,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Use only Material SDK",
 			Description:    "Replace default material components with SDK and manual created ui elements",
 			TaskStatusID:   statusTodo.GetID(),
@@ -147,6 +150,8 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint1.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
+			ListIndex:      2,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Implement authentication (login/register)",
 			Description:    "Use Ory Kratos for identity management",
 			TaskStatusID:   statusDone.GetID(),
@@ -161,6 +166,8 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint1.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
+			ListIndex:      3,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Add user profile & settings page",
 			Description:    "Allow users to update their information",
 			TaskStatusID:   statusTodo.GetID(),
@@ -175,6 +182,8 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint2.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
+			ListIndex:      4,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Create projects & organizations",
 			Description:    "Implement CRUD for projects/organizations",
 			TaskStatusID:   statusTest.GetID(),
@@ -189,6 +198,8 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint2.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
+			ListIndex:      5,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Add issues & epics",
 			Description:    "Core task tracking functionality",
 			TaskStatusID:   statusInProgress.GetID(),
@@ -203,6 +214,8 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint2.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
+			ListIndex:      6,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Polish dashboard UI",
 			Description:    "Make Taskiro visually appealing with Tailwind & animations",
 			TaskStatusID:   statusTodo.GetID(),
