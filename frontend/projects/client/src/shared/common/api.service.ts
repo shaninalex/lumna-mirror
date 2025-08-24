@@ -9,7 +9,7 @@ export class CommonApiService {
     http: HttpClient = inject(HttpClient)
     uiService: UiService = inject(UiService)
 
-    getForm<T>(url: string): Observable<ApiResponse<T>> {
+    get<T>(url: string): Observable<ApiResponse<T>> {
         this.uiService.loading.next(true);
         return this.http.get<ApiResponse<T>>(url, {withCredentials: true}).pipe(
             shareReplay(),

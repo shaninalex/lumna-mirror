@@ -82,7 +82,7 @@ type IssueStatusDto struct {
 	Complete    bool                      `json:"complete"`
 	Index       uint                      `json:"index"`
 	Config      *models.IssueStatusConfig `json:"config"`
-	//Issues      []*IssueDto               `json:"issues"`
+	Issues      []*IssueDto               `json:"issues"`
 }
 
 func NewIssueStatusDto(i *models.IssueStatus) *IssueStatusDto {
@@ -93,7 +93,7 @@ func NewIssueStatusDto(i *models.IssueStatus) *IssueStatusDto {
 		Complete:    i.Complete,
 		Index:       i.Index,
 		Config:      i.GetConfig(),
-		//Issues:      NewIssuesDto(i.Issues),
+		Issues:      NewIssuesDto(i.Issues),
 	}
 }
 

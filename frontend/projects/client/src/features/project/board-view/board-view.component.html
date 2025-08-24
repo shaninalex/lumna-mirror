@@ -1,58 +1,18 @@
-@if (statuses.length === 0) {
-    <mat-spinner diameter="50"/>
-} @else {
-    <div class="flex flex-row no-wrap gap-4">
+<div cdkDropListGroup class="flex flex-row no-wrap gap-4">
+    @for (list of columns; track list) {
         <div class="bg-slate-200 w-sm rounded p-4">
             <div class="mb-2">
-                <div class="font-bold text-slate-500">TODO</div>
+                <div class="font-bold text-slate-500">{{ list.title }}</div>
             </div>
-            <div
-                cdkDropList
-                #todoList="cdkDropList"
-                [cdkDropListData]="todo"
-                [cdkDropListConnectedTo]="[progressList, doneList]"
-                class="flex flex-col gap-2 min-h-20"
-                (cdkDropListDropped)="drop($event)">
-                @for (item of todo; track item) {
-                    <ts-issue-card cdkDrag [task]="item"/>
+            <div class="flex flex-col gap-2 min-h-20"
+                 cdkDropList
+                 [id]="list.id"
+                 [cdkDropListData]="list.issues"
+                 (cdkDropListDropped)="drop($event)">
+                @for (issue of list.issues; track issue.id) {
+                    <ts-issue-card [task]="issue" [cdkDragData]="issue" cdkDrag/>
                 }
             </div>
         </div>
-
-        <div class="bg-slate-200 w-sm rounded p-4">
-            <div class="mb-2">
-                <div class="font-bold text-slate-500">IN PROGRESS</div>
-            </div>
-            <div
-                cdkDropList
-                #progressList="cdkDropList"
-                [cdkDropListData]="progress"
-                [cdkDropListConnectedTo]="[todoList, doneList]"
-                class="flex flex-col gap-2 min-h-20"
-                (cdkDropListDropped)="drop($event)">
-                @for (item of progress; track item) {
-                    <ts-issue-card cdkDrag [task]="item"/>
-                }
-            </div>
-        </div>
-
-        <div class="bg-slate-200 w-sm rounded p-4">
-            <div class="mb-2">
-                <div class="font-bold text-slate-500">DONE</div>
-            </div>
-            <div
-                cdkDropList
-                #doneList="cdkDropList"
-                [cdkDropListData]="done"
-                [cdkDropListConnectedTo]="[todoList, progressList]"
-                class="flex flex-col gap-2 min-h-20"
-                (cdkDropListDropped)="drop($event)">
-                @for (item of done; track item) {
-                    <div class="example-box" cdkDrag>
-                        <ts-issue-card [task]="item"/>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-}
+    }
+</div>

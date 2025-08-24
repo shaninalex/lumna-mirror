@@ -11,8 +11,12 @@ export const BOARD_URLS = {
 @Injectable()
 export class BoardViewApiService extends CommonApiService {
     public Statuses(projectKey: string): Observable<Status[]> {
-        return this.getForm<Status[]>(BOARD_URLS.Statuses(projectKey)).pipe(
+        return this.get<Status[]>(BOARD_URLS.Statuses(projectKey)).pipe(
             map(data => data.data),
         );
+    }
+
+    public ChangeStatus(issueID: string, fromList: string, toList: string): any {
+        console.log("ChangeStatus: ", issueID, fromList, toList)
     }
 }

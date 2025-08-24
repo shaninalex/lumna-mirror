@@ -36,14 +36,19 @@ type Issue struct {
 	IssueStatusID uuid.UUID
 	IssueStatus   *IssueStatus `gorm:"foreignKey:IssueStatusID;references:ID"`
 
-	Assignee string // TODO: issue_assignee separate relation table
+	// Assignee who is assigned to do that task. NOTE: Should be issue_assignee separate relation.
+	Assignee string
 
-	Type        IssueType
 	Title       string
+	Type        IssueType
 	Description string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   gorm.DeletedAt `gorm:"index"`
+
+	// ListIndex - where in a list of statuses it's currently in
+	ListIndex uint
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
 func (s *Issue) GetID() uuid.UUID             { return s.ID }

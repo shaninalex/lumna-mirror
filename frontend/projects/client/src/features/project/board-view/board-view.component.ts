@@ -1,19 +1,28 @@
 import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {Issue, IssueCardComponent, TaskService} from '@client/entities/issue';
-import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem,} from '@angular/cdk/drag-drop';
+import {
+    CdkDrag,
+    CdkDragDrop,
+    CdkDropList,
+    CdkDropListGroup,
+    moveItemInArray,
+    transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {Subscription, tap} from 'rxjs';
 import {BoardViewApiService} from './board-view-api.service';
-import {Status} from '@client/entities/project';
 import {StatusColumn} from './board.model';
+import {MatCardModule} from '@angular/material/card';
 
 @Component({
     selector: "ts-board-view",
     imports: [
-        IssueCardComponent,
         CdkDropList,
         CdkDrag,
         MatProgressSpinnerModule,
+        CdkDropListGroup,
+        MatCardModule,
+        IssueCardComponent,
     ],
     providers: [BoardViewApiService],
     styleUrl: './board-view.component.scss',
@@ -21,17 +30,10 @@ import {StatusColumn} from './board.model';
 })
 export class BoardViewComponent implements OnInit, OnDestroy {
     @Input() projectKey: string;
-    private _taskApi = inject(TaskService)
     private _boardApi = inject(BoardViewApiService)
     private _sub = new Subscription()
 
-    tasks: Issue[]
-    statuses: Status[]
     columns: StatusColumn[]
-
-    todo: Issue[] = [];
-    progress: Issue[] = [];
-    done: Issue[] = [];
 
     drop(event: CdkDragDrop<Issue[]>) {
         if (event.previousContainer === event.container) {
@@ -44,23 +46,20 @@ export class BoardViewComponent implements OnInit, OnDestroy {
                 event.currentIndex,
             );
         }
-        console.log("Drop completed", event)
+        this._boardApi.ChangeStatus(event.item.data.id, event.previousContainer.id, event.container.id)
     }
 
     ngOnInit() {
-        // TODO:
-        //  - build columns
-        //  - update template
-        //  - update this.drop() function
-        this._sub.add(
-            this._taskApi.List(this.projectKey).pipe(
-                tap(tasks => this.tasks = tasks),
-            ).subscribe()
-        )
         this._sub.add(
             this._boardApi.Statuses(this.projectKey).pipe(
-                tap(statuses => this.statuses = statuses),
-            ).subscribe(),
+                tap(statuses => {
+                    this.columns = statuses.map(s => ({
+                        id: s.id,
+                        title: s.title,
+                        issues: s.issues
+                    }));
+                })
+            ).subscribe()
         )
     }
 

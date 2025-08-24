@@ -1,3 +1,5 @@
+import {Issue} from '@client/entities/issue';
+
 export interface StatusConfig {
     color: string
 }
@@ -9,4 +11,5 @@ export interface Status {
     id: string
     index: number
     title: string
+    issues: Issue[]
 }
