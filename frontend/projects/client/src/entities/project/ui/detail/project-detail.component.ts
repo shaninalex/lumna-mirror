@@ -50,7 +50,7 @@ import {BoardViewComponent} from '@client/features/project';
                     </div>
                 </mat-tab>
                 <mat-tab label="Board">
-                    <div class="py-4">
+                    <div class="py-4 w-full">
                         <ts-board-view [projectKey]="projectKey"/>
                     </div>
                 </mat-tab>

@@ -78,11 +78,6 @@ func (b *IssueBuilder) Assignee(assignee string) *IssueBuilder {
 	return b
 }
 
-func (b *IssueBuilder) Type(t models.IssueType) *IssueBuilder {
-	b.issue.Type = t
-	return b
-}
-
 func (b *IssueBuilder) Title(title string) *IssueBuilder {
 	b.issue.Title = title
 	return b

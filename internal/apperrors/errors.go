@@ -8,7 +8,7 @@ type AppError struct {
 	ID      string `json:"id"`
 	Key     string `json:"key"`
 	Message string `json:"message"`
-	Data    any    `json:"data"`
+	Data    any    `json:"data,omitempty"`
 }
 
 func (e AppError) Error() string {

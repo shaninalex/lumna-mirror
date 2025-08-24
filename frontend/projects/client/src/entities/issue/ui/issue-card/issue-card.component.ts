@@ -1,27 +1,29 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {Issue} from '@client/entities/issue';
+import {DatePipe} from '@angular/common';
 
 @Component({
     selector: "ts-issue-card",
     template: `
         <mat-card appearance="outlined">
             <mat-card-header>
-                <h4 class="text-base">{{ task.title }}</h4>
+                <h4 class="text-sm">{{ task.title }}</h4>
             </mat-card-header>
             <mat-card-footer class="p-4 flex items-center gap-2">
-<!--                <mat-chip-set>-->
-<!--                    <mat-chip>tags</mat-chip>-->
-<!--                </mat-chip-set>-->
-<!--                <mat-icon>flag</mat-icon> &lt;!&ndash; priority &ndash;&gt;-->
+                <div class="text-sm">{{ task.created_at | date }}</div>
                 <div class="ms-auto">
                     <img src="/assets/img/1.png" class="rounded-full w-6 border border-1 border-slate-400">
                 </div>
             </mat-card-footer>
         </mat-card>
     `,
-    imports: [MatCardModule]
+    imports: [MatCardModule, DatePipe]
 })
-export class IssueCardComponent {
+export class IssueCardComponent implements OnInit {
     @Input() task: Issue
+
+    ngOnInit() {
+        console.log(this.task.created_at)
+    }
 }
