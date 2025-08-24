@@ -86,6 +86,7 @@ func RunTypeScriptify() {
 	id: string
 	key: string
 	message: string
+    data?: any
 }
 
 export const ERRORS: Record<string, AppError> = ` + string(data) + "\n"

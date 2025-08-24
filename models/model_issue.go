@@ -7,14 +7,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type IssueType string
-
-const (
-	IssueTypeStory IssueType = "story"
-	IssueTypeTask  IssueType = "task"
-	IssueTypeBug   IssueType = "bug"
-)
-
 type Issue struct {
 	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 
@@ -40,7 +32,7 @@ type Issue struct {
 	Assignee string
 
 	Title       string
-	Type        IssueType
+	Completed   bool
 	Description string
 
 	// ListIndex - where in a list of statuses it's currently in

@@ -34,19 +34,19 @@ func NewProjectsDto(ps []*models.Project) []*ProjectDto {
 }
 
 type IssueDto struct {
-	ID          uuid.UUID        `json:"id"`
-	UserID      uuid.UUID        `json:"creator_id"`
-	EpicID      *uuid.UUID       `json:"epic_id"`
-	SprintID    *uuid.UUID       `json:"sprint_id"`
-	ProjectID   uuid.UUID        `json:"project_id"`
-	Assignee    string           `json:"assignee"`
-	Type        models.IssueType `json:"type"`
-	Title       string           `json:"title"`
-	Description string           `json:"description"`
-	StatusID    uuid.UUID        `json:"status"`
-	CreatedAt   time.Time        `json:"created_at"`
-	UpdatedAt   time.Time        `json:"updated_at"`
-	DeletedAt   *time.Time       `json:"deleted_at,omitempty"`
+	ID          uuid.UUID  `json:"id"`
+	UserID      uuid.UUID  `json:"creator_id"`
+	EpicID      *uuid.UUID `json:"epic_id"`
+	SprintID    *uuid.UUID `json:"sprint_id"`
+	ProjectID   uuid.UUID  `json:"project_id"`
+	Assignee    string     `json:"assignee"`
+	Completed   bool       `json:"completed"`
+	Title       string     `json:"title"`
+	Description string     `json:"description"`
+	StatusID    uuid.UUID  `json:"status"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
 func NewIssueDto(i *models.Issue) *IssueDto {
@@ -57,7 +57,7 @@ func NewIssueDto(i *models.Issue) *IssueDto {
 		SprintID:    i.SprintID,
 		ProjectID:   i.ProjectID,
 		Assignee:    i.Assignee,
-		Type:        i.Type,
+		Completed:   i.Completed,
 		Title:       i.Title,
 		Description: i.Description,
 		StatusID:    i.IssueStatusID,
