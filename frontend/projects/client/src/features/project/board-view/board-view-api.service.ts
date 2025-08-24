@@ -5,7 +5,15 @@ import {Status} from '@client/entities/project';
 import {CommonApiService} from '@client/shared/common';
 
 export const BOARD_URLS = {
-    Statuses: (projectKey: string) =>  `${env.API_ROOT}/api/project/${projectKey}/statuses`,
+    Statuses: (projectKey: string) => `${env.API_ROOT}/api/project/${projectKey}/statuses`,
+    TaskAction: (projectKey: string, taskID: string) => `${env.API_ROOT}/api/project/${projectKey}/task/${taskID}/status`,
+}
+
+interface ChangeStatusPayload {
+    from_status: string
+    to_status: string
+    from_idx: number
+    to_idx: number
 }
 
 @Injectable()
@@ -16,7 +24,9 @@ export class BoardViewApiService extends CommonApiService {
         );
     }
 
-    public ChangeStatus(issueID: string, fromList: string, toList: string): any {
-        console.log("ChangeStatus: ", issueID, fromList, toList)
+    public ChangeStatus(projectKey: string, taskID: string, payload: ChangeStatusPayload): Observable<any> {
+        return this.patch<any>(BOARD_URLS.TaskAction(projectKey, taskID), payload).pipe(
+            map(data => data.data),
+        );
     }
 }

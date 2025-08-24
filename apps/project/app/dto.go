@@ -44,6 +44,7 @@ type TaskDto struct {
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
 	StatusID    uuid.UUID  `json:"status"`
+	ListIdx     uint       `json:"list_idx"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
@@ -61,6 +62,7 @@ func NewTaskDto(i *models.Task) *TaskDto {
 		Title:       i.Title,
 		Description: i.Description,
 		StatusID:    i.TaskStatusID,
+		ListIdx:     i.ListIndex,
 		CreatedAt:   i.CreatedAt,
 		UpdatedAt:   i.UpdatedAt,
 		DeletedAt:   &i.DeletedAt.Time,

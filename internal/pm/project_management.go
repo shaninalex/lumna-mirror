@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/jajirra/database"
 	"gitlab.com/shaninalex/jajirra/internal/apperrors"
+	"gitlab.com/shaninalex/jajirra/internal/domain"
 	"gitlab.com/shaninalex/jajirra/models"
 	"gorm.io/gorm"
 )
@@ -16,6 +17,7 @@ type ProjectManager interface {
 	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
 	Issues(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Task, error)
 	Statuses(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
+	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectKey string, taskID uuid.UUID, payload domain.ChangeTaskStatusDTO) error
 }
 
 type ProjectManagement struct{}
@@ -75,4 +77,35 @@ func (s *ProjectManagement) Statuses(ctx context.Context, orgID uuid.UUID, proje
 		return nil, err
 	}
 	return project.Statuses, nil
+}
+
+func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectKey string, taskID uuid.UUID, payload domain.ChangeTaskStatusDTO) error {
+	db := database.GetDB(ctx)
+	project, err := s.Project(ctx, orgID, projectKey)
+	if err != nil {
+		return err
+	}
+	complete := false
+	for _, st := range project.Statuses {
+		if st.GetID() == payload.ToStatusID {
+			complete = st.Complete
+			break
+		}
+	}
+
+	task := models.Task{ID: taskID}
+	tx := db.First(&task)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	task.TaskStatusID = payload.ToStatusID
+	task.ListIndex = payload.ToIdx
+	task.Completed = complete
+
+	tx = db.Save(&task)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
 }

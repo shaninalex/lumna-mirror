@@ -9,6 +9,7 @@ export interface Task {
     title: string
     description: string
     status: string
+    list_idx: number
     created_at: Date
     updated_at: Date
     deleted_at?: Date

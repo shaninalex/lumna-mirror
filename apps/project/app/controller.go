@@ -5,7 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"gitlab.com/shaninalex/jajirra/internal/apperrors"
+	"gitlab.com/shaninalex/jajirra/internal/domain"
 	"gitlab.com/shaninalex/jajirra/internal/pm"
 	"gitlab.com/shaninalex/jajirra/internal/web"
 )
@@ -26,6 +28,7 @@ type ProjectController struct {
 func (s *ProjectController) setRoutes() {
 	s.router.Get("/api/project/list", s.HandleProjectsList)
 	s.router.Get("/api/project/:projectKey/statuses", s.HandleProjectStatuses)
+	s.router.Patch("/api/project/:projectKey/task/:taskID/status", s.HandlePatchTaskStatus)
 	s.router.Get("/api/project/tasks", s.HandleTasksList)
 }
 
@@ -61,6 +64,24 @@ func (s *ProjectController) HandleProjectStatuses(ctx *fiber.Ctx) error {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	return web.Success(ctx, NewTasksStatusDto(statuses))
+}
+
+func (s *ProjectController) HandlePatchTaskStatus(ctx *fiber.Ctx) error {
+	var data domain.ChangeTaskStatusDTO
+	projectKey := ctx.Params("projectKey")
+	taskID, err := uuid.Parse(ctx.Params("taskID"))
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	err = ctx.BodyParser(&data)
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	err = s.projectApi.PatchTaskStatus(ctx.Context(), web.GetOrganizationId(ctx), projectKey, taskID, data)
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	return web.Success(ctx, nil, "Saved")
 }
 
 func (s *ProjectController) getFilterParams(ctx *fiber.Ctx) (*TaskFilter, error) {

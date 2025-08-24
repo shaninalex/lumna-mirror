@@ -24,4 +24,20 @@ export class CommonApiService {
             })
         );
     }
+
+    patch<T>(url: string, data: any, params?: HttpParams): Observable<ApiResponse<T>> {
+        this.uiService.loading.next(true);
+        let p = new HttpParams()
+        if (params) {
+            p = params
+        }
+        return this.http.patch<ApiResponse<T>>(url, data, {params: p, withCredentials: true}).pipe(
+            shareReplay(),
+            finalize(() => this.uiService.loading.next(false)),
+            catchError((error: HttpErrorResponse) => {
+                console.error(error);
+                return EMPTY;
+            })
+        );
+    }
 }

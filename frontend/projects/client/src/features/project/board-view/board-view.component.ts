@@ -46,7 +46,12 @@ export class BoardViewComponent implements OnInit, OnDestroy {
                 event.currentIndex,
             );
         }
-        this._boardApi.ChangeStatus(event.item.data.id, event.previousContainer.id, event.container.id)
+        this._boardApi.ChangeStatus(this.projectKey, event.item.data.id, {
+            from_status: event.previousContainer.id,
+            to_status: event.container.id,
+            from_idx: event.previousIndex,
+            to_idx: event.currentIndex,
+        }).subscribe()
     }
 
     ngOnInit() {
@@ -56,7 +61,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
                     this.columns = statuses.map(s => ({
                         id: s.id,
                         title: s.title,
-                        tasks: s.tasks
+                        tasks: [...s.tasks].sort((a, b) => (a.list_idx - b.list_idx))
                     }));
                 })
             ).subscribe()
