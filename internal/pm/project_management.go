@@ -14,8 +14,8 @@ import (
 type ProjectManager interface {
 	Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error)
 	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
-	Issues(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Issue, error)
-	Statuses(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.IssueStatus, error)
+	Issues(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Task, error)
+	Statuses(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
 }
 
 type ProjectManagement struct{}
@@ -29,8 +29,8 @@ func (s *ProjectManagement) Project(ctx context.Context, orgID uuid.UUID, projec
 
 	tx := database.GetDB(ctx).
 		WithContext(ctx).
-		Preload("Statuses.Issues").
-		Preload("Issues").
+		Preload("Statuses.Tasks").
+		Preload("Tasks").
 		First(&project, "project_key = ? AND organization_id = ?", projectKey, orgID)
 
 	if tx.Error != nil {
@@ -56,8 +56,8 @@ func (s *ProjectManagement) List(ctx context.Context, orgID uuid.UUID) ([]*model
 	return projects, nil
 }
 
-func (s *ProjectManagement) Issues(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Issue, error) {
-	//var issues []*models.Issue
+func (s *ProjectManagement) Issues(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Task, error) {
+	//var issues []*models.Task
 	project, err := s.Project(ctx, orgID, projectKey)
 	if err != nil {
 		return nil, err
@@ -66,10 +66,10 @@ func (s *ProjectManagement) Issues(ctx context.Context, orgID uuid.UUID, project
 	//if tx.Error != nil {
 	//	return nil, tx.Error
 	//}
-	return project.Issues, nil
+	return project.Tasks, nil
 }
 
-func (s *ProjectManagement) Statuses(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.IssueStatus, error) {
+func (s *ProjectManagement) Statuses(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error) {
 	project, err := s.Project(ctx, orgID, projectKey)
 	if err != nil {
 		return nil, err

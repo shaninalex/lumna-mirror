@@ -7,9 +7,9 @@
             <div class="flex flex-col gap-2 min-h-20"
                  cdkDropList
                  [id]="list.id"
-                 [cdkDropListData]="list.issues"
+                 [cdkDropListData]="list.tasks"
                  (cdkDropListDropped)="drop($event)">
-                @for (issue of list.issues; track issue.id) {
+                @for (issue of list.tasks; track issue.id) {
                     <ts-issue-card [task]="issue" [cdkDragData]="issue" cdkDrag/>
                 }
             </div>

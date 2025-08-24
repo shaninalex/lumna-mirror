@@ -1,7 +1,7 @@
-import {Issue} from '@client/entities/issue';
+import {Task} from '@client/entities/task';
 
 export interface StatusColumn {
     id: string;        // same as Status.id
     title: string;     // Status title (TODO, IN PROGRESS, etc.)
-    issues: Issue[];   // tasks in this column
+    tasks: Task[];   // tasks in this column
 }

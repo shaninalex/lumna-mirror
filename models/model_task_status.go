@@ -6,13 +6,13 @@ import (
 	"github.com/google/uuid"
 )
 
-type IssueStatus struct {
+type TaskStatus struct {
 	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 
 	ProjectID uuid.UUID
 	Project   *Project `gorm:"foreignKey:ProjectID;references:ID"`
 
-	Issues []*Issue `gorm:"foreignKey:IssueStatusID;references:ID"`
+	Tasks []*Task `gorm:"foreignKey:TaskStatusID;references:ID"`
 
 	Title       string `gorm:"uniqueIndex"`
 	Description string
@@ -21,33 +21,33 @@ type IssueStatus struct {
 	Config      string
 }
 
-func (s *IssueStatus) GetID() uuid.UUID   { return s.ID }
-func (s *IssueStatus) SetID(id uuid.UUID) { s.ID = id }
-func (s *IssueStatus) SaveConfig(cnf IssueStatusConfig) {
+func (s *TaskStatus) GetID() uuid.UUID   { return s.ID }
+func (s *TaskStatus) SetID(id uuid.UUID) { s.ID = id }
+func (s *TaskStatus) SaveConfig(cnf TaskStatusConfig) {
 	b, err := json.Marshal(cnf)
 	if err != nil {
 		panic(err)
 	}
 	s.Config = string(b)
 }
-func (s *IssueStatus) GetConfig() *IssueStatusConfig {
+func (s *TaskStatus) GetConfig() *TaskStatusConfig {
 	if s.Config == "" {
-		return NewIssueStatusConfig()
+		return NewTaskStatusConfig()
 	}
-	var config IssueStatusConfig
+	var config TaskStatusConfig
 	err := json.Unmarshal([]byte(s.Config), &config)
 	if err != nil {
-		return NewIssueStatusConfig()
+		return NewTaskStatusConfig()
 	}
 	return &config
 }
 
-type IssueStatusConfig struct {
+type TaskStatusConfig struct {
 	Color string `json:"color,omitempty"`
 }
 
-func NewIssueStatusConfig() *IssueStatusConfig {
-	return &IssueStatusConfig{
+func NewTaskStatusConfig() *TaskStatusConfig {
+	return &TaskStatusConfig{
 		Color: "default",
 	}
 }

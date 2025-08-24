@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
-import {Issue} from '@client/entities/issue';
+import {Task} from '@client/entities/task';
 import {DatePipe} from '@angular/common';
 
 @Component({
@@ -21,7 +21,7 @@ import {DatePipe} from '@angular/common';
     imports: [MatCardModule, DatePipe]
 })
 export class IssueCardComponent implements OnInit {
-    @Input() task: Issue
+    @Input() task: Task
 
     ngOnInit() {
         console.log(this.task.created_at)

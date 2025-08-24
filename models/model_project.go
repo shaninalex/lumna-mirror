@@ -15,12 +15,12 @@ type Project struct {
 
 	OrganizationID uuid.UUID `gorm:"uniqueIndex:project_key_uniq"`
 	Organization   Organization
-	Issues         []*Issue `gorm:"foreignKey:ProjectID"`
+	Tasks          []*Task `gorm:"foreignKey:ProjectID"`
 
 	Title      string
 	ProjectKey string `gorm:"uniqueIndex:project_key_uniq"`
 
-	Statuses []*IssueStatus `gorm:"foreignKey:ProjectID;references:ID"`
+	Statuses []*TaskStatus `gorm:"foreignKey:ProjectID;references:ID"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

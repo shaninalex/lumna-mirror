@@ -1,4 +1,4 @@
-import {Issue} from '@client/entities/issue';
+import {Task} from '@client/entities/task';
 
 export interface StatusConfig {
     color: string
@@ -11,5 +11,5 @@ export interface Status {
     id: string
     index: number
     title: string
-    issues: Issue[]
+    tasks: Task[]
 }

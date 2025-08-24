@@ -51,7 +51,7 @@ func (s *ProjectController) HandleTasksList(ctx *fiber.Ctx) error {
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
-	return web.Success(ctx, NewIssuesDto(issues))
+	return web.Success(ctx, NewTasksDto(issues))
 }
 
 func (s *ProjectController) HandleProjectStatuses(ctx *fiber.Ctx) error {
@@ -60,7 +60,7 @@ func (s *ProjectController) HandleProjectStatuses(ctx *fiber.Ctx) error {
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
-	return web.Success(ctx, NewIssuesStatusDto(statuses))
+	return web.Success(ctx, NewTasksStatusDto(statuses))
 }
 
 func (s *ProjectController) getFilterParams(ctx *fiber.Ctx) (*TaskFilter, error) {

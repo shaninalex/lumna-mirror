@@ -1,6 +1,4 @@
-export type IssueType = "Story" | "Task" | "Bug";
-
-export interface Issue {
+export interface Task {
     id: string
     creator_id: string
     epic_id: string

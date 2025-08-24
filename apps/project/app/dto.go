@@ -33,7 +33,7 @@ func NewProjectsDto(ps []*models.Project) []*ProjectDto {
 	return dtos
 }
 
-type IssueDto struct {
+type TaskDto struct {
 	ID          uuid.UUID  `json:"id"`
 	UserID      uuid.UUID  `json:"creator_id"`
 	EpicID      *uuid.UUID `json:"epic_id"`
@@ -49,8 +49,8 @@ type IssueDto struct {
 	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
-func NewIssueDto(i *models.Issue) *IssueDto {
-	return &IssueDto{
+func NewTaskDto(i *models.Task) *TaskDto {
+	return &TaskDto{
 		ID:          i.ID,
 		UserID:      i.UserID,
 		EpicID:      i.EpicID,
@@ -60,45 +60,45 @@ func NewIssueDto(i *models.Issue) *IssueDto {
 		Completed:   i.Completed,
 		Title:       i.Title,
 		Description: i.Description,
-		StatusID:    i.IssueStatusID,
+		StatusID:    i.TaskStatusID,
 		CreatedAt:   i.CreatedAt,
 		UpdatedAt:   i.UpdatedAt,
 		DeletedAt:   &i.DeletedAt.Time,
 	}
 }
 
-func NewIssuesDto(ii []*models.Issue) []*IssueDto {
-	dtos := make([]*IssueDto, len(ii))
+func NewTasksDto(ii []*models.Task) []*TaskDto {
+	dtos := make([]*TaskDto, len(ii))
 	for i, issue := range ii {
-		dtos[i] = NewIssueDto(issue)
+		dtos[i] = NewTaskDto(issue)
 	}
 	return dtos
 }
 
-type IssueStatusDto struct {
-	ID          uuid.UUID                 `json:"id"`
-	Title       string                    `json:"title"`
-	Description string                    `json:"description"`
-	Complete    bool                      `json:"complete"`
-	Index       uint                      `json:"index"`
-	Config      *models.IssueStatusConfig `json:"config"`
-	Issues      []*IssueDto               `json:"issues"`
+type TaskStatusDto struct {
+	ID          uuid.UUID                `json:"id"`
+	Title       string                   `json:"title"`
+	Description string                   `json:"description"`
+	Complete    bool                     `json:"complete"`
+	Index       uint                     `json:"index"`
+	Config      *models.TaskStatusConfig `json:"config"`
+	Tasks       []*TaskDto               `json:"tasks"`
 }
 
-func NewIssueStatusDto(i *models.IssueStatus) *IssueStatusDto {
-	return &IssueStatusDto{
+func NewIssueStatusDto(i *models.TaskStatus) *TaskStatusDto {
+	return &TaskStatusDto{
 		ID:          i.GetID(),
 		Title:       i.Title,
 		Description: i.Description,
 		Complete:    i.Complete,
 		Index:       i.Index,
 		Config:      i.GetConfig(),
-		Issues:      NewIssuesDto(i.Issues),
+		Tasks:       NewTasksDto(i.Tasks),
 	}
 }
 
-func NewIssuesStatusDto(statuses []*models.IssueStatus) []*IssueStatusDto {
-	dtos := make([]*IssueStatusDto, len(statuses))
+func NewTasksStatusDto(statuses []*models.TaskStatus) []*TaskStatusDto {
+	dtos := make([]*TaskStatusDto, len(statuses))
 	for i, status := range statuses {
 		dtos[i] = NewIssueStatusDto(status)
 	}

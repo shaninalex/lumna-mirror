@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTableModule} from '@angular/material/table';
-import {Issue} from '@client/entities/issue';
+import {Task} from '@client/entities/task';
 import {DatePipe} from '@angular/common';
 
 
-const ELEMENT_DATA: Issue[] = [
+const ELEMENT_DATA: Task[] = [
     {
         id: "46fc6efa-9c68-48f9-ae3d-9fe7862e93a5",
         creator_id: "ffc61ef8-9ea7-4bf9-842b-38201a6b49ae",

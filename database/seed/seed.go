@@ -59,7 +59,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 	statusDone := builders.NewIssueStatusBuilder().
 		Project(&project).ID(uuid.New()).ProjectID(project.GetID()).
 		Title("Done").Index(3).Complete(true).Build()
-	statuses := []*models.IssueStatus{statusTodo, statusInProgress, statusTest, statusDone}
+	statuses := []*models.TaskStatus{statusTodo, statusInProgress, statusTest, statusDone}
 	if err := db.Create(&statuses).Error; err != nil {
 		return err
 	}
@@ -124,7 +124,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 	}
 
 	// Create issues
-	issues := []models.Issue{
+	issues := []models.Task{
 		{
 			ID:             uuid.New(),
 			UserID:         userID,
@@ -135,7 +135,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Assignee:       "alex",
 			Title:          "Use only Material SDK",
 			Description:    "Replace default material components with SDK and manual created ui elements",
-			IssueStatusID:  statusTodo.GetID(),
+			TaskStatusID:   statusTodo.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -149,7 +149,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Assignee:       "alex",
 			Title:          "Implement authentication (login/register)",
 			Description:    "Use Ory Kratos for identity management",
-			IssueStatusID:  statusDone.GetID(),
+			TaskStatusID:   statusDone.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -163,7 +163,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Assignee:       "alex",
 			Title:          "Add user profile & settings page",
 			Description:    "Allow users to update their information",
-			IssueStatusID:  statusTodo.GetID(),
+			TaskStatusID:   statusTodo.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -177,7 +177,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Assignee:       "alex",
 			Title:          "Create projects & organizations",
 			Description:    "Implement CRUD for projects/organizations",
-			IssueStatusID:  statusTest.GetID(),
+			TaskStatusID:   statusTest.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -191,7 +191,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Assignee:       "alex",
 			Title:          "Add issues & epics",
 			Description:    "Core task tracking functionality",
-			IssueStatusID:  statusInProgress.GetID(),
+			TaskStatusID:   statusInProgress.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -205,7 +205,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			Assignee:       "alex",
 			Title:          "Polish dashboard UI",
 			Description:    "Make Taskiro visually appealing with Tailwind & animations",
-			IssueStatusID:  statusTodo.GetID(),
+			TaskStatusID:   statusTodo.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},

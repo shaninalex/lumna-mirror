@@ -54,8 +54,8 @@ func InitDB(dsn string) *gorm.DB {
 func ApplyMigrations(db *gorm.DB) {
 	err := db.AutoMigrate(
 		&models.User{},
-		&models.Issue{},
-		&models.IssueStatus{},
+		&models.Task{},
+		&models.TaskStatus{},
 		&models.Epic{},
 		&models.Sprint{},
 		&models.Organization{},

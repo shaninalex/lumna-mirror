@@ -1,5 +1,5 @@
 import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
-import {Issue, IssueCardComponent, TaskService} from '@client/entities/issue';
+import {Task, IssueCardComponent, TaskService} from '@client/entities/task';
 import {
     CdkDrag,
     CdkDragDrop,
@@ -35,7 +35,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
     columns: StatusColumn[]
 
-    drop(event: CdkDragDrop<Issue[]>) {
+    drop(event: CdkDragDrop<Task[]>) {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
@@ -56,7 +56,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
                     this.columns = statuses.map(s => ({
                         id: s.id,
                         title: s.title,
-                        issues: s.issues
+                        tasks: s.tasks
                     }));
                 })
             ).subscribe()
