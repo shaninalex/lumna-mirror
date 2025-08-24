@@ -84,3 +84,28 @@ func GetSession(ctx *fiber.Ctx) *ory.Session {
 	session, _ := ctx.Locals(base.ContextUserID).(*ory.Session)
 	return session
 }
+
+func ParamUUID(ctx *fiber.Ctx, name string) (uuid.UUID, error) {
+	val := ctx.Params(name)
+	id, err := uuid.Parse(val)
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("%s is not a valid UUID", name)
+	}
+	return id, nil
+}
+
+func ParamString(ctx *fiber.Ctx, name string) (string, error) {
+	val := ctx.Params(name)
+	if val == "" {
+		return "", fmt.Errorf("%s is required", name)
+	}
+	return val, nil
+}
+
+func ParseBody[T any](ctx *fiber.Ctx) (*T, error) {
+	var dto T
+	if err := ctx.BodyParser(&dto); err != nil {
+		return nil, err
+	}
+	return &dto, nil
+}

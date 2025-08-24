@@ -79,7 +79,7 @@ func (s *ProjectManagement) Statuses(ctx context.Context, orgID uuid.UUID, proje
 	return project.Statuses, nil
 }
 
-func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectKey string, taskID uuid.UUID, payload domain.ChangeTaskStatusDTO) error {
+func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectKey string, taskID uuid.UUID, payload *domain.ChangeTaskStatusDTO) error {
 	db := database.GetDB(ctx)
 	project, err := s.Project(ctx, orgID, projectKey)
 	if err != nil {
