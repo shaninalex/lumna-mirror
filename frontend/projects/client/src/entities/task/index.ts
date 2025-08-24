@@ -1,3 +1,3 @@
-export * from './model/issue.model'
+export * from './model/task.model'
 export * from './ui'
 export * from './api'

@@ -1,5 +1,5 @@
 import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
-import {Task, IssueCardComponent, TaskService} from '@client/entities/task';
+import {Task, TaskCardComponent, TaskService} from '@client/entities/task';
 import {
     CdkDrag,
     CdkDragDrop,
@@ -22,7 +22,7 @@ import {MatCardModule} from '@angular/material/card';
         MatProgressSpinnerModule,
         CdkDropListGroup,
         MatCardModule,
-        IssueCardComponent,
+        TaskCardComponent,
     ],
     providers: [BoardViewApiService],
     styleUrl: './board-view.component.scss',

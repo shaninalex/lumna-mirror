@@ -4,7 +4,7 @@ import {Task} from '@client/entities/task';
 import {DatePipe} from '@angular/common';
 
 @Component({
-    selector: "ts-issue-card",
+    selector: "ts-task-card",
     template: `
         <mat-card appearance="outlined">
             <mat-card-header>
@@ -20,7 +20,7 @@ import {DatePipe} from '@angular/common';
     `,
     imports: [MatCardModule, DatePipe]
 })
-export class IssueCardComponent implements OnInit {
+export class TaskCardComponent implements OnInit {
     @Input() task: Task
 
     ngOnInit() {

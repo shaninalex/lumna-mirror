@@ -1,1 +1,1 @@
-export * from './issue-card'
+export * from './task-card'
