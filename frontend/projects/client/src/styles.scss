@@ -17,3 +17,11 @@ body {
 .mat-mdc-notch-piece.mdc-notched-outline__notch {
     border-right: 0;
 }
+
+.cdk-overlay-container {
+    background: rgba(0, 0, 0, .2);
+}
+
+.lg-dialog {
+    padding: 1rem;
+}
