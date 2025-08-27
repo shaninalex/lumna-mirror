@@ -1,11 +1,10 @@
-import {Component, inject, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {Task} from '@client/entities/task';
 import {DatePipe} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import {TaskDetailViewComponent} from './task-detail-view.component';
-import {ScrollStrategy} from '@angular/cdk/overlay';
+import {TaskDetailViewComponent} from '@client/entities/task/ui/task-detail-view';
 
 @Component({
     selector: "ts-task-card",
@@ -27,7 +26,7 @@ import {ScrollStrategy} from '@angular/cdk/overlay';
             </mat-card-footer>
         </mat-card>
     `,
-    imports: [MatCardModule, DatePipe, MatButtonModule, MatDialogModule]
+    imports: [MatCardModule, DatePipe, MatButtonModule, MatDialogModule],
 })
 export class TaskCardComponent {
     @Input() task: Task;

@@ -44,11 +44,9 @@ func (s *OrganizationController) handleGetByUser(ctx *fiber.Ctx) error {
 }
 
 func (s *OrganizationController) handleCreate(ctx *fiber.Ctx) error {
-
 	return nil
 }
 
 func (s *OrganizationController) handlePatch(ctx *fiber.Ctx) error {
-
 	return nil
 }
