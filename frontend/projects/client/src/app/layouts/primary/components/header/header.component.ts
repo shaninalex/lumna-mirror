@@ -13,8 +13,8 @@ import {CdkMenuModule} from '@angular/cdk/menu';
         <mat-toolbar class="items-center border-b border-slate-200 relative z-100">
             <div class="flex gap-4 items-center">
                 <a [routerLink]="['/']" class="flex gap-2 items-center">
-                    <img src="/assets/img/logo-simple.png" alt="" class="h-8">
-                    <h3><span class="font-bold">Taskiro</span></h3>
+                    <img src="/assets/img/logo-icon.svg" alt="" class="h-8">
+                    <h3><span class="font-bold">Flowreon</span></h3>
                 </a>
                 <button matIconButton (click)="sidebarToggle()">
                     <mat-icon>menu</mat-icon>

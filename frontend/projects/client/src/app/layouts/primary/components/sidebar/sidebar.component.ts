@@ -26,7 +26,7 @@ import {version} from '../../../../../../../../package.json';
             <div class="flex flex-col">
                 @for (item of sideNav; track $index) {
                     <a [routerLink]="[item.active ? item.link : '/404']"
-                       [routerLinkActive]="'bg-slate-100 text-orange-500'"
+                       [routerLinkActive]="'bg-slate-100 text-teal-500'"
                        [ngClass]="{
                             'text-slate-400 pointer-events-none': !item.active,
                        }"
