@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/shaninalex/jajirra/internal/apperrors"
-	"gitlab.com/shaninalex/jajirra/internal/org"
-	"gitlab.com/shaninalex/jajirra/tdata"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/org"
+	"gitlab.com/shaninalex/flowreon/tdata"
 )
 
 func Test_GetOrganizationByUserID(t *testing.T) {

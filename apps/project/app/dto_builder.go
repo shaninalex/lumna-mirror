@@ -3,8 +3,8 @@ package app
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/internal/domain"
-	"gitlab.com/shaninalex/jajirra/internal/web"
+	"gitlab.com/shaninalex/flowreon/internal/domain"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 type PatchTaskInput struct {

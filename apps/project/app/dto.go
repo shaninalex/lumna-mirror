@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/models"
+	"gitlab.com/shaninalex/flowreon/models"
 )
 
 type ProjectDto struct {

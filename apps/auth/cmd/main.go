@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	authApp "gitlab.com/shaninalex/jajirra/apps/auth/app"
-	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/internal/base"
-	"gitlab.com/shaninalex/jajirra/internal/kratos"
-	"gitlab.com/shaninalex/jajirra/internal/web"
+	authApp "gitlab.com/shaninalex/flowreon/apps/auth/app"
+	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/kratos"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 func main() {

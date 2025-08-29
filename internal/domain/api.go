@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"gitlab.com/shaninalex/jajirra/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 )
 
 type ApiResponse struct {

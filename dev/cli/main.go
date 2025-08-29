@@ -8,9 +8,9 @@ import (
 	"slices"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/database/seed"
-	"gitlab.com/shaninalex/jajirra/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/database/seed"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 )
 
 type DevCliAction string

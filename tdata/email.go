@@ -1,6 +1,6 @@
 package tdata
 
-import "gitlab.com/shaninalex/jajirra/internal/email"
+import "gitlab.com/shaninalex/flowreon/internal/email"
 
 var _emailApi *TestEmailApi
 var _emailStorage *TestEmailStorage

@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"gitlab.com/shaninalex/jajirra/internal/apperrors"
-	"gitlab.com/shaninalex/jajirra/internal/pm"
-	"gitlab.com/shaninalex/jajirra/internal/web"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/pm"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 func NewProjectController(router *fiber.App) {

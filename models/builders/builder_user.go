@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
-	"gitlab.com/shaninalex/jajirra/models"
+	"gitlab.com/shaninalex/flowreon/models"
 )
 
 // UserBuilder builder pattern code

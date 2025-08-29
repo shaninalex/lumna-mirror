@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	orgApp "gitlab.com/shaninalex/jajirra/apps/org/app"
-	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/internal/base"
-	"gitlab.com/shaninalex/jajirra/internal/web"
+	orgApp "gitlab.com/shaninalex/flowreon/apps/org/app"
+	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 func main() {

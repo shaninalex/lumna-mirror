@@ -3,7 +3,7 @@ package app
 import (
 	"time"
 
-	"gitlab.com/shaninalex/jajirra/models"
+	"gitlab.com/shaninalex/flowreon/models"
 )
 
 type OrganizationDto struct {

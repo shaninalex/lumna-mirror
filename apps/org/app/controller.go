@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"gitlab.com/shaninalex/jajirra/internal/apperrors"
-	"gitlab.com/shaninalex/jajirra/internal/org"
-	"gitlab.com/shaninalex/jajirra/internal/web"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/org"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 type OrganizationController struct {

@@ -1,4 +1,4 @@
-// Copyright © 2025 Jajirra https://jajirra.shaninalex.com. All rights reserved.
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
 
 package database
 
@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"gitlab.com/shaninalex/jajirra/models"
+	"gitlab.com/shaninalex/flowreon/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

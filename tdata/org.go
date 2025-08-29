@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/models"
-	"gitlab.com/shaninalex/jajirra/models/builders"
+	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/models/builders"
 )
 
 func CreateOrganisation(ctx context.Context, user *models.User) *models.Organization {

@@ -1,4 +1,4 @@
-# JaJirra
+# flowreon
 
 
 
@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/shaninalex/jajirra.git
+git remote add origin https://gitlab.com/shaninalex/flowreon.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.com/shaninalex/jajirra/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.com/shaninalex/flowreon/-/settings/integrations)
 
 ## Collaborate with your team
 

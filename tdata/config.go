@@ -1,8 +1,8 @@
-// Copyright © 2025 JaJirra https://jajirra.shaninalex.com. All rights reserved.
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
 
 package tdata
 
-import "gitlab.com/shaninalex/jajirra/internal/base"
+import "gitlab.com/shaninalex/flowreon/internal/base"
 
 func newTestConfig() base.IConfig {
 	conf = &testConfig{

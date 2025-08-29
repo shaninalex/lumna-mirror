@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/Pallinder/go-randomdata"
-	"gitlab.com/shaninalex/jajirra/models"
+	"gitlab.com/shaninalex/flowreon/models"
 	"gorm.io/gorm"
 )
 

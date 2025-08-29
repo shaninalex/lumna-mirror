@@ -1,11 +1,11 @@
-// Copyright © 2025 Jajirra https://jajirra.shaninalex.com. All rights reserved.
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
 
 package database
 
 import (
 	"context"
 
-	"gitlab.com/shaninalex/jajirra/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gorm.io/gorm"
 )
 

@@ -54,9 +54,9 @@ import {BoardViewComponent} from '@client/features/project';
                         <ts-board-view [projectKey]="projectKey"/>
                     </div>
                 </mat-tab>
-                <mat-tab label="Timeline">
+                <mat-tab label="Calendar">
                     <div class="py-4">
-                        content Timeline
+                        Calendar
                     </div>
                 </mat-tab>
                 <mat-tab label="Pages">

@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
-	"gitlab.com/shaninalex/jajirra/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 )
 
 var testKratosClient *TestKratosService

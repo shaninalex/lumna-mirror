@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/internal/utils"
-	"gitlab.com/shaninalex/jajirra/models"
-	"gitlab.com/shaninalex/jajirra/models/builders"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
+	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/models/builders"
 	"gorm.io/gorm"
 )
 

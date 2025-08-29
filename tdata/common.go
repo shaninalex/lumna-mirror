@@ -1,4 +1,4 @@
-// Copyright © 2025 JaJirra https://jajirra.shaninalex.com. All rights reserved.
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
 
 package tdata
 
@@ -6,7 +6,7 @@ import (
 	"context"
 	"sync"
 
-	"gitlab.com/shaninalex/jajirra/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gorm.io/gorm"
 )
 

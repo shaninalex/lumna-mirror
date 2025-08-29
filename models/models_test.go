@@ -5,10 +5,10 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/models"
-	"gitlab.com/shaninalex/jajirra/models/builders"
-	"gitlab.com/shaninalex/jajirra/tdata"
+	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/models/builders"
+	"gitlab.com/shaninalex/flowreon/tdata"
 )
 
 func Test_ModelsBuilders(t *testing.T) {

@@ -1,4 +1,4 @@
-module gitlab.com/shaninalex/jajirra
+module gitlab.com/shaninalex/flowreon
 
 go 1.24.2
 
