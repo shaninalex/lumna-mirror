@@ -34,3 +34,24 @@ func NewPatchTaskInput(ctx *fiber.Ctx) (*PatchTaskInput, error) {
 		Data:       data,
 	}, nil
 }
+
+type UpdateTaskInput struct {
+	ProjectCode string
+	TaskCode    string
+	Data        *domain.UpdateTaskData
+}
+
+func NewUpdateTaskInput(ctx *fiber.Ctx) (*UpdateTaskInput, error) {
+	projectCode := ctx.Params("projectCode")
+	taskCode := ctx.Params("taskCode")
+	data, err := web.ParseBody[domain.UpdateTaskData](ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &UpdateTaskInput{
+		ProjectCode: projectCode,
+		TaskCode:    taskCode,
+		Data:        data,
+	}, nil
+}

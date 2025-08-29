@@ -5,7 +5,7 @@ import {Status} from '@client/entities/project';
 import {CommonApiService} from '@client/shared/common';
 
 export const BOARD_URLS = {
-    Statuses: (projectKey: string) => `${env.API_ROOT}/api/project/${projectKey}/statuses`,
+    Tasks: (projectKey: string) => `${env.API_ROOT}/api/project/${projectKey}/tasks`,
     TaskAction: (projectKey: string, taskID: string) => `${env.API_ROOT}/api/project/${projectKey}/task/${taskID}/status`,
 }
 
@@ -18,8 +18,8 @@ interface ChangeStatusPayload {
 
 @Injectable()
 export class BoardViewApiService extends CommonApiService {
-    public Statuses(projectKey: string): Observable<Status[]> {
-        return this.get<Status[]>(BOARD_URLS.Statuses(projectKey)).pipe(
+    public Tasks(projectKey: string): Observable<Status[]> {
+        return this.get<Status[]>(BOARD_URLS.Tasks(projectKey)).pipe(
             map(data => data.data),
         );
     }

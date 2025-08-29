@@ -6,15 +6,20 @@ import {Task} from '@client/entities/task';
 import {CommonApiService} from '@client/shared/common';
 
 export const TASKS_URLS = {
-    List: `${env.API_ROOT}/api/project/tasks`,
+    Detail: (projectCode: string, taskCode: string) => `${env.API_ROOT}/api/project/${projectCode}/tasks/${taskCode}`
 }
 
 @Injectable({providedIn: "root"})
 export class TaskService extends CommonApiService {
-    public List(projectKey: string): Observable<Task[]> {
+    public Detail(projectCode: string, taskCode: string): Observable<Task> {
         let p = new HttpParams()
-        p = p.append("project", projectKey)
-        return this.get<Task[]>(TASKS_URLS.List, p).pipe(
+        return this.get<Task>(TASKS_URLS.Detail(projectCode, taskCode), p).pipe(
+            map(resp => resp.data)
+        );
+    }
+
+    public Update(projectCode: string, taskCode: string, data: any): Observable<Task> {
+        return this.patch<Task>(TASKS_URLS.Detail(projectCode, taskCode), data).pipe(
             map(resp => resp.data)
         );
     }

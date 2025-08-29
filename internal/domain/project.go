@@ -10,3 +10,8 @@ type ChangeTaskStatusDTO struct {
 	FromIdx      uint      `json:"from_idx"`
 	ToIdx        uint      `json:"to_idx"`
 }
+
+type UpdateTaskData struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+}

@@ -25,9 +25,10 @@ type ProjectController struct {
 
 func (s *ProjectController) setRoutes() {
 	s.router.Get("/api/project/list", s.HandleProjectsList)
-	s.router.Get("/api/project/:projectKey/statuses", s.HandleProjectStatuses)
-	s.router.Patch("/api/project/:projectKey/task/:taskID/status", s.HandlePatchTaskStatus)
-	s.router.Get("/api/project/tasks", s.HandleTasksList)
+	s.router.Get("/api/project/:projectKey/tasks", s.HandleProjectTasksList)
+	s.router.Get("/api/project/:projectCode/tasks/:taskCode", s.HandleTaskDetail)
+	s.router.Patch("/api/project/:projectCode/tasks/:taskCode", s.HandleTaskUpdate)
+	s.router.Patch("/api/project/:projectKey/tasks/:taskID/status", s.HandleTaskPatchStatus)
 }
 
 func (s *ProjectController) HandleProjectsList(ctx *fiber.Ctx) error {
@@ -42,34 +43,42 @@ func (s *ProjectController) HandleProjectsList(ctx *fiber.Ctx) error {
 	return web.Success(ctx, NewProjectsDto(projects))
 }
 
-func (s *ProjectController) HandleTasksList(ctx *fiber.Ctx) error {
-	// TODO: check user permission. On error: 403 ( user should not get tasks of the project he do not allowed to get )
-	q, err := s.getFilterParams(ctx)
-	if err != nil {
-		return web.Error(ctx, http.StatusBadRequest, errors.New("provide proper filter conditions"))
-	}
-	issues, err := s.projectApi.Issues(ctx.Context(), web.GetOrganizationId(ctx), q.Project)
-	if err != nil {
-		return web.Error(ctx, http.StatusBadRequest, err)
-	}
-	return web.Success(ctx, NewTasksDto(issues))
-}
-
-func (s *ProjectController) HandleProjectStatuses(ctx *fiber.Ctx) error {
+func (s *ProjectController) HandleProjectTasksList(ctx *fiber.Ctx) error {
 	projectKey := ctx.Params("projectKey")
-	statuses, err := s.projectApi.Statuses(ctx.Context(), web.GetOrganizationId(ctx), projectKey)
+	statuses, err := s.projectApi.TasksList(ctx.Context(), web.GetOrganizationId(ctx), projectKey)
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	return web.Success(ctx, NewTasksStatusDto(statuses))
 }
 
-func (s *ProjectController) HandlePatchTaskStatus(ctx *fiber.Ctx) error {
+func (s *ProjectController) HandleTaskPatchStatus(ctx *fiber.Ctx) error {
 	in, err := NewPatchTaskInput(ctx)
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	if err = s.projectApi.PatchTaskStatus(ctx.Context(), web.GetOrganizationId(ctx), in.ProjectKey, in.TaskID, in.Data); err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	return web.Success(ctx, nil, "Task saved")
+}
+
+func (s *ProjectController) HandleTaskDetail(ctx *fiber.Ctx) error {
+	projectCode := ctx.Params("projectCode")
+	taskCode := ctx.Params("taskCode")
+	task, err := s.projectApi.TaskDetail(ctx.Context(), web.GetOrganizationId(ctx), projectCode, taskCode)
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	return web.Success(ctx, NewTaskDto(task))
+}
+
+func (s *ProjectController) HandleTaskUpdate(ctx *fiber.Ctx) error {
+	data, err := NewUpdateTaskInput(ctx)
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	if err = s.projectApi.TaskUpdate(ctx.Context(), web.GetOrganizationId(ctx), data.ProjectCode, data.TaskCode, data.Data); err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	return web.Success(ctx, nil, "Task saved")

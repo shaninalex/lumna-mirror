@@ -3,17 +3,16 @@ import {MatCardModule} from '@angular/material/card';
 import {Task} from '@client/entities/task';
 import {DatePipe} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import {TaskDetailViewComponent} from '@client/entities/task/ui/task-detail-view';
+import {RouterLink} from '@angular/router';
 
 @Component({
     selector: "ts-task-card",
     template: `
         <mat-card appearance="outlined">
             <mat-card-header>
-                <button class="cursor-pointer" (click)="openDetailView()" type="button">
+                <a [routerLink]="['/projects', projectKey, task.code]" class="cursor-pointer text-left">
                     {{ task.title }}
-                </button>
+                </a>
             </mat-card-header>
             <mat-card-footer class="p-4 flex items-center gap-2">
                 <div class="text-sm">
@@ -26,17 +25,9 @@ import {TaskDetailViewComponent} from '@client/entities/task/ui/task-detail-view
             </mat-card-footer>
         </mat-card>
     `,
-    imports: [MatCardModule, DatePipe, MatButtonModule, MatDialogModule],
+    imports: [MatCardModule, DatePipe, MatButtonModule, RouterLink],
 })
 export class TaskCardComponent {
     @Input() task: Task;
-    readonly dialog = inject(MatDialog);
-
-    openDetailView() {
-        this.dialog.open(TaskDetailViewComponent, {
-            data: {task: this.task},
-            maxWidth: "100%",
-            panelClass: "lg-dialog"
-        });
-    }
+    @Input() projectKey: string;
 }

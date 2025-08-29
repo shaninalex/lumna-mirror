@@ -1,57 +1,57 @@
-import {Component, inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
-import {Task} from '@client/entities/task';
+import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
+import {Task, TaskService} from '@client/entities/task';
 import {MatInputModule} from '@angular/material/input';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatButton} from '@angular/material/button';
 import {ActivityListComponent} from '@client/entities/task/ui/activity-list';
-
-export interface DialogData {
-    task: Task;
-}
+import {TaskEditDetailsComponent} from '@client/features/task/task-edit-details/task-edit-details.component';
+import {Subscription, tap} from 'rxjs';
 
 @Component({
     selector: 'ts-task-detail-view',
     imports: [
-        MatDialogContent,
         MatInputModule,
-        ReactiveFormsModule,
-        MatButton,
-        MatDialogTitle,
         ActivityListComponent,
+        TaskEditDetailsComponent,
     ],
     template: `
-        <div>
-            <h4 mat-dialog-title>{{ data.task.title }}</h4>
-        </div>
-        <mat-dialog-content class="w-screen max-w-7xl mx-auto">
+        @if (!task) {
+            loading...
+        } @else {
+            <div class="mb-4">
+                <h4>{{ task.title }}</h4>
+            </div>
             <div class="grid grid-cols-3 gap-4">
                 <div class="col-span-2">
-                    <form [formGroup]="form" class="flex flex-col gap-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Clearable input</mat-label>
-                            <input matInput type="text" formControlName="title">
-                        </mat-form-field>
-                        <mat-form-field appearance="outline">
-                            <mat-label>Clearable input</mat-label>
-                            <input matInput type="text" formControlName="description">
-                        </mat-form-field>
-                        <div>
-                            <button matButton="outlined">Save</button>
-                        </div>
-                    </form>
+                    <ts-task-edit-details [task]="task" (update)="onUpdate($event)"/>
                 </div>
                 <div>
-                    <ts-activity-list />
+                    <ts-activity-list [taskID]="task.id"/>
                 </div>
             </div>
-        </mat-dialog-content>
+        }
     `
 })
-export class TaskDetailViewComponent {
-    data = inject<DialogData>(MAT_DIALOG_DATA);
-    form = new FormGroup({
-        "title": new FormControl(this.data.task.title, Validators.required),
-        "description": new FormControl(this.data.task.description),
-    })
+export class TaskDetailViewComponent implements OnInit, OnDestroy {
+    @Input() taskCode: string;
+    @Input() projectCode: string;
+    private _sub = new Subscription();
+    api = inject(TaskService);
+    task: Task;
+
+    onUpdate(data: any) {
+        this.api.Update(this.projectCode, this.taskCode, data).subscribe(result => {
+            console.log(result)
+        })
+    }
+
+    ngOnInit() {
+        this._sub.add(
+            this.api.Detail(this.projectCode, this.taskCode).pipe(
+                tap(data => this.task = data)
+            ).subscribe()
+        )
+    }
+
+    ngOnDestroy() {
+        this._sub.unsubscribe()
+    }
 }

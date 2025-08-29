@@ -12,13 +12,13 @@ import (
 	"gorm.io/gorm"
 )
 
-type ProjectManager interface {
-	Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error)
-	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
-	Issues(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Task, error)
-	Statuses(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
-	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectKey string, taskID uuid.UUID, payload domain.ChangeTaskStatusDTO) error
-}
+//type ProjectManager interface {
+//	Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error)
+//	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
+//	Issues(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Task, error)
+//	Statuses(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
+//	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectKey string, taskID uuid.UUID, payload domain.ChangeTaskStatusDTO) error
+//}
 
 type ProjectManagement struct{}
 
@@ -58,20 +58,7 @@ func (s *ProjectManagement) List(ctx context.Context, orgID uuid.UUID) ([]*model
 	return projects, nil
 }
 
-func (s *ProjectManagement) Issues(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Task, error) {
-	//var issues []*models.Task
-	project, err := s.Project(ctx, orgID, projectKey)
-	if err != nil {
-		return nil, err
-	}
-	//tx := database.GetDB(ctx).Where("project_id = ?", project.ID).Find(&issues)
-	//if tx.Error != nil {
-	//	return nil, tx.Error
-	//}
-	return project.Tasks, nil
-}
-
-func (s *ProjectManagement) Statuses(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error) {
+func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error) {
 	project, err := s.Project(ctx, orgID, projectKey)
 	if err != nil {
 		return nil, err
@@ -103,6 +90,39 @@ func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID
 	task.ListIndex = payload.ToIdx
 	task.Completed = complete
 
+	tx = db.Save(&task)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
+func (s *ProjectManagement) TaskDetail(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string) (*models.Task, error) {
+	project, err := s.Project(ctx, orgID, projectKey)
+	if err != nil {
+		return nil, err
+	}
+	var task models.Task
+	tx := database.GetDB(ctx).Where("code = ? AND project_id = ?", taskCode, project.GetID()).First(&task)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return &task, nil
+}
+
+func (s *ProjectManagement) TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *domain.UpdateTaskData) error {
+	db := database.GetDB(ctx)
+	project, err := s.Project(ctx, orgID, projectKey)
+	if err != nil {
+		return err
+	}
+	var task models.Task
+	tx := database.GetDB(ctx).Where("code = ? AND project_id = ?", taskCode, project.GetID()).First(&task)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	task.Title = data.Title
+	task.Description = data.Description
 	tx = db.Save(&task)
 	if tx.Error != nil {
 		return tx.Error

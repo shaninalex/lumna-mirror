@@ -56,7 +56,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._sub.add(
-            this._boardApi.Statuses(this.projectKey).pipe(
+            this._boardApi.Tasks(this.projectKey).pipe(
                 tap(statuses => {
                     this.columns = statuses.map(s => ({
                         id: s.id,
