@@ -1,4 +1,4 @@
-package org
+package app
 
 import (
 	"context"
@@ -10,6 +10,10 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 	"gorm.io/gorm"
 )
+
+type OrganizationManager interface {
+	Get(ctx context.Context, userID uuid.UUID) (*models.Organization, error)
+}
 
 type OrganizationApi struct {
 }

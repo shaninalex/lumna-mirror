@@ -1,27 +1,22 @@
-package app
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+
+package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/internal/domain"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 type PatchTaskInput struct {
-	ProjectKey string
-	TaskID     uuid.UUID
-	Data       *domain.ChangeTaskStatusDTO
+	ProjectCode string
+	TaskCode    string
+	Data        *domain.ChangeTaskStatusDTO
 }
 
 func NewPatchTaskInput(ctx *fiber.Ctx) (*PatchTaskInput, error) {
-	projectKey, err := web.ParamString(ctx, "projectKey")
-	if err != nil {
-		return nil, err
-	}
-	taskID, err := web.ParamUUID(ctx, "taskID")
-	if err != nil {
-		return nil, err
-	}
+	projectCode := ctx.Params("projectCode")
+	taskCode := ctx.Params("taskCode")
 
 	data, err := web.ParseBody[domain.ChangeTaskStatusDTO](ctx)
 	if err != nil {
@@ -29,9 +24,9 @@ func NewPatchTaskInput(ctx *fiber.Ctx) (*PatchTaskInput, error) {
 	}
 
 	return &PatchTaskInput{
-		ProjectKey: projectKey,
-		TaskID:     taskID,
-		Data:       data,
+		ProjectCode: projectCode,
+		TaskCode:    taskCode,
+		Data:        data,
 	}, nil
 }
 

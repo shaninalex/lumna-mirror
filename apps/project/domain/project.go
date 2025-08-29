@@ -1,4 +1,6 @@
-package pm
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+
+package domain
 
 import (
 	"context"
@@ -12,13 +14,16 @@ import (
 	"gorm.io/gorm"
 )
 
-//type ProjectManager interface {
-//	Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error)
-//	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
-//	Issues(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Task, error)
-//	Statuses(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
-//	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectKey string, taskID uuid.UUID, payload domain.ChangeTaskStatusDTO) error
-//}
+type ProjectManager interface {
+	Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error)
+	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
+	TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
+	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *domain.ChangeTaskStatusDTO) error
+	TaskDetail(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string) (*models.Task, error)
+	TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *domain.UpdateTaskData) error
+}
+
+var _ ProjectManager = &ProjectManagement{}
 
 type ProjectManagement struct{}
 
@@ -66,9 +71,9 @@ func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, proj
 	return project.Statuses, nil
 }
 
-func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectKey string, taskID uuid.UUID, payload *domain.ChangeTaskStatusDTO) error {
+func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode, taskCode string, payload *domain.ChangeTaskStatusDTO) error {
 	db := database.GetDB(ctx)
-	project, err := s.Project(ctx, orgID, projectKey)
+	project, err := s.Project(ctx, orgID, projectCode)
 	if err != nil {
 		return err
 	}
@@ -80,9 +85,10 @@ func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID
 		}
 	}
 
-	task := models.Task{ID: taskID}
-	tx := db.First(&task)
+	var task models.Task
+	tx := database.GetDB(ctx).Where("code = ? AND project_id = ?", taskCode, project.GetID()).First(&task)
 	if tx.Error != nil {
+		// TODO: apperror - task not found
 		return tx.Error
 	}
 
@@ -92,6 +98,7 @@ func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID
 
 	tx = db.Save(&task)
 	if tx.Error != nil {
+		// TODO: apperror - db error
 		return tx.Error
 	}
 	return nil

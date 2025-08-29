@@ -6,19 +6,18 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
-	"gitlab.com/shaninalex/flowreon/internal/org"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 type OrganizationController struct {
 	router *fiber.App
-	api    *org.OrganizationApi
+	api    *OrganizationApi
 }
 
 func NewOrganizationController(router *fiber.App) *OrganizationController {
 	c := &OrganizationController{
 		router: router,
-		api:    org.NewOrganizationApi(),
+		api:    NewOrganizationApi(),
 	}
 	c.init()
 	return c
