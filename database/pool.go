@@ -1,4 +1,4 @@
-// Copyright © 2025 Jajirra https://jajirra.shaninalex.com. All rights reserved.
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
 
 package database
 
@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"gitlab.com/shaninalex/flowreon/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -52,12 +53,13 @@ func InitDB(dsn string) *gorm.DB {
 // ApplyMigrations applying migrations
 func ApplyMigrations(db *gorm.DB) {
 	err := db.AutoMigrate(
-		&User{},
-		&Issue{},
-		&Epic{},
-		&Sprint{},
-		&Organization{},
-		&Project{},
+		&models.User{},
+		&models.Task{},
+		&models.TaskStatus{},
+		&models.Epic{},
+		&models.Sprint{},
+		&models.Organization{},
+		&models.Project{},
 	)
 	if err != nil {
 		log.Printf("[DB]: Unable to apply migrations: %v", err)

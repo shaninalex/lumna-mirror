@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	projectApp "gitlab.com/shaninalex/jajirra/apps/project/app"
-	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/internal/base"
-	"gitlab.com/shaninalex/jajirra/internal/kratos"
-	"gitlab.com/shaninalex/jajirra/internal/web"
+	projectApp "gitlab.com/shaninalex/flowreon/apps/project/app"
+	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 func main() {
@@ -22,10 +21,8 @@ func main() {
 
 	config := base.NewConfig(configPath)
 	db := database.InitDB(config.String("app.dsn"))
-	router := web.DefaultRouter(db, "project")
-	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
-	router.Use(web.NewAuthMiddleware(kratosClient))
-	projectApp.NewTaskController(router)
+	router := web.AuthRouter(config, db, "org")
+	projectApp.NewProjectController(router)
 	if err := router.Listen(fmt.Sprintf(":%s", config.String("project.port"))); err != nil {
 		panic(err)
 	}

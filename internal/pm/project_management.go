@@ -1,0 +1,131 @@
+package pm
+
+import (
+	"context"
+	"errors"
+
+	"github.com/google/uuid"
+	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/domain"
+	"gitlab.com/shaninalex/flowreon/models"
+	"gorm.io/gorm"
+)
+
+//type ProjectManager interface {
+//	Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error)
+//	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
+//	Issues(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Task, error)
+//	Statuses(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
+//	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectKey string, taskID uuid.UUID, payload domain.ChangeTaskStatusDTO) error
+//}
+
+type ProjectManagement struct{}
+
+func NewProjectManagement() *ProjectManagement {
+	return &ProjectManagement{}
+}
+
+func (s *ProjectManagement) Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error) {
+	var project models.Project
+
+	tx := database.GetDB(ctx).
+		WithContext(ctx).
+		Preload("Statuses.Tasks").
+		Preload("Tasks").
+		First(&project, "project_key = ? AND organization_id = ?", projectKey, orgID)
+
+	if tx.Error != nil {
+		if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+			return nil, apperrors.ProjectNotFound
+		}
+		return nil, tx.Error
+	}
+
+	return &project, nil
+}
+
+func (s *ProjectManagement) List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error) {
+	db := database.GetDB(ctx)
+	var projects []*models.Project
+	result := db.Find(&projects).Where("organization_id = ?", orgID)
+	if result.Error != nil {
+		if result.Error.Error() == "record not found" {
+			return nil, apperrors.ProjectNotFound
+		}
+		return nil, result.Error
+	}
+	return projects, nil
+}
+
+func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error) {
+	project, err := s.Project(ctx, orgID, projectKey)
+	if err != nil {
+		return nil, err
+	}
+	return project.Statuses, nil
+}
+
+func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectKey string, taskID uuid.UUID, payload *domain.ChangeTaskStatusDTO) error {
+	db := database.GetDB(ctx)
+	project, err := s.Project(ctx, orgID, projectKey)
+	if err != nil {
+		return err
+	}
+	complete := false
+	for _, st := range project.Statuses {
+		if st.GetID() == payload.ToStatusID {
+			complete = st.Complete
+			break
+		}
+	}
+
+	task := models.Task{ID: taskID}
+	tx := db.First(&task)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	task.TaskStatusID = payload.ToStatusID
+	task.ListIndex = payload.ToIdx
+	task.Completed = complete
+
+	tx = db.Save(&task)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
+func (s *ProjectManagement) TaskDetail(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string) (*models.Task, error) {
+	project, err := s.Project(ctx, orgID, projectKey)
+	if err != nil {
+		return nil, err
+	}
+	var task models.Task
+	tx := database.GetDB(ctx).Where("code = ? AND project_id = ?", taskCode, project.GetID()).First(&task)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return &task, nil
+}
+
+func (s *ProjectManagement) TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *domain.UpdateTaskData) error {
+	db := database.GetDB(ctx)
+	project, err := s.Project(ctx, orgID, projectKey)
+	if err != nil {
+		return err
+	}
+	var task models.Task
+	tx := database.GetDB(ctx).Where("code = ? AND project_id = ?", taskCode, project.GetID()).First(&task)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	task.Title = data.Title
+	task.Description = data.Description
+	tx = db.Save(&task)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}

@@ -4,7 +4,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
+	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/models/builders"
 	"gorm.io/gorm"
 )
 
@@ -12,7 +14,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 	now := time.Now()
 
 	// Create organization
-	org := database.Organization{
+	org := models.Organization{
 		ID:          uuid.New(),
 		UserID:      userID,
 		Title:       "Self Org",
@@ -25,14 +27,14 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 	}
 
 	// Attach user to this org
-	if err := db.Model(&database.User{}).
+	if err := db.Model(&models.User{}).
 		Where("id = ?", userID).
 		Update("organization_id", org.ID).Error; err != nil {
 		return err
 	}
 
 	// Create project "Taskiro"
-	project := database.Project{
+	project := models.Project{
 		ID:             uuid.New(),
 		UserID:         userID,
 		OrganizationID: org.ID,
@@ -45,8 +47,26 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		return err
 	}
 
+	// Create project statuses ( board columns )
+	statusTodo := builders.NewIssueStatusBuilder().
+		Project(&project).ID(uuid.New()).ProjectID(project.GetID()).
+		Title("Todo").Index(0).Build()
+	statusInProgress := builders.NewIssueStatusBuilder().
+		Project(&project).ID(uuid.New()).ProjectID(project.GetID()).
+		Title("In Progress").Index(1).Build()
+	statusTest := builders.NewIssueStatusBuilder().
+		Project(&project).ID(uuid.New()).ProjectID(project.GetID()).
+		Title("Testing").Index(2).Build()
+	statusDone := builders.NewIssueStatusBuilder().
+		Project(&project).ID(uuid.New()).ProjectID(project.GetID()).
+		Title("Done").Index(3).Complete(true).Build()
+	statuses := []*models.TaskStatus{statusTodo, statusInProgress, statusTest, statusDone}
+	if err := db.Create(&statuses).Error; err != nil {
+		return err
+	}
+
 	// Create sprints
-	sprint1 := database.Sprint{
+	sprint1 := models.Sprint{
 		ID:             uuid.New(),
 		UserID:         userID,
 		OrganizationID: org.ID,
@@ -57,7 +77,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}
-	sprint2 := database.Sprint{
+	sprint2 := models.Sprint{
 		ID:             uuid.New(),
 		UserID:         userID,
 		OrganizationID: org.ID,
@@ -68,12 +88,12 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}
-	if err := db.Create(&[]database.Sprint{sprint1, sprint2}).Error; err != nil {
+	if err := db.Create(&[]models.Sprint{sprint1, sprint2}).Error; err != nil {
 		return err
 	}
 
 	// Create epics
-	epicUserMgmt := database.Epic{
+	epicUserMgmt := models.Epic{
 		ID:          uuid.New(),
 		UserID:      userID,
 		ProjectID:   project.ID,
@@ -82,7 +102,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}
-	epicCorePM := database.Epic{
+	epicCorePM := models.Epic{
 		ID:          uuid.New(),
 		UserID:      userID,
 		ProjectID:   project.ID,
@@ -91,7 +111,7 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}
-	epicUI := database.Epic{
+	epicUI := models.Epic{
 		ID:          uuid.New(),
 		UserID:      userID,
 		ProjectID:   project.ID,
@@ -100,12 +120,12 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}
-	if err := db.Create(&[]database.Epic{epicUserMgmt, epicCorePM, epicUI}).Error; err != nil {
+	if err := db.Create(&[]models.Epic{epicUserMgmt, epicCorePM, epicUI}).Error; err != nil {
 		return err
 	}
 
 	// Create issues
-	issues := []database.Issue{
+	issues := []models.Task{
 		{
 			ID:             uuid.New(),
 			UserID:         userID,
@@ -114,10 +134,27 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint1.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
-			Type:           "feature",
+			ListIndex:      1,
+			Code:           utils.GenerateEntityCode("task"),
+			Title:          "Try ULID instead of UUID",
+			Description:    "UUID is too long, may be ULID will be much more convinuent?",
+			TaskStatusID:   statusTodo.GetID(),
+			CreatedAt:      now,
+			UpdatedAt:      now,
+		},
+		{
+			ID:             uuid.New(),
+			UserID:         userID,
+			EpicID:         &epicUserMgmt.ID,
+			OrganizationID: org.ID,
+			SprintID:       &sprint1.ID,
+			ProjectID:      project.ID,
+			Assignee:       "alex",
+			ListIndex:      1,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Use only Material SDK",
 			Description:    "Replace default material components with SDK and manual created ui elements",
-			Status:         "todo",
+			TaskStatusID:   statusTodo.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -129,10 +166,11 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint1.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
-			Type:           "feature",
+			ListIndex:      2,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Implement authentication (login/register)",
 			Description:    "Use Ory Kratos for identity management",
-			Status:         "done",
+			TaskStatusID:   statusDone.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -144,10 +182,11 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint1.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
-			Type:           "feature",
+			ListIndex:      3,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Add user profile & settings page",
 			Description:    "Allow users to update their information",
-			Status:         "in_progress",
+			TaskStatusID:   statusTodo.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -159,10 +198,11 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint2.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
-			Type:           "feature",
+			ListIndex:      4,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Create projects & organizations",
 			Description:    "Implement CRUD for projects/organizations",
-			Status:         "todo",
+			TaskStatusID:   statusTest.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -174,10 +214,11 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint2.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
-			Type:           "feature",
+			ListIndex:      5,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Add issues & epics",
 			Description:    "Core task tracking functionality",
-			Status:         "todo",
+			TaskStatusID:   statusInProgress.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},
@@ -189,10 +230,11 @@ func Seed(db *gorm.DB, userID uuid.UUID) error {
 			SprintID:       &sprint2.ID,
 			ProjectID:      project.ID,
 			Assignee:       "alex",
-			Type:           "improvement",
+			ListIndex:      6,
+			Code:           utils.GenerateEntityCode("task"),
 			Title:          "Polish dashboard UI",
 			Description:    "Make Taskiro visually appealing with Tailwind & animations",
-			Status:         "todo",
+			TaskStatusID:   statusTodo.GetID(),
 			CreatedAt:      now,
 			UpdatedAt:      now,
 		},

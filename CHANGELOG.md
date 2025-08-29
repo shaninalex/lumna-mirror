@@ -1,3 +1,31 @@
+## 0.4.0 (2025-08-29)
+
+### Feat
+
+- rename app to Flowreon
+- update task
+- **ui**: task detail form modal dialog
+- **ui**: task detail form modal dialog
+- **model**: add task code
+- save status and sort
+- **models**: remove issue type and add completed prop
+- **ui**: develop board [in progress]
+- get project board
+
+### Fix
+
+- small issues and improvement
+- **ui**: tasks drag and drop list
+
+### Refactor
+
+- **api**: project api handlers
+- **ui**: replace the word "issue" with "task"
+- rename issue to task
+- **ui**: board view
+- **models**: define interfaces
+- **db**: introduce models interfaces + reorganize code
+
 ## 0.3.0 (2025-08-23)
 
 ### Feat

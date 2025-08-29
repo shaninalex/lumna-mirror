@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/tdata"
+	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/tdata"
 )
 
 func Test_UniqueUserCode(t *testing.T) {

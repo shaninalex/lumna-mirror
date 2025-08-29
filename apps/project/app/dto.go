@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/flowreon/models"
 )
 
 type ProjectDto struct {
@@ -15,7 +15,7 @@ type ProjectDto struct {
 	UpdatedAt  time.Time `json:"updated_at"`
 }
 
-func NewProjectDto(p *database.Project) *ProjectDto {
+func NewProjectDto(p *models.Project) *ProjectDto {
 	return &ProjectDto{
 		ID:         p.ID,
 		Title:      p.Title,
@@ -25,7 +25,7 @@ func NewProjectDto(p *database.Project) *ProjectDto {
 	}
 }
 
-func NewProjectsDto(ps []*database.Project) []*ProjectDto {
+func NewProjectsDto(ps []*models.Project) []*ProjectDto {
 	dtos := make([]*ProjectDto, len(ps))
 	for i, p := range ps {
 		dtos[i] = NewProjectDto(p)
@@ -33,44 +33,78 @@ func NewProjectsDto(ps []*database.Project) []*ProjectDto {
 	return dtos
 }
 
-type IssueDto struct {
-	ID          uuid.UUID          `json:"id"`
-	UserID      uuid.UUID          `json:"User_id"`
-	EpicID      *uuid.UUID         `json:"Epic_id"`
-	SprintID    *uuid.UUID         `json:"Sprint_id"`
-	ProjectID   uuid.UUID          `json:"Project_id"`
-	Assignee    string             `json:"assignee"`
-	Type        database.IssueType `json:"type"`
-	Title       string             `json:"title"`
-	Description string             `json:"description"`
-	Status      string             `json:"status"`
-	CreatedAt   time.Time          `json:"created_at"`
-	UpdatedAt   time.Time          `json:"updated_at"`
-	DeletedAt   time.Time          `json:"deleted_at"`
+type TaskDto struct {
+	ID          uuid.UUID  `json:"id"`
+	UserID      uuid.UUID  `json:"creator_id"`
+	EpicID      *uuid.UUID `json:"epic_id"`
+	SprintID    *uuid.UUID `json:"sprint_id"`
+	ProjectID   uuid.UUID  `json:"project_id"`
+	Assignee    string     `json:"assignee"`
+	Completed   bool       `json:"completed"`
+	Title       string     `json:"title"`
+	Description string     `json:"description"`
+	StatusID    uuid.UUID  `json:"status"`
+	ListIdx     uint       `json:"list_idx"`
+	Code        string     `json:"code"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
-func NewIssueDto(i *database.Issue) *IssueDto {
-	return &IssueDto{
-		ID:          i.ID,
-		UserID:      i.UserID,
-		EpicID:      i.EpicID,
-		SprintID:    i.SprintID,
-		ProjectID:   i.ProjectID,
-		Assignee:    i.Assignee,
-		Type:        i.Type,
-		Title:       i.Title,
-		Description: i.Description,
-		Status:      i.Status,
-		CreatedAt:   i.CreatedAt,
-		UpdatedAt:   i.UpdatedAt,
-		DeletedAt:   i.DeletedAt.Time,
+func NewTaskDto(t *models.Task) *TaskDto {
+	return &TaskDto{
+		ID:          t.ID,
+		UserID:      t.UserID,
+		EpicID:      t.EpicID,
+		SprintID:    t.SprintID,
+		ProjectID:   t.ProjectID,
+		Assignee:    t.Assignee,
+		Completed:   t.Completed,
+		Title:       t.Title,
+		Description: t.Description,
+		StatusID:    t.TaskStatusID,
+		ListIdx:     t.ListIndex,
+		Code:        t.Code,
+		CreatedAt:   t.CreatedAt,
+		UpdatedAt:   t.UpdatedAt,
+		DeletedAt:   &t.DeletedAt.Time,
 	}
 }
 
-func NewIssuesDto(ii []*database.Issue) []*IssueDto {
-	dtos := make([]*IssueDto, len(ii))
+func NewTasksDto(ii []*models.Task) []*TaskDto {
+	dtos := make([]*TaskDto, len(ii))
 	for i, issue := range ii {
-		dtos[i] = NewIssueDto(issue)
+		dtos[i] = NewTaskDto(issue)
+	}
+	return dtos
+}
+
+type TaskStatusDto struct {
+	ID          uuid.UUID                `json:"id"`
+	Title       string                   `json:"title"`
+	Description string                   `json:"description"`
+	Complete    bool                     `json:"complete"`
+	Index       uint                     `json:"index"`
+	Config      *models.TaskStatusConfig `json:"config"`
+	Tasks       []*TaskDto               `json:"tasks"`
+}
+
+func NewIssueStatusDto(i *models.TaskStatus) *TaskStatusDto {
+	return &TaskStatusDto{
+		ID:          i.GetID(),
+		Title:       i.Title,
+		Description: i.Description,
+		Complete:    i.Complete,
+		Index:       i.Index,
+		Config:      i.GetConfig(),
+		Tasks:       NewTasksDto(i.Tasks),
+	}
+}
+
+func NewTasksStatusDto(statuses []*models.TaskStatus) []*TaskStatusDto {
+	dtos := make([]*TaskStatusDto, len(statuses))
+	for i, status := range statuses {
+		dtos[i] = NewIssueStatusDto(status)
 	}
 	return dtos
 }

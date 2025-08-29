@@ -44,7 +44,7 @@ linters:
             keywords:
                 - TEMP
         goheader:
-            template: Copyright © 2025 JaJira https://jajira.shaninalex.com. All rights reserved.
+            template: Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
         maintidx:
             under: 12
         revive:

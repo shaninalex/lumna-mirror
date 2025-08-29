@@ -3,7 +3,7 @@ package app
 import (
 	"time"
 
-	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/flowreon/models"
 )
 
 type OrganizationDto struct {
@@ -13,7 +13,7 @@ type OrganizationDto struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
-func ToDto(o *database.Organization) *OrganizationDto {
+func ToDto(o *models.Organization) *OrganizationDto {
 	return &OrganizationDto{
 		Title:       o.Title,
 		Description: o.Description,

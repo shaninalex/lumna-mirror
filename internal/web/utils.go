@@ -8,10 +8,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
-	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/internal/apperrors"
-	"gitlab.com/shaninalex/jajirra/internal/base"
-	"gitlab.com/shaninalex/jajirra/internal/domain"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/domain"
+	"gitlab.com/shaninalex/flowreon/models"
 )
 
 // GetKratosRedirectUrl return redirect with kratos base url from config
@@ -75,12 +75,37 @@ func GetOrganizationId(ctx *fiber.Ctx) uuid.UUID {
 	return uuid.Nil
 }
 
-func GetUser(ctx *fiber.Ctx) *database.User {
-	user, _ := ctx.Locals(base.ContextUser).(*database.User)
+func GetUser(ctx *fiber.Ctx) *models.User {
+	user, _ := ctx.Locals(base.ContextUser).(*models.User)
 	return user
 }
 
 func GetSession(ctx *fiber.Ctx) *ory.Session {
 	session, _ := ctx.Locals(base.ContextUserID).(*ory.Session)
 	return session
+}
+
+func ParamUUID(ctx *fiber.Ctx, name string) (uuid.UUID, error) {
+	val := ctx.Params(name)
+	id, err := uuid.Parse(val)
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("%s is not a valid UUID", name)
+	}
+	return id, nil
+}
+
+func ParamString(ctx *fiber.Ctx, name string) (string, error) {
+	val := ctx.Params(name)
+	if val == "" {
+		return "", fmt.Errorf("%s is required", name)
+	}
+	return val, nil
+}
+
+func ParseBody[T any](ctx *fiber.Ctx) (*T, error) {
+	var dto T
+	if err := ctx.BodyParser(&dto); err != nil {
+		return nil, err
+	}
+	return &dto, nil
 }

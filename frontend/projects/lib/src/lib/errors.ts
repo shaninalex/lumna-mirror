@@ -2,6 +2,7 @@ export interface AppError {
 	id: string
 	key: string
 	message: string
+    data?: any
 }
 
 export const ERRORS: Record<string, AppError> = {

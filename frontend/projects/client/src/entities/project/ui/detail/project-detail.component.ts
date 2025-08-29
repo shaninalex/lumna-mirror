@@ -3,7 +3,8 @@ import {CdkMenuModule} from '@angular/cdk/menu';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {BacklogViewComponent, BoardViewComponent} from '@client/entities/project/ui/detail/components';
+import {BacklogViewComponent} from '@client/entities/project/ui/detail/components';
+import {BoardViewComponent} from '@client/features/project';
 
 @Component({
     selector: "ts-project-detail",
@@ -49,13 +50,13 @@ import {BacklogViewComponent, BoardViewComponent} from '@client/entities/project
                     </div>
                 </mat-tab>
                 <mat-tab label="Board">
-                    <div class="py-4">
+                    <div class="py-4 w-full">
                         <ts-board-view [projectKey]="projectKey"/>
                     </div>
                 </mat-tab>
-                <mat-tab label="Timeline">
+                <mat-tab label="Calendar">
                     <div class="py-4">
-                        content Timeline
+                        Calendar
                     </div>
                 </mat-tab>
                 <mat-tab label="Pages">

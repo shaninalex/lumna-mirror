@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"gitlab.com/shaninalex/jajirra/internal/base"
-	"gitlab.com/shaninalex/jajirra/internal/domain"
-	"gitlab.com/shaninalex/jajirra/internal/kratos"
-	"gitlab.com/shaninalex/jajirra/internal/web"
+	"gitlab.com/shaninalex/flowreon/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/domain"
+	"gitlab.com/shaninalex/flowreon/internal/kratos"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 func NewAuthController(config base.IConfig, router *fiber.App, authApi IAuthApi, kratosService kratos.IKratos) {

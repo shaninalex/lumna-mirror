@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatButtonModule} from '@angular/material/button';
-import {IssuesEditTableComponent} from '@client/features/issue';
+import {TaskEditTableComponent} from '@client/features/task';
 
 @Component({
     selector: "ts-sprint-edit-list-card",
@@ -12,7 +12,7 @@ import {IssuesEditTableComponent} from '@client/features/issue';
                 <mat-card-title>Setup basic layout</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <ts-issues-edit-table />
+                <ts-task-edit-table />
             </mat-card-content>
             <mat-card-footer class="p-4">
                 <button matButton="outlined" type="button">create</button>
@@ -23,7 +23,7 @@ import {IssuesEditTableComponent} from '@client/features/issue';
         MatCardModule,
         MatChipsModule,
         MatButtonModule,
-        IssuesEditTableComponent,
+        TaskEditTableComponent,
     ]
 })
 export class SprintEditListCardComponent {

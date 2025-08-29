@@ -1,5 +1,6 @@
 package app
 
 type TaskFilter struct {
-	Project string `query:"project,required"`
+	Project  string `query:"project,required"`
+	TaskCode string `query:"taskCode"`
 }

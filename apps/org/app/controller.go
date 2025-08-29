@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"gitlab.com/shaninalex/jajirra/internal/apperrors"
-	"gitlab.com/shaninalex/jajirra/internal/org"
-	"gitlab.com/shaninalex/jajirra/internal/web"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/org"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 type OrganizationController struct {
@@ -44,11 +44,9 @@ func (s *OrganizationController) handleGetByUser(ctx *fiber.Ctx) error {
 }
 
 func (s *OrganizationController) handleCreate(ctx *fiber.Ctx) error {
-
 	return nil
 }
 
 func (s *OrganizationController) handlePatch(ctx *fiber.Ctx) error {
-
 	return nil
 }

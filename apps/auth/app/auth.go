@@ -5,8 +5,9 @@ import (
 	"log"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/internal/domain"
+	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/domain"
+	"gitlab.com/shaninalex/flowreon/models"
 )
 
 type IAuthApi interface {
@@ -37,7 +38,7 @@ func (s *AuthApi) HookRegister(ctx context.Context, data *domain.HooksKratosPayl
 		log.Printf("unable to generate username code: %v\n", err)
 		userCode = uuid.NewString()
 	}
-	user := &database.User{
+	user := &models.User{
 		ID:   userId,
 		Code: userCode,
 	}

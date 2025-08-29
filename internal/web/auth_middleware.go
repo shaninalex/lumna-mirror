@@ -6,10 +6,11 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/jajirra/database"
-	"gitlab.com/shaninalex/jajirra/internal/apperrors"
-	"gitlab.com/shaninalex/jajirra/internal/base"
-	"gitlab.com/shaninalex/jajirra/internal/kratos"
+	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/kratos"
+	"gitlab.com/shaninalex/flowreon/models"
 )
 
 type AuthMiddleware struct {
@@ -41,7 +42,7 @@ func (s *AuthMiddleware) Wrap() fiber.Handler {
 		}
 		ctx.Locals(base.ContextSession, session)
 
-		user := &database.User{ID: userID}
+		user := &models.User{ID: userID}
 		db := database.GetDB(ctx.Context())
 		tx := db.First(&user)
 		if tx.Error != nil {

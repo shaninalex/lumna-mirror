@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/Pallinder/go-randomdata"
+	"gitlab.com/shaninalex/flowreon/models"
 	"gorm.io/gorm"
 )
 
@@ -16,7 +17,7 @@ func GenerateUniqueUserCode(ctx context.Context, db *gorm.DB, maxAttempts int) (
 		base := strings.ToLower(randomdata.SillyName())
 		code := fmt.Sprintf("%s%d", base, rand.IntN(100_000))
 
-		var existing User
+		var existing models.User
 		err := db.WithContext(ctx).Where("code = ?", code).First(&existing).Error
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return code, nil

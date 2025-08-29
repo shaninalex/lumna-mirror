@@ -1,11 +1,11 @@
-// Copyright © 2025 JaJirra https://jajirra.shaninalex.com. All rights reserved.
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
 
 package tdata
 
 import (
 	"context"
 
-	"gitlab.com/shaninalex/jajirra/database"
+	"gitlab.com/shaninalex/flowreon/database"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
