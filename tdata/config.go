@@ -7,7 +7,7 @@ import "gitlab.com/shaninalex/flowreon/internal/base"
 func newTestConfig() base.IConfig {
 	conf = &testConfig{
 		storage: map[string]any{
-			"app.dsn": "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable&search_path=test",
+			"app.dsn": "postgres://test:test@localhost:5433/test?sslmode=disable",
 		},
 	}
 	return conf

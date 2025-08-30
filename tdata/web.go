@@ -8,12 +8,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/models"
-	"gorm.io/gorm"
 )
 
 // AuthTestRouter - auth router.
-func AuthTestRouter(db *gorm.DB, name string) *fiber.App {
-	router := web.DefaultRouter(db, name)
+func AuthTestRouter() *fiber.App {
+	router := web.DefaultRouter(db, "test_router")
 	kratosClient := NewMockKratosService()
 	router.Use(web.NewAuthMiddleware(kratosClient))
 	return router

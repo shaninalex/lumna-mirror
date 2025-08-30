@@ -23,9 +23,10 @@ func InitTestDatabase() *gorm.DB {
 
 	db.Exec("CREATE SCHEMA IF NOT EXISTS kratos")
 	db.Exec("CREATE SCHEMA IF NOT EXISTS keto")
-	db.Exec("CREATE SCHEMA IF NOT EXISTS testing")
 
-	db.Exec("SET search_path='testing'")
+	// NOTE: use separate db
+	//db.Exec("CREATE SCHEMA IF NOT EXISTS testing")
+	//db.Exec("SET search_path='testing'")
 
 	database.ApplyMigrations(db)
 	return db
