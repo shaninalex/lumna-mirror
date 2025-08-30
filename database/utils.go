@@ -18,8 +18,8 @@ import (
 // GenerateUniqueUserCode - generate unique user code.
 func GenerateUniqueUserCode(ctx context.Context, db *gorm.DB, maxAttempts int) (string, error) {
 	for i := 0; i < maxAttempts; i++ {
-		base := strings.ToLower(randomdata.SillyName())
-		code := fmt.Sprintf("%s%d", base, rand.IntN(100_000))
+		b := strings.ToLower(randomdata.SillyName())
+		code := fmt.Sprintf("%s%d", b, rand.IntN(100_000))
 
 		var existing models.User
 		err := db.WithContext(ctx).Where("code = ?", code).First(&existing).Error
