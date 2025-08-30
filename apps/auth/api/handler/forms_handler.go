@@ -77,12 +77,12 @@ func (s *AuthFormsHandler) HandleFormRegister(ctx *fiber.Ctx) error {
 
 // HandleFormError - handle form error.
 func (s *AuthFormsHandler) HandleFormError(ctx *fiber.Ctx) error {
-	errorId := ctx.Query("id")
-	if errorId == "" {
+	errorID := ctx.Query("id")
+	if errorID == "" {
 		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, "flow id does not provided")
 	}
 
-	flow, resp, err := s.kratosService.GetErrorFlow(ctx.Context(), errorId)
+	flow, resp, err := s.kratosService.GetErrorFlow(ctx.Context(), errorID)
 	if err != nil {
 		code := http.StatusBadRequest
 		if resp != nil {

@@ -12,10 +12,12 @@ import (
 var IdentityStorage []*ory.Identity = make([]*ory.Identity, 0)
 var SessionStorage map[string]*ory.Session = map[string]*ory.Session{}
 
+// AddIdentity - adds a new identity.
 func AddIdentity(i *ory.Identity) {
 	IdentityStorage = append(IdentityStorage, i)
 }
 
+// AddSession - adds a new session.
 func AddSession(s models.AuthUser) string {
 	var identity *ory.Identity
 	for _, i := range IdentityStorage {

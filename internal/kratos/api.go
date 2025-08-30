@@ -14,7 +14,7 @@ type IKratos interface {
 	Client() *ory.APIClient
 	GetLoginFlow(ctx context.Context, cookie, flowID string) (*ory.LoginFlow, *http.Response, error)
 	GetRegistrationFlow(ctx context.Context, cookie, flowID string) (*ory.RegistrationFlow, *http.Response, error)
-	GetErrorFlow(ctx context.Context, errorId string) (*ory.FlowError, *http.Response, error)
+	GetErrorFlow(ctx context.Context, errorID string) (*ory.FlowError, *http.Response, error)
 	GetVerificationFlow(ctx context.Context, cookie, flowID string) (*ory.VerificationFlow, *http.Response, error)
 	CreateLogoutFlow(ctx context.Context, cookie string) (*ory.LogoutFlow, *http.Response, error)
 	CreateSettingsFlow(ctx context.Context, cookie string) (*ory.SettingsFlow, *http.Response, error)
@@ -71,10 +71,10 @@ func (s *KratosService) GetRegistrationFlow(ctx context.Context, cookie, flowID 
 // GetErrorFlow is the method that return error flow based on user
 // cookies and flow id. ory/kratos store errors in database and user can
 // access them via error flow id.
-func (s *KratosService) GetErrorFlow(ctx context.Context, errorId string) (*ory.FlowError, *http.Response, error) {
+func (s *KratosService) GetErrorFlow(ctx context.Context, errorID string) (*ory.FlowError, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetFlowError(ctx).
-		Id(errorId).
+		Id(errorID).
 		Execute()
 }
 

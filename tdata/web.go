@@ -18,6 +18,7 @@ func AuthTestRouter() *fiber.App {
 	return router
 }
 
+// SetAuthRequest - sets the auth request.
 func SetAuthRequest(req *http.Request, user models.AuthUser, cookie string) {
 	req.Header.Set("X-USER", user.GetID().String())
 	req.Header.Set("Cookie", cookie)

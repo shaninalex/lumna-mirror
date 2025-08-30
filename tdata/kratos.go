@@ -22,51 +22,61 @@ var _ kratos.IKratos = &MockKratosService{}
 type MockKratosService struct {
 }
 
+// Client - client.
 func (s *MockKratosService) Client() *ory.APIClient {
 	//TODO implement me
 	panic("implement me")
 }
 
+// GetLoginFlow - returns the login flow.
 func (s *MockKratosService) GetLoginFlow(ctx context.Context, cookie, flowID string) (*ory.LoginFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
+// GetRegistrationFlow - returns the registration flow.
 func (s *MockKratosService) GetRegistrationFlow(ctx context.Context, cookie, flowID string) (*ory.RegistrationFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s *MockKratosService) GetErrorFlow(ctx context.Context, errorId string) (*ory.FlowError, *http.Response, error) {
+// GetErrorFlow - returns the error flow.
+func (s *MockKratosService) GetErrorFlow(ctx context.Context, errorID string) (*ory.FlowError, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
+// GetVerificationFlow - returns the verification flow.
 func (s *MockKratosService) GetVerificationFlow(ctx context.Context, cookie, flowID string) (*ory.VerificationFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
+// CreateLogoutFlow - creates a new logout flow.
 func (s *MockKratosService) CreateLogoutFlow(ctx context.Context, cookie string) (*ory.LogoutFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
+// CreateSettingsFlow - creates a new settings flow.
 func (s *MockKratosService) CreateSettingsFlow(ctx context.Context, cookie string) (*ory.SettingsFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
+// GetSettingsFlow - returns the settings flow.
 func (s *MockKratosService) GetSettingsFlow(ctx context.Context, cookie, flowID string) (*ory.SettingsFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
+// GetRecoveryFlow - returns the recovery flow.
 func (s *MockKratosService) GetRecoveryFlow(ctx context.Context, cookie, flowID string) (*ory.RecoveryFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
+// GetSession - returns the session.
 func (s *MockKratosService) GetSession(ctx context.Context, cookie string) (*ory.Session, *http.Response, error) {
 	if session, ok := SessionStorage[cookie]; ok {
 		return session, nil, nil
@@ -74,6 +84,7 @@ func (s *MockKratosService) GetSession(ctx context.Context, cookie string) (*ory
 	return nil, nil, apperrors.SessionNotFound
 }
 
+// GetIdentity - returns the identity.
 func (s *MockKratosService) GetIdentity(ctx context.Context, id string) (*ory.Identity, *http.Response, error) {
 	for _, i := range IdentityStorage {
 		if i.Id == id {
@@ -83,6 +94,7 @@ func (s *MockKratosService) GetIdentity(ctx context.Context, id string) (*ory.Id
 	return nil, nil, apperrors.UserIdentityNotFound
 }
 
+// UpdateIdentityTraits - updates the identity traits.
 func (s *MockKratosService) UpdateIdentityTraits(ctx context.Context, id string, traits map[string]interface{}) (*ory.Identity, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")

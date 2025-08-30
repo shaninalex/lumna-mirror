@@ -68,6 +68,7 @@ func CreatePack(ctx context.Context) (*models.Organization, *models.User, *model
 	return org, user, project
 }
 
+// CreateRandomStatuses - creates a new random statuses.
 func CreateRandomStatuses(ctx context.Context, project *models.Project) []*models.TaskStatus {
 	statuses := make([]*models.TaskStatus, 3)
 	for i, stName := range []string{"Todo", "InProgress", "Done"} {
