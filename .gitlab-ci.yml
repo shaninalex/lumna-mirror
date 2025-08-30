@@ -3,6 +3,11 @@ image: golang:1.24.2
 variables:
   CONFIG_PATH: "$CI_PROJECT_DIR/config/development.gitlab.yml"
 
+workflow:
+  # on branch dev and on merge request from dev in main
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev" || ($CI_PIPELINE_SOURCE == 'merge_request_event' && ( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" ))
+
 stages:
   - lint
   - test
