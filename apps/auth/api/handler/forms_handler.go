@@ -11,11 +11,13 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
+// AuthFormsHandler - auth forms handler.
 type AuthFormsHandler struct {
 	kratosService kratos.IKratos
 	config        base.IConfig
 }
 
+// NewAuthFormsHandler - new auth forms handler.
 func NewAuthFormsHandler(config base.IConfig, kratosService kratos.IKratos) *AuthFormsHandler {
 	return &AuthFormsHandler{
 		config:        config,

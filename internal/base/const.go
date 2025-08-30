@@ -2,6 +2,7 @@
 
 package base
 
+// ContextKey - context key.
 type ContextKey string
 
 const (

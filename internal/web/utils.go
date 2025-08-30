@@ -62,6 +62,7 @@ func Error(ctx *fiber.Ctx, status int, err error) error {
 	return ReturnJson(ctx, status, nil, err)
 }
 
+// GetUserId - returns the user id.
 func GetUserId(ctx *fiber.Ctx) uuid.UUID {
 	if id, ok := ctx.Locals(base.ContextUserID).(uuid.UUID); ok {
 		return id
@@ -69,6 +70,7 @@ func GetUserId(ctx *fiber.Ctx) uuid.UUID {
 	return uuid.Nil
 }
 
+// GetOrganizationId - returns the organization id.
 func GetOrganizationId(ctx *fiber.Ctx) uuid.UUID {
 	if id, ok := ctx.Locals(base.ContextOrgID).(uuid.UUID); ok {
 		return id
@@ -76,16 +78,19 @@ func GetOrganizationId(ctx *fiber.Ctx) uuid.UUID {
 	return uuid.Nil
 }
 
+// GetUser - returns the user.
 func GetUser(ctx *fiber.Ctx) *models.User {
 	user, _ := ctx.Locals(base.ContextUser).(*models.User)
 	return user
 }
 
+// GetSession - returns the session.
 func GetSession(ctx *fiber.Ctx) *ory.Session {
 	session, _ := ctx.Locals(base.ContextUserID).(*ory.Session)
 	return session
 }
 
+// ParamUUID - param uuid.
 func ParamUUID(ctx *fiber.Ctx, name string) (uuid.UUID, error) {
 	val := ctx.Params(name)
 	id, err := uuid.Parse(val)
@@ -95,6 +100,7 @@ func ParamUUID(ctx *fiber.Ctx, name string) (uuid.UUID, error) {
 	return id, nil
 }
 
+// ParamString - param string.
 func ParamString(ctx *fiber.Ctx, name string) (string, error) {
 	val := ctx.Params(name)
 	if val == "" {

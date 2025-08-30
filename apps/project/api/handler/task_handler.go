@@ -11,10 +11,12 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
+// TaskHandler - task handler.
 type TaskHandler struct {
 	manager domain.ProjectManager
 }
 
+// NewTaskHandler - new task handler.
 func NewTaskHandler(manager domain.ProjectManager) *TaskHandler {
 	return &TaskHandler{
 		manager: manager,

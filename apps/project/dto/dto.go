@@ -9,6 +9,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
+// ProjectDto - project dto.
 type ProjectDto struct {
 	ID         uuid.UUID `json:"id"`
 	Title      string    `json:"title"`
@@ -17,6 +18,7 @@ type ProjectDto struct {
 	UpdatedAt  time.Time `json:"updated_at"`
 }
 
+// TaskDto - task dto.
 type TaskDto struct {
 	ID          uuid.UUID  `json:"id"`
 	UserID      uuid.UUID  `json:"creator_id"`
@@ -35,6 +37,7 @@ type TaskDto struct {
 	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
+// TaskStatusDto - task status dto.
 type TaskStatusDto struct {
 	ID          uuid.UUID                `json:"id"`
 	Title       string                   `json:"title"`
@@ -45,6 +48,7 @@ type TaskStatusDto struct {
 	Tasks       []*TaskDto               `json:"tasks"`
 }
 
+// ChangeTaskStatusDTO - change task status dto.
 type ChangeTaskStatusDTO struct {
 	FromStatusID uuid.UUID `json:"from_status"`
 	ToStatusID   uuid.UUID `json:"to_status"`

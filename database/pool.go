@@ -11,6 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// InitDB - init db.
 func InitDB(dsn string) *gorm.DB {
 	var err error
 

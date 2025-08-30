@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// NewConfig - new config.
 func NewConfig(path string) *Config {
 	conf := &Config{}
 	conf.path = path
@@ -16,6 +17,7 @@ func NewConfig(path string) *Config {
 	return conf
 }
 
+// IConfig - i config.
 type IConfig interface {
 	ReadConfig(path string)
 	Env() string
@@ -25,6 +27,7 @@ type IConfig interface {
 	List(param string) []string
 }
 
+// Config - config.
 type Config struct {
 	path string
 	v    *viper.Viper

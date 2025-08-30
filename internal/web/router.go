@@ -12,6 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// DefaultRouter - default router.
 func DefaultRouter(db *gorm.DB, name string) *fiber.App {
 	router := fiber.New(fiber.Config{
 		AppName: name,
@@ -23,6 +24,7 @@ func DefaultRouter(db *gorm.DB, name string) *fiber.App {
 	return router
 }
 
+// AuthRouter - auth router.
 func AuthRouter(cnf base.IConfig, db *gorm.DB, name string) *fiber.App {
 	router := DefaultRouter(db, name)
 	kratosClient := kratos.NewKratosService(cnf.String("kratos.url_browser"))

@@ -6,9 +6,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// CommonMiddleware - common middleware.
 type CommonMiddleware struct {
 }
 
+// NewCommonMiddleware - new common middleware.
 func NewCommonMiddleware() fiber.Handler {
 	m := &CommonMiddleware{}
 	return m.Wrap()

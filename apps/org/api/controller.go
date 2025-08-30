@@ -8,10 +8,12 @@ import (
 	"gitlab.com/shaninalex/flowreon/apps/org/domain"
 )
 
+// OrganizationController - organization controller.
 type OrganizationController struct {
 	router *fiber.App
 }
 
+// NewOrganizationController - new organization controller.
 func NewOrganizationController(router *fiber.App) *OrganizationController {
 	c := &OrganizationController{
 		router: router,

@@ -7,6 +7,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
+// ToDto - to dto.
 func ToDto(o *models.Organization) *dto.OrganizationDto {
 	return &dto.OrganizationDto{
 		Title:       o.Title,

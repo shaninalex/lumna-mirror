@@ -6,6 +6,7 @@ import (
 	"fmt"
 )
 
+// AppError - app error.
 type AppError struct {
 	ID      string `json:"id"`
 	Key     string `json:"key"`

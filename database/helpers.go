@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetDB - returns the db.
 func GetDB(ctx context.Context) *gorm.DB {
 	db := ctx.Value(base.ContextDB).(*gorm.DB)
 	if db == nil {

@@ -8,11 +8,13 @@ import (
 	"gitlab.com/shaninalex/flowreon/apps/project/domain"
 )
 
+// NewProjectController - new project controller.
 func NewProjectController(router *fiber.App) {
 	controller := ProjectController{router: router}
 	controller.init()
 }
 
+// ProjectController - project controller.
 type ProjectController struct {
 	router *fiber.App
 }

@@ -7,6 +7,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
+// NewProjectDto - new project dto.
 func NewProjectDto(p *models.Project) *dto.ProjectDto {
 	return &dto.ProjectDto{
 		ID:         p.ID,
@@ -17,6 +18,7 @@ func NewProjectDto(p *models.Project) *dto.ProjectDto {
 	}
 }
 
+// NewProjectsDto - new projects dto.
 func NewProjectsDto(ps []*models.Project) []*dto.ProjectDto {
 	dtos := make([]*dto.ProjectDto, len(ps))
 	for i, p := range ps {
@@ -25,6 +27,7 @@ func NewProjectsDto(ps []*models.Project) []*dto.ProjectDto {
 	return dtos
 }
 
+// NewTaskDto - new task dto.
 func NewTaskDto(t *models.Task) *dto.TaskDto {
 	return &dto.TaskDto{
 		ID:          t.ID,
@@ -45,6 +48,7 @@ func NewTaskDto(t *models.Task) *dto.TaskDto {
 	}
 }
 
+// NewTasksDto - new tasks dto.
 func NewTasksDto(ii []*models.Task) []*dto.TaskDto {
 	dtos := make([]*dto.TaskDto, len(ii))
 	for i, issue := range ii {
@@ -53,6 +57,7 @@ func NewTasksDto(ii []*models.Task) []*dto.TaskDto {
 	return dtos
 }
 
+// NewIssueStatusDto - new issue status dto.
 func NewIssueStatusDto(i *models.TaskStatus) *dto.TaskStatusDto {
 	return &dto.TaskStatusDto{
 		ID:          i.GetID(),
@@ -65,6 +70,7 @@ func NewIssueStatusDto(i *models.TaskStatus) *dto.TaskStatusDto {
 	}
 }
 
+// NewTasksStatusDto - new tasks status dto.
 func NewTasksStatusDto(statuses []*models.TaskStatus) []*dto.TaskStatusDto {
 	dtos := make([]*dto.TaskStatusDto, len(statuses))
 	for i, status := range statuses {

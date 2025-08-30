@@ -14,6 +14,7 @@ type OrganizationBuilder struct {
 	organization *models.Organization
 }
 
+// NewOrganizationBuilder - new organization builder.
 func NewOrganizationBuilder() *OrganizationBuilder {
 	organization := &models.Organization{}
 	b := &OrganizationBuilder{organization: organization}

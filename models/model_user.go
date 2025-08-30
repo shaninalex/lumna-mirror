@@ -11,6 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// User - user.
 type User struct {
 	ID             uuid.UUID `gorm:"type:uuid;primaryKey"`
 	OrganizationID *uuid.UUID
@@ -68,11 +69,13 @@ func (s *User) GetDeletedAt() *time.Time {
 // IsDeleted - checks if it is deleted.
 func (s *User) IsDeleted() bool { return s.DeletedAt.Valid }
 
+// TraitsName - traits name.
 type TraitsName struct {
 	First string `json:"first"`
 	Last  string `json:"last"`
 }
 
+// UserTraits - user traits.
 type UserTraits struct {
 	Email string     `json:"email"`
 	Name  TraitsName `json:"name"`

@@ -9,6 +9,7 @@ import (
 	ory "github.com/ory/kratos-client-go"
 )
 
+// IKratos - i kratos.
 type IKratos interface {
 	Client() *ory.APIClient
 	GetLoginFlow(ctx context.Context, cookie, flowId string) (*ory.LoginFlow, *http.Response, error)
@@ -24,10 +25,12 @@ type IKratos interface {
 	UpdateIdentityTraits(ctx context.Context, id string, traits map[string]interface{}) (*ory.Identity, *http.Response, error)
 }
 
+// KratosService - kratos service.
 type KratosService struct {
 	client *ory.APIClient
 }
 
+// NewKratosService - new kratos service.
 func NewKratosService(url string) *KratosService {
 	configuration := ory.NewConfiguration()
 	configuration.Servers = []ory.ServerConfiguration{

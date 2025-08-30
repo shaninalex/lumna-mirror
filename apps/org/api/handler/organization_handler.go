@@ -13,10 +13,12 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
+// OrganizationHandler - organization handler.
 type OrganizationHandler struct {
 	manager domain.OrganizationManager
 }
 
+// NewOrganizationHandler - new organization handler.
 func NewOrganizationHandler(manager domain.OrganizationManager) *OrganizationHandler {
 	return &OrganizationHandler{
 		manager: manager,

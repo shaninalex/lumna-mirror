@@ -68,6 +68,7 @@ func (s *testConfig) Set(k string, v any) {
 	s.storage[k] = v
 }
 
+// SetConfigValue - sets the config value.
 func SetConfigValue(k string, v any) {
 	if conf == nil {
 		conf = &testConfig{

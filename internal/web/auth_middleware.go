@@ -15,10 +15,12 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
+// AuthMiddleware - auth middleware.
 type AuthMiddleware struct {
 	kratosService kratos.IKratos
 }
 
+// NewAuthMiddleware - new auth middleware.
 func NewAuthMiddleware(kratosService kratos.IKratos) fiber.Handler {
 	m := &AuthMiddleware{
 		kratosService: kratosService,

@@ -12,12 +12,14 @@ import (
 
 var testKratosClient *TestKratosService
 
+// NewTestKratosService - new test kratos service.
 func NewTestKratosService() {
 	testKratosClient = &TestKratosService{
 		Identities: make([]*ory.Identity, 0),
 	}
 }
 
+// TestKratosService - test kratos service.
 type TestKratosService struct {
 	Identities []*ory.Identity
 }
@@ -32,6 +34,7 @@ func (s *TestKratosService) Get(ctx context.Context, id uuid.UUID) (*ory.Identit
 	return nil, apperrors.UserNotFound
 }
 
+// AddUser - adds a new user.
 func AddUser(identity *ory.Identity) {
 	if testKratosClient == nil {
 		NewTestKratosService()

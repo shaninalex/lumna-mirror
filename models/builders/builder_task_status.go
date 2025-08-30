@@ -12,6 +12,7 @@ type TaskStatusBuilder struct {
 	issueStatus *models.TaskStatus
 }
 
+// NewIssueStatusBuilder - new issue status builder.
 func NewIssueStatusBuilder() *TaskStatusBuilder {
 	issueStatus := &models.TaskStatus{}
 	b := &TaskStatusBuilder{issueStatus: issueStatus}

@@ -8,10 +8,12 @@ import (
 	"gorm.io/gorm"
 )
 
+// DbMiddleware - db middleware.
 type DbMiddleware struct {
 	db *gorm.DB
 }
 
+// NewDbMiddleware - new db middleware.
 func NewDbMiddleware(db *gorm.DB) fiber.Handler {
 	m := &DbMiddleware{db: db}
 	return m.Wrap()

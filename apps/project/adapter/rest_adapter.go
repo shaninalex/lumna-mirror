@@ -8,12 +8,14 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
+// PatchTaskInput - patch task input.
 type PatchTaskInput struct {
 	ProjectCode string
 	TaskCode    string
 	Data        *dto.ChangeTaskStatusDTO
 }
 
+// NewPatchTaskInput - new patch task input.
 func NewPatchTaskInput(ctx *fiber.Ctx) (*PatchTaskInput, error) {
 	projectCode := ctx.Params("projectCode")
 	taskCode := ctx.Params("taskCode")
@@ -30,16 +32,20 @@ func NewPatchTaskInput(ctx *fiber.Ctx) (*PatchTaskInput, error) {
 	}, nil
 }
 
+// UpdateTaskData - updates the task data.
 type UpdateTaskData struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
+
+// UpdateTaskInput - updates the task input.
 type UpdateTaskInput struct {
 	ProjectCode string
 	TaskCode    string
 	Data        *UpdateTaskData
 }
 
+// NewUpdateTaskInput - new update task input.
 func NewUpdateTaskInput(ctx *fiber.Ctx) (*UpdateTaskInput, error) {
 	projectCode := ctx.Params("projectCode")
 	taskCode := ctx.Params("taskCode")

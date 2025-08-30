@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Epic - epic.
 type Epic struct {
 	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 

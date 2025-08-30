@@ -10,6 +10,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/kratos"
 )
 
+// NewAuthController - new auth controller.
 func NewAuthController(config base.IConfig, router *fiber.App, kratosService kratos.IKratos) {
 	controller := AuthController{
 		config:        config,
@@ -19,6 +20,7 @@ func NewAuthController(config base.IConfig, router *fiber.App, kratosService kra
 	controller.setRoutes()
 }
 
+// AuthController - auth controller.
 type AuthController struct {
 	router        *fiber.App
 	kratosService kratos.IKratos

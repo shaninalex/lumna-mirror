@@ -15,6 +15,7 @@ type UserBuilder struct {
 	user *models.User
 }
 
+// NewUserBuilder - new user builder.
 func NewUserBuilder() *UserBuilder {
 	user := &models.User{}
 	b := &UserBuilder{user: user}

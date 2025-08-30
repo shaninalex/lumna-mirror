@@ -14,6 +14,7 @@ type ProjectBuilder struct {
 	project *models.Project
 }
 
+// NewProjectBuilder - new project builder.
 func NewProjectBuilder() *ProjectBuilder {
 	project := &models.Project{}
 	b := &ProjectBuilder{project: project}

@@ -13,13 +13,16 @@ import (
 	"gorm.io/gorm"
 )
 
+// OrganizationManager - organization manager.
 type OrganizationManager interface {
 	Get(ctx context.Context, userID uuid.UUID) (*models.Organization, error)
 }
 
+// OrganizationApi - organization api.
 type OrganizationApi struct {
 }
 
+// NewOrganizationApi - new organization api.
 func NewOrganizationApi() *OrganizationApi {
 	return &OrganizationApi{}
 }

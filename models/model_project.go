@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Project - project.
 type Project struct {
 	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 

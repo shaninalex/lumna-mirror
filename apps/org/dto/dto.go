@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// OrganizationDto - organization dto.
 type OrganizationDto struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`

@@ -15,6 +15,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 )
 
+// DevCliAction - dev cli action.
 type DevCliAction string
 
 var (
@@ -59,6 +60,7 @@ func main() {
 	}
 }
 
+// RunSeeder - runs the seeder.
 func RunSeeder(strID string) {
 	fmt.Print("Start seed... ")
 	userID := uuid.MustParse(strID)
@@ -70,6 +72,7 @@ func RunSeeder(strID string) {
 	fmt.Println("Seed completed!")
 }
 
+// RunTypeScriptify - runs the type scriptify.
 func RunTypeScriptify() {
 	fmt.Print("Generate appErrors... ")
 	errorsMap := map[string]apperrors.AppError{}

@@ -11,6 +11,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/models/builders"
 )
 
+// CreateOrganisation - creates a new organisation.
 func CreateOrganisation(ctx context.Context, user *models.User) *models.Organization {
 	organization := builders.NewOrganizationBuilder().
 		User(*user).UserID(user.ID).
@@ -23,6 +24,7 @@ func CreateOrganisation(ctx context.Context, user *models.User) *models.Organiza
 	return organization
 }
 
+// CreateUser - creates a new user.
 func CreateUser(ctx context.Context) *models.User {
 	user := builders.NewUserBuilder().ID(uuid.New()).Code(uuid.NewString()).Build()
 	result := database.GetDB(ctx).Create(&user)
@@ -32,6 +34,7 @@ func CreateUser(ctx context.Context) *models.User {
 	return user
 }
 
+// CreateProject - creates a new project.
 func CreateProject(ctx context.Context, org *models.Organization, user *models.User) *models.Project {
 	project := builders.NewProjectBuilder().
 		User(*user).UserID(user.ID).

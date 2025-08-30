@@ -7,6 +7,7 @@ import "gitlab.com/shaninalex/flowreon/internal/email"
 var _emailApi *TestEmailApi
 var _emailStorage *TestEmailStorage
 
+// GetTestEmailApi - returns the test email api.
 func GetTestEmailApi() email.IEmailApi {
 	if _emailApi == nil {
 		_emailApi = &TestEmailApi{}
@@ -17,6 +18,7 @@ func GetTestEmailApi() email.IEmailApi {
 	return _emailApi
 }
 
+// TestEmailApi - test email api.
 type TestEmailApi struct{}
 
 // SendVerificationEmail - send verification email.
@@ -25,6 +27,7 @@ func (s *TestEmailApi) SendVerificationEmail(token, to string) error {
 	return nil
 }
 
+// TestEmailStorage - test email storage.
 type TestEmailStorage struct {
 	codes map[string]string
 }

@@ -11,10 +11,12 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
+// AuthHooksHandler - auth hooks handler.
 type AuthHooksHandler struct {
 	authApi domain.AuthHookHandler
 }
 
+// NewAuthHooksHandler - new auth hooks handler.
 func NewAuthHooksHandler(api domain.AuthHookHandler) *AuthHooksHandler {
 	// hooks
 	// TODO: we can authenticate hooks by "ory_kratos_continuity" cookie

@@ -14,6 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// GenerateUniqueUserCode - generate unique user code.
 func GenerateUniqueUserCode(ctx context.Context, db *gorm.DB, maxAttempts int) (string, error) {
 	for i := 0; i < maxAttempts; i++ {
 		base := strings.ToLower(randomdata.SillyName())

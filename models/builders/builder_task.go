@@ -14,6 +14,7 @@ type TaskBuilder struct {
 	task *models.Task
 }
 
+// NewIssueBuilder - new issue builder.
 func NewIssueBuilder() *TaskBuilder {
 	task := &models.Task{}
 	b := &TaskBuilder{task: task}

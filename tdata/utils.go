@@ -12,6 +12,7 @@ import (
 	"testing"
 )
 
+// CreateTempFile - creates a new temp file.
 func CreateTempFile(t *testing.T, fileName string, content []byte) string {
 	filePath := filepath.Join(t.TempDir(), fileName)
 	_ = os.WriteFile(filePath, content, 0644)
@@ -19,6 +20,7 @@ func CreateTempFile(t *testing.T, fileName string, content []byte) string {
 	return filePath
 }
 
+// SendRequest - send request.
 func SendRequest(server *httptest.Server, payload string) *http.Response {
 	reader := strings.NewReader(payload)
 	request, err := http.NewRequest("POST", server.URL, reader)

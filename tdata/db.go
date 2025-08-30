@@ -11,6 +11,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
+// InitTestDatabase - init test database.
 func InitTestDatabase() *gorm.DB {
 	var err error
 	db, err = gorm.Open(postgres.Open(config.String("app.dsn")), &gorm.Config{

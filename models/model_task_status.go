@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// TaskStatus - task status.
 type TaskStatus struct {
 	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 
@@ -51,10 +52,12 @@ func (s *TaskStatus) GetConfig() *TaskStatusConfig {
 	return &config
 }
 
+// TaskStatusConfig - task status config.
 type TaskStatusConfig struct {
 	Color string `json:"color,omitempty"`
 }
 
+// NewTaskStatusConfig - new task status config.
 func NewTaskStatusConfig() *TaskStatusConfig {
 	return &TaskStatusConfig{
 		Color: "default",

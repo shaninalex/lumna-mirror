@@ -6,6 +6,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
+// HooksKratosPayloadDTO - hooks kratos payload dto.
 type HooksKratosPayloadDTO struct {
 	UserID string            `json:"userId"`
 	Traits models.UserTraits `json:"traits"`

@@ -6,6 +6,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 )
 
+// ApiResponse - api response.
 type ApiResponse struct {
 	Status   bool                 `json:"status"`
 	Data     any                  `json:"data"`
@@ -13,6 +14,7 @@ type ApiResponse struct {
 	Errors   []apperrors.AppError `json:"errors,omitempty"`
 }
 
+// NewApiResponse - new api response.
 func NewApiResponse(data any) *ApiResponse {
 	return &ApiResponse{
 		Status: true,

@@ -12,6 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Seed - seed.
 func Seed(db *gorm.DB, userID uuid.UUID) error {
 	now := time.Now()
 

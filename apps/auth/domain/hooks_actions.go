@@ -12,6 +12,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
+// AuthHookHandler - auth hook handler.
 type AuthHookHandler interface {
 	HookRegister(ctx context.Context, data *dto.HooksKratosPayloadDTO) error
 	HookVerify(ctx context.Context) error
@@ -20,9 +21,11 @@ type AuthHookHandler interface {
 
 var _ AuthHookHandler = &AuthHookApi{}
 
+// AuthHookApi - auth hook api.
 type AuthHookApi struct {
 }
 
+// NewAuthHookApi - new auth hook api.
 func NewAuthHookApi() *AuthHookApi {
 	return &AuthHookApi{}
 }

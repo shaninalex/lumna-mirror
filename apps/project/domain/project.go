@@ -15,21 +15,25 @@ import (
 	"gorm.io/gorm"
 )
 
+// ProjectReader - project reader.
 type ProjectReader interface {
 	Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error)
 	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
 }
 
+// TaskReader - task reader.
 type TaskReader interface {
 	TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
 	TaskDetail(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string) (*models.Task, error)
 }
 
+// TaskWriter - task writer.
 type TaskWriter interface {
 	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *dto.ChangeTaskStatusDTO) error
 	TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *adapter.UpdateTaskData) error
 }
 
+// ProjectManager - project manager.
 type ProjectManager interface {
 	ProjectReader
 	TaskReader
@@ -38,8 +42,10 @@ type ProjectManager interface {
 
 var _ ProjectManager = &ProjectManagement{}
 
+// ProjectManagement - project management.
 type ProjectManagement struct{}
 
+// NewProjectManagement - new project management.
 func NewProjectManagement() *ProjectManagement {
 	return &ProjectManagement{}
 }

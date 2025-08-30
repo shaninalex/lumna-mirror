@@ -2,6 +2,7 @@
 
 package keto
 
+// IKeto - i keto.
 type IKeto interface {
 	//GetPermissionsTree(ctx context.Context, userID uuid.UUID) any
 }

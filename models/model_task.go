@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Task - task.
 type Task struct {
 	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 

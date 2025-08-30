@@ -13,10 +13,12 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
+// ProjectHandler - project handler.
 type ProjectHandler struct {
 	manager domain.ProjectManager
 }
 
+// NewProjectHandler - new project handler.
 func NewProjectHandler(manager domain.ProjectManager) *ProjectHandler {
 	h := &ProjectHandler{
 		manager: manager,
@@ -47,6 +49,7 @@ func (s *ProjectHandler) HandleProjectTasksList(ctx *fiber.Ctx) error {
 	return web.Success(ctx, adapter.NewTasksStatusDto(statuses))
 }
 
+// TaskFilter - task filter.
 type TaskFilter struct {
 	Project  string `query:"project,required"`
 	TaskCode string `query:"taskCode"`
