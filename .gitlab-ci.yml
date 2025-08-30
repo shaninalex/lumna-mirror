@@ -1,0 +1,25 @@
+stages:
+  - test
+
+variables:
+  POSTGRES_USER: test
+  POSTGRES_PASSWORD: test
+  POSTGRES_DB: test
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: 5432
+
+test:
+  stage: test
+  image: golang:1.24.2
+  services:
+    - name: postgres:15
+      alias: postgres
+  before_script:
+    - go mod download
+    # optional: install migrate tool or run init SQL
+    - until pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT; do echo "Waiting for postgres..."; sleep 1; done
+    - psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -c "SELECT 1;"
+  script:
+    - go test ./... -v
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
