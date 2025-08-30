@@ -36,7 +36,9 @@ func (s *AuthController) setRoutes() {
 	s.router.Get("/api/auth/form/recovery", forms.HandleFormRecovery)
 
 	hooks := handler.NewAuthHooksHandler(domain.NewAuthHookAPI())
-	s.router.Post("/api/auth/hook/registration", hooks.HandleHookRegister)
-	s.router.Post("/api/auth/hook/verify", hooks.HandleHookVerify)
-	s.router.Post("/api/auth/hook/login", hooks.HandleHookLogin)
+	hooksGroup := s.router.Group("/api/auth/hook")
+	hooksGroup.Use(NewAuthHooksMiddleware(s.kratosService, s.config))
+	hooksGroup.Post("/registration", hooks.HandleHookRegister)
+	hooksGroup.Post("/api/auth/hook/verify", hooks.HandleHookVerify)
+	hooksGroup.Post("/api/auth/hook/login", hooks.HandleHookLogin)
 }
