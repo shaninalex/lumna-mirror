@@ -26,6 +26,7 @@ func NewOrganizationHandler(manager domain.OrganizationManager) *OrganizationHan
 }
 
 // HandleGetByUser - handle get by user.
+// TODO: rename
 func (s *OrganizationHandler) HandleGetByUser(ctx *fiber.Ctx) error {
 	organization, err := s.manager.Get(ctx.Context(), web.GetUserId(ctx))
 	if errors.Is(err, apperrors.OrgNotFound) {
