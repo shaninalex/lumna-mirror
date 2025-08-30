@@ -28,7 +28,6 @@ func NewProjectHandler(manager domain.ProjectManager) *ProjectHandler {
 
 // HandleProjectsList - handle projects list.
 func (s *ProjectHandler) HandleProjectsList(ctx *fiber.Ctx) error {
-	// TODO: check user permission ( user should not see project he do not allowed to see )
 	projects, err := s.manager.List(ctx.Context(), web.GetOrganizationId(ctx))
 	if err != nil {
 		if errors.Is(err, apperrors.ProjectNotFound) {

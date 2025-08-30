@@ -29,7 +29,9 @@ func newTestManager() {
 	ctx = context.Background()
 	db = InitTestDatabase()
 	ctx = context.WithValue(ctx, base.ContextDB, db)
-	m = &TestManager{}
+	m = &TestManager{
+		DB: db,
+	}
 }
 
 // Manager - manager.
