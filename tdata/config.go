@@ -23,7 +23,7 @@ func (s *testConfig) ReadConfig(path string) {
 	// TODO: read from test config file
 }
 
-func (s *testConfig) Env() string { return base.ENV_TESTING }
+func (s *testConfig) Env() string { return base.EnvTesting }
 
 func (s *testConfig) String(param string) string {
 	v, ok := s.storage[param].(string)

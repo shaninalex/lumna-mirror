@@ -5,6 +5,7 @@ package api
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/project/api/handler"
+	"gitlab.com/shaninalex/flowreon/apps/project/domain"
 )
 
 func NewProjectController(router *fiber.App) {
@@ -17,10 +18,12 @@ type ProjectController struct {
 }
 
 func (s *ProjectController) init() {
-	h := handler.NewProjectHandler()
-	s.router.Get("/api/project/list", h.HandleProjectsList)
-	s.router.Get("/api/project/:projectCode/tasks", h.HandleProjectTasksList)
-	s.router.Get("/api/project/:projectCode/tasks/:taskCode", h.HandleTaskDetail)
-	s.router.Patch("/api/project/:projectCode/tasks/:taskCode", h.HandleTaskUpdate)
-	s.router.Patch("/api/project/:projectCode/tasks/:taskCode/status", h.HandleTaskPatchStatus)
+	projectHandler := handler.NewProjectHandler(domain.NewProjectManagement())
+	s.router.Get("/api/project/list", projectHandler.HandleProjectsList)
+	s.router.Get("/api/project/:projectCode/tasks", projectHandler.HandleProjectTasksList)
+
+	taskHandler := handler.NewTaskHandler(domain.NewProjectManagement())
+	s.router.Get("/api/project/:projectCode/tasks/:taskCode", taskHandler.HandleTaskDetail)
+	s.router.Patch("/api/project/:projectCode/tasks/:taskCode", taskHandler.HandleTaskUpdate)
+	s.router.Patch("/api/project/:projectCode/tasks/:taskCode/status", taskHandler.HandleTaskPatchStatus)
 }

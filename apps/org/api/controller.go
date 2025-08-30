@@ -5,6 +5,7 @@ package api
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/org/api/handler"
+	"gitlab.com/shaninalex/flowreon/apps/org/domain"
 )
 
 type OrganizationController struct {
@@ -24,9 +25,6 @@ func (s *OrganizationController) init() {
 }
 
 func (s *OrganizationController) setRoutes() {
-	// get by user
-	h := handler.NewOrganizationHandler()
+	h := handler.NewOrganizationHandler(domain.NewOrganizationApi())
 	s.router.Get("/api/org", h.HandleGetByUser)
-	//s.router.Post("/api/org", h.HandleCreate)
-	//s.router.Patch("/api/org/:orgCode", h.HandlePatch)
 }

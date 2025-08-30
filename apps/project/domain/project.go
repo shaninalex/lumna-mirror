@@ -15,13 +15,25 @@ import (
 	"gorm.io/gorm"
 )
 
-type ProjectManager interface {
+type ProjectReader interface {
 	Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error)
 	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
+}
+
+type TaskReader interface {
 	TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
-	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *dto.ChangeTaskStatusDTO) error
 	TaskDetail(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string) (*models.Task, error)
+}
+
+type TaskWriter interface {
+	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *dto.ChangeTaskStatusDTO) error
 	TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *adapter.UpdateTaskData) error
+}
+
+type ProjectManager interface {
+	ProjectReader
+	TaskReader
+	TaskWriter
 }
 
 var _ ProjectManager = &ProjectManagement{}

@@ -16,10 +16,6 @@ func NewConfig(path string) *Config {
 	return conf
 }
 
-func ProvideConfig(path string) IConfig {
-	return NewConfig(path)
-}
-
 type IConfig interface {
 	ReadConfig(path string)
 	Env() string
@@ -48,16 +44,18 @@ func (s *Config) ReadConfig(path string) {
 	}
 }
 
-const ENV_PRODUCTION = "production"
-const ENV_STAGING = "staging"
-const ENV_DEVELOPMENT = "development"
-const ENV_TESTING = "testing"
+// NOTE: Not used for now
+// const EnvProduction = "production"
+// const EnvStaging = "staging"
+
+const EnvDevelopment = "development"
+const EnvTesting = "testing"
 
 func (s *Config) Env() string {
 	if os.Getenv("APPLICATION_ENV") != "" {
 		return os.Getenv("APPLICATION_ENV")
 	}
-	return ENV_DEVELOPMENT
+	return EnvDevelopment
 }
 
 func (s *Config) String(param string) string {
