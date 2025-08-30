@@ -1,10 +1,12 @@
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+
 package main
 
 import (
 	"fmt"
 	"os"
 
-	authApp "gitlab.com/shaninalex/flowreon/apps/auth/app"
+	authApp "gitlab.com/shaninalex/flowreon/apps/auth/api"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/internal/kratos"
@@ -25,8 +27,7 @@ func main() {
 
 	router := web.DefaultRouter(db, "auth")
 	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
-	NewAuthApi := authApp.NewAuthApi()
-	authApp.NewAuthController(config, router, NewAuthApi, kratosClient)
+	authApp.NewAuthController(config, router, kratosClient)
 
 	if err := router.Listen(fmt.Sprintf(":%s", config.String("auth.port"))); err != nil {
 		panic(err)

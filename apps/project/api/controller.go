@@ -1,10 +1,10 @@
 // Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
 
-package app
+package api
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"gitlab.com/shaninalex/flowreon/apps/project/app/handler"
+	"gitlab.com/shaninalex/flowreon/apps/project/api/handler"
 )
 
 func NewProjectController(router *fiber.App) {

@@ -7,9 +7,10 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
+	"gitlab.com/shaninalex/flowreon/apps/project/dto"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
-	"gitlab.com/shaninalex/flowreon/internal/domain"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gorm.io/gorm"
 )
@@ -18,9 +19,9 @@ type ProjectManager interface {
 	Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error)
 	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
 	TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
-	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *domain.ChangeTaskStatusDTO) error
+	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *dto.ChangeTaskStatusDTO) error
 	TaskDetail(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string) (*models.Task, error)
-	TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *domain.UpdateTaskData) error
+	TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *adapter.UpdateTaskData) error
 }
 
 var _ ProjectManager = &ProjectManagement{}
@@ -71,7 +72,7 @@ func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, proj
 	return project.Statuses, nil
 }
 
-func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode, taskCode string, payload *domain.ChangeTaskStatusDTO) error {
+func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *dto.ChangeTaskStatusDTO) error {
 	db := database.GetDB(ctx)
 	project, err := s.Project(ctx, orgID, projectCode)
 	if err != nil {
@@ -117,7 +118,7 @@ func (s *ProjectManagement) TaskDetail(ctx context.Context, orgID uuid.UUID, pro
 	return &task, nil
 }
 
-func (s *ProjectManagement) TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *domain.UpdateTaskData) error {
+func (s *ProjectManagement) TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *adapter.UpdateTaskData) error {
 	db := database.GetDB(ctx)
 	project, err := s.Project(ctx, orgID, projectKey)
 	if err != nil {

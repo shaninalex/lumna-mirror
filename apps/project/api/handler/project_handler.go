@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"gitlab.com/shaninalex/flowreon/apps/project/dto"
+	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
@@ -17,11 +17,11 @@ func (s *ProjectHandler) HandleProjectsList(ctx *fiber.Ctx) error {
 	projects, err := s.projectApi.List(ctx.Context(), web.GetOrganizationId(ctx))
 	if err != nil {
 		if errors.Is(err, apperrors.ProjectNotFound) {
-			return web.Success(ctx, dto.NewProjectsDto(nil))
+			return web.Success(ctx, adapter.NewProjectsDto(nil))
 		}
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
-	return web.Success(ctx, dto.NewProjectsDto(projects))
+	return web.Success(ctx, adapter.NewProjectsDto(projects))
 }
 
 func (s *ProjectHandler) HandleProjectTasksList(ctx *fiber.Ctx) error {
@@ -30,5 +30,5 @@ func (s *ProjectHandler) HandleProjectTasksList(ctx *fiber.Ctx) error {
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
-	return web.Success(ctx, dto.NewTasksStatusDto(statuses))
+	return web.Success(ctx, adapter.NewTasksStatusDto(statuses))
 }

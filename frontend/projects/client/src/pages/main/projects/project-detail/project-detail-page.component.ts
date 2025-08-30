@@ -6,7 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 @Component({
     selector: "ts-project-detail-page",
     template: `
-        <ts-project-detail [projectKey]="projectKey" />
+        <ts-project-detail [projectCode]="projectCode" />
     `,
     imports: [
         ProjectDetailComponent,
@@ -16,5 +16,5 @@ export class ProjectDetailPageComponent extends PageTitleSetter {
     pageTitle = "Taskiro project";
     route = inject(ActivatedRoute)
 
-    projectKey: string = this.route.snapshot.params["projectKey"];
+    projectCode: string = this.route.snapshot.params["projectCode"];
 }

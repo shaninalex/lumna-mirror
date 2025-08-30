@@ -1,4 +1,4 @@
-start:
+start_all:
 	docker compose \
 		-f docker/base.yml \
 		-f docker/database.yml \
@@ -12,7 +12,7 @@ clear:
 		-f docker/kratos.yml \
  		down -v
 
-start_base:
+start:
 	docker compose \
 		-f docker/base.yml \
 		-f docker/database.yml \

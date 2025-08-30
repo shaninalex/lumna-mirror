@@ -1,10 +1,12 @@
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+
 package main
 
 import (
 	"fmt"
 	"os"
 
-	orgApp "gitlab.com/shaninalex/flowreon/apps/org/app"
+	orgApp "gitlab.com/shaninalex/flowreon/apps/org/api"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/internal/web"

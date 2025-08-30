@@ -51,7 +51,7 @@ import {BoardViewComponent} from '@client/features/project';
                 </mat-tab>
                 <mat-tab label="Board">
                     <div class="py-4 w-full">
-                        <ts-board-view [projectKey]="projectKey"/>
+                        <ts-board-view [projectCode]="projectCode"/>
                     </div>
                 </mat-tab>
                 <mat-tab label="Calendar">
@@ -69,5 +69,5 @@ import {BoardViewComponent} from '@client/features/project';
     `
 })
 export class ProjectDetailComponent {
-    @Input() projectKey: string;
+    @Input() projectCode: string;
 }

@@ -10,7 +10,7 @@
                  [cdkDropListData]="list.tasks"
                  (cdkDropListDropped)="drop($event)">
                 @for (task of list.tasks; track task.id) {
-                    <ts-task-card [projectKey]="projectKey" [task]="task" [cdkDragData]="task" cdkDrag/>
+                    <ts-task-card [projectCode]="projectCode" [task]="task" [cdkDragData]="task" cdkDrag/>
                 }
             </div>
         </div>

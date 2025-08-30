@@ -9,7 +9,7 @@ export const projectRoutes: Routes = [
         component: ProjectListPageComponent,
     },
     {
-        path: 'projects/:projectKey',
+        path: 'projects/:projectCode',
         component: ProjectDetailPageComponent,
     },
     {

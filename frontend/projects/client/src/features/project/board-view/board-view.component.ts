@@ -29,7 +29,7 @@ import {MatCardModule} from '@angular/material/card';
     templateUrl: './board-view.component.html'
 })
 export class BoardViewComponent implements OnInit, OnDestroy {
-    @Input() projectKey: string;
+    @Input() projectCode: string;
     private _boardApi = inject(BoardViewApiService)
     private _sub = new Subscription()
 
@@ -46,7 +46,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
                 event.currentIndex,
             );
         }
-        this._boardApi.ChangeStatus(this.projectKey, event.item.data.id, {
+        this._boardApi.ChangeStatus(this.projectCode, event.item.data.code, {
             from_status: event.previousContainer.id,
             to_status: event.container.id,
             from_idx: event.previousIndex,
@@ -56,7 +56,7 @@ export class BoardViewComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._sub.add(
-            this._boardApi.Tasks(this.projectKey).pipe(
+            this._boardApi.Tasks(this.projectCode).pipe(
                 tap(statuses => {
                     this.columns = statuses.map(s => ({
                         id: s.id,

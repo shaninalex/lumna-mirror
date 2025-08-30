@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"gitlab.com/shaninalex/flowreon/apps/project/dto"
+	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 func (s *ProjectHandler) HandleTaskPatchStatus(ctx *fiber.Ctx) error {
-	in, err := NewPatchTaskInput(ctx)
+	in, err := adapter.NewPatchTaskInput(ctx)
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
@@ -28,11 +28,11 @@ func (s *ProjectHandler) HandleTaskDetail(ctx *fiber.Ctx) error {
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
-	return web.Success(ctx, dto.NewTaskDto(task))
+	return web.Success(ctx, adapter.NewTaskDto(task))
 }
 
 func (s *ProjectHandler) HandleTaskUpdate(ctx *fiber.Ctx) error {
-	data, err := NewUpdateTaskInput(ctx)
+	data, err := adapter.NewUpdateTaskInput(ctx)
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}

@@ -10,7 +10,6 @@ import (
 	ory "github.com/ory/kratos-client-go"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 	"gitlab.com/shaninalex/flowreon/internal/base"
-	"gitlab.com/shaninalex/flowreon/internal/domain"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
@@ -21,7 +20,7 @@ func GetKratosRedirectUrl(c base.IConfig, path string) string {
 
 // ReturnJson return api response based on statuses
 func ReturnJson(ctx *fiber.Ctx, status int, data any, params ...any) error {
-	resp := domain.NewApiResponse(data)
+	resp := NewApiResponse(data)
 	if status >= 400 {
 		resp.Status = false
 	}

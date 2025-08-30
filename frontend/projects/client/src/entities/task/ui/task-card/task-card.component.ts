@@ -10,7 +10,7 @@ import {RouterLink} from '@angular/router';
     template: `
         <mat-card appearance="outlined">
             <mat-card-header>
-                <a [routerLink]="['/projects', projectKey, task.code]" class="cursor-pointer text-left">
+                <a [routerLink]="['/projects', projectCode, task.code]" class="cursor-pointer text-left">
                     {{ task.title }}
                 </a>
             </mat-card-header>
@@ -29,5 +29,5 @@ import {RouterLink} from '@angular/router';
 })
 export class TaskCardComponent {
     @Input() task: Task;
-    @Input() projectKey: string;
+    @Input() projectCode: string;
 }

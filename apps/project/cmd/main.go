@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	projectApp "gitlab.com/shaninalex/flowreon/apps/project/app"
+	projectApp "gitlab.com/shaninalex/flowreon/apps/project/api"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/internal/web"
@@ -23,7 +23,7 @@ func main() {
 
 	config := base.NewConfig(configPath)
 	db := database.InitDB(config.String("app.dsn"))
-	router := web.AuthRouter(config, db, "org")
+	router := web.AuthRouter(config, db, "project")
 	projectApp.NewProjectController(router)
 	if err := router.Listen(fmt.Sprintf(":%s", config.String("project.port"))); err != nil {
 		panic(err)

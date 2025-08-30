@@ -6,7 +6,7 @@ import {CommonApiService} from '@client/shared/common';
 
 export const BOARD_URLS = {
     Tasks: (projectKey: string) => `${env.API_ROOT}/api/project/${projectKey}/tasks`,
-    TaskAction: (projectKey: string, taskID: string) => `${env.API_ROOT}/api/project/${projectKey}/task/${taskID}/status`,
+    TaskAction: (projectCode: string, taskCode: string) => `${env.API_ROOT}/api/project/${projectCode}/tasks/${taskCode}/status`,
 }
 
 interface ChangeStatusPayload {
@@ -24,8 +24,8 @@ export class BoardViewApiService extends CommonApiService {
         );
     }
 
-    public ChangeStatus(projectKey: string, taskID: string, payload: ChangeStatusPayload): Observable<any> {
-        return this.patch<any>(BOARD_URLS.TaskAction(projectKey, taskID), payload).pipe(
+    public ChangeStatus(projectCode: string, taskCode: string, payload: ChangeStatusPayload): Observable<any> {
+        return this.patch<any>(BOARD_URLS.TaskAction(projectCode, taskCode), payload).pipe(
             map(data => data.data),
         );
     }

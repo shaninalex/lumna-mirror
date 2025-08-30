@@ -1,31 +1,33 @@
-package app
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+
+package domain
 
 import (
 	"context"
 	"log"
 
 	"github.com/google/uuid"
+	"gitlab.com/shaninalex/flowreon/apps/auth/dto"
 	"gitlab.com/shaninalex/flowreon/database"
-	"gitlab.com/shaninalex/flowreon/internal/domain"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
-type IAuthApi interface {
-	HookRegister(ctx context.Context, data *domain.HooksKratosPayloadDTO) error
+type AuthHookHandler interface {
+	HookRegister(ctx context.Context, data *dto.HooksKratosPayloadDTO) error
 	HookVerify(ctx context.Context) error
 	HookLogin(ctx context.Context) error
 }
 
-var _ IAuthApi = &AuthApi{}
+var _ AuthHookHandler = &AuthHookApi{}
 
-type AuthApi struct {
+type AuthHookApi struct {
 }
 
-func NewAuthApi() *AuthApi {
-	return &AuthApi{}
+func NewAuthHookApi() *AuthHookApi {
+	return &AuthHookApi{}
 }
 
-func (s *AuthApi) HookRegister(ctx context.Context, data *domain.HooksKratosPayloadDTO) error {
+func (s *AuthHookApi) HookRegister(ctx context.Context, data *dto.HooksKratosPayloadDTO) error {
 	userId, err := uuid.Parse(data.UserID)
 	if err != nil {
 		return err
@@ -49,13 +51,13 @@ func (s *AuthApi) HookRegister(ctx context.Context, data *domain.HooksKratosPayl
 	return nil
 }
 
-func (s *AuthApi) HookVerify(ctx context.Context) error {
+func (s *AuthHookApi) HookVerify(ctx context.Context) error {
 	// TODO: notify about Verify
 	// TODO implement me
 	panic("implement me")
 }
 
-func (s *AuthApi) HookLogin(ctx context.Context) error {
+func (s *AuthHookApi) HookLogin(ctx context.Context) error {
 	// TODO: notify about Login
 	// TODO implement me
 	panic("implement me")
