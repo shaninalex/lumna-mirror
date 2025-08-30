@@ -6,7 +6,9 @@ import (
 	"context"
 	"sync"
 
+	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/kratos"
 	"gorm.io/gorm"
 )
 
@@ -22,15 +24,24 @@ func init() {
 
 // TestManager - test manager.
 type TestManager struct {
-	DB *gorm.DB
+	Ctx    context.Context
+	DB     *gorm.DB
+	Config base.IConfig
+	Kratos kratos.IKratos
+	Router *fiber.App
 }
 
 func newTestManager() {
 	ctx = context.Background()
 	db = InitTestDatabase()
 	ctx = context.WithValue(ctx, base.ContextDB, db)
+	clearDatabase(ctx)
 	m = &TestManager{
-		DB: db,
+		DB:     db,
+		Ctx:    ctx,
+		Config: config,
+		Kratos: NewMockKratosService(),
+		Router: AuthTestRouter(db, "test_router"),
 	}
 }
 

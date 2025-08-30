@@ -20,7 +20,7 @@ func Test_ModelsBuilders(t *testing.T) {
 	assert.NotNil(t, user)
 	assert.NotNil(t, project)
 	assert.Equal(t, org.UserID, user.ID)
-	issue := builders.NewIssueBuilder().
+	issue := builders.NewTaskBuilder().
 		User(*user).
 		Organization(*org).
 		Project(*project).

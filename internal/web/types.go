@@ -7,16 +7,16 @@ import (
 )
 
 // ApiResponse - api response.
-type ApiResponse struct {
+type ApiResponse[T any] struct {
 	Status   bool                 `json:"status"`
-	Data     any                  `json:"data"`
+	Data     T                    `json:"data"`
 	Messages []string             `json:"messages,omitempty"`
 	Errors   []apperrors.AppError `json:"errors,omitempty"`
 }
 
 // NewApiResponse - new api response.
-func NewApiResponse(data any) *ApiResponse {
-	return &ApiResponse{
+func NewApiResponse[T any](data T) *ApiResponse[T] {
+	return &ApiResponse[T]{
 		Status: true,
 		Data:   data,
 	}

@@ -3,6 +3,7 @@
 package handler_test
 
 import (
+	"encoding/json"
 	"io"
 	"net/http"
 	"testing"
@@ -10,32 +11,65 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/flowreon/apps/project/api/handler"
 	"gitlab.com/shaninalex/flowreon/apps/project/domain"
+	"gitlab.com/shaninalex/flowreon/apps/project/dto"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/tdata"
 )
 
-func TestProjectList(t *testing.T) {
+func Test_ProjectList(t *testing.T) {
 	m := tdata.Manager()
-	testRouter := web.DefaultRouter(m.DB, "test_project_api")
 
+	_, user, project := tdata.CreatePack(m.Ctx)
+	cookie := tdata.AddSession(user)
+
+	r := m.Router
 	handlers := handler.NewProjectHandler(domain.NewProjectManagement())
-	testRouter.Get("/", handlers.HandleProjectsList)
+	r.Get("/", handlers.HandleProjectsList)
 
-	// Create a new HTTP request
 	req, _ := http.NewRequest("GET", "/", nil)
+	tdata.SetAuthRequest(req, user, cookie)
 
-	// Perform the request using app.Test
-	res, err := testRouter.Test(req, -1)
+	res, err := r.Test(req, -1)
 
-	// Verify that no error occurred
 	assert.Nil(t, err)
-
-	// Verify the status code
 	assert.Equal(t, 200, res.StatusCode)
 
-	// Read the response body
 	body, _ := io.ReadAll(res.Body)
 
-	// Verify the response body
-	assert.Equal(t, "OK", string(body))
+	var response web.ApiResponse[[]*dto.ProjectDto]
+	err = json.Unmarshal(body, &response)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(response.Data))
+	assert.Equal(t, project.GetID(), response.Data[0].ID)
+}
+
+func Test_ProjectTaskList(t *testing.T) {
+	m := tdata.Manager()
+
+	_, user, project := tdata.CreatePack(m.Ctx)
+	cookie := tdata.AddSession(user)
+
+	statuses := tdata.CreateRandomStatuses(m.Ctx, project)
+
+	r := m.Router
+	handlers := handler.NewProjectHandler(domain.NewProjectManagement())
+	r.Get("/", handlers.HandleProjectTasksList)
+
+	req, _ := http.NewRequest("GET", "/", nil)
+	tdata.SetAuthRequest(req, user, cookie)
+
+	res, err := r.Test(req, -1)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 200, res.StatusCode)
+
+	body, _ := io.ReadAll(res.Body)
+
+	var response web.ApiResponse[[]*dto.TaskStatusDto]
+	err = json.Unmarshal(body, &response)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(response.Data))
+	assert.Equal(t, statuses[0].ID, response.Data[0].ID)
+	assert.Equal(t, statuses[0].Title, response.Data[0].Title)
+	assert.Equal(t, len(statuses[0].Tasks), len(response.Data[0].Tasks))
 }

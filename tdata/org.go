@@ -6,6 +6,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	ory "github.com/ory/kratos-client-go"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/models/builders"
@@ -26,11 +27,17 @@ func CreateOrganisation(ctx context.Context, user *models.User) *models.Organiza
 
 // CreateUser - creates a new user.
 func CreateUser(ctx context.Context) *models.User {
-	user := builders.NewUserBuilder().ID(uuid.New()).Code(uuid.NewString()).Build()
+	user := builders.NewUserBuilder().
+		ID(uuid.New()).
+		Code(uuid.NewString()).
+		Build()
 	result := database.GetDB(ctx).Create(&user)
 	if result.Error != nil {
 		panic(result.Error)
 	}
+	AddIdentity(&ory.Identity{
+		Id: user.GetID().String(),
+	})
 	return user
 }
 
@@ -57,4 +64,30 @@ func CreatePack(ctx context.Context) (*models.Organization, *models.User, *model
 	org := CreateOrganisation(ctx, user)
 	project := CreateProject(ctx, org, user)
 	return org, user, project
+}
+
+func CreateRandomStatuses(ctx context.Context, project *models.Project) []*models.TaskStatus {
+	st1 := models.TaskStatus{
+		ProjectID: project.GetID(),
+		Title:     "Todo1",
+		Complete:  false,
+		Index:     0,
+	}
+	_db := database.GetDB(ctx)
+	for _ = range 3 {
+		task := builders.NewTaskBuilder().
+			UserID(project.GetOwnerID()).
+			OrganizationID(project.OrganizationID).
+			ProjectID(project.GetID()).
+			TaskStatusID(st1.GetID()).
+			TaskStatus(&st1).
+			Title(uuid.NewString()).Build()
+		st1.Tasks = append(st1.Tasks, task)
+	}
+	tx := _db.Save(&st1)
+	if tx.Error != nil {
+		panic(tx.Error)
+	}
+
+	return []*models.TaskStatus{&st1}
 }

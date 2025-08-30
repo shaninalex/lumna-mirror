@@ -35,7 +35,13 @@ func clearDatabase(ctx context.Context) {
 	_db := database.GetDB(ctx)
 	if err := _db.Exec(`
 		TRUNCATE TABLE 
-			users, issues, epics, sprints, organizations, projects 
+			epics,
+		    organizations,
+		    projects,
+		    sprints,
+		    task_statuses,
+		    tasks,
+		    users
 		RESTART IDENTITY CASCADE
 	`).Error; err != nil {
 		panic(err)

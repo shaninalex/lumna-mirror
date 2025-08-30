@@ -14,8 +14,8 @@ type TaskBuilder struct {
 	task *models.Task
 }
 
-// NewIssueBuilder - new issue builder.
-func NewIssueBuilder() *TaskBuilder {
+// NewTaskBuilder - new issue builder.
+func NewTaskBuilder() *TaskBuilder {
 	task := &models.Task{}
 	b := &TaskBuilder{task: task}
 	return b
@@ -78,6 +78,18 @@ func (b *TaskBuilder) Sprint(sprint models.Sprint) *TaskBuilder {
 // ProjectID - project id.
 func (b *TaskBuilder) ProjectID(projectID uuid.UUID) *TaskBuilder {
 	b.task.ProjectID = projectID
+	return b
+}
+
+// TaskStatusID - task status id.
+func (b *TaskBuilder) TaskStatusID(taskStatusID uuid.UUID) *TaskBuilder {
+	b.task.TaskStatusID = taskStatusID
+	return b
+}
+
+// TaskStatus - task status
+func (b *TaskBuilder) TaskStatus(taskStatus *models.TaskStatus) *TaskBuilder {
+	b.task.TaskStatus = taskStatus
 	return b
 }
 
