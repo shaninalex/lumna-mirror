@@ -25,17 +25,34 @@ type Epic struct {
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
 
-func (s *Epic) GetID() uuid.UUID             { return s.ID }
-func (s *Epic) SetID(id uuid.UUID)           { s.ID = id }
-func (s *Epic) GetOwner() AuthUser           { return s.User }
-func (s *Epic) GetOwnerID() uuid.UUID        { return s.UserID }
+// GetID - returns the id.
+func (s *Epic) GetID() uuid.UUID { return s.ID }
+
+// SetID - sets the id.
+func (s *Epic) SetID(id uuid.UUID) { s.ID = id }
+
+// GetOwner - returns the owner.
+func (s *Epic) GetOwner() AuthUser { return s.User }
+
+// GetOwnerID - returns the owner id.
+func (s *Epic) GetOwnerID() uuid.UUID { return s.UserID }
+
+// IsOwner - checks if it is owner.
 func (s *Epic) IsOwner(entity AuthUser) bool { return entity.GetID() == s.GetOwnerID() }
-func (s *Epic) GetCreatedAt() time.Time      { return s.CreatedAt }
+
+// GetCreatedAt - returns the created at.
+func (s *Epic) GetCreatedAt() time.Time { return s.CreatedAt }
+
+// GetDeletedAt - returns the deleted at.
 func (s *Epic) GetDeletedAt() *time.Time {
 	if s.DeletedAt.Valid {
 		return &s.DeletedAt.Time
 	}
 	return nil
 }
-func (s *Epic) IsDeleted() bool         { return s.DeletedAt.Valid }
+
+// IsDeleted - checks if it is deleted.
+func (s *Epic) IsDeleted() bool { return s.DeletedAt.Valid }
+
+// GetCreatedBy - returns the created by.
 func (s *Epic) GetCreatedBy() uuid.UUID { return s.GetOwnerID() }

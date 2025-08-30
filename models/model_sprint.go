@@ -28,18 +28,37 @@ type Sprint struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (s *Sprint) GetID() uuid.UUID             { return s.ID }
-func (s *Sprint) SetID(id uuid.UUID)           { s.ID = id }
-func (s *Sprint) GetOwner() AuthUser           { return s.User }
-func (s *Sprint) GetOwnerID() uuid.UUID        { return s.UserID }
+// GetID - returns the id.
+func (s *Sprint) GetID() uuid.UUID { return s.ID }
+
+// SetID - sets the id.
+func (s *Sprint) SetID(id uuid.UUID) { s.ID = id }
+
+// GetOwner - returns the owner.
+func (s *Sprint) GetOwner() AuthUser { return s.User }
+
+// GetOwnerID - returns the owner id.
+func (s *Sprint) GetOwnerID() uuid.UUID { return s.UserID }
+
+// IsOwner - checks if it is owner.
 func (s *Sprint) IsOwner(entity AuthUser) bool { return entity.GetID() == s.GetOwnerID() }
-func (s *Sprint) GetCreatedAt() time.Time      { return s.CreatedAt }
-func (s *Sprint) GetUpdatedAt() time.Time      { return s.UpdatedAt }
+
+// GetCreatedAt - returns the created at.
+func (s *Sprint) GetCreatedAt() time.Time { return s.CreatedAt }
+
+// GetUpdatedAt - returns the updated at.
+func (s *Sprint) GetUpdatedAt() time.Time { return s.UpdatedAt }
+
+// GetDeletedAt - returns the deleted at.
 func (s *Sprint) GetDeletedAt() *time.Time {
 	if s.DeletedAt.Valid {
 		return &s.DeletedAt.Time
 	}
 	return nil
 }
-func (s *Sprint) IsDeleted() bool         { return s.DeletedAt.Valid }
+
+// IsDeleted - checks if it is deleted.
+func (s *Sprint) IsDeleted() bool { return s.DeletedAt.Valid }
+
+// GetCreatedBy - returns the created by.
 func (s *Sprint) GetCreatedBy() uuid.UUID { return s.GetOwnerID() }

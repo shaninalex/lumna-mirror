@@ -48,20 +48,43 @@ type Task struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (s *Task) GetID() uuid.UUID             { return s.ID }
-func (s *Task) SetID(id uuid.UUID)           { s.ID = id }
-func (s *Task) GetOwner() AuthUser           { return s.User }
-func (s *Task) GetOwnerID() uuid.UUID        { return s.UserID }
+// GetID - returns the id.
+func (s *Task) GetID() uuid.UUID { return s.ID }
+
+// SetID - sets the id.
+func (s *Task) SetID(id uuid.UUID) { s.ID = id }
+
+// GetOwner - returns the owner.
+func (s *Task) GetOwner() AuthUser { return s.User }
+
+// GetOwnerID - returns the owner id.
+func (s *Task) GetOwnerID() uuid.UUID { return s.UserID }
+
+// IsOwner - checks if it is owner.
 func (s *Task) IsOwner(entity AuthUser) bool { return entity.GetID() == s.GetOwnerID() }
-func (s *Task) GetCreatedAt() time.Time      { return s.CreatedAt }
-func (s *Task) GetUpdatedAt() time.Time      { return s.UpdatedAt }
+
+// GetCreatedAt - returns the created at.
+func (s *Task) GetCreatedAt() time.Time { return s.CreatedAt }
+
+// GetUpdatedAt - returns the updated at.
+func (s *Task) GetUpdatedAt() time.Time { return s.UpdatedAt }
+
+// GetDeletedAt - returns the deleted at.
 func (s *Task) GetDeletedAt() *time.Time {
 	if s.DeletedAt.Valid {
 		return &s.DeletedAt.Time
 	}
 	return nil
 }
-func (s *Task) IsDeleted() bool         { return s.DeletedAt.Valid }
+
+// IsDeleted - checks if it is deleted.
+func (s *Task) IsDeleted() bool { return s.DeletedAt.Valid }
+
+// GetCreatedBy - returns the created by.
 func (s *Task) GetCreatedBy() uuid.UUID { return s.GetOwnerID() }
-func (s *Task) SetCode(code string)     { s.Code = code }
-func (s *Task) GetCode() string         { return s.Code }
+
+// SetCode - sets the code.
+func (s *Task) SetCode(code string) { s.Code = code }
+
+// GetCode - returns the code.
+func (s *Task) GetCode() string { return s.Code }

@@ -23,6 +23,7 @@ func NewAuthFormsHandler(config base.IConfig, kratosService kratos.IKratos) *Aut
 	}
 }
 
+// HandleFormLogin - handle form login.
 func (s *AuthFormsHandler) HandleFormLogin(ctx *fiber.Ctx) error {
 	flowId := ctx.Query("flow")
 	if flowId == "" {
@@ -47,6 +48,7 @@ func (s *AuthFormsHandler) HandleFormLogin(ctx *fiber.Ctx) error {
 	return web.Success(ctx, data)
 }
 
+// HandleFormRegister - handle form register.
 func (s *AuthFormsHandler) HandleFormRegister(ctx *fiber.Ctx) error {
 	flowId := ctx.Query("flow")
 	if flowId == "" {
@@ -71,6 +73,7 @@ func (s *AuthFormsHandler) HandleFormRegister(ctx *fiber.Ctx) error {
 	return web.Success(ctx, data)
 }
 
+// HandleFormError - handle form error.
 func (s *AuthFormsHandler) HandleFormError(ctx *fiber.Ctx) error {
 	errorId := ctx.Query("id")
 	if errorId == "" {
@@ -95,6 +98,7 @@ func (s *AuthFormsHandler) HandleFormError(ctx *fiber.Ctx) error {
 	return web.Success(ctx, data)
 }
 
+// HandleFormVerification - handle form verification.
 func (s *AuthFormsHandler) HandleFormVerification(ctx *fiber.Ctx) error {
 	flowId := ctx.Query("flow")
 	if flowId == "" {
@@ -120,6 +124,7 @@ func (s *AuthFormsHandler) HandleFormVerification(ctx *fiber.Ctx) error {
 	return web.Success(ctx, data)
 }
 
+// HandleFormRecovery - handle form recovery.
 func (s *AuthFormsHandler) HandleFormRecovery(ctx *fiber.Ctx) error {
 	flowId := ctx.Query("flow")
 	if flowId == "" {

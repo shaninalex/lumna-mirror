@@ -19,6 +19,7 @@ func GetTestEmailApi() email.IEmailApi {
 
 type TestEmailApi struct{}
 
+// SendVerificationEmail - send verification email.
 func (s *TestEmailApi) SendVerificationEmail(token, to string) error {
 	_emailStorage.Set(to, token)
 	return nil
@@ -28,6 +29,7 @@ type TestEmailStorage struct {
 	codes map[string]string
 }
 
+// Get - returns the value.
 func (s *TestEmailStorage) Get(t string) string {
 	if t, ok := s.codes[t]; ok {
 		return t
@@ -35,6 +37,7 @@ func (s *TestEmailStorage) Get(t string) string {
 	return ""
 }
 
+// Set - sets the value.
 func (s *TestEmailStorage) Set(key, v string) {
 	s.codes[key] = v
 }

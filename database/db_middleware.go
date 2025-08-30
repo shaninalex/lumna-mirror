@@ -17,6 +17,7 @@ func NewDbMiddleware(db *gorm.DB) fiber.Handler {
 	return m.Wrap()
 }
 
+// Wrap - wrap.
 func (m *DbMiddleware) Wrap() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		ctx.Locals(base.ContextDB, m.db)

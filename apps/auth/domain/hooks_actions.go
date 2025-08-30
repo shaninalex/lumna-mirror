@@ -27,6 +27,7 @@ func NewAuthHookApi() *AuthHookApi {
 	return &AuthHookApi{}
 }
 
+// HookRegister - hook register.
 func (s *AuthHookApi) HookRegister(ctx context.Context, data *dto.HooksKratosPayloadDTO) error {
 	userId, err := uuid.Parse(data.UserID)
 	if err != nil {
@@ -51,12 +52,14 @@ func (s *AuthHookApi) HookRegister(ctx context.Context, data *dto.HooksKratosPay
 	return nil
 }
 
+// HookVerify - hook verify.
 func (s *AuthHookApi) HookVerify(ctx context.Context) error {
 	// TODO: notify about Verify
 	// TODO implement me
 	panic("implement me")
 }
 
+// HookLogin - hook login.
 func (s *AuthHookApi) HookLogin(ctx context.Context) error {
 	// TODO: notify about Login
 	// TODO implement me

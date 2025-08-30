@@ -26,6 +26,7 @@ func NewAuthMiddleware(kratosService kratos.IKratos) fiber.Handler {
 	return m.Wrap()
 }
 
+// Wrap - wrap.
 func (s *AuthMiddleware) Wrap() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		id := ctx.Get("X-USER")

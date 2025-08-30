@@ -14,6 +14,7 @@ func NewCommonMiddleware() fiber.Handler {
 	return m.Wrap()
 }
 
+// Wrap - wrap.
 func (m *CommonMiddleware) Wrap() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		ctx.Locals("ip", ctx.IP())

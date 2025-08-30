@@ -39,10 +39,12 @@ type Timestamped interface {
 	IsDeleted() bool
 }
 
+// Auditable get id of an entity created
 type Auditable interface {
 	GetCreatedBy() uuid.UUID
 }
 
+// Coded describe an entity has and use codes
 type Coded interface {
 	SetCode(string)
 	GetCode() string

@@ -23,6 +23,7 @@ func NewAuthHooksHandler(api domain.AuthHookHandler) *AuthHooksHandler {
 	}
 }
 
+// HandleHookRegister - handle hook register.
 func (s *AuthHooksHandler) HandleHookRegister(ctx *fiber.Ctx) error {
 	var data dto.HooksKratosPayloadDTO
 	err := ctx.BodyParser(&data)
@@ -36,10 +37,12 @@ func (s *AuthHooksHandler) HandleHookRegister(ctx *fiber.Ctx) error {
 	return web.Success(ctx, nil)
 }
 
+// HandleHookVerify - handle hook verify.
 func (s *AuthHooksHandler) HandleHookVerify(ctx *fiber.Ctx) error {
 	return web.Success(ctx, nil)
 }
 
+// HandleHookLogin - handle hook login.
 func (s *AuthHooksHandler) HandleHookLogin(ctx *fiber.Ctx) error {
 	return web.Success(ctx, nil)
 }

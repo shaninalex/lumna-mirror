@@ -23,8 +23,13 @@ type TaskStatus struct {
 	Config      string
 }
 
-func (s *TaskStatus) GetID() uuid.UUID   { return s.ID }
+// GetID - returns the id.
+func (s *TaskStatus) GetID() uuid.UUID { return s.ID }
+
+// SetID - sets the id.
 func (s *TaskStatus) SetID(id uuid.UUID) { s.ID = id }
+
+// SaveConfig - saves the config.
 func (s *TaskStatus) SaveConfig(cnf TaskStatusConfig) {
 	b, err := json.Marshal(cnf)
 	if err != nil {
@@ -32,6 +37,8 @@ func (s *TaskStatus) SaveConfig(cnf TaskStatusConfig) {
 	}
 	s.Config = string(b)
 }
+
+// GetConfig - returns the config.
 func (s *TaskStatus) GetConfig() *TaskStatusConfig {
 	if s.Config == "" {
 		return NewTaskStatusConfig()

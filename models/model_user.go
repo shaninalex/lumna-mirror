@@ -31,24 +31,41 @@ type User struct {
 	//Permissions any          `gorm:"-"` // Keto permissions data
 }
 
-func (s *User) GetID() uuid.UUID   { return s.ID }
+// GetID - returns the id.
+func (s *User) GetID() uuid.UUID { return s.ID }
+
+// SetID - sets the id.
 func (s *User) SetID(id uuid.UUID) { s.ID = id }
-func (s *User) GetTraits() any     { return s.GetIdentity().GetTraits() }
+
+// GetTraits - returns the traits.
+func (s *User) GetTraits() any { return s.GetIdentity().GetTraits() }
+
+// GetIdentity - returns the identity.
 func (s *User) GetIdentity() *ory.Identity {
 	if s.Identity == nil {
 		panic(fmt.Errorf("identity not set"))
 	}
 	return s.Identity
 }
-func (s *User) IsActive() bool          { return s.GetIdentity().GetState() == "active" }
+
+// IsActive - checks if it is active.
+func (s *User) IsActive() bool { return s.GetIdentity().GetState() == "active" }
+
+// GetCreatedAt - returns the created at.
 func (s *User) GetCreatedAt() time.Time { return s.CreatedAt }
+
+// GetUpdatedAt - returns the updated at.
 func (s *User) GetUpdatedAt() time.Time { return s.UpdatedAt }
+
+// GetDeletedAt - returns the deleted at.
 func (s *User) GetDeletedAt() *time.Time {
 	if s.DeletedAt.Valid {
 		return &s.DeletedAt.Time
 	}
 	return nil
 }
+
+// IsDeleted - checks if it is deleted.
 func (s *User) IsDeleted() bool { return s.DeletedAt.Valid }
 
 type TraitsName struct {

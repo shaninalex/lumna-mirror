@@ -21,6 +21,7 @@ func NewTaskHandler(manager domain.ProjectManager) *TaskHandler {
 	}
 }
 
+// HandleTaskPatchStatus - handle task patch status.
 func (s *TaskHandler) HandleTaskPatchStatus(ctx *fiber.Ctx) error {
 	in, err := adapter.NewPatchTaskInput(ctx)
 	if err != nil {
@@ -32,6 +33,7 @@ func (s *TaskHandler) HandleTaskPatchStatus(ctx *fiber.Ctx) error {
 	return web.Success(ctx, nil, "Task saved")
 }
 
+// HandleTaskDetail - handle task detail.
 func (s *TaskHandler) HandleTaskDetail(ctx *fiber.Ctx) error {
 	projectCode := ctx.Params("projectCode")
 	taskCode := ctx.Params("taskCode")
@@ -42,6 +44,7 @@ func (s *TaskHandler) HandleTaskDetail(ctx *fiber.Ctx) error {
 	return web.Success(ctx, adapter.NewTaskDto(task))
 }
 
+// HandleTaskUpdate - handle task update.
 func (s *TaskHandler) HandleTaskUpdate(ctx *fiber.Ctx) error {
 	data, err := adapter.NewUpdateTaskInput(ctx)
 	if err != nil {

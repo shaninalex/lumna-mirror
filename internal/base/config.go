@@ -35,6 +35,7 @@ func (s *Config) init() {
 	s.ReadConfig(s.path)
 }
 
+// ReadConfig - read config.
 func (s *Config) ReadConfig(path string) {
 	s.v.SetConfigFile(path)
 
@@ -51,6 +52,7 @@ func (s *Config) ReadConfig(path string) {
 const EnvDevelopment = "development"
 const EnvTesting = "testing"
 
+// Env - env.
 func (s *Config) Env() string {
 	if os.Getenv("APPLICATION_ENV") != "" {
 		return os.Getenv("APPLICATION_ENV")
@@ -58,18 +60,22 @@ func (s *Config) Env() string {
 	return EnvDevelopment
 }
 
+// String - string.
 func (s *Config) String(param string) string {
 	return s.v.GetString(param)
 }
 
+// Int - int.
 func (s *Config) Int(param string) int {
 	return s.v.GetInt(param)
 }
 
+// Bool - bool.
 func (s *Config) Bool(param string) bool {
 	return s.v.GetBool(param)
 }
 
+// List - lists all value.
 func (s *Config) List(param string) []string {
 	return s.v.GetStringSlice(param)
 }

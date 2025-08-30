@@ -19,12 +19,15 @@ type testConfig struct {
 	storage map[string]any
 }
 
+// ReadConfig - read config.
 func (s *testConfig) ReadConfig(path string) {
 	// TODO: read from test config file
 }
 
+// Env - env.
 func (s *testConfig) Env() string { return base.EnvTesting }
 
+// String - string.
 func (s *testConfig) String(param string) string {
 	v, ok := s.storage[param].(string)
 	if !ok {
@@ -33,6 +36,7 @@ func (s *testConfig) String(param string) string {
 	return v
 }
 
+// Bool - bool.
 func (s *testConfig) Bool(param string) bool {
 	v, ok := s.storage[param].(bool)
 	if !ok {
@@ -41,6 +45,7 @@ func (s *testConfig) Bool(param string) bool {
 	return v
 }
 
+// Int - int.
 func (s *testConfig) Int(param string) int {
 	v, ok := s.storage[param].(int)
 	if !ok {
@@ -49,6 +54,7 @@ func (s *testConfig) Int(param string) int {
 	return v
 }
 
+// List - lists all value.
 func (s *testConfig) List(param string) []string {
 	v, ok := s.storage[param].([]string)
 	if !ok {
@@ -57,6 +63,7 @@ func (s *testConfig) List(param string) []string {
 	return v
 }
 
+// Set - sets the value.
 func (s *testConfig) Set(k string, v any) {
 	s.storage[k] = v
 }

@@ -24,6 +24,7 @@ func NewOrganizationApi() *OrganizationApi {
 	return &OrganizationApi{}
 }
 
+// Get - returns the value.
 func (s *OrganizationApi) Get(ctx context.Context, userID uuid.UUID) (*models.Organization, error) {
 	var user models.User
 	if err := database.GetDB(ctx).Preload("Organization").First(&user, "id = ?", userID).Error; err != nil {

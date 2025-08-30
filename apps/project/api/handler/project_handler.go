@@ -24,6 +24,7 @@ func NewProjectHandler(manager domain.ProjectManager) *ProjectHandler {
 	return h
 }
 
+// HandleProjectsList - handle projects list.
 func (s *ProjectHandler) HandleProjectsList(ctx *fiber.Ctx) error {
 	// TODO: check user permission ( user should not see project he do not allowed to see )
 	projects, err := s.manager.List(ctx.Context(), web.GetOrganizationId(ctx))
@@ -36,6 +37,7 @@ func (s *ProjectHandler) HandleProjectsList(ctx *fiber.Ctx) error {
 	return web.Success(ctx, adapter.NewProjectsDto(projects))
 }
 
+// HandleProjectTasksList - handle project tasks list.
 func (s *ProjectHandler) HandleProjectTasksList(ctx *fiber.Ctx) error {
 	projectCode := ctx.Params("projectCode")
 	statuses, err := s.manager.TasksList(ctx.Context(), web.GetOrganizationId(ctx), projectCode)

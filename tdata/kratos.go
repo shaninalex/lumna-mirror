@@ -22,6 +22,7 @@ type TestKratosService struct {
 	Identities []*ory.Identity
 }
 
+// Get - returns the value.
 func (s *TestKratosService) Get(ctx context.Context, id uuid.UUID) (*ory.Identity, error) {
 	for _, i := range s.Identities {
 		if i.Id == id.String() {

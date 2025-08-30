@@ -13,6 +13,7 @@ type AppError struct {
 	Data    any    `json:"data,omitempty"`
 }
 
+// Error implements error interface
 func (e AppError) Error() string {
 	return fmt.Sprintf("[%s]: %s", e.ID, e.Message)
 }

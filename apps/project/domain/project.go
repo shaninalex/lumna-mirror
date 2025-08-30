@@ -44,6 +44,7 @@ func NewProjectManagement() *ProjectManagement {
 	return &ProjectManagement{}
 }
 
+// Project - project.
 func (s *ProjectManagement) Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error) {
 	var project models.Project
 
@@ -63,6 +64,7 @@ func (s *ProjectManagement) Project(ctx context.Context, orgID uuid.UUID, projec
 	return &project, nil
 }
 
+// List - lists all value.
 func (s *ProjectManagement) List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error) {
 	db := database.GetDB(ctx)
 	var projects []*models.Project
@@ -76,6 +78,7 @@ func (s *ProjectManagement) List(ctx context.Context, orgID uuid.UUID) ([]*model
 	return projects, nil
 }
 
+// TasksList - tasks list.
 func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error) {
 	project, err := s.Project(ctx, orgID, projectKey)
 	if err != nil {
@@ -84,6 +87,7 @@ func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, proj
 	return project.Statuses, nil
 }
 
+// PatchTaskStatus - patch task status.
 func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *dto.ChangeTaskStatusDTO) error {
 	db := database.GetDB(ctx)
 	project, err := s.Project(ctx, orgID, projectCode)
@@ -117,6 +121,7 @@ func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID
 	return nil
 }
 
+// TaskDetail - task detail.
 func (s *ProjectManagement) TaskDetail(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string) (*models.Task, error) {
 	project, err := s.Project(ctx, orgID, projectKey)
 	if err != nil {
@@ -130,6 +135,7 @@ func (s *ProjectManagement) TaskDetail(ctx context.Context, orgID uuid.UUID, pro
 	return &task, nil
 }
 
+// TaskUpdate - task update.
 func (s *ProjectManagement) TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *adapter.UpdateTaskData) error {
 	db := database.GetDB(ctx)
 	project, err := s.Project(ctx, orgID, projectKey)
