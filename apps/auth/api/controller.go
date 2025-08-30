@@ -5,7 +5,7 @@ package api
 import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/auth/api/handler"
-	domain2 "gitlab.com/shaninalex/flowreon/apps/auth/domain"
+	"gitlab.com/shaninalex/flowreon/apps/auth/domain"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/internal/kratos"
 )
@@ -35,7 +35,7 @@ func (s *AuthController) setRoutes() {
 	s.router.Get("/api/auth/form/verification", forms.HandleFormVerification)
 	s.router.Get("/api/auth/form/recovery", forms.HandleFormRecovery)
 
-	hooks := handler.NewAuthHooksHandler(domain2.NewAuthHookAPI())
+	hooks := handler.NewAuthHooksHandler(domain.NewAuthHookAPI())
 	s.router.Post("/api/auth/hook/registration", hooks.HandleHookRegister)
 	s.router.Post("/api/auth/hook/verify", hooks.HandleHookVerify)
 	s.router.Post("/api/auth/hook/login", hooks.HandleHookLogin)

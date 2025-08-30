@@ -69,6 +69,12 @@ func (s *User) GetDeletedAt() *time.Time {
 // IsDeleted - checks if it is deleted.
 func (s *User) IsDeleted() bool { return s.DeletedAt.Valid }
 
+// SetCode - sets the code.
+func (s *User) SetCode(code string) { s.Code = code }
+
+// GetCode - returns the code.
+func (s *User) GetCode() string { return s.Code }
+
 // TraitsName - traits name.
 type TraitsName struct {
 	First string `json:"first"`
