@@ -24,7 +24,7 @@ func Test_HandleGetByUser(t *testing.T) {
 	cookie := tdata.AddSession(user)
 
 	r := tdata.AuthTestRouter()
-	handlers := handler.NewOrganizationHandler(domain.NewOrganizationApi())
+	handlers := handler.NewOrganizationHandler(domain.NewOrganizationAPI())
 	r.Get("/", handlers.HandleGetByUser)
 	req, _ := http.NewRequest("GET", "/", nil)
 	tdata.SetAuthRequest(req, user, cookie)

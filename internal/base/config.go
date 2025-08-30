@@ -58,7 +58,10 @@ func (s *Config) ReadConfig(path string) {
 // const EnvProduction = "production"
 // const EnvStaging = "staging"
 
+// EnvDevelopment development application mode
 const EnvDevelopment = "development"
+
+// EnvTesting testing application mode
 const EnvTesting = "testing"
 
 // Env - env.

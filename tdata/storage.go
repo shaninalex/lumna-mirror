@@ -9,7 +9,10 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
+// IdentityStorage - mock storage for ory identity
 var IdentityStorage []*ory.Identity = make([]*ory.Identity, 0)
+
+// SessionStorage - mock storage for ory session
 var SessionStorage map[string]*ory.Session = map[string]*ory.Session{}
 
 // AddIdentity - adds a new identity.

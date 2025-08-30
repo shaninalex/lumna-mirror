@@ -79,7 +79,7 @@ func CreateRandomStatuses(ctx context.Context, project *models.Project) []*model
 			Index:     0,
 		}
 		_db := database.GetDB(ctx)
-		for _ = range 3 {
+		for range 3 {
 			task := builders.NewTaskBuilder().
 				UserID(project.GetOwnerID()).
 				OrganizationID(project.OrganizationID).

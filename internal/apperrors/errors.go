@@ -20,6 +20,7 @@ func (e AppError) Error() string {
 }
 
 var (
+	// Default default application error
 	Default              = AppError{"APP000", "generic_error", "Something went wrong", nil}
 	InvalidCredentials   = AppError{"AUTH001", "invalid_credentials", "Invalid username or password", nil}
 	TokenExpired         = AppError{"AUTH002", "token_expired", "Authentication token expired", nil}
@@ -36,6 +37,7 @@ var (
 	TaskUnableToPatch    = AppError{"TAS002", "unable_to_patch", "Unable to patch task", nil}
 )
 
+// AllErrors set of all application errors
 var AllErrors = []AppError{
 	Default,
 	InvalidCredentials,
@@ -45,7 +47,10 @@ var AllErrors = []AppError{
 	UserNotActive,
 	UserIdentityNotFound,
 	UserOrgNotAttached,
+	UserUnableToCreate,
 	DBConnectionFailed,
 	OrgNotFound,
 	ProjectNotFound,
+	TaskNotFound,
+	TaskUnableToPatch,
 }

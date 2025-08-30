@@ -25,32 +25,32 @@ type IKratos interface {
 	UpdateIdentityTraits(ctx context.Context, id string, traits map[string]interface{}) (*ory.Identity, *http.Response, error)
 }
 
-// KratosService - kratos service.
-type KratosService struct {
+// Service - kratos service.
+type Service struct {
 	client *ory.APIClient
 }
 
 // NewKratosService - new kratos service.
-func NewKratosService(url string) *KratosService {
+func NewKratosService(url string) *Service {
 	configuration := ory.NewConfiguration()
 	configuration.Servers = []ory.ServerConfiguration{
 		{
 			URL: url,
 		},
 	}
-	return &KratosService{
+	return &Service{
 		client: ory.NewAPIClient(configuration),
 	}
 }
 
 // Client return ory kratos api client itself
-func (s *KratosService) Client() *ory.APIClient {
+func (s *Service) Client() *ory.APIClient {
 	return s.client
 }
 
 // GetLoginFlow is the method that return created login flow based on user
 // cookies and flow id
-func (s *KratosService) GetLoginFlow(ctx context.Context, cookie, flowID string) (*ory.LoginFlow, *http.Response, error) {
+func (s *Service) GetLoginFlow(ctx context.Context, cookie, flowID string) (*ory.LoginFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetLoginFlow(ctx).
 		Cookie(cookie).
@@ -60,7 +60,7 @@ func (s *KratosService) GetLoginFlow(ctx context.Context, cookie, flowID string)
 
 // GetRegistrationFlow is the method that return registration flow based on user
 // cookies and flow id
-func (s *KratosService) GetRegistrationFlow(ctx context.Context, cookie, flowID string) (*ory.RegistrationFlow, *http.Response, error) {
+func (s *Service) GetRegistrationFlow(ctx context.Context, cookie, flowID string) (*ory.RegistrationFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetRegistrationFlow(ctx).
 		Cookie(cookie).
@@ -71,7 +71,7 @@ func (s *KratosService) GetRegistrationFlow(ctx context.Context, cookie, flowID 
 // GetErrorFlow is the method that return error flow based on user
 // cookies and flow id. ory/kratos store errors in database and user can
 // access them via error flow id.
-func (s *KratosService) GetErrorFlow(ctx context.Context, errorID string) (*ory.FlowError, *http.Response, error) {
+func (s *Service) GetErrorFlow(ctx context.Context, errorID string) (*ory.FlowError, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetFlowError(ctx).
 		Id(errorID).
@@ -81,7 +81,7 @@ func (s *KratosService) GetErrorFlow(ctx context.Context, errorID string) (*ory.
 // GetVerificationFlow is the method that return verification flow based on user
 // cookies and flow id. After registration user can be redirected to the
 // verification page where this form should be rendered.
-func (s *KratosService) GetVerificationFlow(ctx context.Context, cookie, flowID string) (*ory.VerificationFlow, *http.Response, error) {
+func (s *Service) GetVerificationFlow(ctx context.Context, cookie, flowID string) (*ory.VerificationFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetVerificationFlow(ctx).
 		Cookie(cookie).
@@ -93,7 +93,7 @@ func (s *KratosService) GetVerificationFlow(ctx context.Context, cookie, flowID 
 // return logout token and logout url. By following logout id or calling api
 // call with logout token - kratos will remove active session from db and user
 // will be logged out
-func (s *KratosService) CreateLogoutFlow(ctx context.Context, cookie string) (*ory.LogoutFlow, *http.Response, error) {
+func (s *Service) CreateLogoutFlow(ctx context.Context, cookie string) (*ory.LogoutFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		CreateBrowserLogoutFlow(ctx).
 		Cookie(cookie).
@@ -103,7 +103,7 @@ func (s *KratosService) CreateLogoutFlow(ctx context.Context, cookie string) (*o
 // CreateSettingsFlow is the method that create user settings flow. This method
 // basically says to the system that this user ( by cookie ) want to get his
 // settings form to change something about himself.
-func (s *KratosService) CreateSettingsFlow(ctx context.Context, cookie string) (*ory.SettingsFlow, *http.Response, error) {
+func (s *Service) CreateSettingsFlow(ctx context.Context, cookie string) (*ory.SettingsFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		CreateBrowserSettingsFlow(ctx).
 		Cookie(cookie).
@@ -112,7 +112,7 @@ func (s *KratosService) CreateSettingsFlow(ctx context.Context, cookie string) (
 
 // GetSettingsFlow is the method that return settings flow to user. This object
 // contain all editable user profile fields that kratos user have access to.
-func (s *KratosService) GetSettingsFlow(ctx context.Context, cookie, flowID string) (*ory.SettingsFlow, *http.Response, error) {
+func (s *Service) GetSettingsFlow(ctx context.Context, cookie, flowID string) (*ory.SettingsFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetSettingsFlow(ctx).
 		Cookie(cookie).
@@ -121,7 +121,7 @@ func (s *KratosService) GetSettingsFlow(ctx context.Context, cookie, flowID stri
 }
 
 // GetRecoveryFlow is the method that return account recovery flow
-func (s *KratosService) GetRecoveryFlow(ctx context.Context, cookie, flowID string) (*ory.RecoveryFlow, *http.Response, error) {
+func (s *Service) GetRecoveryFlow(ctx context.Context, cookie, flowID string) (*ory.RecoveryFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetRecoveryFlow(ctx).
 		Cookie(cookie).
@@ -130,7 +130,7 @@ func (s *KratosService) GetRecoveryFlow(ctx context.Context, cookie, flowID stri
 }
 
 // GetSession is the method that return user session information
-func (s *KratosService) GetSession(ctx context.Context, cookie string) (*ory.Session, *http.Response, error) {
+func (s *Service) GetSession(ctx context.Context, cookie string) (*ory.Session, *http.Response, error) {
 	return s.client.FrontendAPI.
 		ToSession(ctx).
 		Cookie(cookie).
@@ -138,12 +138,12 @@ func (s *KratosService) GetSession(ctx context.Context, cookie string) (*ory.Ses
 }
 
 // GetIdentity returns identity
-func (s *KratosService) GetIdentity(ctx context.Context, id string) (*ory.Identity, *http.Response, error) {
+func (s *Service) GetIdentity(ctx context.Context, id string) (*ory.Identity, *http.Response, error) {
 	return s.client.IdentityAPI.GetIdentity(ctx, id).Execute()
 }
 
 // UpdateIdentityTraits updates identity traits
-func (s *KratosService) UpdateIdentityTraits(ctx context.Context, id string, traits map[string]interface{}) (*ory.Identity, *http.Response, error) {
+func (s *Service) UpdateIdentityTraits(ctx context.Context, id string, traits map[string]interface{}) (*ory.Identity, *http.Response, error) {
 	payload := ory.UpdateIdentityBody{
 		Traits: traits,
 	}

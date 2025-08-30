@@ -6,9 +6,18 @@ package base
 type ContextKey string
 
 const (
+	// ContextSession ory session context key
 	ContextSession = "session"
-	ContextUser    = "user"
-	ContextUserID  = "user_id"
-	ContextOrgID   = "org_id"
-	ContextDB      = "postgres_database"
+
+	// ContextUser - user object
+	ContextUser = "user"
+
+	// ContextUserID - user id
+	ContextUserID = "user_id"
+
+	// ContextOrgID - user organization id
+	ContextOrgID = "org_id"
+
+	// ContextDB - gorm db
+	ContextDB = "postgres_database"
 )
