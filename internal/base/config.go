@@ -5,6 +5,7 @@ package base
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/viper"
 )
@@ -41,10 +42,15 @@ func (s *Config) init() {
 // ReadConfig - read config.
 func (s *Config) ReadConfig(path string) {
 	s.v.SetConfigFile(path)
+	s.v.AutomaticEnv()
+	s.v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	// Handle errors reading the config file
 	if err := s.v.ReadInConfig(); err != nil {
-		panic(fmt.Errorf("can't open config file. %w", err))
+		// only fail if the error is not "file not found"
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			panic(fmt.Errorf("can't open config file: %w", err))
+		}
 	}
 }
 

@@ -22,7 +22,7 @@ func main() {
 	}
 
 	config := base.NewConfig(configPath)
-	db := database.InitDB(config.String("app.dsn"))
+	db := database.InitDB(database.BuildDSN(config))
 	router := web.AuthRouter(config, db, "org")
 	orgApp.NewOrganizationController(router)
 	if err := router.Listen(fmt.Sprintf(":%s", config.String("org.port"))); err != nil {

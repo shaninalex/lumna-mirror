@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/Pallinder/go-randomdata"
+	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gorm.io/gorm"
 )
@@ -45,4 +46,16 @@ func shortID() string {
 		b[i] = letters[rand.IntN(len(letters))]
 	}
 	return string(b)
+}
+
+// BuildDSN - builds the dsn.
+func BuildDSN(c base.IConfig) string {
+	host := c.String("db.POSTGRES_HOST")
+	user := c.String("db.POSTGRES_USER")
+	pass := c.String("db.POSTGRES_PASSWORD")
+	name := c.String("db.POSTGRES_DB")
+	port := c.Int("db.POSTGRES_PORT")
+
+	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		user, pass, host, port, name)
 }
