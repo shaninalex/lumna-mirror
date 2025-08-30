@@ -35,7 +35,7 @@ func (s *AuthController) setRoutes() {
 	s.router.Get("/api/auth/form/verification", forms.HandleFormVerification)
 	s.router.Get("/api/auth/form/recovery", forms.HandleFormRecovery)
 
-	hooks := handler.NewAuthHooksHandler(domain2.NewAuthHookApi())
+	hooks := handler.NewAuthHooksHandler(domain2.NewAuthHookAPI())
 	s.router.Post("/api/auth/hook/registration", hooks.HandleHookRegister)
 	s.router.Post("/api/auth/hook/verify", hooks.HandleHookVerify)
 	s.router.Post("/api/auth/hook/login", hooks.HandleHookLogin)

@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {filter, map, Observable, switchMap} from 'rxjs';
 import {FlowError} from '@ory/kratos-client';
-import {ApiResponse} from '@client/shared/models';
+import {APIResponse} from '@client/shared/models';
 import {AsyncPipe, JsonPipe} from '@angular/common';
 import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../api';
@@ -32,9 +32,9 @@ export class ErrorFormComponent {
             }
             return params["flow"];
         }),
-        filter((flowId) => flowId !== null),
-        switchMap((flowId: string) => this.authService.GetError(flowId).pipe(
-            map((data: ApiResponse<FlowError>) => data.data)
+        filter((flowID) => flowID !== null),
+        switchMap((flowID: string) => this.authService.GetError(flowID).pipe(
+            map((data: APIResponse<FlowError>) => data.data)
         ))
     );
 }

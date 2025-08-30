@@ -6,17 +6,17 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 )
 
-// ApiResponse - api response.
-type ApiResponse[T any] struct {
+// APIResponse - api response.
+type APIResponse[T any] struct {
 	Status   bool                 `json:"status"`
 	Data     T                    `json:"data"`
 	Messages []string             `json:"messages,omitempty"`
 	Errors   []apperrors.AppError `json:"errors,omitempty"`
 }
 
-// NewApiResponse - new api response.
-func NewApiResponse[T any](data T) *ApiResponse[T] {
-	return &ApiResponse[T]{
+// NewAPIResponse - new api response.
+func NewAPIResponse[T any](data T) *APIResponse[T] {
+	return &APIResponse[T]{
 		Status: true,
 		Data:   data,
 	}

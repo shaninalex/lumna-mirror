@@ -29,7 +29,7 @@ func (s *TaskHandler) HandleTaskPatchStatus(ctx *fiber.Ctx) error {
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
-	if err = s.manager.PatchTaskStatus(ctx.Context(), web.GetOrganizationId(ctx), in.ProjectCode, in.TaskCode, in.Data); err != nil {
+	if err = s.manager.PatchTaskStatus(ctx.Context(), web.GetOrganizationID(ctx), in.ProjectCode, in.TaskCode, in.Data); err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	return web.Success(ctx, nil, "Task saved")
@@ -39,7 +39,7 @@ func (s *TaskHandler) HandleTaskPatchStatus(ctx *fiber.Ctx) error {
 func (s *TaskHandler) HandleTaskDetail(ctx *fiber.Ctx) error {
 	projectCode := ctx.Params("projectCode")
 	taskCode := ctx.Params("taskCode")
-	task, err := s.manager.TaskDetail(ctx.Context(), web.GetOrganizationId(ctx), projectCode, taskCode)
+	task, err := s.manager.TaskDetail(ctx.Context(), web.GetOrganizationID(ctx), projectCode, taskCode)
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
@@ -52,7 +52,7 @@ func (s *TaskHandler) HandleTaskUpdate(ctx *fiber.Ctx) error {
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
-	if err = s.manager.TaskUpdate(ctx.Context(), web.GetOrganizationId(ctx), data.ProjectCode, data.TaskCode, data.Data); err != nil {
+	if err = s.manager.TaskUpdate(ctx.Context(), web.GetOrganizationID(ctx), data.ProjectCode, data.TaskCode, data.Data); err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	return web.Success(ctx, nil, "Task saved")

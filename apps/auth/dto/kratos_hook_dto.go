@@ -8,6 +8,6 @@ import (
 
 // HooksKratosPayloadDTO - hooks kratos payload dto.
 type HooksKratosPayloadDTO struct {
-	UserID string            `json:"userId"`
+	UserID string            `json:"userID"`
 	Traits models.UserTraits `json:"traits"`
 }

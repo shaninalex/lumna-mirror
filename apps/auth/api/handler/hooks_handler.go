@@ -13,7 +13,7 @@ import (
 
 // AuthHooksHandler - auth hooks handler.
 type AuthHooksHandler struct {
-	authApi domain.AuthHookHandler
+	authAPI domain.AuthHookHandler
 }
 
 // NewAuthHooksHandler - new auth hooks handler.
@@ -21,7 +21,7 @@ func NewAuthHooksHandler(api domain.AuthHookHandler) *AuthHooksHandler {
 	// hooks
 	// TODO: we can authenticate hooks by "ory_kratos_continuity" cookie
 	return &AuthHooksHandler{
-		authApi: api,
+		authAPI: api,
 	}
 }
 
@@ -30,11 +30,11 @@ func (s *AuthHooksHandler) HandleHookRegister(ctx *fiber.Ctx) error {
 	var data dto.HooksKratosPayloadDTO
 	err := ctx.BodyParser(&data)
 	if err != nil {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
+		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, err.Error())
 	}
-	err = s.authApi.HookRegister(ctx.Context(), &data)
+	err = s.authAPI.HookRegister(ctx.Context(), &data)
 	if err != nil {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
+		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, err.Error())
 	}
 	return web.Success(ctx, nil)
 }

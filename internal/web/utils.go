@@ -15,14 +15,14 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
-// GetKratosRedirectUrl return redirect with kratos base url from config
-func GetKratosRedirectUrl(c base.IConfig, path string) string {
+// GetKratosRedirectURL return redirect with kratos base url from config
+func GetKratosRedirectURL(c base.IConfig, path string) string {
 	return fmt.Sprintf("%s%s", c.String("kratos.url_browser"), path)
 }
 
-// ReturnJson return api response based on statuses
-func ReturnJson(ctx *fiber.Ctx, status int, data any, params ...any) error {
-	resp := NewApiResponse(data)
+// ReturnJSON return api response based on statuses
+func ReturnJSON(ctx *fiber.Ctx, status int, data any, params ...any) error {
+	resp := NewAPIResponse(data)
 	if status >= 400 {
 		resp.Status = false
 	}
@@ -54,24 +54,24 @@ func ReturnJson(ctx *fiber.Ctx, status int, data any, params ...any) error {
 
 // Success return api response based on statuses
 func Success(ctx *fiber.Ctx, data any, params ...any) error {
-	return ReturnJson(ctx, http.StatusOK, data, params...)
+	return ReturnJSON(ctx, http.StatusOK, data, params...)
 }
 
 // Error return api response based on statuses
 func Error(ctx *fiber.Ctx, status int, err error) error {
-	return ReturnJson(ctx, status, nil, err)
+	return ReturnJSON(ctx, status, nil, err)
 }
 
-// GetUserId - returns the user id.
-func GetUserId(ctx *fiber.Ctx) uuid.UUID {
+// GetUserID - returns the user id.
+func GetUserID(ctx *fiber.Ctx) uuid.UUID {
 	if id, ok := ctx.Locals(base.ContextUserID).(uuid.UUID); ok {
 		return id
 	}
 	return uuid.Nil
 }
 
-// GetOrganizationId - returns the organization id.
-func GetOrganizationId(ctx *fiber.Ctx) uuid.UUID {
+// GetOrganizationID - returns the organization id.
+func GetOrganizationID(ctx *fiber.Ctx) uuid.UUID {
 	if id, ok := ctx.Locals(base.ContextOrgID).(uuid.UUID); ok {
 		return id
 	}

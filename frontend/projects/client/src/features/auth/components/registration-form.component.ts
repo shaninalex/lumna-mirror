@@ -6,7 +6,7 @@ import {FormMessagesComponent, KratosInputComponent, PreloaderComponent} from '@
 import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../api';
 import {environment} from '@client/environments/environment.development';
-import {ApiResponse} from '@client/shared/models';
+import {APIResponse} from '@client/shared/models';
 
 
 @Component({
@@ -41,9 +41,9 @@ export class RegistrationFormComponent {
             }
             return params["flow"];
         }),
-        filter((flowId) => flowId !== null),
-        switchMap((flowId: string) => this.authService.GetRegistrationForm(flowId).pipe(
-            map((data: ApiResponse<RegistrationFlow>) => data.data)
+        filter((flowID) => flowID !== null),
+        switchMap((flowID: string) => this.authService.GetRegistrationForm(flowID).pipe(
+            map((data: APIResponse<RegistrationFlow>) => data.data)
         ))
     );
 }

@@ -2,7 +2,7 @@
 
 package email
 
-// IEmailApi - i email api.
-type IEmailApi interface {
+// IEmailAPI - i email api.
+type IEmailAPI interface {
 	SendVerificationEmail(token, to string) error
 }

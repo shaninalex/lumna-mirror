@@ -27,24 +27,24 @@ func NewAuthFormsHandler(config base.IConfig, kratosService kratos.IKratos) *Aut
 
 // HandleFormLogin - handle form login.
 func (s *AuthFormsHandler) HandleFormLogin(ctx *fiber.Ctx) error {
-	flowId := ctx.Query("flow")
-	if flowId == "" {
-		return ctx.Redirect(web.GetKratosRedirectUrl(s.config, "/self-service/login/browser"), http.StatusMovedPermanently)
+	flowID := ctx.Query("flow")
+	if flowID == "" {
+		return ctx.Redirect(web.GetKratosRedirectURL(s.config, "/self-service/login/browser"), http.StatusMovedPermanently)
 	}
 
-	flow, resp, err := s.kratosService.GetLoginFlow(ctx.Context(), ctx.Get("Cookie"), flowId)
+	flow, resp, err := s.kratosService.GetLoginFlow(ctx.Context(), ctx.Get("Cookie"), flowID)
 	if err != nil {
 		code := http.StatusBadRequest
 		if resp != nil {
 			code = resp.StatusCode
 		}
-		return web.ReturnJson(ctx, code, nil, err.Error())
+		return web.ReturnJSON(ctx, code, nil, err.Error())
 	}
 	defer resp.Body.Close() //nolint:all
 
 	data, err := flow.ToMap()
 	if err != nil {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
+		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, err.Error())
 	}
 
 	return web.Success(ctx, data)
@@ -52,24 +52,24 @@ func (s *AuthFormsHandler) HandleFormLogin(ctx *fiber.Ctx) error {
 
 // HandleFormRegister - handle form register.
 func (s *AuthFormsHandler) HandleFormRegister(ctx *fiber.Ctx) error {
-	flowId := ctx.Query("flow")
-	if flowId == "" {
-		return ctx.Redirect(web.GetKratosRedirectUrl(s.config, "/self-service/registration/browser"), http.StatusMovedPermanently)
+	flowID := ctx.Query("flow")
+	if flowID == "" {
+		return ctx.Redirect(web.GetKratosRedirectURL(s.config, "/self-service/registration/browser"), http.StatusMovedPermanently)
 	}
 
-	flow, resp, err := s.kratosService.GetRegistrationFlow(ctx.Context(), ctx.Get("Cookie"), flowId)
+	flow, resp, err := s.kratosService.GetRegistrationFlow(ctx.Context(), ctx.Get("Cookie"), flowID)
 	if err != nil {
 		code := http.StatusBadRequest
 		if resp != nil {
 			code = resp.StatusCode
 		}
-		return web.ReturnJson(ctx, code, nil, err.Error())
+		return web.ReturnJSON(ctx, code, nil, err.Error())
 	}
 	defer resp.Body.Close() //nolint:all
 
 	data, err := flow.ToMap()
 	if err != nil {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
+		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, err.Error())
 	}
 
 	return web.Success(ctx, data)
@@ -79,7 +79,7 @@ func (s *AuthFormsHandler) HandleFormRegister(ctx *fiber.Ctx) error {
 func (s *AuthFormsHandler) HandleFormError(ctx *fiber.Ctx) error {
 	errorId := ctx.Query("id")
 	if errorId == "" {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, "flow id does not provided")
+		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, "flow id does not provided")
 	}
 
 	flow, resp, err := s.kratosService.GetErrorFlow(ctx.Context(), errorId)
@@ -88,39 +88,39 @@ func (s *AuthFormsHandler) HandleFormError(ctx *fiber.Ctx) error {
 		if resp != nil {
 			code = resp.StatusCode
 		}
-		return web.ReturnJson(ctx, code, nil, err.Error())
+		return web.ReturnJSON(ctx, code, nil, err.Error())
 	}
 
 	defer resp.Body.Close() //nolint:all
 
 	data, err := flow.ToMap()
 	if err != nil {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
+		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, err.Error())
 	}
 	return web.Success(ctx, data)
 }
 
 // HandleFormVerification - handle form verification.
 func (s *AuthFormsHandler) HandleFormVerification(ctx *fiber.Ctx) error {
-	flowId := ctx.Query("flow")
-	if flowId == "" {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, "flow id does not provided")
+	flowID := ctx.Query("flow")
+	if flowID == "" {
+		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, "flow id does not provided")
 	}
 
-	flow, resp, err := s.kratosService.GetVerificationFlow(ctx.Context(), ctx.Get("Cookie"), flowId)
+	flow, resp, err := s.kratosService.GetVerificationFlow(ctx.Context(), ctx.Get("Cookie"), flowID)
 	if err != nil {
 		code := http.StatusBadRequest
 		if resp != nil {
 			code = resp.StatusCode
 		}
-		return web.ReturnJson(ctx, code, nil, err.Error())
+		return web.ReturnJSON(ctx, code, nil, err.Error())
 	}
 
 	defer resp.Body.Close() //nolint:all
 
 	data, err := flow.ToMap()
 	if err != nil {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
+		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, err.Error())
 	}
 
 	return web.Success(ctx, data)
@@ -128,25 +128,25 @@ func (s *AuthFormsHandler) HandleFormVerification(ctx *fiber.Ctx) error {
 
 // HandleFormRecovery - handle form recovery.
 func (s *AuthFormsHandler) HandleFormRecovery(ctx *fiber.Ctx) error {
-	flowId := ctx.Query("flow")
-	if flowId == "" {
-		return ctx.Redirect(web.GetKratosRedirectUrl(s.config, "/self-service/recovery/browser"), http.StatusMovedPermanently)
+	flowID := ctx.Query("flow")
+	if flowID == "" {
+		return ctx.Redirect(web.GetKratosRedirectURL(s.config, "/self-service/recovery/browser"), http.StatusMovedPermanently)
 	}
 
-	flow, resp, err := s.kratosService.GetRecoveryFlow(ctx.Context(), ctx.Get("Cookie"), flowId)
+	flow, resp, err := s.kratosService.GetRecoveryFlow(ctx.Context(), ctx.Get("Cookie"), flowID)
 	if err != nil {
 		code := http.StatusBadRequest
 		if resp != nil {
 			code = resp.StatusCode
 		}
-		return web.ReturnJson(ctx, code, nil, err.Error())
+		return web.ReturnJSON(ctx, code, nil, err.Error())
 	}
 
 	defer resp.Body.Close() //nolint:all
 
 	data, err := flow.ToMap()
 	if err != nil {
-		return web.ReturnJson(ctx, http.StatusBadRequest, nil, err.Error())
+		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, err.Error())
 	}
 
 	return web.Success(ctx, data)

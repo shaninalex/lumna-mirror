@@ -2,4 +2,5 @@
 
 package main
 
+// Version platform global version
 const Version = "0.4.0"

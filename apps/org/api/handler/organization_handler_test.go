@@ -35,7 +35,7 @@ func Test_HandleGetByUser(t *testing.T) {
 	assert.Equal(t, 200, res.StatusCode)
 	body, _ := io.ReadAll(res.Body)
 
-	var response web.ApiResponse[*dto.OrganizationDto]
+	var response web.APIResponse[*dto.OrganizationDto]
 	err = json.Unmarshal(body, &response)
 	assert.NoError(t, err)
 

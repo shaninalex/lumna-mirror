@@ -53,7 +53,7 @@ func Test_HandleTaskPatchStatus(t *testing.T) {
 	assert.Equal(t, 200, res.StatusCode)
 	body, _ := io.ReadAll(res.Body)
 	assert.NotNil(t, body)
-	var response web.ApiResponse[any]
+	var response web.APIResponse[any]
 	err = json.Unmarshal(body, &response)
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"Task saved"}, response.Messages)
@@ -87,7 +87,7 @@ func Test_HandleTaskDetail(t *testing.T) {
 
 	body, _ := io.ReadAll(res.Body)
 
-	var response web.ApiResponse[*dto.TaskDto]
+	var response web.APIResponse[*dto.TaskDto]
 	err = json.Unmarshal(body, &response)
 	assert.NoError(t, err)
 
@@ -136,7 +136,7 @@ func Test_HandleTaskUpdate(t *testing.T) {
 	assert.Equal(t, 200, res.StatusCode)
 	body, _ := io.ReadAll(res.Body)
 	assert.NotNil(t, body)
-	var response web.ApiResponse[any]
+	var response web.APIResponse[any]
 	err = json.Unmarshal(body, &response)
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"Task saved"}, response.Messages)

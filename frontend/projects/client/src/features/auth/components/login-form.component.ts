@@ -5,7 +5,7 @@ import {FormMessagesComponent, KratosInputComponent, PreloaderComponent} from '@
 import {AsyncPipe} from '@angular/common';
 import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../api';
-import {ApiResponse} from '@client/shared/models';
+import {APIResponse} from '@client/shared/models';
 import {environment} from '@client/environments/environment.development';
 
 @Component({
@@ -40,9 +40,9 @@ export class LoginFormComponent {
             }
             return params["flow"];
         }),
-        filter((flowId) => flowId !== null),
-        switchMap((flowId: string) => this.authService.GetLoginForm(flowId).pipe(
-            map((data: ApiResponse<LoginFlow>) => data.data)
+        filter((flowID) => flowID !== null),
+        switchMap((flowID: string) => this.authService.GetLoginForm(flowID).pipe(
+            map((data: APIResponse<LoginFlow>) => data.data)
         ))
     );
 }

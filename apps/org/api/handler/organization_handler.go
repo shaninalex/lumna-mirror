@@ -28,9 +28,9 @@ func NewOrganizationHandler(manager domain.OrganizationManager) *OrganizationHan
 // HandleGetByUser - handle get by user.
 // TODO: rename
 func (s *OrganizationHandler) HandleGetByUser(ctx *fiber.Ctx) error {
-	organization, err := s.manager.Get(ctx.Context(), web.GetUserId(ctx))
+	organization, err := s.manager.Get(ctx.Context(), web.GetUserID(ctx))
 	if errors.Is(err, apperrors.OrgNotFound) {
-		return web.ReturnJson(ctx, http.StatusNotFound, nil, err.Error())
+		return web.ReturnJSON(ctx, http.StatusNotFound, nil, err.Error())
 	}
 	return web.Success(ctx, adapter.ToDto(organization))
 }

@@ -12,14 +12,14 @@ import (
 // IKratos - i kratos.
 type IKratos interface {
 	Client() *ory.APIClient
-	GetLoginFlow(ctx context.Context, cookie, flowId string) (*ory.LoginFlow, *http.Response, error)
-	GetRegistrationFlow(ctx context.Context, cookie, flowId string) (*ory.RegistrationFlow, *http.Response, error)
+	GetLoginFlow(ctx context.Context, cookie, flowID string) (*ory.LoginFlow, *http.Response, error)
+	GetRegistrationFlow(ctx context.Context, cookie, flowID string) (*ory.RegistrationFlow, *http.Response, error)
 	GetErrorFlow(ctx context.Context, errorId string) (*ory.FlowError, *http.Response, error)
-	GetVerificationFlow(ctx context.Context, cookie, flowId string) (*ory.VerificationFlow, *http.Response, error)
+	GetVerificationFlow(ctx context.Context, cookie, flowID string) (*ory.VerificationFlow, *http.Response, error)
 	CreateLogoutFlow(ctx context.Context, cookie string) (*ory.LogoutFlow, *http.Response, error)
 	CreateSettingsFlow(ctx context.Context, cookie string) (*ory.SettingsFlow, *http.Response, error)
-	GetSettingsFlow(ctx context.Context, cookie, flowId string) (*ory.SettingsFlow, *http.Response, error)
-	GetRecoveryFlow(ctx context.Context, cookie, flowId string) (*ory.RecoveryFlow, *http.Response, error)
+	GetSettingsFlow(ctx context.Context, cookie, flowID string) (*ory.SettingsFlow, *http.Response, error)
+	GetRecoveryFlow(ctx context.Context, cookie, flowID string) (*ory.RecoveryFlow, *http.Response, error)
 	GetSession(ctx context.Context, cookie string) (*ory.Session, *http.Response, error)
 	GetIdentity(ctx context.Context, id string) (*ory.Identity, *http.Response, error)
 	UpdateIdentityTraits(ctx context.Context, id string, traits map[string]interface{}) (*ory.Identity, *http.Response, error)
@@ -50,21 +50,21 @@ func (s *KratosService) Client() *ory.APIClient {
 
 // GetLoginFlow is the method that return created login flow based on user
 // cookies and flow id
-func (s *KratosService) GetLoginFlow(ctx context.Context, cookie, flowId string) (*ory.LoginFlow, *http.Response, error) {
+func (s *KratosService) GetLoginFlow(ctx context.Context, cookie, flowID string) (*ory.LoginFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetLoginFlow(ctx).
 		Cookie(cookie).
-		Id(flowId).
+		Id(flowID).
 		Execute()
 }
 
 // GetRegistrationFlow is the method that return registration flow based on user
 // cookies and flow id
-func (s *KratosService) GetRegistrationFlow(ctx context.Context, cookie, flowId string) (*ory.RegistrationFlow, *http.Response, error) {
+func (s *KratosService) GetRegistrationFlow(ctx context.Context, cookie, flowID string) (*ory.RegistrationFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetRegistrationFlow(ctx).
 		Cookie(cookie).
-		Id(flowId).
+		Id(flowID).
 		Execute()
 }
 
@@ -81,11 +81,11 @@ func (s *KratosService) GetErrorFlow(ctx context.Context, errorId string) (*ory.
 // GetVerificationFlow is the method that return verification flow based on user
 // cookies and flow id. After registration user can be redirected to the
 // verification page where this form should be rendered.
-func (s *KratosService) GetVerificationFlow(ctx context.Context, cookie, flowId string) (*ory.VerificationFlow, *http.Response, error) {
+func (s *KratosService) GetVerificationFlow(ctx context.Context, cookie, flowID string) (*ory.VerificationFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetVerificationFlow(ctx).
 		Cookie(cookie).
-		Id(flowId).
+		Id(flowID).
 		Execute()
 }
 
@@ -112,20 +112,20 @@ func (s *KratosService) CreateSettingsFlow(ctx context.Context, cookie string) (
 
 // GetSettingsFlow is the method that return settings flow to user. This object
 // contain all editable user profile fields that kratos user have access to.
-func (s *KratosService) GetSettingsFlow(ctx context.Context, cookie, flowId string) (*ory.SettingsFlow, *http.Response, error) {
+func (s *KratosService) GetSettingsFlow(ctx context.Context, cookie, flowID string) (*ory.SettingsFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetSettingsFlow(ctx).
 		Cookie(cookie).
-		Id(flowId).
+		Id(flowID).
 		Execute()
 }
 
 // GetRecoveryFlow is the method that return account recovery flow
-func (s *KratosService) GetRecoveryFlow(ctx context.Context, cookie, flowId string) (*ory.RecoveryFlow, *http.Response, error) {
+func (s *KratosService) GetRecoveryFlow(ctx context.Context, cookie, flowID string) (*ory.RecoveryFlow, *http.Response, error) {
 	return s.client.FrontendAPI.
 		GetRecoveryFlow(ctx).
 		Cookie(cookie).
-		Id(flowId).
+		Id(flowID).
 		Execute()
 }
 

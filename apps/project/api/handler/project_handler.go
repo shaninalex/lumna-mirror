@@ -28,7 +28,7 @@ func NewProjectHandler(manager domain.ProjectManager) *ProjectHandler {
 
 // HandleProjectsList - handle projects list.
 func (s *ProjectHandler) HandleProjectsList(ctx *fiber.Ctx) error {
-	projects, err := s.manager.List(ctx.Context(), web.GetOrganizationId(ctx))
+	projects, err := s.manager.List(ctx.Context(), web.GetOrganizationID(ctx))
 	if err != nil {
 		if errors.Is(err, apperrors.ProjectNotFound) {
 			return web.Success(ctx, adapter.NewProjectsDto(nil))
@@ -41,7 +41,7 @@ func (s *ProjectHandler) HandleProjectsList(ctx *fiber.Ctx) error {
 // HandleProjectTasksList - handle project tasks list.
 func (s *ProjectHandler) HandleProjectTasksList(ctx *fiber.Ctx) error {
 	projectCode := ctx.Params("projectCode")
-	statuses, err := s.manager.TasksList(ctx.Context(), web.GetOrganizationId(ctx), projectCode)
+	statuses, err := s.manager.TasksList(ctx.Context(), web.GetOrganizationID(ctx), projectCode)
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}

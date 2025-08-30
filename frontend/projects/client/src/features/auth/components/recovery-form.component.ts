@@ -6,7 +6,7 @@ import {FormMessagesComponent, KratosInputComponent, PreloaderComponent} from '@
 import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../api';
 import {environment} from '@client/environments/environment.development';
-import {ApiResponse} from '@client/shared/models';
+import {APIResponse} from '@client/shared/models';
 
 @Component({
     selector: "jr-recovery-form",
@@ -41,9 +41,9 @@ export class RecoveryFormComponent {
             }
             return params["flow"];
         }),
-        filter((flowId) => flowId !== null),
-        switchMap((flowId: string) => this.authService.GetRecoveryForm(flowId).pipe(
-            map((data: ApiResponse<RecoveryFlow>) => data.data)
+        filter((flowID) => flowID !== null),
+        switchMap((flowID: string) => this.authService.GetRecoveryForm(flowID).pipe(
+            map((data: APIResponse<RecoveryFlow>) => data.data)
         ))
     );
 }

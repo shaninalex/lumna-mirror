@@ -27,12 +27,12 @@ func (s *MockKratosService) Client() *ory.APIClient {
 	panic("implement me")
 }
 
-func (s *MockKratosService) GetLoginFlow(ctx context.Context, cookie, flowId string) (*ory.LoginFlow, *http.Response, error) {
+func (s *MockKratosService) GetLoginFlow(ctx context.Context, cookie, flowID string) (*ory.LoginFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s *MockKratosService) GetRegistrationFlow(ctx context.Context, cookie, flowId string) (*ory.RegistrationFlow, *http.Response, error) {
+func (s *MockKratosService) GetRegistrationFlow(ctx context.Context, cookie, flowID string) (*ory.RegistrationFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -42,7 +42,7 @@ func (s *MockKratosService) GetErrorFlow(ctx context.Context, errorId string) (*
 	panic("implement me")
 }
 
-func (s *MockKratosService) GetVerificationFlow(ctx context.Context, cookie, flowId string) (*ory.VerificationFlow, *http.Response, error) {
+func (s *MockKratosService) GetVerificationFlow(ctx context.Context, cookie, flowID string) (*ory.VerificationFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -57,12 +57,12 @@ func (s *MockKratosService) CreateSettingsFlow(ctx context.Context, cookie strin
 	panic("implement me")
 }
 
-func (s *MockKratosService) GetSettingsFlow(ctx context.Context, cookie, flowId string) (*ory.SettingsFlow, *http.Response, error) {
+func (s *MockKratosService) GetSettingsFlow(ctx context.Context, cookie, flowID string) (*ory.SettingsFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s *MockKratosService) GetRecoveryFlow(ctx context.Context, cookie, flowId string) (*ory.RecoveryFlow, *http.Response, error) {
+func (s *MockKratosService) GetRecoveryFlow(ctx context.Context, cookie, flowID string) (*ory.RecoveryFlow, *http.Response, error) {
 	//TODO implement me
 	panic("implement me")
 }

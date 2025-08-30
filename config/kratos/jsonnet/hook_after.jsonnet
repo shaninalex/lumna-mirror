@@ -1,5 +1,5 @@
 function(ctx) {
-  userId: ctx.identity.id,
+  userID: ctx.identity.id,
   traits: {
     email: ctx.identity.traits.email,
   },

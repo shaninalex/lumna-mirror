@@ -38,7 +38,7 @@ func Test_ProjectList(t *testing.T) {
 
 	body, _ := io.ReadAll(res.Body)
 
-	var response web.ApiResponse[[]*dto.ProjectDto]
+	var response web.APIResponse[[]*dto.ProjectDto]
 	err = json.Unmarshal(body, &response)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(response.Data))
@@ -68,7 +68,7 @@ func Test_ProjectTaskList(t *testing.T) {
 
 	body, _ := io.ReadAll(res.Body)
 
-	var response web.ApiResponse[[]*dto.TaskStatusDto]
+	var response web.APIResponse[[]*dto.TaskStatusDto]
 	err = json.Unmarshal(body, &response)
 	assert.NoError(t, err)
 	assert.Equal(t, len(statuses), len(response.Data))

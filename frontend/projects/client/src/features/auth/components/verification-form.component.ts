@@ -5,7 +5,7 @@ import {FormMessagesComponent, KratosInputComponent, PreloaderComponent} from '@
 import {AsyncPipe} from '@angular/common';
 import {ActivatedRoute, Params} from '@angular/router';
 import {AuthService} from '../api';
-import {ApiResponse} from '@client/shared/models';
+import {APIResponse} from '@client/shared/models';
 
 
 @Component({
@@ -39,9 +39,9 @@ export class VerificationFormComponent {
             }
             return params["flow"];
         }),
-        filter((flowId) => flowId !== null),
-        switchMap((flowId: string) => this.authService.GetVerificationForm(flowId).pipe(
-            map((data: ApiResponse<VerificationFlow>) => data.data)
+        filter((flowID) => flowID !== null),
+        switchMap((flowID: string) => this.authService.GetVerificationForm(flowID).pipe(
+            map((data: APIResponse<VerificationFlow>) => data.data)
         ))
     );
 }

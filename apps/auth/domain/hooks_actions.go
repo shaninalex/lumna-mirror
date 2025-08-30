@@ -20,20 +20,20 @@ type AuthHookHandler interface {
 	HookLogin(ctx context.Context) error
 }
 
-var _ AuthHookHandler = &AuthHookApi{}
+var _ AuthHookHandler = &AuthHookAPI{}
 
-// AuthHookApi - auth hook api.
-type AuthHookApi struct {
+// AuthHookAPI - auth hook api.
+type AuthHookAPI struct {
 }
 
-// NewAuthHookApi - new auth hook api.
-func NewAuthHookApi() *AuthHookApi {
-	return &AuthHookApi{}
+// NewAuthHookAPI - new auth hook api.
+func NewAuthHookAPI() *AuthHookAPI {
+	return &AuthHookAPI{}
 }
 
 // HookRegister - hook register.
-func (s *AuthHookApi) HookRegister(ctx context.Context, data *dto.HooksKratosPayloadDTO) error {
-	userId, err := uuid.Parse(data.UserID)
+func (s *AuthHookAPI) HookRegister(ctx context.Context, data *dto.HooksKratosPayloadDTO) error {
+	userID, err := uuid.Parse(data.UserID)
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func (s *AuthHookApi) HookRegister(ctx context.Context, data *dto.HooksKratosPay
 		userCode = uuid.NewString()
 	}
 	user := &models.User{
-		ID:   userId,
+		ID:   userID,
 		Code: userCode,
 	}
 	tx := db.Create(&user)
@@ -57,14 +57,14 @@ func (s *AuthHookApi) HookRegister(ctx context.Context, data *dto.HooksKratosPay
 }
 
 // HookVerify - hook verify.
-func (s *AuthHookApi) HookVerify(ctx context.Context) error {
+func (s *AuthHookAPI) HookVerify(ctx context.Context) error {
 	// TODO: notify about Verify
 	// TODO implement me
 	panic("implement me")
 }
 
 // HookLogin - hook login.
-func (s *AuthHookApi) HookLogin(ctx context.Context) error {
+func (s *AuthHookAPI) HookLogin(ctx context.Context) error {
 	// TODO: notify about Login
 	// TODO implement me
 	panic("implement me")

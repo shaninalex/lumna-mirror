@@ -4,25 +4,25 @@ package tdata
 
 import "gitlab.com/shaninalex/flowreon/internal/email"
 
-var _emailApi *TestEmailApi
+var _emailAPI *TestEmailAPI
 var _emailStorage *TestEmailStorage
 
-// GetTestEmailApi - returns the test email api.
-func GetTestEmailApi() email.IEmailApi {
-	if _emailApi == nil {
-		_emailApi = &TestEmailApi{}
+// GetTestEmailAPI - returns the test email api.
+func GetTestEmailAPI() email.IEmailAPI {
+	if _emailAPI == nil {
+		_emailAPI = &TestEmailAPI{}
 	}
 	if _emailStorage == nil {
 		_emailStorage = &TestEmailStorage{}
 	}
-	return _emailApi
+	return _emailAPI
 }
 
-// TestEmailApi - test email api.
-type TestEmailApi struct{}
+// TestEmailAPI - test email api.
+type TestEmailAPI struct{}
 
 // SendVerificationEmail - send verification email.
-func (s *TestEmailApi) SendVerificationEmail(token, to string) error {
+func (s *TestEmailAPI) SendVerificationEmail(token, to string) error {
 	_emailStorage.Set(to, token)
 	return nil
 }

@@ -18,17 +18,17 @@ type OrganizationManager interface {
 	Get(ctx context.Context, userID uuid.UUID) (*models.Organization, error)
 }
 
-// OrganizationApi - organization api.
-type OrganizationApi struct {
+// OrganizationAPI - organization api.
+type OrganizationAPI struct {
 }
 
 // NewOrganizationApi - new organization api.
-func NewOrganizationApi() *OrganizationApi {
-	return &OrganizationApi{}
+func NewOrganizationApi() *OrganizationAPI {
+	return &OrganizationAPI{}
 }
 
 // Get - returns the value.
-func (s *OrganizationApi) Get(ctx context.Context, userID uuid.UUID) (*models.Organization, error) {
+func (s *OrganizationAPI) Get(ctx context.Context, userID uuid.UUID) (*models.Organization, error) {
 	var user models.User
 	if err := database.GetDB(ctx).Preload("Organization").First(&user, "id = ?", userID).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
