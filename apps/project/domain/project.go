@@ -121,8 +121,7 @@ func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID
 
 	tx = db.Save(&task)
 	if tx.Error != nil {
-		// TODO: apperror - db error
-		return tx.Error
+		return errors.Join(apperrors.TaskUnableToPatch, tx.Error)
 	}
 	return nil
 }
@@ -136,7 +135,7 @@ func (s *ProjectManagement) TaskDetail(ctx context.Context, orgID uuid.UUID, pro
 	var task models.Task
 	tx := database.GetDB(ctx).Where("code = ? AND project_id = ?", taskCode, project.GetID()).First(&task)
 	if tx.Error != nil {
-		return nil, tx.Error
+		return nil, errors.Join(apperrors.TaskNotFound, tx.Error)
 	}
 	return &task, nil
 }
@@ -151,13 +150,13 @@ func (s *ProjectManagement) TaskUpdate(ctx context.Context, orgID uuid.UUID, pro
 	var task models.Task
 	tx := database.GetDB(ctx).Where("code = ? AND project_id = ?", taskCode, project.GetID()).First(&task)
 	if tx.Error != nil {
-		return tx.Error
+		return errors.Join(apperrors.TaskNotFound, tx.Error)
 	}
 	task.Title = data.Title
 	task.Description = data.Description
 	tx = db.Save(&task)
 	if tx.Error != nil {
-		return tx.Error
+		return errors.Join(apperrors.TaskUnableToPatch, tx.Error)
 	}
 	return nil
 }

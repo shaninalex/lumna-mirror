@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/apps/auth/dto"
 	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
@@ -50,7 +51,7 @@ func (s *AuthHookApi) HookRegister(ctx context.Context, data *dto.HooksKratosPay
 	}
 	tx := db.Create(&user)
 	if tx.Error != nil {
-		return err
+		return apperrors.UserUnableToCreate
 	}
 	return nil
 }

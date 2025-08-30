@@ -28,9 +28,12 @@ var (
 	UserNotActive        = AppError{"USER002", "user_not_active", "User is not active", nil}
 	UserIdentityNotFound = AppError{"USER003", "identity_not_found", "Identity not found", nil}
 	UserOrgNotAttached   = AppError{"USER004", "org_not_attached", "user does not attach to any organizations", nil}
+	UserUnableToCreate   = AppError{"USER005", "unable_to_create", "unable to create user", nil}
 	DBConnectionFailed   = AppError{"DB001", "db_connection_failed", "Database connection failed", nil}
 	OrgNotFound          = AppError{"ORG001", "org_not_found", "Organization not found", nil}
 	ProjectNotFound      = AppError{"PRJ001", "prj_not_found", "Project not found", nil}
+	TaskNotFound         = AppError{"TAS001", "task_not_found", "Task not found", nil}
+	TaskUnableToPatch    = AppError{"TAS002", "unable_to_patch", "Unable to patch task", nil}
 )
 
 var AllErrors = []AppError{
