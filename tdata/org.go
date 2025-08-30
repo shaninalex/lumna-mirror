@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
 	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/models/builders"
 )
@@ -46,6 +47,7 @@ func CreateProject(ctx context.Context, org *models.Organization, user *models.U
 	project := builders.NewProjectBuilder().
 		User(*user).UserID(user.ID).
 		Organization(*org).OrganizationID(org.ID).
+		ProjectKey(utils.GenerateEntityCode("project")).
 		Title(uuid.NewString()).
 		Build()
 	result := database.GetDB(ctx).Create(&project)
@@ -67,27 +69,32 @@ func CreatePack(ctx context.Context) (*models.Organization, *models.User, *model
 }
 
 func CreateRandomStatuses(ctx context.Context, project *models.Project) []*models.TaskStatus {
-	st1 := models.TaskStatus{
-		ProjectID: project.GetID(),
-		Title:     "Todo1",
-		Complete:  false,
-		Index:     0,
-	}
-	_db := database.GetDB(ctx)
-	for _ = range 3 {
-		task := builders.NewTaskBuilder().
-			UserID(project.GetOwnerID()).
-			OrganizationID(project.OrganizationID).
-			ProjectID(project.GetID()).
-			TaskStatusID(st1.GetID()).
-			TaskStatus(&st1).
-			Title(uuid.NewString()).Build()
-		st1.Tasks = append(st1.Tasks, task)
-	}
-	tx := _db.Save(&st1)
-	if tx.Error != nil {
-		panic(tx.Error)
-	}
+	statuses := make([]*models.TaskStatus, 3)
+	for i, stName := range []string{"Todo", "InProgress", "Done"} {
+		st := models.TaskStatus{
+			ProjectID: project.GetID(),
+			Title:     stName,
+			Complete:  false,
+			Index:     0,
+		}
+		_db := database.GetDB(ctx)
+		for _ = range 3 {
+			task := builders.NewTaskBuilder().
+				UserID(project.GetOwnerID()).
+				OrganizationID(project.OrganizationID).
+				ProjectID(project.GetID()).
+				TaskStatusID(st.GetID()).
+				TaskStatus(&st).
+				Code(utils.GenerateEntityCode("task")).
+				Title(uuid.NewString()).Build()
+			st.Tasks = append(st.Tasks, task)
+		}
+		tx := _db.Save(&st)
+		if tx.Error != nil {
+			panic(tx.Error)
+		}
 
-	return []*models.TaskStatus{&st1}
+		statuses[i] = &st
+	}
+	return statuses
 }

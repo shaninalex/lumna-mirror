@@ -20,15 +20,22 @@ func Test_ModelsBuilders(t *testing.T) {
 	assert.NotNil(t, user)
 	assert.NotNil(t, project)
 	assert.Equal(t, org.UserID, user.ID)
-	issue := builders.NewTaskBuilder().
+	st := models.TaskStatus{
+		ProjectID: project.GetID(),
+		Title:     uuid.NewString(),
+		Complete:  false,
+		Index:     0,
+	}
+	database.GetDB(ctx).Save(&st)
+	task := builders.NewTaskBuilder().
 		User(*user).
 		Organization(*org).
 		Project(*project).
 		Title(uuid.NewString()).
 		Description(uuid.NewString()).
-		Status("todo").
-		Type(models.IssueTypeTask).
+		TaskStatusID(st.GetID()).
+		TaskStatus(&st).
 		Build()
-	result := database.GetDB(ctx).Create(&issue)
+	result := database.GetDB(ctx).Create(&task)
 	assert.NoError(t, result.Error)
 }

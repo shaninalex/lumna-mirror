@@ -87,6 +87,12 @@ func (b *TaskBuilder) TaskStatusID(taskStatusID uuid.UUID) *TaskBuilder {
 	return b
 }
 
+// Code - set task code
+func (b *TaskBuilder) Code(code string) *TaskBuilder {
+	b.task.Code = code
+	return b
+}
+
 // TaskStatus - task status
 func (b *TaskBuilder) TaskStatus(taskStatus *models.TaskStatus) *TaskBuilder {
 	b.task.TaskStatus = taskStatus

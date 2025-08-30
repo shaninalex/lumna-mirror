@@ -4,6 +4,7 @@ package handler_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"testing"
@@ -55,22 +56,22 @@ func Test_ProjectTaskList(t *testing.T) {
 
 	r := tdata.AuthTestRouter()
 	handlers := handler.NewProjectHandler(domain.NewProjectManagement())
-	r.Get("/", handlers.HandleProjectTasksList)
+	r.Get("/api/project/:projectCode/tasks", handlers.HandleProjectTasksList)
 
-	req, _ := http.NewRequest("GET", "/", nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("/api/project/%s/tasks", project.ProjectKey), nil)
 	tdata.SetAuthRequest(req, user, cookie)
 
 	res, err := r.Test(req, -1)
 
 	assert.Nil(t, err)
-	assert.Equal(t, 200, res.StatusCode)
+	assert.Equal(t, http.StatusOK, res.StatusCode)
 
 	body, _ := io.ReadAll(res.Body)
 
 	var response web.ApiResponse[[]*dto.TaskStatusDto]
 	err = json.Unmarshal(body, &response)
 	assert.NoError(t, err)
-	assert.Equal(t, 1, len(response.Data))
+	assert.Equal(t, len(statuses), len(response.Data))
 	assert.Equal(t, statuses[0].ID, response.Data[0].ID)
 	assert.Equal(t, statuses[0].Title, response.Data[0].Title)
 	assert.Equal(t, len(statuses[0].Tasks), len(response.Data[0].Tasks))

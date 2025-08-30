@@ -59,3 +59,6 @@ db_restore:
 	# docker exec -it flowreon-postgres-1 psql -U postgres -c "DROP DATABASE postgres;"
 	# docker exec -it flowreon-postgres-1 psql -U postgres -c "CREATE DATABASE postgres;"
 	cat ./database/data/db_backup.sql | docker exec -i flowreon-postgres-1 psql -U postgres -d postgres
+
+tests:
+	go test ./...

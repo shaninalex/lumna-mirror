@@ -57,6 +57,12 @@ func (b *ProjectBuilder) Title(title string) *ProjectBuilder {
 	return b
 }
 
+// ProjectKey - set project code
+func (b *ProjectBuilder) ProjectKey(code string) *ProjectBuilder {
+	b.project.ProjectKey = code
+	return b
+}
+
 // CreatedAt - created at.
 func (b *ProjectBuilder) CreatedAt(createdAt time.Time) *ProjectBuilder {
 	b.project.CreatedAt = createdAt
