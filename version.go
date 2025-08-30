@@ -3,4 +3,4 @@
 package main
 
 // Version platform global version
-const Version = "0.4.0"
+const Version = "0.5.0"

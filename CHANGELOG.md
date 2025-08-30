@@ -1,3 +1,19 @@
+## 0.5.0 (2025-08-30)
+
+### Feat
+
+- **ui**: branding
+
+### Fix
+
+- **tests**: test db and tdata.Manager
+
+### Refactor
+
+- split controllers + define managers interfaces
+- use similar structure for services
+- service structure
+
 ## 0.4.0 (2025-08-29)
 
 ### Feat
