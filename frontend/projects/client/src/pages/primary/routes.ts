@@ -1,7 +1,9 @@
 import {ResolveFn, Routes} from '@angular/router';
 import {PrimaryRoot} from './primary-root';
 import {Overview} from './overview/overview';
+import {overviewResolver} from './overview/overview.resolver';
 import {ProjectsList} from './projects-list/projects-list'
+import {projectListResolver} from './projects-list/projects-list.resolver';
 import {GetSessionAction} from '@client/entities/session';
 import {Store} from '@ngrx/store';
 import {inject} from '@angular/core';
@@ -22,10 +24,12 @@ export const mainRoutes: Routes = [
             {
                 path: "",
                 component: Overview,
+                resolve: { overview: overviewResolver }
             },
             {
                 path: "projects",
                 component: ProjectsList,
+                resolve: { projects: projectListResolver }
             }
         ]
     }

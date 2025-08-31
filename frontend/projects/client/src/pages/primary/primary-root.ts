@@ -28,6 +28,7 @@ export class PrimaryRoot implements OnInit, OnDestroy {
     private store: Store<AppState> = inject(Store<AppState>);
     private _sub: Subscription = new Subscription();
     ready = false;
+
     ngOnInit() {
         this._sub.add(
             this.store.select(selectSession).pipe(

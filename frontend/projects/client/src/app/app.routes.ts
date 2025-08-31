@@ -3,6 +3,6 @@ import {authRoutes, mainRoutes, systemRoutes} from '../pages';
 
 export const routes: Routes = [
     ...authRoutes,
-    ...systemRoutes,
     ...mainRoutes,
+    ...systemRoutes,
 ];

@@ -11,7 +11,7 @@ const urls = {
     session: `${environment.KRATOS_ROOT}/sessions/whoami`,
 }
 
-export const IdentityGet = createEffect(
+export const sessionGet = createEffect(
     (
         actions$ = inject(Actions),
         http = inject(HttpClient),
