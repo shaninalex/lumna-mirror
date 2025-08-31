@@ -4,7 +4,9 @@ import {Component} from '@angular/core';
     selector: 'fr-overview',
     imports: [],
     templateUrl: './overview.html',
-    styleUrl: './overview.scss'
 })
 export class Overview {
+    constructor() {
+        console.log("overview")
+    }
 }

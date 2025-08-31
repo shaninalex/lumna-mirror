@@ -1,30 +1,30 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {MainLayout} from '@client/app/layouts';
+import {PrimaryLayout} from '@client/app/layouts';
 import {RouterOutlet} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {selectSession} from '@client/entities/session';
 import {LoaderComponent} from '@dev/ui/loader';
-import {filter, tap, map, Subscription, take} from 'rxjs';
+import {filter, tap, Subscription} from 'rxjs';
 
 @Component({
     selector: 'fr-root',
     imports: [
-        MainLayout,
+        PrimaryLayout,
         RouterOutlet,
         LoaderComponent
     ],
     template: `
         @if (ready) {
-            <fr-main-layout>
+            <fr-primary-layout>
                 <router-outlet/>
-            </fr-main-layout>
+            </fr-primary-layout>
         } @else {
             <ui-loader />
         }
     `
 })
-export class MainRoot implements OnInit, OnDestroy {
+export class PrimaryRoot implements OnInit, OnDestroy {
     private store: Store<AppState> = inject(Store<AppState>);
     private _sub: Subscription = new Subscription();
     ready = false;

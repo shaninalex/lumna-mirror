@@ -42,6 +42,9 @@
             ],
             "@dev/ui/*": [
                 "./projects/ui/src/lib/*",
+            ],
+            "@root/*": [
+                "./*",
             ]
         }
     },

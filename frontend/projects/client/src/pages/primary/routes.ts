@@ -1,6 +1,7 @@
 import {ResolveFn, Routes} from '@angular/router';
-import {MainRoot} from './main-root';
+import {PrimaryRoot} from './primary-root';
 import {Overview} from './overview/overview';
+import {ProjectsList} from './projects-list/projects-list'
 import {GetSessionAction} from '@client/entities/session';
 import {Store} from '@ngrx/store';
 import {inject} from '@angular/core';
@@ -15,12 +16,16 @@ export const sessionResolver: ResolveFn<void> = () => {
 export const mainRoutes: Routes = [
     {
         path: "",
-        component: MainRoot,
+        component: PrimaryRoot,
         resolve: { session: sessionResolver },
         children: [
             {
                 path: "",
                 component: Overview,
+            },
+            {
+                path: "projects",
+                component: ProjectsList,
             }
         ]
     }
