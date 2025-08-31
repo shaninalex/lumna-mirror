@@ -12,16 +12,14 @@ import {KratosFormRenderer} from '@dev/ui/kratos';
         KratosFormRenderer
     ],
     template: `
-        @if (loginFlow) {
-            <fr-auth-layout title="Login">
-                <ui-form-renderer [flow]="loginFlow"/>
-                Don't have an account? <a [routerLink]="['/auth/registration']" class="underline">Registration</a> <br />
-                Forgot password? <a [routerLink]="['/auth/recovery']" class="underline">Recovery</a>
-            </fr-auth-layout>
-        }
+        <fr-auth-layout title="Login" [ready]="!!loginFlow">
+            <ui-form-renderer [flow]="loginFlow"/>
+            Don't have an account? <a [routerLink]="['/auth/registration']" class="underline">Registration</a> <br />
+            Forgot password? <a [routerLink]="['/auth/recovery']" class="underline">Recovery</a>
+        </fr-auth-layout>
     `,
 })
 export class Login {
     activatedRoute = inject(ActivatedRoute)
-    loginFlow: LoginFlow | undefined = this.activatedRoute.snapshot.data['loginForm']
+    loginFlow = this.activatedRoute.snapshot.data['loginForm']
 }
