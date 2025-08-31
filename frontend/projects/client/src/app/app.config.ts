@@ -2,7 +2,7 @@ import {
     ApplicationConfig,
     isDevMode,
     provideBrowserGlobalErrorListeners,
-    provideZoneChangeDetection
+    provideZoneChangeDetection,
 } from '@angular/core';
 import {provideRouter} from '@angular/router';
 
@@ -12,14 +12,15 @@ import {provideStoreDevtools} from '@ngrx/store-devtools';
 import {provideEffects} from '@ngrx/effects';
 import {provideRouterStore} from '@ngrx/router-store';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {reducers} from './app.store';
+import {effects, reducers} from './app.store';
+
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(),
         provideZoneChangeDetection({eventCoalescing: true}),
         provideRouter(routes),
-        provideEffects(),
+        provideEffects(effects),
         provideHttpClient(withInterceptorsFromDi()),
         provideRouterStore(),
         provideStore(reducers),

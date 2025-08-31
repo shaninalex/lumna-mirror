@@ -39,6 +39,6 @@ func (s *AuthController) setRoutes() {
 	hooksGroup := s.router.Group("/api/auth/hook")
 	hooksGroup.Use(NewAuthHooksMiddleware(s.kratosService, s.config))
 	hooksGroup.Post("/registration", hooks.HandleHookRegister)
-	hooksGroup.Post("/api/auth/hook/verify", hooks.HandleHookVerify)
-	hooksGroup.Post("/api/auth/hook/login", hooks.HandleHookLogin)
+	hooksGroup.Post("/verify", hooks.HandleHookVerify)
+	hooksGroup.Post("/login", hooks.HandleHookLogin)
 }

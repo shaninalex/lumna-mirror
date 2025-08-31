@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {CdkMenuModule} from '@angular/cdk/menu';
@@ -12,5 +12,4 @@ import {CdkMenuModule} from '@angular/cdk/menu';
     ],
     template: `<router-outlet/>`,
 })
-export class App {
-}
+export class App {}

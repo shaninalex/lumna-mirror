@@ -28,10 +28,6 @@ func NewAuthFormsHandler(config base.IConfig, kratosService kratos.IKratos) *Aut
 // HandleFormLogin - handle form login.
 func (s *AuthFormsHandler) HandleFormLogin(ctx *fiber.Ctx) error {
 	flowID := ctx.Query("flow")
-	if flowID == "" {
-		return ctx.Redirect(web.GetKratosRedirectURL(s.config, "/self-service/login/browser"), http.StatusMovedPermanently)
-	}
-
 	flow, resp, err := s.kratosService.GetLoginFlow(ctx.Context(), ctx.Get("Cookie"), flowID)
 	if err != nil {
 		code := http.StatusBadRequest
@@ -53,10 +49,6 @@ func (s *AuthFormsHandler) HandleFormLogin(ctx *fiber.Ctx) error {
 // HandleFormRegister - handle form register.
 func (s *AuthFormsHandler) HandleFormRegister(ctx *fiber.Ctx) error {
 	flowID := ctx.Query("flow")
-	if flowID == "" {
-		return ctx.Redirect(web.GetKratosRedirectURL(s.config, "/self-service/registration/browser"), http.StatusMovedPermanently)
-	}
-
 	flow, resp, err := s.kratosService.GetRegistrationFlow(ctx.Context(), ctx.Get("Cookie"), flowID)
 	if err != nil {
 		code := http.StatusBadRequest

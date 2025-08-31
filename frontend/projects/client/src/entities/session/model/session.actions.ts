@@ -7,5 +7,5 @@ export const SetSessionAction = createAction(
 )
 
 export const GetSessionAction = createAction(
-    "[session] set session",
+    "[session] get session",
 )
