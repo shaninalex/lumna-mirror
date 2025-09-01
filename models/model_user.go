@@ -3,6 +3,7 @@
 package models
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -75,6 +76,23 @@ func (s *User) SetCode(code string) { s.Code = code }
 // GetCode - returns the code.
 func (s *User) GetCode() string { return s.Code }
 
+func (s *User) GetSettings() *UserSettings {
+	var settings UserSettings
+	err := json.Unmarshal([]byte(s.Settings), &settings)
+	if err != nil {
+		panic(err)
+	}
+	return &settings
+}
+
+func (s *User) SetSettings(settings *UserSettings) {
+	b, err := json.Marshal(&settings)
+	if err != nil {
+		panic(err)
+	}
+	s.Settings = string(b)
+}
+
 // TraitsName - traits name.
 type TraitsName struct {
 	First string `json:"first"`
@@ -85,4 +103,22 @@ type TraitsName struct {
 type UserTraits struct {
 	Email string     `json:"email"`
 	Name  TraitsName `json:"name"`
+}
+
+type UserSettings struct {
+	Theme        string `json:"theme" validate:"required"`
+	Language     string `json:"language" validate:"required"`
+	Timezone     string `json:"timezone" validate:"required"`
+	DateFormat   string `json:"date_format" validate:"required"`
+	TimeFormat   string `json:"time_format" validate:"required"`
+	WeekStartDay string `json:"week_start_day" validate:"required"`
+}
+
+var DefaultUserSettings = UserSettings{
+	Theme:        "light",
+	Language:     "en",
+	Timezone:     "UTC",
+	DateFormat:   "02.01.2006",
+	TimeFormat:   "15:04",
+	WeekStartDay: "1",
 }

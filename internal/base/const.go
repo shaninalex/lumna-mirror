@@ -20,4 +20,7 @@ const (
 
 	// ContextDB - gorm db
 	ContextDB = "postgres_database"
+
+	// ContextCookie - authentication cookie
+	ContextCookie = "auth_cookie"
 )

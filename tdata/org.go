@@ -36,9 +36,11 @@ func CreateUser(ctx context.Context) *models.User {
 	if result.Error != nil {
 		panic(result.Error)
 	}
-	AddIdentity(&ory.Identity{
+	identity := &ory.Identity{
 		Id: user.GetID().String(),
-	})
+	}
+	AddIdentity(identity)
+	user.Identity = identity
 	return user
 }
 
