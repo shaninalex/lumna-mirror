@@ -23,7 +23,7 @@ type ProjectReader interface {
 
 // TaskReader - task reader.
 type TaskReader interface {
-	TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
+	TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.Task, error)
 	TaskDetail(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string) (*models.Task, error)
 }
 
@@ -85,12 +85,17 @@ func (s *ProjectManagement) List(ctx context.Context, orgID uuid.UUID) ([]*model
 }
 
 // TasksList - tasks list.
-func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error) {
-	project, err := s.Project(ctx, orgID, projectKey)
+func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, projectCode string) ([]*models.Task, error) {
+	project, err := s.Project(ctx, orgID, projectCode)
 	if err != nil {
 		return nil, err
 	}
-	return project.Statuses, nil
+	var tasks []*models.Task
+	tx := database.GetDB(ctx).Where("project_id = ?", project.GetID()).Find(&tasks)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return tasks, nil
 }
 
 // PatchTaskStatus - patch task status.

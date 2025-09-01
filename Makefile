@@ -61,4 +61,5 @@ db_restore:
 	cat ./database/data/db_backup.sql | docker exec -i flowreon-postgres-1 psql -U postgres -d postgres
 
 tests:
-	go test ./...
+	go clean -testcache
+	CONFIG_PATH=$$(pwd)/config/development.test.yml go test ./...
