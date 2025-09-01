@@ -1,6 +1,6 @@
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
-import {GetTasksActions, SetTasksActions} from '@client/entities/task';
+import {GetTasksActions, SetTasksActions} from './task.actions';
 import {TaskService} from '../api/task.service';
 import {exhaustMap, of, switchMap} from 'rxjs';
 

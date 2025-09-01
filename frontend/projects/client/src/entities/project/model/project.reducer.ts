@@ -1,7 +1,7 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import {Project} from '@client/entities/project/model/project.model';
+import {Project} from './project.model';
 import {createReducer, on} from '@ngrx/store';
-import {SetProjectsAction} from '@client/entities/project/model/project.actions';
+import {SetProjectsAction} from './project.actions';
 
 export interface ProjectState extends EntityState<Project> {}
 export const projectsAdapter: EntityAdapter<Project> = createEntityAdapter<Project>();

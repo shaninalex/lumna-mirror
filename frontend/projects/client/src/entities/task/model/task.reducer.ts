@@ -1,6 +1,7 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {Task, SetTasksActions} from '@client/entities/task';
 import {createReducer, on} from '@ngrx/store';
+import {Task} from './task.model'
+import {SetTasksActions} from './task.actions';
 
 export interface TasksState extends EntityState<Task> {}
 export const tasksAdapter: EntityAdapter<Task> = createEntityAdapter<Task>();

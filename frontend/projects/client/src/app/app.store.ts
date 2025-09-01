@@ -1,5 +1,5 @@
 import {sessionReducer} from '@client/entities//session';
-import {projectsReducer} from '@client/entities/project/model/project.reducer';
+import {projectsReducer} from '@client/entities/project';
 import {tasksReducer} from '@client/entities/task';
 
 import * as sessionEffects from '@client/entities/session/model/session.effects';
