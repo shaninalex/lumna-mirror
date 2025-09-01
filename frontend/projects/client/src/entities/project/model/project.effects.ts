@@ -1,6 +1,6 @@
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {GetProjectsAction, SetProjectsAction} from '@client/entities/project/model/project.actions';
 import {catchError, exhaustMap, of, switchMap} from 'rxjs';
