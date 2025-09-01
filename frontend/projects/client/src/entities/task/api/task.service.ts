@@ -5,7 +5,7 @@ import {CommonApiService} from '@client/shared/common';
 import {Task} from '@client/entities/task';
 
 const tasksUrl = {
-    list: (projectCode: string) => `${env.API_ROOT}/api/project/${projectCode}tasks`, // TODO: <= change me
+    list: (projectCode: string) => `${env.API_ROOT}/api/project/${projectCode}/tasks`,
 }
 
 @Injectable({providedIn: "root"}) // TODO: does it has to be root?
