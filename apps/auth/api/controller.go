@@ -28,13 +28,6 @@ type AuthController struct {
 }
 
 func (s *AuthController) setRoutes() {
-	forms := handler.NewAuthFormsHandler(s.config, s.kratosService)
-	s.router.Get("/api/auth/form/login", forms.HandleFormLogin)
-	s.router.Get("/api/auth/form/registration", forms.HandleFormRegister)
-	s.router.Get("/api/auth/form/error", forms.HandleFormError)
-	s.router.Get("/api/auth/form/verification", forms.HandleFormVerification)
-	s.router.Get("/api/auth/form/recovery", forms.HandleFormRecovery)
-
 	hooks := handler.NewAuthHooksHandler(domain.NewAuthHookAPI())
 	hooksGroup := s.router.Group("/api/auth/hook")
 	hooksGroup.Use(NewAuthHooksMiddleware(s.kratosService, s.config))

@@ -14,7 +14,7 @@ import {KratosFormRenderer} from '@dev/ui/kratos';
     template: `
         <fr-auth-layout title="Login" [ready]="!!loginFlow">
             <ui-form-renderer [flow]="loginFlow"/>
-            Don't have an account? <a [routerLink]="['/auth/registration']" class="underline">Registration</a> <br />
+            Don't have an account+? <a [routerLink]="['/auth/registration']" class="underline">Registration</a> <br />
             Forgot password? <a [routerLink]="['/auth/recovery']" class="underline">Recovery</a>
         </fr-auth-layout>
     `,
