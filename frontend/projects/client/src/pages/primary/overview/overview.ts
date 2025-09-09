@@ -6,7 +6,4 @@ import {Component} from '@angular/core';
     templateUrl: './overview.html',
 })
 export class Overview {
-    constructor() {
-        console.log("overview")
-    }
 }

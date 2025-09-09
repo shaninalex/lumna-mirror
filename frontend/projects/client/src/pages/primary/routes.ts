@@ -9,6 +9,7 @@ import {inject} from '@angular/core';
 import {AppState} from '@client/shared/store';
 import {GetSessionAction} from '@client/entities/auth';
 import {CanMatchPrimarySection} from '@client/pages/primary/guard';
+import {AccountPageComponent} from './account-page/account-page';
 
 export const sessionResolver: ResolveFn<void> = () => {
     const store = inject(Store<AppState>);
@@ -32,7 +33,11 @@ export const mainRoutes: Routes = [
                 path: "projects",
                 component: ProjectsList,
                 resolve: { projects: projectListResolver }
-            }
+            },
+            {
+                path: "account",
+                component: AccountPageComponent,
+            },
         ]
     }
 ];

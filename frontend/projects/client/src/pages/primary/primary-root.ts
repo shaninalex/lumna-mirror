@@ -6,6 +6,7 @@ import {AppState} from '@client/shared/store';
 import {filter, tap, Subscription} from 'rxjs';
 import {LoaderComponent} from '@client/shared/ui/loader';
 import {selectSession} from '@client/entities/auth';
+import {UserService} from '@client/entities/user';
 
 @Component({
     selector: 'fr-root',
@@ -13,6 +14,9 @@ import {selectSession} from '@client/entities/auth';
         PrimaryLayout,
         RouterOutlet,
         LoaderComponent
+    ],
+    providers: [
+        UserService
     ],
     template: `
         @if (ready) {

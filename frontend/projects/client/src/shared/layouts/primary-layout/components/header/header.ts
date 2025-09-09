@@ -5,6 +5,8 @@ import {map, Observable} from 'rxjs';
 import {selectSession} from '@client/entities/auth';
 import {AsyncPipe} from '@angular/common';
 import {CdkMenu, CdkMenuItem, CdkMenuModule} from '@angular/cdk/menu';
+import {RouterLink} from '@angular/router';
+import {UserLogoutFeature} from '@client/features/user';
 
 @Component({
     selector: 'fr-header',
@@ -13,6 +15,8 @@ import {CdkMenu, CdkMenuItem, CdkMenuModule} from '@angular/cdk/menu';
         CdkMenu,
         CdkMenuItem,
         CdkMenuModule,
+        RouterLink,
+        UserLogoutFeature,
     ],
     template: `
         <div class="bg-white py-2 px-4 flex items-center justify-between">
@@ -25,9 +29,9 @@ import {CdkMenu, CdkMenuItem, CdkMenuModule} from '@angular/cdk/menu';
                     <ng-template #header_menu>
                         <div class="bg-white flex flex-col gap-2 border p-2 rounded mt-2" cdkMenu>
                             <button cdkMenuItem>Refresh</button>
-                            <button cdkMenuItem>Settings</button>
+                            <a [routerLink]="['account']" cdkMenuItem>Account</a>
                             <button cdkMenuItem>Help</button>
-                            <button cdkMenuItem>Sign out</button>
+                            <kr-user-logout-feature />
                         </div>
                     </ng-template>
                 }
