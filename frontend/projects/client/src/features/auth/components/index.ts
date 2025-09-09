@@ -1,5 +1,0 @@
-export * from './error-form.component'
-export * from './login-form.component'
-export * from './recovery-form.component'
-export * from './registration-form.component'
-export * from './verification-form.component'

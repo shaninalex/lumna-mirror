@@ -1,64 +1,70 @@
 /* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
 /* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "strictPropertyInitialization": false,
-    "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "ES2022",
-    "module": "preserve",
-    "paths": {
-      "@client/app/*": [
-        "./project/client/src/app/*",
-      ],
-      "@client/entities/*": [
-        "./projects/client/src/entities/*",
-      ],
-      "@client/features/*": [
-        "./projects/client/src/features/*",
-      ],
-      "@client/pages/*": [
-        "./projects/client/src/pages/*",
-      ],
-      "@client/shared/*": [
-        "./projects/client/src/shared/*",
-      ],
-      "@client/environments/*": [
-        "./projects/client/src/environments/*"
-      ],
-      "lib": [
-        "./dist/lib"
-      ]
-    }
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "typeCheckHostBindings": true,
-    "strictTemplates": true
-  },
-  "files": [],
-  "references": [
-    {
-      "path": "./projects/client/tsconfig.app.json"
+    "compileOnSave": false,
+    "compilerOptions": {
+        "strict": true,
+        "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "strictPropertyInitialization": false,
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "target": "ES2022",
+        "module": "preserve",
+        "paths": {
+            "@client/app/*": [
+                "./projects/client/src/app/*"
+            ],
+            "@client/environments/*": [
+                "./projects/client/src/environments/*"
+            ],
+            "@client/entities/*": [
+                "./projects/client/src/entities/*"
+            ],
+            "@client/features/*": [
+                "./projects/client/src/features/*"
+            ],
+            "@client/pages/*": [
+                "./projects/client/src/pages/*"
+            ],
+            "@client/shared/*": [
+                "./projects/client/src/shared/*"
+            ],
+            "@root/*": [
+                "./*",
+            ]
+        }
     },
-    {
-      "path": "./projects/client/tsconfig.spec.json"
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "typeCheckHostBindings": true,
+        "strictTemplates": true
     },
-    {
-      "path": "./projects/lib/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/lib/tsconfig.spec.json"
-    }
-  ]
+    "files": [],
+    "references": [
+        {
+            "path": "./projects/client/tsconfig.app.json"
+        },
+        {
+            "path": "./projects/client/tsconfig.spec.json"
+        },
+        {
+            "path": "./projects/ui/tsconfig.lib.json"
+        },
+        {
+            "path": "./projects/ui/tsconfig.spec.json"
+        },
+        {
+            "path": "./projects/lib/tsconfig.lib.json"
+        },
+        {
+            "path": "./projects/lib/tsconfig.spec.json"
+        }
+    ]
 }

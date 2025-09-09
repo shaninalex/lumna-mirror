@@ -17,20 +17,24 @@ import (
 
 // ProjectReader - project reader.
 type ProjectReader interface {
-	Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error)
 	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
+	Project(ctx context.Context, orgID uuid.UUID, projectCode string) (*models.Project, error)
+}
+
+type StatusesReader interface {
+	ProjectStatuses(ctx context.Context, orgID uuid.UUID, projectCode string) ([]*models.TaskStatus, error)
 }
 
 // TaskReader - task reader.
 type TaskReader interface {
-	TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error)
-	TaskDetail(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string) (*models.Task, error)
+	TasksList(ctx context.Context, orgID uuid.UUID, projectCode string) ([]*models.Task, error)
+	TaskDetail(ctx context.Context, orgID uuid.UUID, projectCode, taskCode string) (*models.Task, error)
 }
 
 // TaskWriter - task writer.
 type TaskWriter interface {
 	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *dto.ChangeTaskStatusDTO) error
-	TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *adapter.UpdateTaskData) error
+	TaskUpdate(ctx context.Context, orgID uuid.UUID, projectCode, taskCode string, data *adapter.UpdateTaskData) error
 }
 
 // ProjectManager - project manager.
@@ -51,14 +55,14 @@ func NewProjectManagement() *ProjectManagement {
 }
 
 // Project - project.
-func (s *ProjectManagement) Project(ctx context.Context, orgID uuid.UUID, projectKey string) (*models.Project, error) {
+func (s *ProjectManagement) Project(ctx context.Context, orgID uuid.UUID, projectCode string) (*models.Project, error) {
 	var project models.Project
 
 	tx := database.GetDB(ctx).
 		WithContext(ctx).
 		Preload("Statuses.Tasks").
 		Preload("Tasks").
-		First(&project, "project_key = ? AND organization_id = ?", projectKey, orgID)
+		First(&project, "project_key = ? AND organization_id = ?", projectCode, orgID)
 
 	if tx.Error != nil {
 		if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
@@ -85,12 +89,17 @@ func (s *ProjectManagement) List(ctx context.Context, orgID uuid.UUID) ([]*model
 }
 
 // TasksList - tasks list.
-func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, projectKey string) ([]*models.TaskStatus, error) {
-	project, err := s.Project(ctx, orgID, projectKey)
+func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, projectCode string) ([]*models.Task, error) {
+	project, err := s.Project(ctx, orgID, projectCode)
 	if err != nil {
 		return nil, err
 	}
-	return project.Statuses, nil
+	var tasks []*models.Task
+	tx := database.GetDB(ctx).Where("project_id = ?", project.GetID()).Find(&tasks)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return tasks, nil
 }
 
 // PatchTaskStatus - patch task status.
@@ -127,8 +136,8 @@ func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID
 }
 
 // TaskDetail - task detail.
-func (s *ProjectManagement) TaskDetail(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string) (*models.Task, error) {
-	project, err := s.Project(ctx, orgID, projectKey)
+func (s *ProjectManagement) TaskDetail(ctx context.Context, orgID uuid.UUID, projectCode, taskCode string) (*models.Task, error) {
+	project, err := s.Project(ctx, orgID, projectCode)
 	if err != nil {
 		return nil, err
 	}
@@ -141,9 +150,9 @@ func (s *ProjectManagement) TaskDetail(ctx context.Context, orgID uuid.UUID, pro
 }
 
 // TaskUpdate - task update.
-func (s *ProjectManagement) TaskUpdate(ctx context.Context, orgID uuid.UUID, projectKey, taskCode string, data *adapter.UpdateTaskData) error {
+func (s *ProjectManagement) TaskUpdate(ctx context.Context, orgID uuid.UUID, projectCode, taskCode string, data *adapter.UpdateTaskData) error {
 	db := database.GetDB(ctx)
-	project, err := s.Project(ctx, orgID, projectKey)
+	project, err := s.Project(ctx, orgID, projectCode)
 	if err != nil {
 		return err
 	}

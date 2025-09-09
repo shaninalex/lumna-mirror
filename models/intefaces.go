@@ -20,6 +20,8 @@ type AuthUser interface {
 	Identifiable
 	GetTraits() any
 	IsActive() bool
+	GetSettings() *UserSettings
+	SetSettings(*UserSettings)
 }
 
 // Ownable has an owner and can validate other

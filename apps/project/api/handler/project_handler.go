@@ -41,11 +41,11 @@ func (s *ProjectHandler) HandleProjectsList(ctx *fiber.Ctx) error {
 // HandleProjectTasksList - handle project tasks list.
 func (s *ProjectHandler) HandleProjectTasksList(ctx *fiber.Ctx) error {
 	projectCode := ctx.Params("projectCode")
-	statuses, err := s.manager.TasksList(ctx.Context(), web.GetOrganizationID(ctx), projectCode)
+	tasks, err := s.manager.TasksList(ctx.Context(), web.GetOrganizationID(ctx), projectCode)
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
-	return web.Success(ctx, adapter.NewTasksStatusDto(statuses))
+	return web.Success(ctx, adapter.NewTasksDto(tasks))
 }
 
 // TaskFilter - task filter.

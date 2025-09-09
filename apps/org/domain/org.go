@@ -22,8 +22,8 @@ type OrganizationManager interface {
 type OrganizationAPI struct {
 }
 
-// NewOrganizationApi - new organization api.
-func NewOrganizationApi() *OrganizationAPI {
+// NewOrganizationAPI - new organization api.
+func NewOrganizationAPI() *OrganizationAPI {
 	return &OrganizationAPI{}
 }
 

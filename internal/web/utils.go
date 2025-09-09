@@ -109,6 +109,7 @@ func ParamString(ctx *fiber.Ctx, name string) (string, error) {
 	return val, nil
 }
 
+// ParseBody - parse fiber post/patch/put request to defined structure
 func ParseBody[T any](ctx *fiber.Ctx) (*T, error) {
 	var dto T
 	if err := ctx.BodyParser(&dto); err != nil {

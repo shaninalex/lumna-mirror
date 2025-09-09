@@ -52,7 +52,7 @@ func Test_ProjectTaskList(t *testing.T) {
 	_, user, project := tdata.CreatePack(m.Ctx)
 	cookie := tdata.AddSession(user)
 
-	statuses := tdata.CreateRandomStatuses(m.Ctx, project)
+	tasks := tdata.CreateTasks(m.Ctx, project)
 
 	r := tdata.AuthTestRouter()
 	handlers := handler.NewProjectHandler(domain.NewProjectManagement())
@@ -68,11 +68,8 @@ func Test_ProjectTaskList(t *testing.T) {
 
 	body, _ := io.ReadAll(res.Body)
 
-	var response web.APIResponse[[]*dto.TaskStatusDto]
+	var response web.APIResponse[[]*dto.TaskDto]
 	err = json.Unmarshal(body, &response)
 	assert.NoError(t, err)
-	assert.Equal(t, len(statuses), len(response.Data))
-	assert.Equal(t, statuses[0].ID, response.Data[0].ID)
-	assert.Equal(t, statuses[0].Title, response.Data[0].Title)
-	assert.Equal(t, len(statuses[0].Tasks), len(response.Data[0].Tasks))
+	assert.Equal(t, len(tasks), len(response.Data))
 }

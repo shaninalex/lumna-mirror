@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import {authRoutes} from '@client/pages/auth';
-import {mainRoutes} from '@client/pages/main';
+import {authRoutes, mainRoutes, systemRoutes} from '../pages';
 
 export const routes: Routes = [
     ...authRoutes,
     ...mainRoutes,
+    ...systemRoutes,
 ];

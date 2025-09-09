@@ -1,3 +1,29 @@
+## 0.6.0 (2025-09-09)
+
+### Feat
+
+- **ui**: add account settings page
+- **ui**: add auth pages
+- remove Kratos forms api
+- user service domain + uncompleted tests
+- **api**: project task list return tasks only
+- **ui**: task entity + redux
+- **ui**: project card + project state + project resolver change
+- **ui**: minimalistic primary layout and components
+- **ui**: registration, login, verification and main component
+- **ui**: simplified login form
+- **auth**: registration hook middleware
+
+### Fix
+
+- task redux
+
+### Refactor
+
+- **ui**: bunch of small little things
+- **ui**: refactoring preloader auth layout
+- **ui**: replace features/auth with page data resolvers
+
 ## 0.5.0 (2025-08-30)
 
 ### Feat

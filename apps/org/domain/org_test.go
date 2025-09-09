@@ -17,7 +17,7 @@ func Test_GetOrganizationByUserID(t *testing.T) {
 	user := tdata.CreateUser(ctx)
 	_org := tdata.CreateOrganisation(ctx, user)
 
-	api := domain.NewOrganizationApi()
+	api := domain.NewOrganizationAPI()
 	organization, err := api.Get(ctx, user.ID)
 
 	assert.NoError(t, err)
@@ -29,7 +29,7 @@ func Test_GetOrganizationNotFound(t *testing.T) {
 	tdata.Clear(ctx)
 	user := tdata.CreateUser(ctx)
 
-	api := domain.NewOrganizationApi()
+	api := domain.NewOrganizationAPI()
 	organization, err := api.Get(ctx, user.ID)
 
 	assert.Error(t, err)

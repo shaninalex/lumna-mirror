@@ -27,6 +27,6 @@ func (s *OrganizationController) init() {
 }
 
 func (s *OrganizationController) setRoutes() {
-	h := handler.NewOrganizationHandler(domain.NewOrganizationApi())
+	h := handler.NewOrganizationHandler(domain.NewOrganizationAPI())
 	s.router.Get("/api/org", h.HandleGetByUser)
 }

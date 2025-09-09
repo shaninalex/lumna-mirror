@@ -1,3 +1,1 @@
-export * from './api'
-export * from './ui'
-export * from './models'
+export * from './model'

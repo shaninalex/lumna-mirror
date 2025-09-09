@@ -2,16 +2,5 @@ export interface APIResponse<T> {
     messages: string[]
     status: boolean
     data: T
-    error: ApiError[]
-}
-
-export interface ApiError {
-    field: string
-    validator: string
-    message: string
-}
-
-export interface Pagination {
-    limit: number
-    offset: number
+    error: any // TODO: get apperror type from backend
 }

@@ -36,9 +36,11 @@ func CreateUser(ctx context.Context) *models.User {
 	if result.Error != nil {
 		panic(result.Error)
 	}
-	AddIdentity(&ory.Identity{
+	identity := &ory.Identity{
 		Id: user.GetID().String(),
-	})
+	}
+	AddIdentity(identity)
+	user.Identity = identity
 	return user
 }
 
@@ -68,8 +70,8 @@ func CreatePack(ctx context.Context) (*models.Organization, *models.User, *model
 	return org, user, project
 }
 
-// CreateRandomStatuses - creates a new random statuses.
-func CreateRandomStatuses(ctx context.Context, project *models.Project) []*models.TaskStatus {
+// CreateRandomTasksAndStatuses - creates a new random statuses.
+func CreateRandomTasksAndStatuses(ctx context.Context, project *models.Project) []*models.TaskStatus {
 	statuses := make([]*models.TaskStatus, 3)
 	for i, stName := range []string{"Todo", "InProgress", "Done"} {
 		st := models.TaskStatus{
@@ -79,7 +81,7 @@ func CreateRandomStatuses(ctx context.Context, project *models.Project) []*model
 			Index:     0,
 		}
 		_db := database.GetDB(ctx)
-		for _ = range 3 {
+		for range 3 {
 			task := builders.NewTaskBuilder().
 				UserID(project.GetOwnerID()).
 				OrganizationID(project.OrganizationID).
@@ -98,4 +100,15 @@ func CreateRandomStatuses(ctx context.Context, project *models.Project) []*model
 		statuses[i] = &st
 	}
 	return statuses
+}
+
+func CreateTasks(ctx context.Context, project *models.Project) []*models.Task {
+	statuses := CreateRandomTasksAndStatuses(ctx, project)
+	var tasks []*models.Task
+	for _, p := range statuses {
+		for _, t := range p.Tasks {
+			tasks = append(tasks, t)
+		}
+	}
+	return tasks
 }
