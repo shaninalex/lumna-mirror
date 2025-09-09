@@ -1,32 +1,28 @@
 import {Routes} from '@angular/router';
-import {AuthRoot} from './auth-root';
 import {Login} from './login/login';
-import {Register} from './register/registration';
+import {Registration} from './registration/registration';
 import {Verification} from './verification/verification';
-import {loginFlowResolver} from '@client/pages/auth/login/resolver';
-import {registrationFlowResolver} from '@client/pages/auth/register/resolver';
-import {verificationFlowResolver} from '@client/pages/auth/verification/resolver';
+import {registrationFlowResolver} from './registration/registration.resolver';
+import {Recovery} from './recovery/recovery';
+import {recoveryFlowResolver} from '@client/pages/auth/recovery/recovery.resolver';
 
 export const authRoutes: Routes = [
     {
-        path: "auth",
-        component: AuthRoot,
-        children: [
-            {
-                path: "login",
-                component: Login,
-                resolve: { loginForm: loginFlowResolver }
-            },
-            {
-                path: "registration",
-                component: Register,
-                resolve: { registrationForm: registrationFlowResolver }
-            },
-            {
-                path: "verification",
-                component: Verification,
-                resolve: { verificationForm: verificationFlowResolver }
-            }
-        ]
-    }
-];
+        path: "auth/login",
+        component: Login,
+    },
+    {
+        path: "auth/registration",
+        resolve: {form: registrationFlowResolver},
+        component: Registration,
+    },
+    {
+        path: "auth/verification",
+        component: Verification,
+    },
+    {
+        path: "auth/recovery",
+        resolve: {form: recoveryFlowResolver},
+        component: Recovery,
+    },
+]

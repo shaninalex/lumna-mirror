@@ -34,15 +34,6 @@
             "@client/shared/*": [
                 "./projects/client/src/shared/*"
             ],
-            "lib": [
-                "./dist/lib"
-            ],
-            "@ui": [
-                "./dist/ui"
-            ],
-            "@dev/ui/*": [
-                "./projects/ui/src/lib/*",
-            ],
             "@root/*": [
                 "./*",
             ]

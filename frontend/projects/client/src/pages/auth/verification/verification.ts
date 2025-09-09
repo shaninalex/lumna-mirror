@@ -1,21 +1,39 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {AuthLayout} from '@client/app/layouts';
-import {KratosFormRenderer} from '@dev/ui/kratos';
+import {AuthLayout} from '@client/shared/layouts/auth-layout/auth-layout';
+import {AuthService} from '@client/entities/auth';
+import {filter, map, switchMap} from 'rxjs'
+import {VerificationFlow} from '@ory/kratos-client';
+import {AuthVerificationFeature} from '@client/features/auth';
 
 @Component({
-    selector: 'fr-verification',
+  selector: 'kr-verification',
     imports: [
         AuthLayout,
-        KratosFormRenderer,
+        AuthVerificationFeature
     ],
-    template: `
-        <fr-auth-layout title="Verification" [ready]="!!verificationForm">
-            <ui-form-renderer [flow]="verificationForm" />
-        </fr-auth-layout>
-    `,
+  template: `
+      <fr-auth-layout title="Verification">
+          @if (form) {
+              <kr-auth-verification-feature [form]="form" />
+          }
+      </fr-auth-layout>
+  `
 })
-export class Verification {
+export class Verification implements OnInit {
     activatedRoute = inject(ActivatedRoute)
-    verificationForm = this.activatedRoute.snapshot.data['verificationForm']
+    service = inject(AuthService)
+    form: VerificationFlow
+
+    ngOnInit() {
+        this.activatedRoute.queryParams.pipe(
+            filter(params => "flow" in params),
+            map(params => params["flow"] as string),
+            switchMap(flowID => {
+                return this.service.verificationFlow(flowID)
+            })
+        ).subscribe(form=> {
+            this.form = form
+        })
+    }
 }

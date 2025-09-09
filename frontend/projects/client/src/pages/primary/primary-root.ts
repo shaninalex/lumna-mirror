@@ -1,11 +1,11 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {PrimaryLayout} from '@client/app/layouts';
+import {PrimaryLayout} from '@client/shared/layouts';
 import {RouterOutlet} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
-import {selectSession} from '@client/entities/session';
-import {LoaderComponent} from '@dev/ui/loader';
 import {filter, tap, Subscription} from 'rxjs';
+import {LoaderComponent} from '@client/shared/ui/loader';
+import {selectSession} from '@client/entities/auth';
 
 @Component({
     selector: 'fr-root',
