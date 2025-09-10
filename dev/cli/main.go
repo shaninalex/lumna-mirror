@@ -75,6 +75,7 @@ func RunSeeder(strID string) {
 // RunTypeScriptify - runs the type scriptify.
 func RunTypeScriptify() {
 	fmt.Print("Generate appErrors... ")
+	resultPath := "frontend/projects/client/src/shared/common/errors.ts"
 	errorsMap := map[string]apperrors.AppError{}
 	for _, e := range apperrors.AllErrors {
 		errorsMap[e.Key] = e
@@ -97,9 +98,9 @@ func RunTypeScriptify() {
 export const ERRORS: Record<string, AppError> = ` + string(data) + "\n"
 
 	// write to file
-	if err := os.WriteFile("frontend/projects/lib/src/lib/errors.ts", []byte(ts), 0644); err != nil {
+	if err := os.WriteFile(resultPath, []byte(ts), 0644); err != nil {
 		panic(err)
 	}
 
-	fmt.Println("Generated frontend/projects/lib/src/lib/errors.ts")
+	fmt.Printf("Generated %s\n", resultPath)
 }
