@@ -11,6 +11,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/models/builders"
 )
 
 // AuthHookHandler - auth hook handler.
@@ -38,7 +39,7 @@ func (s *AuthHookAPI) HookRegister(ctx context.Context, data *dto.HooksKratosPay
 		return err
 	}
 
-	// TODO: move to user service
+	// TODO: move user settings creation into user service
 	db := database.GetDB(ctx)
 	userCode, err := database.GenerateUniqueUserCode(ctx, db, 5)
 	if err != nil {
@@ -53,6 +54,20 @@ func (s *AuthHookAPI) HookRegister(ctx context.Context, data *dto.HooksKratosPay
 	if tx.Error != nil {
 		return apperrors.UserUnableToCreate
 	}
+
+	// move to separate user pipeline
+	// For MVP we will just create organizations on user registration.
+	// later when create organization and invitation steps will be completed - we remove that
+	// It should be managed by organization microservice
+	org := builders.NewOrganizationBuilder().
+		Title(uuid.NewString()).
+		UserID(user.GetID()).
+		Build()
+	tx = db.Create(&org)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
 	return nil
 }
 
