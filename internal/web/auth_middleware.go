@@ -48,7 +48,7 @@ func (s *AuthMiddleware) Wrap() fiber.Handler {
 		ctx.Locals(base.ContextSession, session)
 
 		user := &models.User{ID: userID}
-		tx := database.GetDB(ctx.Context()).First(&user)
+		tx := database.GetDB(ctx.Context()).Preload("Organization").First(&user)
 		if tx.Error != nil {
 			return Error(ctx, http.StatusUnauthorized, apperrors.UserNotFound)
 		}
