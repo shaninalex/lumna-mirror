@@ -46,10 +46,10 @@ func (s *AuthHookAPI) HookRegister(ctx context.Context, data *dto.HooksKratosPay
 		log.Printf("unable to generate username code: %v\n", err)
 		userCode = uuid.NewString()
 	}
-	user := &models.User{
-		ID:   userID,
-		Code: userCode,
-	}
+	user := builders.NewUserBuilder().
+		ID(userID).
+		Code(userCode).
+		Settings(models.DefaultUserSettings.ToString()).Build()
 	tx := db.Create(&user)
 	if tx.Error != nil {
 		return apperrors.UserUnableToCreate

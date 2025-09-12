@@ -31,6 +31,7 @@ func CreateUser(ctx context.Context) *models.User {
 	user := builders.NewUserBuilder().
 		ID(uuid.New()).
 		Code(uuid.NewString()).
+		Settings(models.DefaultUserSettings.ToString()).
 		Build()
 	result := database.GetDB(ctx).Create(&user)
 	if result.Error != nil {
