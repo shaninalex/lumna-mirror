@@ -67,8 +67,9 @@ func (s *AuthHookAPI) HookRegister(ctx context.Context, data *dto.HooksKratosPay
 	if tx.Error != nil {
 		return tx.Error
 	}
-	// TODO: user.SetOrganization(org)
-	db.Update("organization_id", &org.ID).Where("id = ?", userID)
+
+	user.OrganizationID = &org.ID
+	tx = db.Save(&user)
 	if tx.Error != nil {
 		return tx.Error
 	}

@@ -29,6 +29,7 @@ export class GlobalInterceptor {
     }
 
     handleResponseError(err: APIResponse<any>): void {
+        console.log(err)
         for (let e of err.errors) {
             this.store.dispatch(AppErrorAction({ err: e }))
         }
