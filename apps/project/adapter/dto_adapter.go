@@ -13,6 +13,7 @@ func NewProjectDto(p *models.Project) *dto.ProjectDto {
 		ID:         p.ID,
 		Title:      p.Title,
 		ProjectKey: p.ProjectKey,
+		Statuses:   NewIssueStatusesDto(p.Statuses),
 		CreatedAt:  p.CreatedAt,
 		UpdatedAt:  p.UpdatedAt,
 	}
@@ -66,12 +67,12 @@ func NewIssueStatusDto(i *models.TaskStatus) *dto.TaskStatusDto {
 		Complete:    i.Complete,
 		Index:       i.Index,
 		Config:      i.GetConfig(),
-		Tasks:       NewTasksDto(i.Tasks),
+		//Tasks:       NewTasksDto(i.Tasks),
 	}
 }
 
-// NewTasksStatusDto - new tasks status dto.
-func NewTasksStatusDto(statuses []*models.TaskStatus) []*dto.TaskStatusDto {
+// NewIssueStatusesDto - new tasks status dto.
+func NewIssueStatusesDto(statuses []*models.TaskStatus) []*dto.TaskStatusDto {
 	dtos := make([]*dto.TaskStatusDto, len(statuses))
 	for i, status := range statuses {
 		dtos[i] = NewIssueStatusDto(status)
