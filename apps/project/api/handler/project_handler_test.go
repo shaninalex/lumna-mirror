@@ -19,12 +19,11 @@ import (
 
 func Test_ProjectList(t *testing.T) {
 	m := tdata.Manager()
-	tdata.Clear(m.Ctx)
 
 	_, user, project := tdata.CreatePack(m.Ctx)
 	cookie := tdata.AddSession(user)
 
-	r := tdata.AuthTestRouter()
+	r := tdata.AuthTestRouter(m.Ctx)
 	handlers := handler.NewProjectHandler(domain.NewProjectManagement())
 	r.Get("/", handlers.HandleProjectsList)
 
@@ -47,14 +46,13 @@ func Test_ProjectList(t *testing.T) {
 
 func Test_ProjectTaskList(t *testing.T) {
 	m := tdata.Manager()
-	tdata.Clear(m.Ctx)
 
 	_, user, project := tdata.CreatePack(m.Ctx)
 	cookie := tdata.AddSession(user)
 
 	tasks := tdata.CreateTasks(m.Ctx, project)
 
-	r := tdata.AuthTestRouter()
+	r := tdata.AuthTestRouter(m.Ctx)
 	handlers := handler.NewProjectHandler(domain.NewProjectManagement())
 	r.Get("/api/project/:projectCode/tasks", handlers.HandleProjectTasksList)
 

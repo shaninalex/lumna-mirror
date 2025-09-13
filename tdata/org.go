@@ -67,6 +67,10 @@ func CreateProject(ctx context.Context, org *models.Organization, user *models.U
 func CreatePack(ctx context.Context) (*models.Organization, *models.User, *models.Project) {
 	user := CreateUser(ctx)
 	org := CreateOrganisation(ctx, user)
+	user.Organization = org
+	user.OrganizationID = &org.ID
+	db := database.GetDB(ctx)
+	db.Save(user)
 	project := CreateProject(ctx, org, user)
 	return org, user, project
 }

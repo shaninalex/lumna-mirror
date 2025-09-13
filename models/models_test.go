@@ -14,9 +14,9 @@ import (
 )
 
 func Test_ModelsBuilders(t *testing.T) {
-	ctx := tdata.Ctx()
-	tdata.Clear(ctx)
-	org, user, project := tdata.CreatePack(ctx)
+	m := tdata.Manager()
+	ctx := m.Ctx
+	org, user, project := tdata.CreatePack(m.Ctx)
 	assert.NotNil(t, user)
 	assert.NotNil(t, project)
 	assert.Equal(t, org.UserID, user.ID)

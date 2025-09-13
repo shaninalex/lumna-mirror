@@ -12,8 +12,7 @@ import (
 )
 
 func Test_UniqueUserCode(t *testing.T) {
-	ctx := tdata.Ctx()
-	tdata.Clear(ctx)
+	ctx := tdata.Manager().Ctx
 
 	// Insert user with a known code
 	existingCode := "testuser123"

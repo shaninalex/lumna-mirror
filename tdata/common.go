@@ -13,14 +13,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var ctx context.Context
-var m *TestManager
-var db *gorm.DB
 var lock = sync.RWMutex{}
-
-func init() {
-	newTestManager()
-}
 
 // TestManager - test manager.
 type TestManager struct {
@@ -29,30 +22,21 @@ type TestManager struct {
 	Kratos kratos.IKratos
 }
 
-func newTestManager() {
-	ctx = context.Background()
+// Manager - manager.
+func Manager() *TestManager {
+	ctx := context.Background()
 	conf := base.NewConfig(os.Getenv("CONFIG_PATH"))
 	url := database.BuildDSN(conf)
-	db = database.InitDB(url)
+	db := database.InitDB(url)
 	ctx = context.WithValue(ctx, base.ContextDB, db)
-	m = &TestManager{
+
+	lock.Lock()
+	resetDatabase(ctx)
+	lock.Unlock()
+
+	return &TestManager{
 		DB:     db,
 		Ctx:    ctx,
 		Kratos: NewMockKratosService(),
 	}
-}
-
-// Manager - manager.
-func Manager() *TestManager {
-	return m
-}
-
-// Ctx - ctx.
-func Ctx() context.Context {
-	return ctx
-}
-
-// Clear - clear.
-func Clear(ctx context.Context) {
-	clearDatabase(ctx)
 }

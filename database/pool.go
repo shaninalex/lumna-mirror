@@ -9,6 +9,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // InitDB - init db.
@@ -19,7 +20,9 @@ func InitDB(dsn string) *gorm.DB {
 	const retryDelay = 5 * time.Second
 
 	for i := 1; i <= maxRetries; i++ {
-		gormDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		gormDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Silent),
+		})
 		if err != nil {
 			log.Printf("[DB]: Connection attempt %d/%d failed to open: %v", i, maxRetries, err)
 			time.Sleep(retryDelay)

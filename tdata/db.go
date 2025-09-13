@@ -6,21 +6,23 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/models"
 )
 
-func clearDatabase(ctx context.Context) {
-	_db := database.GetDB(ctx)
-	if err := _db.Exec(`
-		TRUNCATE TABLE 
-			epics,
-		    organizations,
-		    projects,
-		    sprints,
-		    task_statuses,
-		    tasks,
-		    users
-		RESTART IDENTITY CASCADE
-	`).Error; err != nil {
+func resetDatabase(ctx context.Context) {
+	db := database.GetDB(ctx)
+	err := db.Migrator().DropTable(
+		&models.User{},
+		&models.Task{},
+		&models.TaskStatus{},
+		&models.Epic{},
+		&models.Sprint{},
+		&models.Organization{},
+		&models.Project{},
+	)
+	if err != nil {
 		panic(err)
 	}
+
+	database.ApplyMigrations(db)
 }
