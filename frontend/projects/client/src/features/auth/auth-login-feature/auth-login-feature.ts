@@ -34,7 +34,7 @@ export class AuthLoginFeature {
                 if (err.redirect_browser_to) {
                     window.location.href = err.redirect_browser_to;
                 } else {
-                    this.form = err.error; // re-render with errors
+                    this.form = err; // re-render with errors
                 }
             },
         });
