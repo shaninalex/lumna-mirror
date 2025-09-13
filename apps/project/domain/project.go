@@ -11,7 +11,9 @@ import (
 	"gitlab.com/shaninalex/flowreon/apps/project/dto"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
 	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/models/builders"
 	"gorm.io/gorm"
 )
 
@@ -19,6 +21,7 @@ import (
 type ProjectReader interface {
 	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
 	Project(ctx context.Context, orgID uuid.UUID, projectCode string) (*models.Project, error)
+	CreateProject(ctx context.Context, userID, orgID uuid.UUID, projectDto *dto.ProjectDto) (*models.Project, error)
 }
 
 type StatusesReader interface {
@@ -57,7 +60,6 @@ func NewProjectManagement() *ProjectManagement {
 // Project - project.
 func (s *ProjectManagement) Project(ctx context.Context, orgID uuid.UUID, projectCode string) (*models.Project, error) {
 	var project models.Project
-
 	tx := database.GetDB(ctx).
 		WithContext(ctx).
 		Preload("Statuses.Tasks").
@@ -72,6 +74,21 @@ func (s *ProjectManagement) Project(ctx context.Context, orgID uuid.UUID, projec
 	}
 
 	return &project, nil
+}
+
+// CreateProject - create new project
+func (s *ProjectManagement) CreateProject(ctx context.Context, userID, orgID uuid.UUID, projectDto *dto.ProjectDto) (*models.Project, error) {
+	project := builders.NewProjectBuilder().
+		OrganizationID(orgID).
+		UserID(userID).
+		Title(projectDto.Title).
+		ProjectKey(utils.GenerateEntityCode("project")).
+		Build()
+	tx := database.GetDB(ctx).Create(project)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return project, nil
 }
 
 // List - lists all value.

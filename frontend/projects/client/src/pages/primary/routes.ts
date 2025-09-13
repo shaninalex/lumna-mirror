@@ -2,7 +2,7 @@ import {ResolveFn, Routes} from '@angular/router';
 import {PrimaryRoot} from './primary-root';
 import {Overview} from './overview/overview';
 import {overviewResolver} from './overview/overview.resolver';
-import {ProjectsList} from './projects-list/projects-list'
+import {ProjectsListPageComponent} from './projects-list/projects-list-page.component'
 import {projectListResolver} from './projects-list/projects-list.resolver';
 import {Store} from '@ngrx/store';
 import {inject} from '@angular/core';
@@ -31,7 +31,7 @@ export const mainRoutes: Routes = [
             },
             {
                 path: "projects",
-                component: ProjectsList,
+                component: ProjectsListPageComponent,
                 resolve: { projects: projectListResolver }
             },
             {

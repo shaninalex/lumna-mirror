@@ -9,3 +9,13 @@ export const SetProjectsAction = createAction(
 export const GetProjectsAction = createAction(
     "[project] get list",
 )
+
+export const SetProjectAction = createAction(
+    "[project] set",
+    props<{ payload: Project }>(),
+)
+
+export const CreateProjectAction = createAction(
+    "[project] create",
+    props<{ payload: Record<string, string> }>(),
+)

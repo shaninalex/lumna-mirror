@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
 	"gitlab.com/shaninalex/flowreon/apps/project/domain"
+	"gitlab.com/shaninalex/flowreon/apps/project/dto"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
@@ -46,6 +47,20 @@ func (s *ProjectHandler) HandleProjectTasksList(ctx *fiber.Ctx) error {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	return web.Success(ctx, adapter.NewTasksDto(tasks))
+}
+
+// HandleProjectCreate - handle project tasks list.
+func (s *ProjectHandler) HandleProjectCreate(ctx *fiber.Ctx) error {
+	var projectDto dto.ProjectDto
+	err := ctx.BodyParser(&projectDto)
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	project, err := s.manager.CreateProject(ctx.Context(), web.GetUserID(ctx), web.GetOrganizationID(ctx), &projectDto)
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	return web.Success(ctx, adapter.NewProjectDto(project))
 }
 
 // TaskFilter - task filter.

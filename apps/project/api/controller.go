@@ -21,7 +21,8 @@ type ProjectController struct {
 
 func (s *ProjectController) init() {
 	projectHandler := handler.NewProjectHandler(domain.NewProjectManagement())
-	s.router.Get("/api/project/list", projectHandler.HandleProjectsList)
+	s.router.Get("/api/project/", projectHandler.HandleProjectsList)
+	s.router.Post("/api/project/", projectHandler.HandleProjectCreate)
 	s.router.Get("/api/project/:projectCode/tasks", projectHandler.HandleProjectTasksList)
 
 	taskHandler := handler.NewTaskHandler(domain.NewProjectManagement())

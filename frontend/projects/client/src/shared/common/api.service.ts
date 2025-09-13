@@ -42,4 +42,14 @@ export class CommonApiService {
             // })
         );
     }
+
+    post<T>(url: string, data: any, params?: HttpParams): Observable<APIResponse<T>> {
+        let p = new HttpParams()
+        if (params) {
+            p = params
+        }
+        return this.http.post<APIResponse<T>>(url, data, {params: p, withCredentials: true}).pipe(
+            shareReplay(),
+        );
+    }
 }
