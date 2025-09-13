@@ -10,6 +10,8 @@ import {AppState} from '@client/shared/store';
 import {GetSessionAction} from '@client/entities/auth';
 import {CanMatchPrimarySection} from '@client/pages/primary/guard';
 import {AccountPageComponent} from './account-page/account-page';
+import {ProjectDetailPageComponent} from '@client/pages/primary/project-detail';
+import {ProjectsRootComponent} from '@client/pages/primary/projects-root';
 
 export const sessionResolver: ResolveFn<void> = () => {
     const store = inject(Store<AppState>);
@@ -31,8 +33,18 @@ export const mainRoutes: Routes = [
             },
             {
                 path: "projects",
-                component: ProjectsListPageComponent,
-                resolve: { projects: projectListResolver }
+                component: ProjectsRootComponent,
+                resolve: { projects: projectListResolver },
+                children: [
+                    {
+                        path: "",
+                        component: ProjectsListPageComponent,
+                    },
+                    {
+                        path: ":projectKey",
+                        component: ProjectDetailPageComponent,
+                    },
+                ]
             },
             {
                 path: "account",

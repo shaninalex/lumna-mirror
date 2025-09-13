@@ -14,7 +14,7 @@ import {Actions, ofType} from '@ngrx/effects';
     imports: [
         ProjectCardComponent,
         AsyncPipe,
-        NewProjectFormComponent
+        NewProjectFormComponent,
     ],
     template: `
         <div class="mb-4">
@@ -27,7 +27,7 @@ import {Actions, ofType} from '@ngrx/effects';
         </div>
 
         @if (projects$ | async; as projects) {
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2 overflow-auto">
                 @if (!projects?.length) {
                     there are no projects yet
                 }

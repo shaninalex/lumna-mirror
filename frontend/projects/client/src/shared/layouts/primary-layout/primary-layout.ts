@@ -13,7 +13,7 @@ import {Sidebar} from '@client/shared/layouts/primary-layout/components/sidebar/
             <fr-sidebar />
             <div class="flex flex-col flex-grow ">
                 <fr-header />
-                <div class="flex-grow p-4 border-t border-l border-slate-300 rounded-lg">
+                <div class="flex-grow p-4 border-t border-l border-slate-300 rounded-lg overflow-y-auto">
                     <ng-content></ng-content>
                 </div>
             </div>
