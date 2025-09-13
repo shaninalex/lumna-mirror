@@ -84,6 +84,15 @@ func (s *ProjectManagement) CreateProject(ctx context.Context, userID, orgID uui
 		Title(projectDto.Title).
 		ProjectKey(utils.GenerateEntityCode("project")).
 		Build()
+	project.Statuses = []*models.TaskStatus{
+		builders.NewIssueStatusBuilder().
+			Project(project).ProjectID(project.GetID()).Title("Todo").Index(0).Build(),
+		builders.NewIssueStatusBuilder().
+			Project(project).ProjectID(project.GetID()).Title("In Progress").Index(1).Build(),
+		builders.NewIssueStatusBuilder().
+			Project(project).ProjectID(project.GetID()).Title("Done").Index(2).Complete(true).Build(),
+	}
+
 	tx := database.GetDB(ctx).Create(project)
 	if tx.Error != nil {
 		return nil, tx.Error
