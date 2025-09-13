@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	userController "gitlab.com/shaninalex/flowreon/apps/user/api"
+	userApp "gitlab.com/shaninalex/flowreon/apps/user/api"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/internal/web"
@@ -23,9 +23,9 @@ func main() {
 
 	config := base.NewConfig(configPath)
 	db := database.InitDB(database.BuildDSN(config))
-	router := web.AuthRouter(config, db, "user")
-	userController.NewUserController(router)
-	if err := router.Listen(fmt.Sprintf(":%s", config.String("user.port"))); err != nil {
+	router := web.AuthRouter(config, db, "user_service")
+	userApp.NewUserController(router)
+	if err := router.Listen(fmt.Sprintf(":%s", config.String("user_service.port"))); err != nil {
 		panic(err)
 	}
 }

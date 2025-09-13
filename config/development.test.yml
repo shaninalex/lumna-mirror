@@ -7,6 +7,9 @@ project:
 org:
   port: 8002
 
+user_service:
+  port: 8003
+
 app:
   secret_key: "very-secret-key"
 

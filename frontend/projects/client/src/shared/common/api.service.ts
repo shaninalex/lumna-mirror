@@ -1,8 +1,7 @@
-import {catchError, EMPTY, Observable, shareReplay} from 'rxjs';
+import {Observable, shareReplay} from 'rxjs';
 import {APIResponse} from '@client/shared/models';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {inject} from '@angular/core';
-// import {UiService} from '@client/shared/ui';
 
 
 export class CommonApiService {

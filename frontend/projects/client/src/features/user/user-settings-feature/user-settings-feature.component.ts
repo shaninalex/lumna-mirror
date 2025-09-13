@@ -1,12 +1,26 @@
 import {Component, inject, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {Language, Settings, Theme, WeekStartDay} from '@client/entities/user';
+import {selectUser, Settings, SetUserAction, UpdateUserSettingsAction, UserModel} from '@client/entities/user';
+import {Store} from '@ngrx/store';
+import {AppState} from '@client/shared/store';
+import {filter} from 'rxjs';
+import {LoaderComponent} from '@client/shared/ui/loader';
+import {Actions, ofType} from '@ngrx/effects';
 
 @Component({
     selector: 'fr-settings-form-feature',
     standalone: true,
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, LoaderComponent],
     template: `
+        @if (user) {
+            <div class="flex items-center gap-2">
+                <div>Username:</div>
+                <div class="text-lg font-bold">{{ user.code }}</div>
+            </div>
+        }
+
+        <hr class="my-4 border-slate-300">
+
         <form [formGroup]="form" (ngSubmit)="save()">
             <div class="mb-4">
                 <label for="theme">Theme</label>
@@ -44,42 +58,66 @@ import {Language, Settings, Theme, WeekStartDay} from '@client/entities/user';
             <div class="mb-4">
                 <label for="week_start_day">Week Start Day</label>
                 <select id="week_start_day" formControlName="week_start_day" class="input">
-                    @for (d of weekDays; track d) {
-                        <option [value]="d">{{ d }}</option>
+                    @for (d of weekDays; track $index) {
+                        <option [value]="$index">{{ d }}</option>
                     }
                 </select>
             </div>
 
-            <button class="btn" type="submit">Save</button>
+            @if (loading) {
+                <ui-loader />
+            } @else {
+                <button class="btn" type="submit">Save</button>
+            }
         </form>
     `
 })
 export class SettingsFormComponent implements OnInit {
     private fb = inject(FormBuilder);
-
+    private actions$ = inject(Actions);
+    private store = inject(Store<AppState>);
+    loading: boolean = false;
+    user: UserModel
     weekDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
     form: FormGroup<{
-        theme: FormControl<Theme>;
-        language: FormControl<Language>;
+        theme: FormControl<string>;
+        language: FormControl<string>;
         timezone: FormControl<string>;
         date_format: FormControl<string>;
         time_format: FormControl<string>;
-        week_start_day: FormControl<WeekStartDay>;
+        week_start_day: FormControl<string>;
     }>;
 
+    constructor() {
+        this.actions$.pipe(ofType(SetUserAction)).subscribe(() => this.loading = false)
+    }
+
     ngOnInit() {
+        this.store.select(selectUser).pipe(filter(user => !!user)).subscribe(user => {
+            if (!user) return
+            this.user = user
+            this.form.setValue({
+                theme: user.settings.theme,
+                language: user.settings.language,
+                timezone: user.settings.timezone,
+                date_format: user.settings.date_format,
+                time_format: user.settings.time_format,
+                week_start_day: user.settings.week_start_day,
+            })
+        })
         this.form = this.fb.group({
-            theme: this.fb.control<Theme>(Theme.Light, { nonNullable: true }),
-            language: this.fb.control<Language>(Language.EN, { nonNullable: true }),
+            theme: this.fb.control<string>("light", { nonNullable: true }),
+            language: this.fb.control<string>("en", { nonNullable: true }),
             timezone: this.fb.control<string>('', { nonNullable: true }),
             date_format: this.fb.control<string>('YYYY-MM-DD', { nonNullable: true }),
             time_format: this.fb.control<string>('HH:mm', { nonNullable: true }),
-            week_start_day: this.fb.control<WeekStartDay>(WeekStartDay.Monday, { nonNullable: true }),
+            week_start_day: this.fb.control<string>("0", { nonNullable: true }),
         });
     }
 
     save() {
+        this.loading = true
         const settings: Settings = this.form.value as Settings;
-        console.log(settings);
+        this.store.dispatch(UpdateUserSettingsAction({ payload: settings }))
     }
 }

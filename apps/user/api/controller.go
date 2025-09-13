@@ -27,6 +27,6 @@ func (s *UserController) init() {
 
 func (s *UserController) setRoutes() {
 	h := handler.NewUserHandler(domain.NewUserService())
-	s.router.Get("/api/user", h.HandleGetUser)
+	s.router.Get("/api/user/me", h.HandleGetUser)
 	s.router.Post("/api/user/settings", h.HandleUpdateSettings)
 }

@@ -1,4 +1,4 @@
-import {createAction} from '@ngrx/store';
+import {createAction, props} from '@ngrx/store';
 import {UserModel, Settings} from '@client/entities/user';
 
 export const GetUserAction = createAction(
@@ -7,10 +7,10 @@ export const GetUserAction = createAction(
 
 export const SetUserAction = createAction(
     "[user] set",
-    prompt<{ payload: UserModel }>(),
+    props<{ payload: UserModel }>(),
 )
 
-export const UpdateUserSettings = createAction(
+export const UpdateUserSettingsAction = createAction(
     "[user] update settings",
-    prompt<{ payload: Settings }>(),
+    props<{ payload: Settings }>(),
 )

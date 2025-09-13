@@ -1,8 +1,12 @@
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
-import {catchError, EMPTY, exhaustMap, map} from 'rxjs';
+import {catchError, EMPTY, exhaustMap, map, of} from 'rxjs';
 import {UserService} from '@client/entities/user';
-import {GetUserAction, SetUserAction, UpdateUserSettings} from '@client/entities/user/model/user.actions';
+import {
+    GetUserAction,
+    SetUserAction,
+    UpdateUserSettingsAction
+} from '@client/entities/user/model/user.actions';
 
 export const GetUserEffect = createEffect(
     (
@@ -26,7 +30,7 @@ export const UpdateUserSettingsEffect = createEffect(
         service = inject(UserService),
     ) => {
         return actions$.pipe(
-            ofType(UpdateUserSettings),
+            ofType(UpdateUserSettingsAction),
             exhaustMap((action) => service.updateUserSettings(action.payload).pipe(
                 map(result => SetUserAction({payload: result})),
                 catchError(() => EMPTY)

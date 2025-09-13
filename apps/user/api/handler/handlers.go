@@ -7,6 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
+	"gitlab.com/shaninalex/flowreon/apps/user/dto"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/models"
 )
@@ -28,7 +29,7 @@ func (s *UserHandler) HandleGetUser(ctx *fiber.Ctx) error {
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
-	return web.Success(ctx, user)
+	return web.Success(ctx, dto.ToUserDto(user))
 }
 
 // HandleUpdateSettings - update user settings
@@ -41,5 +42,9 @@ func (s *UserHandler) HandleUpdateSettings(ctx *fiber.Ctx) error {
 	if err != nil {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
-	return web.Success(ctx, nil, "Settings updated")
+	user, err := s.manager.GetUser(ctx.Context(), web.GetUserID(ctx))
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	return web.Success(ctx, dto.ToUserDto(user), "Settings updated")
 }
