@@ -37,9 +37,7 @@ export class PrimaryRoot implements OnInit, OnDestroy {
         this._sub.add(
             this.store.select(selectSession).pipe(
                 filter(session => !!session),
-                tap(() => {
-                    this.ready = true;
-                }),
+                tap(() => this.ready = true),
             ).subscribe()
         )
     }

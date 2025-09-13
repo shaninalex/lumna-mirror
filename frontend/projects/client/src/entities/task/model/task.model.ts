@@ -18,7 +18,7 @@ export interface Task {
     deleted_at?: Date
 }
 
-function NewTask(): Task {
+export function NewTask(): Task {
     return {
         id: uuidv4(),
         creator_id: "",
@@ -35,4 +35,10 @@ function NewTask(): Task {
         created_at: new Date(),
         updated_at: new Date(),
     }
+}
+
+export interface CreateTaskDto {
+    title: string
+    status_id: string
+    project_code: string
 }

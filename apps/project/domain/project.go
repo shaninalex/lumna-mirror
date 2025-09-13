@@ -11,7 +11,9 @@ import (
 	"gitlab.com/shaninalex/flowreon/apps/project/dto"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
 	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/models/builders"
 	"gorm.io/gorm"
 )
 
@@ -19,6 +21,10 @@ import (
 type ProjectReader interface {
 	List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error)
 	Project(ctx context.Context, orgID uuid.UUID, projectCode string) (*models.Project, error)
+}
+
+type ProjectWriter interface {
+	CreateProject(ctx context.Context, userID, orgID uuid.UUID, projectDto *dto.ProjectDto) (*models.Project, error)
 }
 
 type StatusesReader interface {
@@ -35,11 +41,13 @@ type TaskReader interface {
 type TaskWriter interface {
 	PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *dto.ChangeTaskStatusDTO) error
 	TaskUpdate(ctx context.Context, orgID uuid.UUID, projectCode, taskCode string, data *adapter.UpdateTaskData) error
+	TaskCreate(ctx context.Context, orgID, userID uuid.UUID, taskDto *dto.CreateTaskDto) (*models.Task, error)
 }
 
 // ProjectManager - project manager.
 type ProjectManager interface {
 	ProjectReader
+	ProjectWriter
 	TaskReader
 	TaskWriter
 }
@@ -54,10 +62,9 @@ func NewProjectManagement() *ProjectManagement {
 	return &ProjectManagement{}
 }
 
-// Project - project.
+// Project - project. TODO: should be GetProject ( do not forget the verb! )
 func (s *ProjectManagement) Project(ctx context.Context, orgID uuid.UUID, projectCode string) (*models.Project, error) {
 	var project models.Project
-
 	tx := database.GetDB(ctx).
 		WithContext(ctx).
 		Preload("Statuses.Tasks").
@@ -74,11 +81,37 @@ func (s *ProjectManagement) Project(ctx context.Context, orgID uuid.UUID, projec
 	return &project, nil
 }
 
+// CreateProject - create new project
+func (s *ProjectManagement) CreateProject(ctx context.Context, userID, orgID uuid.UUID, projectDto *dto.ProjectDto) (*models.Project, error) {
+	project := builders.NewProjectBuilder().
+		OrganizationID(orgID).
+		UserID(userID).
+		Title(projectDto.Title).
+		ProjectKey(utils.GenerateEntityCode("project")).
+		Build()
+	project.Statuses = []*models.TaskStatus{
+		builders.NewIssueStatusBuilder().
+			Project(project).ProjectID(project.GetID()).Title("Todo").Index(0).Build(),
+		builders.NewIssueStatusBuilder().
+			Project(project).ProjectID(project.GetID()).Title("In Progress").Index(1).Build(),
+		builders.NewIssueStatusBuilder().
+			Project(project).ProjectID(project.GetID()).Title("Done").Index(2).Complete(true).Build(),
+	}
+
+	tx := database.GetDB(ctx).Create(project)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return project, nil
+}
+
 // List - lists all value.
 func (s *ProjectManagement) List(ctx context.Context, orgID uuid.UUID) ([]*models.Project, error) {
 	db := database.GetDB(ctx)
 	var projects []*models.Project
-	result := db.Find(&projects).Where("organization_id = ?", orgID)
+	result := db.Preload("Statuses").
+		Find(&projects).
+		Where("organization_id = ?", orgID)
 	if result.Error != nil {
 		if result.Error.Error() == "record not found" {
 			return nil, apperrors.ProjectNotFound
@@ -103,7 +136,7 @@ func (s *ProjectManagement) TasksList(ctx context.Context, orgID uuid.UUID, proj
 }
 
 // PatchTaskStatus - patch task status.
-func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode string, taskCode string, payload *dto.ChangeTaskStatusDTO) error {
+func (s *ProjectManagement) PatchTaskStatus(ctx context.Context, orgID uuid.UUID, projectCode, taskCode string, payload *dto.ChangeTaskStatusDTO) error {
 	db := database.GetDB(ctx)
 	project, err := s.Project(ctx, orgID, projectCode)
 	if err != nil {
@@ -168,4 +201,27 @@ func (s *ProjectManagement) TaskUpdate(ctx context.Context, orgID uuid.UUID, pro
 		return errors.Join(apperrors.TaskUnableToPatch, tx.Error)
 	}
 	return nil
+}
+
+// TaskCreate - create new task.
+func (s *ProjectManagement) TaskCreate(ctx context.Context, orgID, userID uuid.UUID, taskDto *dto.CreateTaskDto) (*models.Task, error) {
+	db := database.GetDB(ctx)
+	project, err := s.Project(ctx, orgID, taskDto.ProjectCode)
+	if err != nil {
+		return nil, err
+	}
+	task := models.Task{
+		UserID:         userID,
+		ProjectID:      project.GetID(),
+		Code:           utils.GenerateEntityCode("task"),
+		TaskStatusID:   taskDto.StatusID,
+		Title:          taskDto.Title,
+		OrganizationID: orgID,
+		ListIndex:      0,
+	}
+	tx := db.Create(&task)
+	if tx.Error != nil {
+		return nil, errors.Join(apperrors.TaskUnableToPatch, tx.Error)
+	}
+	return &task, nil
 }

@@ -18,12 +18,11 @@ import (
 
 func Test_HandleGetByUser(t *testing.T) {
 	m := tdata.Manager()
-	tdata.Clear(m.Ctx)
 
 	org, user, _ := tdata.CreatePack(m.Ctx)
 	cookie := tdata.AddSession(user)
 
-	r := tdata.AuthTestRouter()
+	r := tdata.AuthTestRouter(m.Ctx)
 	handlers := handler.NewOrganizationHandler(domain.NewOrganizationAPI())
 	r.Get("/", handlers.HandleGetByUser)
 	req, _ := http.NewRequest("GET", "/", nil)

@@ -1,3 +1,23 @@
+## 0.7.0 (2025-09-13)
+
+### Feat
+
+- task board view, create form, update status
+- **ui**: projects list + simple create form
+- create org on user registration 2
+- create org on user registration
+- app errors effects + join or create org page
+- dispatch app errors
+
+### Fix
+
+- **ui**: project detail route + template
+- **ui**: auth flows
+- tests
+- tests
+- user settings
+- create org on user registration
+
 ## 0.6.0 (2025-09-09)
 
 ### Feat

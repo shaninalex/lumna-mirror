@@ -11,11 +11,12 @@ import (
 
 // ProjectDto - project dto.
 type ProjectDto struct {
-	ID         uuid.UUID `json:"id"`
-	Title      string    `json:"title"`
-	ProjectKey string    `json:"project_key"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
+	ID         uuid.UUID        `json:"id"`
+	Title      string           `json:"title"`
+	ProjectKey string           `json:"project_key"`
+	Statuses   []*TaskStatusDto `json:"statuses"`
+	CreatedAt  time.Time        `json:"created_at"`
+	UpdatedAt  time.Time        `json:"updated_at"`
 }
 
 // TaskDto - task dto.
@@ -45,7 +46,7 @@ type TaskStatusDto struct {
 	Complete    bool                     `json:"complete"`
 	Index       uint                     `json:"index"`
 	Config      *models.TaskStatusConfig `json:"config"`
-	Tasks       []*TaskDto               `json:"tasks"`
+	//Tasks       []*TaskDto               `json:"tasks"`
 }
 
 // ChangeTaskStatusDTO - change task status dto.
@@ -54,4 +55,10 @@ type ChangeTaskStatusDTO struct {
 	ToStatusID   uuid.UUID `json:"to_status"`
 	FromIdx      uint      `json:"from_idx"`
 	ToIdx        uint      `json:"to_idx"`
+}
+
+type CreateTaskDto struct {
+	Title       string    `json:"title"`
+	StatusID    uuid.UUID `json:"status_id"`
+	ProjectCode string    `json:"project_code"`
 }

@@ -31,6 +31,7 @@ func CreateUser(ctx context.Context) *models.User {
 	user := builders.NewUserBuilder().
 		ID(uuid.New()).
 		Code(uuid.NewString()).
+		Settings(models.DefaultUserSettings.ToString()).
 		Build()
 	result := database.GetDB(ctx).Create(&user)
 	if result.Error != nil {
@@ -66,6 +67,10 @@ func CreateProject(ctx context.Context, org *models.Organization, user *models.U
 func CreatePack(ctx context.Context) (*models.Organization, *models.User, *models.Project) {
 	user := CreateUser(ctx)
 	org := CreateOrganisation(ctx, user)
+	user.Organization = org
+	user.OrganizationID = &org.ID
+	db := database.GetDB(ctx)
+	db.Save(user)
 	project := CreateProject(ctx, org, user)
 	return org, user, project
 }

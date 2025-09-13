@@ -4,14 +4,20 @@ import {environment as env} from '@client/environments/environment.development'
 import {Project} from '@client/entities/project';
 import {CommonApiService} from '@client/shared/common';
 
-export const PROJECT_URLS = {
-    List: `${env.API_ROOT}/api/project/list`,
+const projectUrl = {
+    Root: `${env.API_ROOT}/api/project/`,
 }
 
 @Injectable({providedIn: "root"}) // TODO: does it has to be root?
 export class ProjectService extends CommonApiService {
     public List(): Observable<Array<Project>> {
-        return this.get<Array<Project>>(PROJECT_URLS.List).pipe(
+        return this.get<Array<Project>>(projectUrl.Root).pipe(
+            map(data => data.data),
+        );
+    }
+
+    public Create(payload: Record<string, string>): Observable<Project> {
+        return this.post<Project>(projectUrl.Root, payload).pipe(
             map(data => data.data),
         );
     }

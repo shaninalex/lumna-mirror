@@ -31,10 +31,10 @@ export class AuthLoginFeature {
                 }
             },
             error: (err) => {
-                if (err.error?.redirect_browser_to) {
-                    window.location.href = err.error.redirect_browser_to;
+                if (err.redirect_browser_to) {
+                    window.location.href = err.redirect_browser_to;
                 } else {
-                    this.form = err.error; // re-render with errors
+                    this.form = err; // re-render with errors
                 }
             },
         });

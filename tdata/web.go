@@ -3,15 +3,19 @@
 package tdata
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
 // AuthTestRouter - auth router.
-func AuthTestRouter() *fiber.App {
+func AuthTestRouter(ctx context.Context) *fiber.App {
+	db := database.GetDB(ctx)
+
 	router := web.DefaultRouter(db, "test_router")
 	kratosClient := NewMockKratosService()
 	router.Use(web.NewAuthMiddleware(kratosClient))

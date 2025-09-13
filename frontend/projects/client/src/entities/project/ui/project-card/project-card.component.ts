@@ -10,7 +10,7 @@ import {DatePipe} from '@angular/common';
         DatePipe
     ],
     template: `
-        <a [routerLink]="['projects', project.project_key ]" class="block border-lg bg-white p-4 border rounded-lg border-slate-300 cursor-pointer">
+        <a [routerLink]="[ project.project_key ]" class="block border-lg bg-white p-4 border rounded-lg border-slate-300 cursor-pointer">
             <div class="font-bold font-lg mb-2">{{ project.title }}</div>
             <div>Last updated: {{ project.updated_at | date }}</div>
             <div class="text-slate-400 text-sm">[{{ project.project_key }}]</div>

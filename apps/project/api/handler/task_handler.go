@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
 	"gitlab.com/shaninalex/flowreon/apps/project/domain"
+	"gitlab.com/shaninalex/flowreon/apps/project/dto"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
@@ -56,4 +57,17 @@ func (s *TaskHandler) HandleTaskUpdate(ctx *fiber.Ctx) error {
 		return web.Error(ctx, http.StatusBadRequest, err)
 	}
 	return web.Success(ctx, nil, "Task saved")
+}
+
+// HandleTaskCreate - create task handler
+func (s *TaskHandler) HandleTaskCreate(ctx *fiber.Ctx) error {
+	data, err := web.ParseBody[dto.CreateTaskDto](ctx)
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	task, err := s.manager.TaskCreate(ctx.Context(), web.GetOrganizationID(ctx), web.GetUserID(ctx), data)
+	if err != nil {
+		return web.Error(ctx, http.StatusBadRequest, err)
+	}
+	return web.Success(ctx, adapter.NewTaskDto(task), "Task created")
 }

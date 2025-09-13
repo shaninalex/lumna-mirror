@@ -114,6 +114,13 @@ type UserSettings struct {
 	WeekStartDay string `json:"week_start_day" validate:"required"`
 }
 
+func (s *UserSettings) ToString() string {
+	if b, err := json.Marshal(s); err == nil {
+		return string(b)
+	}
+	return "{}"
+}
+
 var DefaultUserSettings = UserSettings{
 	Theme:        "light",
 	Language:     "en",

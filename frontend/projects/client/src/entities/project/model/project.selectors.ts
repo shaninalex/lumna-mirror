@@ -1,9 +1,15 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {projectsAdapter, ProjectState} from '@client/entities/project';
+import {byMostRecent} from '@client/shared/common';
+import {Project, projectsAdapter, ProjectState} from '@client/entities/project';
 
 export const selectProjectsFeature = createFeatureSelector<ProjectState>('project');
 export const projectsSelectors = projectsAdapter.getSelectors();
 export const selectProjects = createSelector(
     selectProjectsFeature,
-    projectsSelectors.selectAll,
+    state => projectsSelectors.selectAll(state).sort(byMostRecent)
 );
+
+export const selectProject = (code: string) => createSelector(
+    selectProjectsFeature,
+    (state: ProjectState) => projectsSelectors.selectAll(state).find(p => p.project_key === code)
+)

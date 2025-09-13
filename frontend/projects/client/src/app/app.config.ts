@@ -11,8 +11,9 @@ import {provideStore} from '@ngrx/store';
 import {provideStoreDevtools} from '@ngrx/store-devtools';
 import {provideEffects} from '@ngrx/effects';
 import {provideRouterStore} from '@ngrx/router-store';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {effects, reducers} from './app.store';
+import {GlobalInterceptor} from '@client/app/global.interceptor';
 
 
 export const appConfig: ApplicationConfig = {
@@ -25,5 +26,10 @@ export const appConfig: ApplicationConfig = {
         provideRouterStore(),
         provideStore(reducers),
         provideStoreDevtools({maxAge: 25, logOnly: !isDevMode()}),
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: GlobalInterceptor,
+            multi: true,
+        }
     ]
 };

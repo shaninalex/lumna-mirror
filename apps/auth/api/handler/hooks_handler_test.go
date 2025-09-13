@@ -22,7 +22,6 @@ import (
 
 func Test_AuthHooks_HandleHookRegister(t *testing.T) {
 	m := tdata.Manager()
-	tdata.Clear(m.Ctx)
 	r := web.DefaultRouter(m.DB, "test_router")
 	identity := &ory.Identity{
 		Id: uuid.NewString(),

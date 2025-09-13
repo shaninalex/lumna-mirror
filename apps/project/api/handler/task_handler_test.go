@@ -24,12 +24,11 @@ import (
 
 func Test_HandleTaskPatchStatus(t *testing.T) {
 	m := tdata.Manager()
-	tdata.Clear(m.Ctx)
 
 	_, user, project := tdata.CreatePack(m.Ctx)
 	cookie := tdata.AddSession(user)
 	statuses := tdata.CreateRandomTasksAndStatuses(m.Ctx, project)
-	r := tdata.AuthTestRouter()
+	r := tdata.AuthTestRouter(m.Ctx)
 	handlers := handler.NewTaskHandler(domain.NewProjectManagement())
 	r.Patch("/api/project/:projectCode/tasks/:taskCode/status", handlers.HandleTaskPatchStatus)
 
@@ -66,12 +65,11 @@ func Test_HandleTaskPatchStatus(t *testing.T) {
 
 func Test_HandleTaskDetail(t *testing.T) {
 	m := tdata.Manager()
-	tdata.Clear(m.Ctx)
 
 	_, user, project := tdata.CreatePack(m.Ctx)
 	cookie := tdata.AddSession(user)
 	tasks := tdata.CreateTasks(m.Ctx, project)
-	r := tdata.AuthTestRouter()
+	r := tdata.AuthTestRouter(m.Ctx)
 	handlers := handler.NewTaskHandler(domain.NewProjectManagement())
 	r.Get("/api/project/:projectCode/tasks/:taskCode", handlers.HandleTaskDetail)
 
@@ -110,12 +108,11 @@ func Test_HandleTaskDetail(t *testing.T) {
 
 func Test_HandleTaskUpdate(t *testing.T) {
 	m := tdata.Manager()
-	tdata.Clear(m.Ctx)
 
 	_, user, project := tdata.CreatePack(m.Ctx)
 	cookie := tdata.AddSession(user)
 	statuses := tdata.CreateRandomTasksAndStatuses(m.Ctx, project)
-	r := tdata.AuthTestRouter()
+	r := tdata.AuthTestRouter(m.Ctx)
 	handlers := handler.NewTaskHandler(domain.NewProjectManagement())
 	r.Patch("/api/project/:projectCode/tasks/:taskCode", handlers.HandleTaskUpdate)
 

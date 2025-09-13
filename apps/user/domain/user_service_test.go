@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
+	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/tdata"
 )
 
@@ -23,5 +24,18 @@ func Test_UserService_GetUser(t *testing.T) {
 }
 
 func Test_UserService_UpdateUserSettings(t *testing.T) {
-	panic("implement me")
+	m := tdata.Manager()
+	testUser := tdata.CreateUser(m.Ctx)
+	service := domain.NewUserService()
+
+	settings := testUser.GetSettings()
+	settings.Language = "fr"
+
+	err := service.UpdateUserSettings(m.Ctx, testUser.GetID(), settings)
+	assert.NoError(t, err)
+
+	var user models.User
+	m.DB.First(&user, testUser.GetID())
+	assert.Equal(t, settings, user.GetSettings())
+	assert.Equal(t, "fr", user.GetSettings().Language)
 }

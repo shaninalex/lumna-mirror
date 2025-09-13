@@ -33,10 +33,12 @@ export class AuthRegistrationFeature {
                 }
             },
             error: (err) => {
-                if (err.error.error.id === "browser_location_change_required") {
-                    window.location.href = err.error.redirect_browser_to;
+                if ('error' in err ) {
+                    if (err.error.error.id === "browser_location_change_required") {
+                        window.location.href = err.error.redirect_browser_to;
+                    }
                 } else {
-                    this.form = err.error;
+                    this.form = err;
                 }
             },
         });

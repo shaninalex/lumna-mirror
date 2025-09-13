@@ -12,8 +12,7 @@ import (
 )
 
 func Test_GetOrganizationByUserID(t *testing.T) {
-	ctx := tdata.Ctx()
-	tdata.Clear(ctx)
+	ctx := tdata.Manager().Ctx
 	user := tdata.CreateUser(ctx)
 	_org := tdata.CreateOrganisation(ctx, user)
 
@@ -25,8 +24,7 @@ func Test_GetOrganizationByUserID(t *testing.T) {
 }
 
 func Test_GetOrganizationNotFound(t *testing.T) {
-	ctx := tdata.Ctx()
-	tdata.Clear(ctx)
+	ctx := tdata.Manager().Ctx
 	user := tdata.CreateUser(ctx)
 
 	api := domain.NewOrganizationAPI()
