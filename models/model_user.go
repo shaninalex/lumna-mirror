@@ -105,13 +105,29 @@ type UserTraits struct {
 	Name  TraitsName `json:"name"`
 }
 
+type Language string
+
+const (
+	LanguageEn Language = "en"
+	LanguageUa Language = "ua"
+	LanguageDe Language = "de"
+)
+
+type Theme string
+
+const (
+	ThemeLight  Theme = "light"
+	ThemeDark   Theme = "dark"
+	ThemeDevice Theme = "device"
+)
+
 type UserSettings struct {
-	Theme        string `json:"theme" validate:"required"`
-	Language     string `json:"language" validate:"required"`
-	Timezone     string `json:"timezone" validate:"required"`
-	DateFormat   string `json:"date_format" validate:"required"`
-	TimeFormat   string `json:"time_format" validate:"required"`
-	WeekStartDay string `json:"week_start_day" validate:"required"`
+	Theme        Theme    `json:"theme" validate:"required"`
+	Language     Language `json:"language" validate:"required"`
+	Timezone     string   `json:"timezone" validate:"required"`
+	DateFormat   string   `json:"date_format" validate:"required"`
+	TimeFormat   string   `json:"time_format" validate:"required"`
+	WeekStartDay string   `json:"week_start_day" validate:"required"`
 }
 
 func (s *UserSettings) ToString() string {

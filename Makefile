@@ -52,6 +52,9 @@ start_project:
 start_org:
 	go run apps/org/cmd/main.go ./config/development.local.yml
 
+start_user:
+	go run apps/user/cmd/main.go ./config/development.local.yml
+
 db_backup:
 	docker exec -t flowreon-postgres-1 pg_dump -U postgres postgres > ./database/data/db_backup.sql
 

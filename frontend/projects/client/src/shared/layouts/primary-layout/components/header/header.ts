@@ -30,6 +30,7 @@ import {UserLogoutFeature} from '@client/features/user';
                         <div class="bg-white flex flex-col gap-2 border p-2 rounded mt-2" cdkMenu>
                             <button cdkMenuItem>Refresh</button>
                             <a [routerLink]="['account']" cdkMenuItem>Account</a>
+                            <a [routerLink]="['settings']" cdkMenuItem>Settings</a>
                             <button cdkMenuItem>Help</button>
                             <kr-user-logout-feature />
                         </div>

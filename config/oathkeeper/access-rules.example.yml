@@ -1,7 +1,7 @@
-- id: "backend"
+- id: "auth-service"
   upstream:
     preserve_host: true
-    url: "http://host.docker.internal:8000"
+    url: "http://localhost:8000"
   match:
     url: "http://localhost:8080/api/auth/<**>"
     methods:
@@ -14,5 +14,62 @@
     - handler: noop
   mutators:
     - handler: noop
+  authorizer:
+    handler: allow
+
+- id: "project-service"
+  upstream:
+    preserve_host: true
+    url: "http://localhost:8001"
+  match:
+    url: "http://localhost:8080/api/project/<**>"
+    methods:
+      - POST
+      - GET
+      - PUT
+      - PATCH
+      - DELETE
+  authenticators:
+    - handler: cookie_session
+  mutators:
+    - handler: header
+  authorizer:
+    handler: allow
+
+- id: "org-service"
+  upstream:
+    preserve_host: true
+    url: "http://localhost:8002"
+  match:
+    url: "http://localhost:8080/api/org/<**>"
+    methods:
+      - POST
+      - GET
+      - PUT
+      - PATCH
+      - DELETE
+  authenticators:
+    - handler: cookie_session
+  mutators:
+    - handler: header
+  authorizer:
+    handler: allow
+
+- id: "user-service"
+  upstream:
+    preserve_host: true
+    url: "http://localhost:8003"
+  match:
+    url: "http://localhost:8080/api/user/<**>"
+    methods:
+      - POST
+      - GET
+      - PUT
+      - PATCH
+      - DELETE
+  authenticators:
+    - handler: cookie_session
+  mutators:
+    - handler: header
   authorizer:
     handler: allow

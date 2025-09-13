@@ -10,6 +10,7 @@ import {
     toProfilePayload,
     toTOTPPayload
 } from '@client/entities/user/api/helpers';
+import {Settings, UserModel} from '@client/entities/user';
 
 @Injectable()
 export class UserService {
@@ -51,5 +52,13 @@ export class UserService {
 
         const params = new HttpParams().set("flow", flowID)
         return this.http.post<SettingsFlow>(`${environment.KRATOS_ROOT}/self-service/settings`, payload, { params, withCredentials: true })
+    }
+
+    getUser(): Observable<UserModel> {
+        return this.http.get<UserModel>(`${environment.BASE_URL}/api/user`, { withCredentials: true })
+    }
+
+    updateUserSettings(settings: Settings): Observable<UserModel> {
+        return this.http.post<UserModel>(`${environment.BASE_URL}/api/user/settings`, settings, { withCredentials: true })
     }
 }
