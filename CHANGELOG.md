@@ -1,3 +1,15 @@
+## 0.8.1 (2025-09-14)
+
+### Fix
+
+- remove redundant types
+
+## 0.8.0 (2025-09-14)
+
+### Feat
+
+- user settings form + settings api
+
 ## 0.7.0 (2025-09-13)
 
 ### Feat

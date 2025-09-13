@@ -21,10 +21,10 @@ export const appConfig: ApplicationConfig = {
         provideBrowserGlobalErrorListeners(),
         provideZoneChangeDetection({eventCoalescing: true}),
         provideRouter(routes),
-        provideEffects(effects),
         provideHttpClient(withInterceptorsFromDi()),
         provideRouterStore(),
         provideStore(reducers),
+        provideEffects(effects),
         provideStoreDevtools({maxAge: 25, logOnly: !isDevMode()}),
         {
             provide: HTTP_INTERCEPTORS,

@@ -8,7 +8,7 @@ import {
     SetProjectAction,
     SetProjectsAction
 } from '@client/entities/project/model/project.actions';
-import {catchError, EMPTY, exhaustMap, map, of, switchMap} from 'rxjs';
+import {catchError, EMPTY, exhaustMap, map, of} from 'rxjs';
 import {ProjectService} from '@client/entities/project/api/project.service';
 
 export const getProjectsEffect = createEffect(
@@ -20,7 +20,7 @@ export const getProjectsEffect = createEffect(
         return actions$.pipe(
             ofType(GetProjectsAction.type),
             exhaustMap(() => service.List().pipe(
-                switchMap(data => of(SetProjectsAction({payload: data}))),
+                map(data => SetProjectsAction({payload: data})),
 
                 // This errors we can catch in global.interceptor
                 catchError((error: HttpErrorResponse) => {

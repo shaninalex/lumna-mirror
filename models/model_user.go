@@ -5,6 +5,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -80,7 +81,8 @@ func (s *User) GetSettings() *UserSettings {
 	var settings UserSettings
 	err := json.Unmarshal([]byte(s.Settings), &settings)
 	if err != nil {
-		panic(err)
+		log.Println("User.GetSettings. Error:", err)
+		return &DefaultUserSettings
 	}
 	return &settings
 }
@@ -111,7 +113,7 @@ type UserSettings struct {
 	Timezone     string `json:"timezone" validate:"required"`
 	DateFormat   string `json:"date_format" validate:"required"`
 	TimeFormat   string `json:"time_format" validate:"required"`
-	WeekStartDay string `json:"week_start_day" validate:"required"`
+	WeekStartDay uint   `json:"week_start_day" validate:"required"`
 }
 
 func (s *UserSettings) ToString() string {
@@ -127,5 +129,5 @@ var DefaultUserSettings = UserSettings{
 	Timezone:     "UTC",
 	DateFormat:   "02.01.2006",
 	TimeFormat:   "15:04",
-	WeekStartDay: "1",
+	WeekStartDay: 1,
 }

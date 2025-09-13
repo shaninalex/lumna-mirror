@@ -1,7 +1,14 @@
-import {Identity} from '@ory/kratos-client';
-
-
 export interface UserModel {
-    nickname: string
-    identity: Identity
+    id: string
+    settings: Settings
+    code: string
+}
+
+export interface Settings {
+    theme: string
+    language: string
+    timezone: string
+    date_format: string
+    time_format: string
+    week_start_day: string
 }

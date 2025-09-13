@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {SettingsFlow} from '@ory/kratos-client';
 import {environment} from '@client/environments/environment.development';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -10,8 +10,10 @@ import {
     toProfilePayload,
     toTOTPPayload
 } from '@client/entities/user/api/helpers';
+import {Settings, UserModel} from '@client/entities/user';
+import {APIResponse} from '@client/shared/models';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UserService {
     http = inject(HttpClient);
 
@@ -51,5 +53,17 @@ export class UserService {
 
         const params = new HttpParams().set("flow", flowID)
         return this.http.post<SettingsFlow>(`${environment.KRATOS_ROOT}/self-service/settings`, payload, { params, withCredentials: true })
+    }
+
+    getUser(): Observable<UserModel> {
+        return this.http.get<APIResponse<UserModel>>(`${environment.API_ROOT}/api/user/me`, { withCredentials: true }).pipe(
+            map(data => data.data),
+        );
+    }
+
+    updateUserSettings(settings: Settings): Observable<UserModel> {
+        return this.http.post<APIResponse<UserModel>>(`${environment.API_ROOT}/api/user/settings`, settings, { withCredentials: true }).pipe(
+            map(data => data.data),
+        );
     }
 }

@@ -6,6 +6,7 @@ import {AuthService, selectSession, SetSessionAction} from '@client/entities/aut
 import {catchError, take} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {AppState} from '@client/shared/store';
+// import {GetUserAction} from '@client/entities/user/model/user.actions';
 
 @Injectable({providedIn: 'root'})
 export class CanMatchPrimarySection implements CanMatch {
@@ -22,6 +23,7 @@ export class CanMatchPrimarySection implements CanMatch {
                     map(fetchedSession => {
                         if (fetchedSession) {
                             this.store.dispatch(SetSessionAction({session: fetchedSession}));
+                            // this.store.dispatch(GetUserAction())
                             return true;
                         }
                         this.router.navigate(['/auth/login']);

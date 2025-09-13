@@ -1,25 +1,24 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {PrimaryLayout} from '@client/shared/layouts';
 import {RouterOutlet} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
-import {filter, tap, Subscription} from 'rxjs';
+import {filter, Observable, map} from 'rxjs';
 import {LoaderComponent} from '@client/shared/ui/loader';
 import {selectSession} from '@client/entities/auth';
-import {UserService} from '@client/entities/user';
+import {GetUserAction} from '@client/entities/user';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
     selector: 'fr-root',
     imports: [
         PrimaryLayout,
         RouterOutlet,
-        LoaderComponent
-    ],
-    providers: [
-        UserService
+        LoaderComponent,
+        AsyncPipe
     ],
     template: `
-        @if (ready) {
+        @if (ready$ | async) {
             <fr-primary-layout>
                 <router-outlet/>
             </fr-primary-layout>
@@ -28,21 +27,14 @@ import {UserService} from '@client/entities/user';
         }
     `
 })
-export class PrimaryRoot implements OnInit, OnDestroy {
+export class PrimaryRoot implements OnInit {
     private store: Store<AppState> = inject(Store<AppState>);
-    private _sub: Subscription = new Subscription();
-    ready = false;
+    ready$: Observable<boolean> = this.store.select(selectSession).pipe(
+        filter(session => !!session),
+        map(session => !!session),
+    );
 
     ngOnInit() {
-        this._sub.add(
-            this.store.select(selectSession).pipe(
-                filter(session => !!session),
-                tap(() => this.ready = true),
-            ).subscribe()
-        )
-    }
-
-    ngOnDestroy() {
-        this._sub.unsubscribe();
+        this.store.dispatch(GetUserAction());
     }
 }

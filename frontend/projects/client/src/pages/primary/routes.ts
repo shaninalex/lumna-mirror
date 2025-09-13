@@ -12,6 +12,7 @@ import {CanMatchPrimarySection} from '@client/pages/primary/guard';
 import {AccountPageComponent} from './account-page/account-page';
 import {ProjectDetailPageComponent} from '@client/pages/primary/project-detail';
 import {ProjectsRootComponent} from '@client/pages/primary/projects-root';
+import {SettingsPageComponent} from '@client/pages/primary/settings-page';
 
 export const sessionResolver: ResolveFn<void> = () => {
     const store = inject(Store<AppState>);
@@ -49,6 +50,10 @@ export const mainRoutes: Routes = [
             {
                 path: "account",
                 component: AccountPageComponent,
+            },
+            {
+                path: "settings",
+                component: SettingsPageComponent,
             },
         ]
     }
