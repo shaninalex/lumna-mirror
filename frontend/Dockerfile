@@ -1,21 +1,21 @@
-FROM node:22.15.0 as build
+# ---------- Build Stage ----------
+FROM node:22.15.0 AS build
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY ./frontend/package*.json ./
 
-RUN yarn install
-
+RUN yarn install --frozen-lockfile
 RUN yarn global add @angular/cli
 
-COPY . .
+COPY ./frontend ./
+RUN ng build client --configuration production
 
-RUN ng build client
 
+# ---------- Serve Stage ----------
 FROM nginx:latest
 
 COPY --from=build /app/dist/client/browser /usr/share/nginx/html
-
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
