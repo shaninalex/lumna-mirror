@@ -21,6 +21,7 @@ func DefaultRouter(db *gorm.DB, name string) *fiber.App {
 	router.Use(logger.New())
 	router.Use(database.NewDbMiddleware(db))
 	router.Use(NewCommonMiddleware())
+	router.Get("/_health", HandleHealth)
 	return router
 }
 
