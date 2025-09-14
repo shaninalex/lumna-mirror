@@ -1,3 +1,13 @@
+## 0.9.0 (2025-09-14)
+
+### Feat
+
+- **CI**: build images
+
+### Fix
+
+- **CI**: service /_health endpoint
+
 ## 0.8.1 (2025-09-14)
 
 ### Fix
