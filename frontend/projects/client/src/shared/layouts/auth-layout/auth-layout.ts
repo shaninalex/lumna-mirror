@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import { Logo } from './logo'
+import {version} from '@root/package.json';
 
 @Component({
     selector: 'fr-auth-layout',
@@ -14,10 +15,12 @@ import { Logo } from './logo'
                     <div class="text-center text-lg font-bold mb-4">{{ title }}</div>
                     <ng-content></ng-content>
                 </div>
+                <div class="text-xs text-slate-400 text-end">v{{ version }}</div>
             </div>
         </div>
     `
 })
 export class AuthLayout {
     @Input() title: string = "";
+    version: string = version;
 }

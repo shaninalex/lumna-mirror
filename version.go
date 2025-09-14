@@ -3,4 +3,4 @@
 package flowreon
 
 // Version platform global version
-const Version = "0.8.1"
+const Version = "0.9.0"
