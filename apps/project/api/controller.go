@@ -30,5 +30,5 @@ func (s *ProjectController) init() {
 	s.router.Post("/api/project/tasks", taskHandler.HandleTaskCreate)
 	s.router.Get("/api/project/:projectCode/tasks/:taskCode", taskHandler.HandleTaskDetail)
 	s.router.Patch("/api/project/:projectCode/tasks/:taskCode", taskHandler.HandleTaskUpdate)
-	s.router.Patch("/api/project/:projectCode/tasks/:taskID/status", taskHandler.HandleTaskPatchStatus)
+	s.router.Patch("/api/project/:projectCode/tasks/:taskCode/status", taskHandler.HandleTaskPatchStatus)
 }
