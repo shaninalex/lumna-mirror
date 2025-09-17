@@ -18,7 +18,7 @@ import {StatusColumn} from '@client/features/project/board-view-feature/board.mo
         <form [formGroup]="form" (ngSubmit)="submitForm()" class="mb-4">
             <div class="flex item-center gap-1">
                 <div class="flex-grow">
-                    <input placeholder="Task title" type="text" class="input bg-white" formControlName="title"
+                    <input placeholder="Task title" type="text" class="input block" formControlName="title"
                            pattern="[a-zA-Z0-9 ]*">
                 </div>
                 <div class="flex items-center">
@@ -26,7 +26,7 @@ import {StatusColumn} from '@client/features/project/board-view-feature/board.mo
                         <ui-loader/>
                     } @else {
                         <button
-                            class=" bg-white cursor-pointer border rounded-lg h-full px-2 flex items-center justify-center font-bold disabled:text-slate-300"
+                            class="btn"
                             [disabled]="loading || !form.valid" type="submit">
                             +
                         </button>
