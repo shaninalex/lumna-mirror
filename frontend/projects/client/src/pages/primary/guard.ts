@@ -31,7 +31,7 @@ export class CanMatchPrimarySection implements CanMatch {
                     }),
                     catchError((err: HttpErrorResponse) => {
                         let params: { [key: string]: any } = {}
-                        if (err.error.error.id === 'session_aal2_required' && err.error.redirect_browser_to) {
+                        if (err.error.error?.id === 'session_aal2_required' && err.error.redirect_browser_to) {
                             params["aal"] = "aal2"
                         }
                         this.router.navigate(['/auth/login'], {queryParams: params});

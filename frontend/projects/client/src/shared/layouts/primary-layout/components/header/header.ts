@@ -12,29 +12,24 @@ import {UserLogoutFeature} from '@client/features/user';
     selector: 'fr-header',
     imports: [
         AsyncPipe,
-        CdkMenu,
-        CdkMenuItem,
-        CdkMenuModule,
         RouterLink,
         UserLogoutFeature,
     ],
     template: `
-        <div class="bg-white py-2 px-4 flex items-center justify-between">
+        <div class="bg-white dark:bg-slate-800 py-2 px-4 flex items-center justify-between">
             <div class="flex items-center gap-2 ms-auto">
                 @if (email$ | async; as email) {
                     <div>{{ email }}</div>
-                    <button [cdkMenuTriggerFor]="header_menu" class="flex items-center gap-2 cursor-pointer">
-                        <img src="img/1.png" class="rounded-full w-8" alt="">
-                    </button>
-                    <ng-template #header_menu>
-                        <div class="bg-white flex flex-col gap-2 border p-2 rounded mt-2" cdkMenu>
-                            <button cdkMenuItem>Refresh</button>
-                            <a [routerLink]="['account']" cdkMenuItem>Account</a>
-                            <a [routerLink]="['settings']" cdkMenuItem>Settings</a>
-                            <button cdkMenuItem>Help</button>
-                            <kr-user-logout-feature />
+                    <div class="dropdown">
+                        <div tabindex="0" role="button" class="">
+                            <img src="img/1.png" class="rounded-full w-8" alt="">
                         </div>
-                    </ng-template>
+                        <ul tabindex="0" class="dropdown-content right-0 menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm">
+                            <li><a [routerLink]="['account']">account</a></li>
+                            <li><a [routerLink]="['settings']">settings</a></li>
+                            <kr-user-logout-feature />
+                        </ul>
+                    </div>
                 }
             </div>
         </div>
