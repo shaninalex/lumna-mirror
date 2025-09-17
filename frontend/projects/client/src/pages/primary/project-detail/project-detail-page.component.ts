@@ -6,8 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 import {AsyncPipe} from '@angular/common';
 import {filter, map, switchMap, tap} from 'rxjs';
 import {BoardViewComponent} from '@client/features/project/board-view-feature';
-import {MatButtonModule} from '@angular/material/button';
-import {CdkMenuModule, CdkMenuTrigger} from '@angular/cdk/menu';
+import {CdkMenuModule} from '@angular/cdk/menu';
 import {GetTasksActions} from '@client/entities/task';
 
 
@@ -16,7 +15,6 @@ import {GetTasksActions} from '@client/entities/task';
     imports: [
         AsyncPipe,
         BoardViewComponent,
-        CdkMenuTrigger,
         CdkMenuModule,
     ],
     template: `
@@ -24,17 +22,17 @@ import {GetTasksActions} from '@client/entities/task';
             <div class="flex items-center gap-2 mb-4">
                 <img src="/img/project.svg" class="w-6 rounded"/>
                 <h3 class="font-bold text-xl">{{ project.title }}</h3>
-                <button class="btn" [cdkMenuTriggerFor]="project_detail_menu">
-                    menu
-                </button>
-                <ng-template #project_detail_menu>
-                    <div class="bg-white flex flex-col gap-2 border p-2 rounded" cdkMenu>
-                        <button cdkMenuItem>Refresh</button>
-                        <button cdkMenuItem>Settings</button>
-                        <button cdkMenuItem>Help</button>
-                        <button cdkMenuItem>Sign out</button>
+                <div class="dropdown">
+                    <div tabindex="0" role="button">
+                        menu
                     </div>
-                </ng-template>
+                    <ul tabindex="0" class="dropdown-content left-0 menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm">
+                        <a>Refresh</a>
+                        <a>Settings</a>
+                        <a>Help</a>
+                        <a>Sign out</a>
+                    </ul>
+                </div>
             </div>
 
             <fr-board-view-feature [project]="project" />

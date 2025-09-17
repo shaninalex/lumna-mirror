@@ -34,7 +34,7 @@ import {byMostRecent} from '@client/shared/common';
     template: `
         <div cdkDropListGroup class="flex flex-row no-wrap gap-4">
             @for (column of columns; track column) {
-                <div class="bg-slate-200 w-xs rounded p-4">
+                <div class="bg-slate-200 dark:bg-slate-700 w-xs rounded p-4">
                     <fr-column-header [project]="project" [column]="column"/>
                     <div class="flex flex-col gap-2 min-h-20"
                          cdkDropList
