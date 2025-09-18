@@ -13,3 +13,11 @@ type APIResponse[T any] struct {
 	Messages []string             `json:"messages,omitempty"`
 	Errors   []apperrors.AppError `json:"errors,omitempty"`
 }
+
+// NewAPIResponse - new api response.
+func NewAPIResponse[T any](data T) *APIResponse[T] {
+	return &APIResponse[T]{
+		Status: true,
+		Data:   data,
+	}
+}

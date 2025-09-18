@@ -20,14 +20,6 @@ func GetKratosRedirectURL(c base.IConfig, path string) string {
 	return fmt.Sprintf("%s%s", c.String("kratos.url_browser"), path)
 }
 
-// NewAPIResponse initializes a response
-func NewAPIResponse[T any](data any) *APIResponse[T] {
-	return &APIResponse[T]{
-		Status: true,
-		Data:   data,
-	}
-}
-
 // ReturnJSON writes JSON response
 func ReturnJSON(w http.ResponseWriter, status int, data any, params ...any) {
 	resp := NewAPIResponse(data)
