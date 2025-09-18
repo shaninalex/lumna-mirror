@@ -25,7 +25,11 @@ func main() {
 	config := base.NewConfig(configPath)
 	db := database.InitDB(database.BuildDSN(config))
 
-	router := web.DefaultRouter(db, "auth")
+	sqlDB, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
+	router := web.NewAppRouter(sqlDB, "auth")
 	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
 	authApp.NewAuthController(config, router, kratosClient)
 

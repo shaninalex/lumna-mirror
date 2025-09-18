@@ -3,11 +3,11 @@
 package web
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
@@ -15,84 +15,95 @@ import (
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
-// GetKratosRedirectURL return redirect with kratos base url from config
+// GetKratosRedirectURL returns redirect URL using Kratos base URL from config
 func GetKratosRedirectURL(c base.IConfig, path string) string {
 	return fmt.Sprintf("%s%s", c.String("kratos.url_browser"), path)
 }
 
-// ReturnJSON return api response based on statuses
-func ReturnJSON(ctx *fiber.Ctx, status int, data any, params ...any) error {
+// NewAPIResponse initializes a response
+func NewAPIResponse(data any) *APIResponse {
+	return &APIResponse{
+		Status: true,
+		Data:   data,
+	}
+}
+
+// ReturnJSON writes JSON response
+func ReturnJSON(w http.ResponseWriter, status int, data any, params ...any) {
 	resp := NewAPIResponse(data)
 	if status >= 400 {
 		resp.Status = false
 	}
 
-	// separate messages vs app errors
 	for _, p := range params {
 		switch v := p.(type) {
 		case string:
-			// general user-facing message
 			resp.Messages = append(resp.Messages, v)
 		case apperrors.AppError:
-			// structured app error
 			resp.Errors = append(resp.Errors, v)
 		case error:
-			// try to extract AppError if wrapped
 			var appErr apperrors.AppError
 			if errors.As(v, &appErr) {
 				resp.Errors = append(resp.Errors, appErr)
 			} else {
-				// fallback: put error string in messages
 				resp.Messages = append(resp.Messages, v.Error())
 			}
 		}
 	}
 
-	ctx.Status(status)
-	return ctx.JSON(resp)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	_ = json.NewEncoder(w).Encode(resp)
 }
 
-// Success return api response based on statuses
-func Success(ctx *fiber.Ctx, data any, params ...any) error {
-	return ReturnJSON(ctx, http.StatusOK, data, params...)
+// Success is a shorthand for 200 OK
+func Success(w http.ResponseWriter, data any, params ...any) {
+	ReturnJSON(w, http.StatusOK, data, params...)
 }
 
-// Error return api response based on statuses
-func Error(ctx *fiber.Ctx, status int, err error) error {
-	return ReturnJSON(ctx, status, nil, err)
+// Error is a shorthand for error responses
+func Error(w http.ResponseWriter, status int, err error) {
+	ReturnJSON(w, status, nil, err)
 }
 
-// GetUserID - returns the user id.
-func GetUserID(ctx *fiber.Ctx) uuid.UUID {
-	if id, ok := ctx.Locals(base.ContextUserID).(uuid.UUID); ok {
+// GetUserID retrieves the user ID from context
+func GetUserID(r *http.Request) uuid.UUID {
+	if id, ok := r.Context().Value(base.ContextUserID).(uuid.UUID); ok {
 		return id
 	}
 	return uuid.Nil
 }
 
-// GetOrganizationID - returns the organization id.
-func GetOrganizationID(ctx *fiber.Ctx) uuid.UUID {
-	if id, ok := ctx.Locals(base.ContextOrgID).(uuid.UUID); ok {
+// GetOrganizationID retrieves the organization ID from context
+func GetOrganizationID(r *http.Request) uuid.UUID {
+	if id, ok := r.Context().Value(base.ContextOrgID).(uuid.UUID); ok {
 		return id
 	}
 	return uuid.Nil
 }
 
-// GetUser - returns the user.
-func GetUser(ctx *fiber.Ctx) *models.User {
-	user, _ := ctx.Locals(base.ContextUser).(*models.User)
-	return user
+// GetUser retrieves the user object from context
+func GetUser(r *http.Request) *models.User {
+	if user, ok := r.Context().Value(base.ContextUser).(*models.User); ok {
+		return user
+	}
+	return nil
 }
 
-// GetSession - returns the session.
-func GetSession(ctx *fiber.Ctx) *ory.Session {
-	session, _ := ctx.Locals(base.ContextUserID).(*ory.Session)
-	return session
+// GetSession retrieves the session object from context
+func GetSession(r *http.Request) *ory.Session {
+	if session, ok := r.Context().Value(base.ContextSession).(*ory.Session); ok {
+		return session
+	}
+	return nil
 }
 
-// ParamUUID - param uuid.
-func ParamUUID(ctx *fiber.Ctx, name string) (uuid.UUID, error) {
-	val := ctx.Params(name)
+// ParamUUID parses a URL param as UUID
+func ParamUUID(r *http.Request, name string, params map[string]string) (uuid.UUID, error) {
+	val, ok := params[name]
+	if !ok {
+		return uuid.Nil, fmt.Errorf("%s is required", name)
+	}
 	id, err := uuid.Parse(val)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("%s is not a valid UUID", name)
@@ -100,20 +111,20 @@ func ParamUUID(ctx *fiber.Ctx, name string) (uuid.UUID, error) {
 	return id, nil
 }
 
-// ParamString - param string.
-func ParamString(ctx *fiber.Ctx, name string) (string, error) {
-	val := ctx.Params(name)
-	if val == "" {
+// ParamString retrieves a string param
+func ParamString(r *http.Request, name string, params map[string]string) (string, error) {
+	val, ok := params[name]
+	if !ok || val == "" {
 		return "", fmt.Errorf("%s is required", name)
 	}
 	return val, nil
 }
 
-// ParseBody - parse fiber post/patch/put request to defined structure
-func ParseBody[T any](ctx *fiber.Ctx) (*T, error) {
-	var dto T
-	if err := ctx.BodyParser(&dto); err != nil {
+// BodyParser parse request POST body into generic type
+func BodyParser[T any](r *http.Request) (*T, error) {
+	var data T
+	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		return nil, err
 	}
-	return &dto, nil
+	return &data, nil
 }

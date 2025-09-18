@@ -14,6 +14,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/internal/kratos"
+	"gitlab.com/shaninalex/flowreon/internal/web/middlewares"
 	"gorm.io/gorm"
 )
 
@@ -115,11 +116,10 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 //	w.Header().Set("Cache-Control", "private, no-cache, no-store, must-revalidate")
 //}
 
-func NewAppRouter(db *sql.DB) *Router {
+func NewAppRouter(db *sql.DB, appName string) *Router {
 	r := NewRouter()
+	r.Use(middlewares.NewRecoveryMiddleware().Wrap)
 	r.Use(database.NewMiddleware(db).Wrap)
-	// TODO: recovery
-	// TODO: logger
-	// TODO: Kratos
+	r.Use(middlewares.NewLoggerMiddleware(appName).Wrap)
 	return r
 }

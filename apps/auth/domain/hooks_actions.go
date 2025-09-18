@@ -40,6 +40,7 @@ func (s *AuthHookAPI) HookRegister(ctx context.Context, data *dto.HooksKratosPay
 	}
 
 	// TODO: move user settings creation into user service
+	// 		 (do not run direct db call for entities does not related to concrete service)
 	db := database.GetDB(ctx)
 	userCode, err := database.GenerateUniqueUserCode(ctx, db, 5)
 	if err != nil {

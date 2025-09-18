@@ -5,7 +5,6 @@ package handler
 import (
 	"net/http"
 
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/auth/domain"
 	"gitlab.com/shaninalex/flowreon/apps/auth/dto"
 	"gitlab.com/shaninalex/flowreon/internal/web"
@@ -18,33 +17,35 @@ type AuthHooksHandler struct {
 
 // NewAuthHooksHandler - new auth hooks handler.
 func NewAuthHooksHandler(api domain.AuthHookHandler) *AuthHooksHandler {
-	// hooks
-	// TODO: we can authenticate hooks by "ory_kratos_continuity" cookie
 	return &AuthHooksHandler{
 		authAPI: api,
 	}
 }
 
 // HandleHookRegister - handle hook register.
-func (s *AuthHooksHandler) HandleHookRegister(ctx *fiber.Ctx) error {
-	var data dto.HooksKratosPayloadDTO
-	err := ctx.BodyParser(&data)
+func (s *AuthHooksHandler) HandleHookRegister(w http.ResponseWriter, r *http.Request) {
+	data, err := web.BodyParser[dto.HooksKratosPayloadDTO](r)
 	if err != nil {
-		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, err.Error())
+		web.ReturnJSON(w, http.StatusBadRequest, nil, err.Error())
+		return
 	}
-	err = s.authAPI.HookRegister(ctx.Context(), &data)
+	err = s.authAPI.HookRegister(r.Context(), data)
 	if err != nil {
-		return web.ReturnJSON(ctx, http.StatusBadRequest, nil, err.Error())
+		web.ReturnJSON(w, http.StatusBadRequest, nil, err.Error())
+		return
 	}
-	return web.Success(ctx, nil)
+	web.Success(w, nil)
+	return
 }
 
 // HandleHookVerify - handle hook verify.
-func (s *AuthHooksHandler) HandleHookVerify(ctx *fiber.Ctx) error {
-	return web.Success(ctx, nil)
+func (s *AuthHooksHandler) HandleHookVerify(w http.ResponseWriter, r *http.Request) {
+	web.Success(w, nil)
+	return
 }
 
 // HandleHookLogin - handle hook login.
-func (s *AuthHooksHandler) HandleHookLogin(ctx *fiber.Ctx) error {
-	return web.Success(ctx, nil)
+func (s *AuthHooksHandler) HandleHookLogin(w http.ResponseWriter, r *http.Request) {
+	web.Success(w, nil)
+	return
 }

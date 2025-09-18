@@ -3,10 +3,10 @@
 package web
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
@@ -21,53 +21,59 @@ type AuthMiddleware struct {
 }
 
 // NewAuthMiddleware - new auth middleware.
-func NewAuthMiddleware(kratosService kratos.IKratos) fiber.Handler {
-	m := &AuthMiddleware{
+func NewAuthMiddleware(kratosService kratos.IKratos) *AuthMiddleware {
+	return &AuthMiddleware{
 		kratosService: kratosService,
 	}
-	return m.Wrap()
 }
 
 // Wrap - wrap.
-func (s *AuthMiddleware) Wrap() fiber.Handler {
-	return func(ctx *fiber.Ctx) error {
-		id := ctx.Get("X-USER")
+func (s *AuthMiddleware) Wrap(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		id := r.Header.Get("X-USER")
 		if id == "" {
-			return Error(ctx, http.StatusUnauthorized, fmt.Errorf("user is empty"))
+			Error(w, http.StatusUnauthorized, fmt.Errorf("user is empty"))
+			return
 		}
 
 		userID, err := uuid.Parse(id)
 		if err != nil {
-			return Error(ctx, http.StatusUnauthorized, fmt.Errorf("user id is invalid"))
+			Error(w, http.StatusUnauthorized, fmt.Errorf("user id is invalid"))
+			return
 		}
 
-		session, _, err := s.kratosService.GetSession(ctx.Context(), ctx.Get("cookie"))
+		session, _, err := s.kratosService.GetSession(ctx, r.Header.Get("cookie"))
 		if err != nil {
-			return Error(ctx, http.StatusUnauthorized, apperrors.SessionNotFound)
+			Error(w, http.StatusUnauthorized, apperrors.SessionNotFound)
+			return
 		}
-		ctx.Locals(base.ContextSession, session)
+		ctx = context.WithValue(ctx, base.ContextSession, session)
 
 		user := &models.User{ID: userID}
-		tx := database.GetDB(ctx.Context()).Preload("Organization").First(&user)
+		tx := database.GetDB(ctx).Preload("Organization").First(&user)
 		if tx.Error != nil {
-			return Error(ctx, http.StatusUnauthorized, apperrors.UserNotFound)
+			Error(w, http.StatusUnauthorized, apperrors.UserNotFound)
+			return
 		}
 
-		identity, _, err := s.kratosService.GetIdentity(ctx.Context(), id)
+		identity, _, err := s.kratosService.GetIdentity(ctx, id)
 		if err != nil {
-			return Error(ctx, http.StatusUnauthorized, apperrors.UserIdentityNotFound)
+			Error(w, http.StatusUnauthorized, apperrors.UserIdentityNotFound)
+			return
 		}
 
 		user.Identity = identity
 
-		ctx.Locals(base.ContextUser, user)
-		ctx.Locals(base.ContextUserID, userID)
+		ctx = context.WithValue(ctx, base.ContextUser, user)
+		ctx = context.WithValue(ctx, base.ContextUserID, userID)
 
 		if user.OrganizationID == nil {
-			return Error(ctx, http.StatusForbidden, apperrors.UserOrgNotAttached)
+			Error(w, http.StatusForbidden, apperrors.UserOrgNotAttached)
+			return
 		}
-		ctx.Locals(base.ContextOrgID, *user.OrganizationID)
+		ctx = context.WithValue(ctx, base.ContextOrgID, *user.OrganizationID)
 
-		return ctx.Next()
-	}
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
