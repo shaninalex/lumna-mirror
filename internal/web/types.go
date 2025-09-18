@@ -7,9 +7,9 @@ import (
 )
 
 // APIResponse standard response structure
-type APIResponse struct {
+type APIResponse[T any] struct {
 	Status   bool                 `json:"status"`
-	Data     any                  `json:"data,omitempty"`
+	Data     T                    `json:"data,omitempty"`
 	Messages []string             `json:"messages,omitempty"`
 	Errors   []apperrors.AppError `json:"errors,omitempty"`
 }

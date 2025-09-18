@@ -3,18 +3,18 @@
 package api
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/org/api/handler"
 	"gitlab.com/shaninalex/flowreon/apps/org/domain"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 // OrganizationController - organization controller.
 type OrganizationController struct {
-	router *fiber.App
+	router *web.Router
 }
 
 // NewOrganizationController - new organization controller.
-func NewOrganizationController(router *fiber.App) *OrganizationController {
+func NewOrganizationController(router *web.Router) *OrganizationController {
 	c := &OrganizationController{
 		router: router,
 	}
@@ -28,5 +28,5 @@ func (s *OrganizationController) init() {
 
 func (s *OrganizationController) setRoutes() {
 	h := handler.NewOrganizationHandler(domain.NewOrganizationAPI())
-	s.router.Get("/api/org", h.HandleGetByUser)
+	s.router.GET("/api/org", h.HandleGetByUser)
 }

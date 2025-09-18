@@ -21,8 +21,8 @@ func GetKratosRedirectURL(c base.IConfig, path string) string {
 }
 
 // NewAPIResponse initializes a response
-func NewAPIResponse(data any) *APIResponse {
-	return &APIResponse{
+func NewAPIResponse[T any](data any) *APIResponse[T] {
+	return &APIResponse[T]{
 		Status: true,
 		Data:   data,
 	}

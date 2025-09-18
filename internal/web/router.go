@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"net/http"
 	"path"
-	"testing"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -47,13 +46,6 @@ type Router struct {
 }
 
 func NewRouter() *Router {
-	return &Router{
-		mux: http.NewServeMux(),
-	}
-}
-
-// NewTestRouter creates a new Router for testing purposes without metrics.
-func NewTestRouter(*testing.T) *Router {
 	return &Router{
 		mux: http.NewServeMux(),
 	}

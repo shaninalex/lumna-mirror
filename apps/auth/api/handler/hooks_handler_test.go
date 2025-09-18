@@ -50,10 +50,9 @@ func Test_AuthHooks_HandleHookRegister(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	dbMiddleware := database.NewMiddleware(m.DB)
-	handler := dbMiddleware.Wrap(http.HandlerFunc(handlers.HandleHookRegister))
-	handler.ServeHTTP(rr, req)
+	h := dbMiddleware.Wrap(http.HandlerFunc(handlers.HandleHookRegister))
+	h.ServeHTTP(rr, req)
 
-	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 	user := models.User{ID: uuid.MustParse(identity.GetId())}
 	tx := database.GetDB(m.Ctx).Find(&user)

@@ -6,7 +6,6 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/org/adapter"
 	"gitlab.com/shaninalex/flowreon/apps/org/domain"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
@@ -27,10 +26,12 @@ func NewOrganizationHandler(manager domain.OrganizationManager) *OrganizationHan
 
 // HandleGetByUser - handle get by user.
 // TODO: rename
-func (s *OrganizationHandler) HandleGetByUser(ctx *fiber.Ctx) error {
-	organization, err := s.manager.Get(ctx.Context(), web.GetUserID(ctx))
+func (s *OrganizationHandler) HandleGetByUser(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	organization, err := s.manager.Get(ctx, web.GetUserID(r))
 	if errors.Is(err, apperrors.OrgNotFound) {
-		return web.ReturnJSON(ctx, http.StatusNotFound, nil, err.Error())
+		web.ReturnJSON(w, http.StatusNotFound, nil, err.Error())
+		return
 	}
-	return web.Success(ctx, adapter.ToDto(organization))
+	web.Success(w, adapter.ToDto(organization))
 }

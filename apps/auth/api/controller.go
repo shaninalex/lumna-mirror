@@ -3,7 +3,6 @@
 package api
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/auth/api/handler"
 	"gitlab.com/shaninalex/flowreon/apps/auth/domain"
 	"gitlab.com/shaninalex/flowreon/internal/base"

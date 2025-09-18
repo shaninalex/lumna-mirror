@@ -3,8 +3,12 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
+	"time"
 
 	authApp "gitlab.com/shaninalex/flowreon/apps/auth/api"
 	"gitlab.com/shaninalex/flowreon/database"
@@ -32,8 +36,13 @@ func main() {
 	router := web.NewAppRouter(sqlDB, "auth")
 	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
 	authApp.NewAuthController(config, router, kratosClient)
-
-	if err := router.Listen(fmt.Sprintf(":%s", config.String("auth.port"))); err != nil {
-		panic(err)
+	srv := &http.Server{
+		Handler:      router,
+		Addr:         fmt.Sprintf(":%s", config.String("auth.port")),
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
+	if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Printf("Server error: %v\n", err)
 	}
 }
