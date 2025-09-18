@@ -3,6 +3,10 @@
 package database
 
 import (
+	"context"
+	"database/sql"
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gorm.io/gorm"
@@ -25,4 +29,19 @@ func (m *DbMiddleware) Wrap() fiber.Handler {
 		ctx.Locals(base.ContextDB, m.db)
 		return ctx.Next()
 	}
+}
+
+type Middleware struct {
+	db *sql.DB
+}
+
+func NewMiddleware(db *sql.DB) *Middleware {
+	return &Middleware{db: db}
+}
+
+func (s *Middleware) Wrap(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r = r.WithContext(context.WithValue(r.Context(), base.ContextDB, s.db))
+		next.ServeHTTP(w, r)
+	})
 }
