@@ -44,16 +44,16 @@ migrate_down:
 		-verbose down $(N)
 
 start_auth:
-	go run apps/auth/cmd/main.go ./config/development.local.yml
+	go run cmd/cloud/auth/main.go ./config/development.local.yml
 
 start_project:
-	go run apps/project/cmd/main.go ./config/development.local.yml
+	go run cmd/cloud/project/main.go ./config/development.local.yml
 
 start_org:
-	go run apps/org/cmd/main.go ./config/development.local.yml
+	go run cmd/cloud/org/main.go ./config/development.local.yml
 
 start_user:
-	go run apps/user/cmd/main.go ./config/development.local.yml
+	go run cmd/cloud/user/main.go ./config/development.local.yml
 
 db_backup:
 	docker exec -t flowreon-postgres-1 pg_dump -U postgres postgres > ./database/data/db_backup.sql

@@ -19,7 +19,7 @@ RUN go mod tidy
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o user_service apps/project/cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o project_service cmd/cloud/project/main.go
 
 # Stage 3: Minimal Alpine image
 FROM alpine:latest
@@ -27,4 +27,4 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
-COPY --from=builder /build/user_service ./
+COPY --from=builder /build/project_service ./

@@ -19,7 +19,7 @@ RUN go mod tidy
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o auth_service apps/auth/cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o auth_service cmd/cloud/auth/main.go
 
 # Stage 3: Minimal Alpine image
 FROM alpine:latest
