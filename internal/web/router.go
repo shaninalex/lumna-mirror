@@ -10,7 +10,6 @@ import (
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/internal/kratos"
-	"gitlab.com/shaninalex/flowreon/internal/web/middlewares"
 )
 
 type Middleware func(http.Handler) http.Handler
@@ -82,9 +81,10 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 // DefaultRouter - default router.
 func DefaultRouter(db *sql.DB, name string) *Router {
 	r := NewRouter()
-	r.Use(middlewares.NewRecoveryMiddleware().Wrap)
+	r.Use(NewRecoveryMiddleware().Wrap)
 	r.Use(database.NewMiddleware(db).Wrap)
-	r.Use(middlewares.NewLoggerMiddleware(name).Wrap)
+	r.Use(NewLoggerMiddleware(name).Wrap)
+	r.Use(NewCommonMiddleware().Wrap)
 	r.GET("/_health", HandleHealth)
 	return r
 }

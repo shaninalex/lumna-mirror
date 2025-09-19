@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
+	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/tdata"
 )
@@ -35,7 +36,7 @@ func Test_UserService_UpdateUserSettings(t *testing.T) {
 	assert.NoError(t, err)
 
 	var user models.User
-	m.DB.First(&user, testUser.GetID())
+	database.GetDB(m.Ctx).First(&user, testUser.GetID())
 	assert.Equal(t, settings, user.GetSettings())
 	assert.Equal(t, "fr", user.GetSettings().Language)
 }
