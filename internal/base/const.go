@@ -23,4 +23,7 @@ const (
 
 	// ContextCookie - authentication cookie
 	ContextCookie = "auth_cookie"
+
+	// ContextAppName - used to map request to a service
+	ContextAppName = "app_name"
 )

@@ -33,7 +33,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	router := web.NewAppRouter(sqlDB, "auth")
+	router := web.DefaultRouter(sqlDB, "auth")
 	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
 	authApp.NewAuthController(config, router, kratosClient)
 	srv := &http.Server{

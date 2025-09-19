@@ -3,32 +3,32 @@
 package api
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/project/api/handler"
 	"gitlab.com/shaninalex/flowreon/apps/project/domain"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
+// ProjectController - project controller.
+type ProjectController struct {
+	router *web.Router
+}
+
 // NewProjectController - new project controller.
-func NewProjectController(router *fiber.App) {
+func NewProjectController(router *web.Router) {
 	controller := ProjectController{router: router}
 	controller.init()
 }
 
-// ProjectController - project controller.
-type ProjectController struct {
-	router *fiber.App
-}
-
 func (s *ProjectController) init() {
 	projectHandler := handler.NewProjectHandler(domain.NewProjectManagement())
-	s.router.Get("/api/project/", projectHandler.HandleProjectsList)
-	s.router.Post("/api/project/", projectHandler.HandleProjectCreate)
+	s.router.GET("/api/project/", projectHandler.HandleProjectsList)
+	s.router.POST("/api/project/", projectHandler.HandleProjectCreate)
 	// TODO: !!! it should be taskHandler not projectHandler !!!
-	s.router.Get("/api/project/:projectCode/tasks", projectHandler.HandleProjectTasksList)
+	s.router.GET("/api/project/{projectCode}/tasks", projectHandler.HandleProjectTasksList)
 
 	taskHandler := handler.NewTaskHandler(domain.NewProjectManagement())
-	s.router.Post("/api/project/tasks", taskHandler.HandleTaskCreate)
-	s.router.Get("/api/project/:projectCode/tasks/:taskCode", taskHandler.HandleTaskDetail)
-	s.router.Patch("/api/project/:projectCode/tasks/:taskCode", taskHandler.HandleTaskUpdate)
-	s.router.Patch("/api/project/:projectCode/tasks/:taskCode/status", taskHandler.HandleTaskPatchStatus)
+	s.router.POST("/api/project/tasks", taskHandler.HandleTaskCreate)
+	s.router.GET("/api/project/{projectCode}/tasks/{taskCode}", taskHandler.HandleTaskDetail)
+	s.router.PATCH("/api/project/{projectCode}/tasks/{taskCode}", taskHandler.HandleTaskUpdate)
+	s.router.PATCH("/api/project/{projectCode}/tasks/{taskCode}/status", taskHandler.HandleTaskPatchStatus)
 }

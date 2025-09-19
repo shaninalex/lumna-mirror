@@ -7,29 +7,8 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/internal/base"
-	"gorm.io/gorm"
 )
-
-// DbMiddleware - db middleware.
-type DbMiddleware struct {
-	db *gorm.DB
-}
-
-// NewDbMiddleware - new db middleware.
-func NewDbMiddleware(db *gorm.DB) fiber.Handler {
-	m := &DbMiddleware{db: db}
-	return m.Wrap()
-}
-
-// Wrap - wrap.
-func (m *DbMiddleware) Wrap() fiber.Handler {
-	return func(ctx *fiber.Ctx) error {
-		ctx.Locals(base.ContextDB, m.db)
-		return ctx.Next()
-	}
-}
 
 type Middleware struct {
 	db *sql.DB

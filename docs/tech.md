@@ -1,5 +1,5 @@
 ### core part:
-- microservices on go-fiber
+- microservices on golang http router
 - this time try use GORM like ORM, not like query builder
 - rabbitmq
 - radis

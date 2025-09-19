@@ -13,7 +13,6 @@ import (
 	orgApp "gitlab.com/shaninalex/flowreon/apps/org/api"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/base"
-	"gitlab.com/shaninalex/flowreon/internal/kratos"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
@@ -32,9 +31,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	router := web.NewAppRouter(sqlDB, "org")
-	kratosClient := kratos.NewKratosService(config.String("kratos.url_browser"))
-	router.Use(web.NewAuthMiddleware(kratosClient).Wrap)
+	router := web.AuthRouter(config, sqlDB, "org")
 	orgApp.NewOrganizationController(router)
 
 	srv := &http.Server{

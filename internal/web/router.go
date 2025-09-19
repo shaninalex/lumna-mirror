@@ -7,36 +7,11 @@ import (
 	"net/http"
 	"path"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/recover"
 	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/internal/kratos"
 	"gitlab.com/shaninalex/flowreon/internal/web/middlewares"
-	"gorm.io/gorm"
 )
-
-// DefaultRouter - default router.
-func DefaultRouter(db *gorm.DB, name string) *fiber.App {
-	router := fiber.New(fiber.Config{
-		AppName: name,
-	})
-	router.Use(recover.New())
-	router.Use(logger.New())
-	router.Use(database.NewDbMiddleware(db))
-	router.Use(NewCommonMiddleware())
-	router.Get("/_health", HandleHealth)
-	return router
-}
-
-// AuthRouter - auth router.
-func AuthRouter(cnf base.IConfig, db *gorm.DB, name string) *fiber.App {
-	router := DefaultRouter(db, name)
-	kratosClient := kratos.NewKratosService(cnf.String("kratos.url_browser"))
-	router.Use(NewAuthMiddleware(kratosClient))
-	return router
-}
 
 type Middleware func(http.Handler) http.Handler
 
@@ -104,14 +79,20 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 	})
 }
 
-//func NoCache(w http.ResponseWriter) {
-//	w.Header().Set("Cache-Control", "private, no-cache, no-store, must-revalidate")
-//}
-
-func NewAppRouter(db *sql.DB, appName string) *Router {
+// DefaultRouter - default router.
+func DefaultRouter(db *sql.DB, name string) *Router {
 	r := NewRouter()
 	r.Use(middlewares.NewRecoveryMiddleware().Wrap)
 	r.Use(database.NewMiddleware(db).Wrap)
-	r.Use(middlewares.NewLoggerMiddleware(appName).Wrap)
+	r.Use(middlewares.NewLoggerMiddleware(name).Wrap)
+	r.GET("/_health", HandleHealth)
 	return r
+}
+
+// AuthRouter - auth router.
+func AuthRouter(cnf base.IConfig, db *sql.DB, name string) *Router {
+	router := DefaultRouter(db, name)
+	kratosClient := kratos.NewKratosService(cnf.String("kratos.url_browser"))
+	router.Use(NewAuthMiddleware(kratosClient).Wrap)
+	return router
 }

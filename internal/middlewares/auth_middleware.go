@@ -1,6 +1,6 @@
 // Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
 
-package web
+package middlewares
 
 import (
 	"context"
@@ -12,6 +12,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/internal/kratos"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
@@ -33,19 +34,19 @@ func (s *AuthMiddleware) Wrap(next http.Handler) http.Handler {
 		ctx := r.Context()
 		id := r.Header.Get("X-USER")
 		if id == "" {
-			Error(w, http.StatusUnauthorized, fmt.Errorf("user is empty"))
+			web.Error(w, http.StatusUnauthorized, fmt.Errorf("user is empty"))
 			return
 		}
 
 		userID, err := uuid.Parse(id)
 		if err != nil {
-			Error(w, http.StatusUnauthorized, fmt.Errorf("user id is invalid"))
+			web.Error(w, http.StatusUnauthorized, fmt.Errorf("user id is invalid"))
 			return
 		}
 
 		session, _, err := s.kratosService.GetSession(ctx, r.Header.Get("cookie"))
 		if err != nil {
-			Error(w, http.StatusUnauthorized, apperrors.SessionNotFound)
+			web.Error(w, http.StatusUnauthorized, apperrors.SessionNotFound)
 			return
 		}
 		ctx = context.WithValue(ctx, base.ContextSession, session)
@@ -53,13 +54,13 @@ func (s *AuthMiddleware) Wrap(next http.Handler) http.Handler {
 		user := &models.User{ID: userID}
 		tx := database.GetDB(ctx).Preload("Organization").First(&user)
 		if tx.Error != nil {
-			Error(w, http.StatusUnauthorized, apperrors.UserNotFound)
+			web.Error(w, http.StatusUnauthorized, apperrors.UserNotFound)
 			return
 		}
 
 		identity, _, err := s.kratosService.GetIdentity(ctx, id)
 		if err != nil {
-			Error(w, http.StatusUnauthorized, apperrors.UserIdentityNotFound)
+			web.Error(w, http.StatusUnauthorized, apperrors.UserIdentityNotFound)
 			return
 		}
 
@@ -69,7 +70,7 @@ func (s *AuthMiddleware) Wrap(next http.Handler) http.Handler {
 		ctx = context.WithValue(ctx, base.ContextUserID, userID)
 
 		if user.OrganizationID == nil {
-			Error(w, http.StatusForbidden, apperrors.UserOrgNotAttached)
+			web.Error(w, http.StatusForbidden, apperrors.UserOrgNotAttached)
 			return
 		}
 		ctx = context.WithValue(ctx, base.ContextOrgID, *user.OrganizationID)

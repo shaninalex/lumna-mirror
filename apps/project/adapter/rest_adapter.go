@@ -3,7 +3,8 @@
 package adapter
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"net/http"
+
 	"gitlab.com/shaninalex/flowreon/apps/project/dto"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
@@ -16,11 +17,11 @@ type PatchTaskInput struct {
 }
 
 // NewPatchTaskInput - new patch task input.
-func NewPatchTaskInput(ctx *fiber.Ctx) (*PatchTaskInput, error) {
-	projectCode := ctx.Params("projectCode")
-	taskCode := ctx.Params("taskCode")
+func NewPatchTaskInput(r *http.Request) (*PatchTaskInput, error) {
+	projectCode := r.PathValue("projectCode")
+	taskCode := r.PathValue("taskCode")
 
-	data, err := web.ParseBody[dto.ChangeTaskStatusDTO](ctx)
+	data, err := web.BodyParser[dto.ChangeTaskStatusDTO](r)
 	if err != nil {
 		return nil, err
 	}
@@ -46,10 +47,10 @@ type UpdateTaskInput struct {
 }
 
 // NewUpdateTaskInput - new update task input.
-func NewUpdateTaskInput(ctx *fiber.Ctx) (*UpdateTaskInput, error) {
-	projectCode := ctx.Params("projectCode")
-	taskCode := ctx.Params("taskCode")
-	data, err := web.ParseBody[UpdateTaskData](ctx)
+func NewUpdateTaskInput(r *http.Request) (*UpdateTaskInput, error) {
+	projectCode := r.PathValue("projectCode")
+	taskCode := r.PathValue("taskCode")
+	data, err := web.BodyParser[UpdateTaskData](r)
 	if err != nil {
 		return nil, err
 	}

@@ -90,6 +90,14 @@ func GetSession(r *http.Request) *ory.Session {
 	return nil
 }
 
+// GetAppName retrieves the app name from context
+func GetAppName(r *http.Request) *string {
+	if user, ok := r.Context().Value(base.ContextAppName).(*string); ok {
+		return user
+	}
+	return nil
+}
+
 // ParamUUID parses a URL param as UUID
 func ParamUUID(r *http.Request, name string, params map[string]string) (uuid.UUID, error) {
 	val, ok := params[name]

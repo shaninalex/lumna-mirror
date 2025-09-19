@@ -4,7 +4,6 @@ go 1.24.2
 
 require (
 	github.com/Pallinder/go-randomdata v1.2.0
-	github.com/gofiber/fiber/v2 v2.52.9
 	github.com/google/uuid v1.6.0
 	github.com/ory/kratos-client-go v1.3.8
 	github.com/spf13/viper v1.20.1

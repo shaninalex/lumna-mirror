@@ -5,7 +5,6 @@ package handler
 import (
 	"net/http"
 
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
 	"gitlab.com/shaninalex/flowreon/apps/user/dto"
 	"gitlab.com/shaninalex/flowreon/internal/web"
@@ -24,27 +23,31 @@ func NewUserHandler(manager domain.UserManager) *UserHandler {
 }
 
 // HandleGetUser - get user object
-func (s *UserHandler) HandleGetUser(ctx *fiber.Ctx) error {
-	user, err := s.manager.GetUser(ctx.Context(), web.GetUserID(ctx))
+func (s *UserHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
+	user, err := s.manager.GetUser(r.Context(), web.GetUserID(r))
 	if err != nil {
-		return web.Error(ctx, http.StatusBadRequest, err)
+		web.Error(w, http.StatusBadRequest, err)
+		return
 	}
-	return web.Success(ctx, dto.ToUserDto(user))
+	web.Success(w, dto.ToUserDto(user))
 }
 
 // HandleUpdateSettings - update user settings
-func (s *UserHandler) HandleUpdateSettings(ctx *fiber.Ctx) error {
-	data, err := web.ParseBody[models.UserSettings](ctx)
+func (s *UserHandler) HandleUpdateSettings(w http.ResponseWriter, r *http.Request) {
+	data, err := web.BodyParser[models.UserSettings](r)
 	if err != nil {
-		return web.Error(ctx, http.StatusBadRequest, err)
+		web.Error(w, http.StatusBadRequest, err)
+		return
 	}
-	err = s.manager.UpdateUserSettings(ctx.Context(), web.GetUserID(ctx), data)
+	err = s.manager.UpdateUserSettings(r.Context(), web.GetUserID(r), data)
 	if err != nil {
-		return web.Error(ctx, http.StatusBadRequest, err)
+		web.Error(w, http.StatusBadRequest, err)
+		return
 	}
-	user, err := s.manager.GetUser(ctx.Context(), web.GetUserID(ctx))
+	user, err := s.manager.GetUser(r.Context(), web.GetUserID(r))
 	if err != nil {
-		return web.Error(ctx, http.StatusBadRequest, err)
+		web.Error(w, http.StatusBadRequest, err)
+		return
 	}
-	return web.Success(ctx, dto.ToUserDto(user), "Settings updated")
+	web.Success(w, dto.ToUserDto(user), "Settings updated")
 }

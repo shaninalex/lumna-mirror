@@ -13,7 +13,6 @@ import (
 	"gitlab.com/shaninalex/flowreon/apps/org/api/handler"
 	"gitlab.com/shaninalex/flowreon/apps/org/domain"
 	"gitlab.com/shaninalex/flowreon/apps/org/dto"
-	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/tdata"
 )
@@ -26,17 +25,18 @@ func Test_HandleGetByUser(t *testing.T) {
 
 	handlers := handler.NewOrganizationHandler(domain.NewOrganizationAPI())
 
-	req, _ := http.NewRequest("GET", "/", nil)
+	router := tdata.AuthTestRouter(m.Ctx)
+	router.GET("/", handlers.HandleGetByUser)
+
+	req := httptest.NewRequest("GET", "/", nil)
 	tdata.SetAuthRequest(req, user, cookie)
 
 	rr := httptest.NewRecorder()
-	dbMiddleware := database.NewMiddleware(m.DB)
-	h := dbMiddleware.Wrap(http.HandlerFunc(handlers.HandleGetByUser))
-	h.ServeHTTP(rr, req)
+	router.ServeHTTP(rr, req)
 
 	assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
-	body, _ := io.ReadAll(rr.Result().Body)
 
+	body, _ := io.ReadAll(rr.Result().Body)
 	var response web.APIResponse[*dto.OrganizationDto]
 	err := json.Unmarshal(body, &response)
 	assert.NoError(t, err)

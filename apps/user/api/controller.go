@@ -3,17 +3,17 @@
 package api
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/user/api/handler"
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 type UserController struct {
-	router *fiber.App
+	router *web.Router
 }
 
 // NewUserController - new user controller.
-func NewUserController(router *fiber.App) *UserController {
+func NewUserController(router *web.Router) *UserController {
 	c := &UserController{
 		router: router,
 	}
@@ -27,6 +27,6 @@ func (s *UserController) init() {
 
 func (s *UserController) setRoutes() {
 	h := handler.NewUserHandler(domain.NewUserService())
-	s.router.Get("/api/user/me", h.HandleGetUser)
-	s.router.Post("/api/user/settings", h.HandleUpdateSettings)
+	s.router.GET("/api/user/me", h.HandleGetUser)
+	s.router.POST("/api/user/settings", h.HandleUpdateSettings)
 }

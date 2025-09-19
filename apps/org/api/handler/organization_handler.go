@@ -25,7 +25,6 @@ func NewOrganizationHandler(manager domain.OrganizationManager) *OrganizationHan
 }
 
 // HandleGetByUser - handle get by user.
-// TODO: rename
 func (s *OrganizationHandler) HandleGetByUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	organization, err := s.manager.Get(ctx, web.GetUserID(r))

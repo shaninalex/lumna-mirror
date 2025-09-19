@@ -6,7 +6,6 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/gofiber/fiber/v2"
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
 	"gitlab.com/shaninalex/flowreon/apps/project/domain"
 	"gitlab.com/shaninalex/flowreon/apps/project/dto"
@@ -28,49 +27,48 @@ func NewProjectHandler(manager domain.ProjectManager) *ProjectHandler {
 }
 
 // HandleProjectsList - handle projects list.
-func (s *ProjectHandler) HandleProjectsList(ctx *fiber.Ctx) error {
-	projects, err := s.manager.List(ctx.Context(), web.GetOrganizationID(ctx))
+func (s *ProjectHandler) HandleProjectsList(w http.ResponseWriter, r *http.Request) {
+	projects, err := s.manager.List(r.Context(), web.GetOrganizationID(r))
 	if err != nil {
 		if errors.Is(err, apperrors.ProjectNotFound) {
-			return web.Success(ctx, adapter.NewProjectsDto(nil))
+			web.Success(w, adapter.NewProjectsDto(nil))
+			return
 		}
-		return web.Error(ctx, http.StatusBadRequest, err)
+		web.Error(w, http.StatusBadRequest, err)
+		return
 	}
-	return web.Success(ctx, adapter.NewProjectsDto(projects))
+	web.Success(w, adapter.NewProjectsDto(projects))
 }
 
 // HandleProjectTasksList - handle project tasks list.
-func (s *ProjectHandler) HandleProjectTasksList(ctx *fiber.Ctx) error {
-	projectCode := ctx.Params("projectCode")
-	tasks, err := s.manager.TasksList(ctx.Context(), web.GetOrganizationID(ctx), projectCode)
+func (s *ProjectHandler) HandleProjectTasksList(w http.ResponseWriter, r *http.Request) {
+	projectCode := r.PathValue("projectCode")
+
+	tasks, err := s.manager.TasksList(r.Context(), web.GetOrganizationID(r), projectCode)
 	if err != nil {
-		return web.Error(ctx, http.StatusBadRequest, err)
+		web.Error(w, http.StatusBadRequest, err)
+		return
 	}
-	return web.Success(ctx, adapter.NewTasksDto(tasks))
+	web.Success(w, adapter.NewTasksDto(tasks))
 }
 
 // HandleProjectCreate - handle project tasks list.
-func (s *ProjectHandler) HandleProjectCreate(ctx *fiber.Ctx) error {
-	var projectDto dto.ProjectDto
-	err := ctx.BodyParser(&projectDto)
+func (s *ProjectHandler) HandleProjectCreate(w http.ResponseWriter, r *http.Request) {
+	projectDto, err := web.BodyParser[dto.ProjectDto](r)
 	if err != nil {
-		return web.Error(ctx, http.StatusBadRequest, err)
+		web.Error(w, http.StatusBadRequest, err)
+		return
 	}
-	project, err := s.manager.CreateProject(ctx.Context(), web.GetUserID(ctx), web.GetOrganizationID(ctx), &projectDto)
+	project, err := s.manager.CreateProject(r.Context(), web.GetUserID(r), web.GetOrganizationID(r), projectDto)
 	if err != nil {
-		return web.Error(ctx, http.StatusBadRequest, err)
+		web.Error(w, http.StatusBadRequest, err)
+		return
 	}
-	return web.Success(ctx, adapter.NewProjectDto(project))
+	web.Success(w, adapter.NewProjectDto(project))
 }
 
 // TaskFilter - task filter.
 type TaskFilter struct {
 	Project  string `query:"project,required"`
 	TaskCode string `query:"taskCode"`
-}
-
-func (s *ProjectHandler) getFilterParams(ctx *fiber.Ctx) (*TaskFilter, error) {
-	q := new(TaskFilter)
-	err := ctx.QueryParser(q)
-	return q, err
 }

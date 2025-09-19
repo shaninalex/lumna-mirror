@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
@@ -17,6 +18,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/apps/project/api/handler"
 	"gitlab.com/shaninalex/flowreon/apps/project/domain"
 	"gitlab.com/shaninalex/flowreon/apps/project/dto"
+	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/tdata"
@@ -28,9 +30,10 @@ func Test_HandleTaskPatchStatus(t *testing.T) {
 	_, user, project := tdata.CreatePack(m.Ctx)
 	cookie := tdata.AddSession(user)
 	statuses := tdata.CreateRandomTasksAndStatuses(m.Ctx, project)
-	r := tdata.AuthTestRouter(m.Ctx)
 	handlers := handler.NewTaskHandler(domain.NewProjectManagement())
-	r.Patch("/api/project/:projectCode/tasks/:taskCode/status", handlers.HandleTaskPatchStatus)
+
+	router := tdata.AuthTestRouter(m.Ctx)
+	router.PATCH("/api/project/{projectCode}/tasks/{taskCode}/status", handlers.HandleTaskPatchStatus)
 
 	testTask := statuses[0].Tasks[0]
 
@@ -44,22 +47,21 @@ func Test_HandleTaskPatchStatus(t *testing.T) {
 	b, _ := json.Marshal(payload)
 	req, _ := http.NewRequest("PATCH", fmt.Sprintf("/api/project/%s/tasks/%s/status", project.ProjectKey, testTask.Code), strings.NewReader(string(b)))
 	req.Header.Set("Content-Type", "application/json")
-
 	tdata.SetAuthRequest(req, user, cookie)
-	res, err := r.Test(req, -1)
 
-	assert.NoError(t, err)
-	assert.Equal(t, 200, res.StatusCode)
-	body, _ := io.ReadAll(res.Body)
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	assert.Equal(t, 200, rr.Result().StatusCode)
+	body, _ := io.ReadAll(rr.Result().Body)
 	assert.NotNil(t, body)
 	var response web.APIResponse[any]
-	err = json.Unmarshal(body, &response)
+	err := json.Unmarshal(body, &response)
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"Task saved"}, response.Messages)
 
 	taskFromDB := models.Task{ID: testTask.ID}
-	m.DB.First(&taskFromDB)
-
+	database.GetDB(m.Ctx).First(&taskFromDB)
 	assert.Equal(t, statuses[1].ID, taskFromDB.TaskStatusID)
 }
 
@@ -69,24 +71,24 @@ func Test_HandleTaskDetail(t *testing.T) {
 	_, user, project := tdata.CreatePack(m.Ctx)
 	cookie := tdata.AddSession(user)
 	tasks := tdata.CreateTasks(m.Ctx, project)
-	r := tdata.AuthTestRouter(m.Ctx)
 	handlers := handler.NewTaskHandler(domain.NewProjectManagement())
-	r.Get("/api/project/:projectCode/tasks/:taskCode", handlers.HandleTaskDetail)
+	router := tdata.AuthTestRouter(m.Ctx)
+	router.GET("/api/project/{projectCode}/tasks/{taskCode}", handlers.HandleTaskDetail)
 
 	testTask := tasks[0]
 
 	req, _ := http.NewRequest("GET", fmt.Sprintf("/api/project/%s/tasks/%s", project.ProjectKey, testTask.Code), nil)
 	tdata.SetAuthRequest(req, user, cookie)
 
-	res, err := r.Test(req, -1)
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
 
-	assert.NoError(t, err)
-	assert.Equal(t, 200, res.StatusCode)
+	assert.Equal(t, 200, rr.Result().StatusCode)
 
-	body, _ := io.ReadAll(res.Body)
+	body, _ := io.ReadAll(rr.Result().Body)
 
 	var response web.APIResponse[*dto.TaskDto]
-	err = json.Unmarshal(body, &response)
+	err := json.Unmarshal(body, &response)
 	assert.NoError(t, err)
 
 	testTaskDto := adapter.NewTaskDto(testTask)
@@ -112,9 +114,9 @@ func Test_HandleTaskUpdate(t *testing.T) {
 	_, user, project := tdata.CreatePack(m.Ctx)
 	cookie := tdata.AddSession(user)
 	statuses := tdata.CreateRandomTasksAndStatuses(m.Ctx, project)
-	r := tdata.AuthTestRouter(m.Ctx)
 	handlers := handler.NewTaskHandler(domain.NewProjectManagement())
-	r.Patch("/api/project/:projectCode/tasks/:taskCode", handlers.HandleTaskUpdate)
+	router := tdata.AuthTestRouter(m.Ctx)
+	router.PATCH("/api/project/{projectCode}/tasks/{taskCode}", handlers.HandleTaskUpdate)
 
 	testTask := statuses[0].Tasks[0]
 	payload := adapter.UpdateTaskData{
@@ -125,21 +127,21 @@ func Test_HandleTaskUpdate(t *testing.T) {
 	b, _ := json.Marshal(payload)
 	req, _ := http.NewRequest("PATCH", fmt.Sprintf("/api/project/%s/tasks/%s", project.ProjectKey, testTask.Code), strings.NewReader(string(b)))
 	req.Header.Set("Content-Type", "application/json")
-
 	tdata.SetAuthRequest(req, user, cookie)
-	res, err := r.Test(req, -1)
 
-	assert.NoError(t, err)
-	assert.Equal(t, 200, res.StatusCode)
-	body, _ := io.ReadAll(res.Body)
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	assert.Equal(t, 200, rr.Result().StatusCode)
+	body, _ := io.ReadAll(rr.Result().Body)
 	assert.NotNil(t, body)
 	var response web.APIResponse[any]
-	err = json.Unmarshal(body, &response)
+	err := json.Unmarshal(body, &response)
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"Task saved"}, response.Messages)
 
 	taskFromDB := models.Task{ID: testTask.ID}
-	m.DB.First(&taskFromDB)
+	database.GetDB(m.Ctx).First(&taskFromDB)
 
 	assert.Equal(t, payload.Title, taskFromDB.Title)
 	assert.Equal(t, payload.Description, taskFromDB.Description)

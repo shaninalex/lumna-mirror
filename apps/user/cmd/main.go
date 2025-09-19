@@ -3,8 +3,12 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
+	"time"
 
 	userApp "gitlab.com/shaninalex/flowreon/apps/user/api"
 	"gitlab.com/shaninalex/flowreon/database"
@@ -23,9 +27,20 @@ func main() {
 
 	config := base.NewConfig(configPath)
 	db := database.InitDB(database.BuildDSN(config))
-	router := web.AuthRouter(config, db, "user_service")
-	userApp.NewUserController(router)
-	if err := router.Listen(fmt.Sprintf(":%s", config.String("user_service.port"))); err != nil {
+	sqlDB, err := db.DB()
+	if err != nil {
 		panic(err)
+	}
+	router := web.AuthRouter(config, sqlDB, "user_service")
+	userApp.NewUserController(router)
+
+	srv := &http.Server{
+		Handler:      router,
+		Addr:         fmt.Sprintf(":%s", config.String("user_service.port")),
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
+	if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Printf("Server error: %v\n", err)
 	}
 }
