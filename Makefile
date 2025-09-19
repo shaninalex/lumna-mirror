@@ -27,20 +27,20 @@ seed:
 	go run ./dev/cli/main.go --action=seed --userID=$(id)
 
 migrate_create:
-	~/go/bin/migrate create -ext sql -dir ./database/migrations -format "20060102150405" $(name)
+	~/go/bin/migrate create -ext sql -dir ./migrations -format "20060102150405" $(name)
 
 migrate_up:
 	~/go/bin/migrate \
-		-path ./database/migrations/ \
-		-database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" \
+		-path ./migrations/ \
+		-database "sqlite3://flowreon.db" \
 		-verbose up
 
 # usage:
 # 	make migrate_down N=1 - for one migration down
 migrate_down:
 	~/go/bin/migrate \
-		-path ./database/migrations/ \
-		-database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" \
+		-path ./migrations/ \
+		-database "sqlite3://flowreon.db" \
 		-verbose down $(N)
 
 start_auth:

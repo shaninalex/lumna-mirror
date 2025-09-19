@@ -12,3 +12,4 @@ config/kratos/kratos.yml
 config/oathkeeper/access-rules.yml
 config/oathkeeper/oathkeeper.yml
 cmd/standalone/web/
+*.db
