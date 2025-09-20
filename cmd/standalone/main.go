@@ -29,7 +29,8 @@ func main() {
 	router := web.DefaultRouter(sqlDB, "standalone")
 	router.GET("/", frontendHandler(static))
 
-	auth.NewAuthController(router)
+	sessionStore := web.NewCookieStoreDatabase(sqlDB, []byte("very-secret-key"))
+	auth.NewAuthController(router, sessionStore)
 
 	log.Println("server started...")
 	if err := router.Run(); err != nil && !errors.Is(err, http.ErrServerClosed) {

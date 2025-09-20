@@ -8,7 +8,6 @@ import (
 	"path"
 
 	"github.com/gorilla/csrf"
-	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/internal/database"
 )
 
@@ -105,9 +104,8 @@ func DefaultRouter(db *sql.DB, name string) *Router {
 }
 
 // AuthRouter - auth router.
-func AuthRouter(cnf base.IConfig, db *sql.DB, name string) *Router {
+func AuthRouter(db *sql.DB, store *CookieStoreDatabase, name string) *Router {
 	router := DefaultRouter(db, name)
-	//kratosClient := kratos.NewKratosService(cnf.String("kratos.url_browser"))
-	//router.Use(NewAuthMiddleware(kratosClient).Wrap)
+	router.Use(SessionMiddleware(store, "app_session"))
 	return router
 }

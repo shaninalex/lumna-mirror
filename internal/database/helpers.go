@@ -29,3 +29,12 @@ func GetDB(ctx context.Context) *gorm.DB {
 	}
 	return db
 }
+
+// GetDb - returns the *sql.DB
+func GetDb(ctx context.Context) *sql.DB {
+	sqlDB := ctx.Value(base.ContextDB).(*sql.DB)
+	if sqlDB == nil {
+		panic("postgres context is not set")
+	}
+	return sqlDB
+}

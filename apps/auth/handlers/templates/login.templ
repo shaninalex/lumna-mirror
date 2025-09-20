@@ -1,6 +1,6 @@
 package templates
 
-templ LoginTemplate(csrfInput string) {
+templ LoginTemplate(csrfInput string, err error) {
     <!doctype html>
     <html lang="en">
     <head>
@@ -26,6 +26,14 @@ templ LoginTemplate(csrfInput string) {
             <div>
                 <button type="submit">Login</button>
             </div>
+
+            if err != nil {
+                <div style="color: red">{ err.Error() }</div>
+            }
+
+            <hr>
+
+            <a href={ templ.URL("/auth/registration") }>Registration</a>
         </form>
     </body>
     </html>
