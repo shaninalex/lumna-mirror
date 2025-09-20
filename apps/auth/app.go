@@ -13,4 +13,6 @@ func NewAuthController(router *web.Router, sessionStore *web.CookieStoreDatabase
 	router.POST("/auth/login", h.HandleLogin)
 	router.GET("/auth/registration", h.HandleRegistrationTemplate)
 	router.POST("/auth/registration", h.HandleRegistration)
+	router.GET("/auth/verify", h.HandleVerifyTemplate)
+	router.POST("/auth/verify", h.HandleVerify)
 }

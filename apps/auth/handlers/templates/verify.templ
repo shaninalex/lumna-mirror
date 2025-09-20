@@ -1,0 +1,36 @@
+package templates
+
+templ VerifyTemplate(csrfInput string, err error) {
+    <!doctype html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Login page</title>
+    </head>
+    <body>
+        <form method="post" action="/auth/verify">
+            @templ.Raw(csrfInput)
+
+            <div>
+                <label for="email">Email</label>
+                <input autocomplete="email" id="email" name="email" type="email" placeholder="Enter your email" required />
+            </div>
+
+            <div>
+                <button type="submit">Verify</button>
+            </div>
+
+            if err != nil {
+                <div style="color: red">{ err.Error() }</div>
+            }
+
+            <hr>
+
+            <a href={ templ.URL("/auth/login") }>Login</a> /
+            <a href={ templ.URL("/auth/registration") }>Registration</a>
+        </form>
+    </body>
+    </html>
+}
