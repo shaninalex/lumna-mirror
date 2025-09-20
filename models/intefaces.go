@@ -49,5 +49,3 @@ type Coded interface {
 	SetCode(string)
 	GetCode() string
 }
-
-type Repository[T Identifiable] interface{}

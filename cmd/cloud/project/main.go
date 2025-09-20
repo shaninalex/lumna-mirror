@@ -11,8 +11,8 @@ import (
 	"time"
 
 	projectApp "gitlab.com/shaninalex/flowreon/apps/project/api"
-	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 

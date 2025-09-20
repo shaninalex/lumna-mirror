@@ -8,18 +8,16 @@ import (
 	"os"
 	"sync"
 
-	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/base"
-	"gitlab.com/shaninalex/flowreon/internal/kratos"
+	"gitlab.com/shaninalex/flowreon/internal/database"
 )
 
 var lock = sync.RWMutex{}
 
 // TestManager - test manager.
 type TestManager struct {
-	Ctx    context.Context
-	DB     *sql.DB
-	Kratos kratos.IKratos
+	Ctx context.Context
+	DB  *sql.DB
 }
 
 // Manager - manager.
@@ -35,8 +33,7 @@ func Manager() *TestManager {
 	lock.Unlock()
 
 	return &TestManager{
-		DB:     db,
-		Ctx:    ctx,
-		Kratos: NewMockKratosService(),
+		DB:  db,
+		Ctx: ctx,
 	}
 }

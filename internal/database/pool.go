@@ -6,7 +6,6 @@ import (
 	"log"
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -46,27 +45,9 @@ func InitDB(dsn string) *gorm.DB {
 		sqlDB.SetMaxIdleConns(10)
 		sqlDB.SetMaxOpenConns(100)
 		sqlDB.SetConnMaxLifetime(time.Hour)
-		ApplyMigrations(gormDB)
 		return gormDB
 	}
 
 	log.Fatalf("[DB]: Failed to connect after %d attempts: %v", maxRetries, err)
 	return nil
-}
-
-// ApplyMigrations applying migrations
-func ApplyMigrations(db *gorm.DB) {
-	err := db.AutoMigrate(
-		&models.User{},
-		&models.Task{},
-		&models.TaskStatus{},
-		&models.Epic{},
-		&models.Sprint{},
-		&models.Organization{},
-		&models.Project{},
-	)
-	if err != nil {
-		log.Printf("[DB]: Unable to apply migrations: %v", err)
-		panic(err)
-	}
 }

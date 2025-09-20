@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
-	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/tdata"
 )

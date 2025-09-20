@@ -5,7 +5,7 @@ package tdata
 import (
 	"context"
 
-	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
