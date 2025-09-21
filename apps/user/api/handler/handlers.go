@@ -4,8 +4,8 @@ package handler
 
 import (
 	"net/http"
-	"time"
 
+	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
 	"gitlab.com/shaninalex/flowreon/apps/user/dto"
 	"gitlab.com/shaninalex/flowreon/internal/web"
@@ -14,14 +14,14 @@ import (
 
 type UserHandler struct {
 	manager      domain.UserManager
-	sessionStore *web.CookieStoreDatabase
+	tokenService web.TokenManager
 }
 
 // NewUserHandler - new user handler
-func NewUserHandler(manager domain.UserManager, sessionStore *web.CookieStoreDatabase) *UserHandler {
+func NewUserHandler(manager domain.UserManager) *UserHandler {
 	return &UserHandler{
 		manager:      manager,
-		sessionStore: sessionStore,
+		tokenService: web.NewTokenService(),
 	}
 }
 
@@ -57,16 +57,11 @@ func (s *UserHandler) HandleUpdateSettings(w http.ResponseWriter, r *http.Reques
 
 func (s *UserHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	sess := web.GetSession(r)
-	if err := s.sessionStore.Delete(ctx, sess); err != nil {
+	jti := uuid.MustParse(ctx.Value("jti").(string))
+	userID := web.GetUserID(r)
+	if err := s.tokenService.DeleteToken(ctx, userID, jti); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
+		return
 	}
-	http.SetCookie(w, &http.Cookie{
-		Name:     "app_session",
-		Value:    "",
-		Path:     "/",
-		Expires:  time.Unix(0, 0),
-		HttpOnly: true,
-	})
 	web.Success(w, nil, "Logout Successful")
 }

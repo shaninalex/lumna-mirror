@@ -5,6 +5,8 @@ package web
 import (
 	"context"
 	"net/http"
+
+	"github.com/gorilla/csrf"
 )
 
 // CommonMiddleware - common middleware.
@@ -35,4 +37,18 @@ func readRequestIP(r *http.Request) string {
 		IPAddress = r.RemoteAddr
 	}
 	return IPAddress
+}
+
+func CSRFMiddleware(secret []byte) Middleware {
+	return func(next http.Handler) http.Handler {
+		// double-submit cookie setup
+		return csrf.Protect(
+			secret,
+			csrf.Secure(false), // true in prod (requires HTTPS)
+			csrf.HttpOnly(true),
+			csrf.Path("/"),
+			csrf.CookieName("csrf_token"),
+			csrf.FieldName("X-CSRF-Token"), // what we expect from frontend
+		)(next)
+	}
 }

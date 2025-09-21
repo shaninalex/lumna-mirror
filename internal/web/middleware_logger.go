@@ -3,20 +3,15 @@
 package web
 
 import (
-	"context"
 	"log"
 	"net/http"
 	"time"
-
-	"gitlab.com/shaninalex/flowreon/internal/base"
 )
 
-type LoggerMiddleware struct {
-	appName string
-}
+type LoggerMiddleware struct{}
 
-func NewLoggerMiddleware(name string) *LoggerMiddleware {
-	return &LoggerMiddleware{appName: name}
+func NewLoggerMiddleware() *LoggerMiddleware {
+	return &LoggerMiddleware{}
 }
 
 func (m *LoggerMiddleware) Wrap(next http.Handler) http.Handler {
@@ -26,10 +21,10 @@ func (m *LoggerMiddleware) Wrap(next http.Handler) http.Handler {
 		// Wrap ResponseWriter to capture status code
 		lrw := &loggingResponseWriter{ResponseWriter: w, status: http.StatusOK}
 
-		next.ServeHTTP(lrw, r.WithContext(context.WithValue(r.Context(), base.ContextAppName, m.appName)))
+		next.ServeHTTP(lrw, r)
 
 		duration := time.Since(start)
-		log.Printf("[%s]: %s %s %d %v\n", m.appName, r.Method, r.URL.Path, lrw.status, duration)
+		log.Printf("%s %s %d %v\n", r.Method, r.URL.Path, lrw.status, duration)
 	})
 }
 

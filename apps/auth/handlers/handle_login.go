@@ -3,6 +3,7 @@
 package handlers
 
 import (
+	"context"
 	"errors"
 	"net/http"
 
@@ -36,14 +37,12 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session, _ := s.sessionStore.Get(r, "app_session")
-	session.Values["user_id"] = user.ID
-	session.Values["user_email"] = user.Email
-	session.Options.MaxAge = 86400 * 7
-	err = s.sessionStore.Save(r, w, session)
+	ctx = context.WithValue(ctx, "device", r.UserAgent())
+	tokenString, err := s.tokenService.CreateToken(ctx, user.ID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	web.Success(w, nil, "Login Successful")
+
+	web.Success(w, map[string]any{"token": tokenString}, "Login Successful")
 }

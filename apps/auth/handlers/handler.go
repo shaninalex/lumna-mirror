@@ -7,14 +7,14 @@ import (
 	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
 
-func NewAuthHandler(sessionStore *web.CookieStoreDatabase) *AuthHandler {
+func NewAuthHandler() *AuthHandler {
 	return &AuthHandler{
-		sessionStore:   sessionStore,
+		tokenService:   web.NewTokenService(),
 		userRepository: repositories.NewUserRepository(),
 	}
 }
 
 type AuthHandler struct {
-	sessionStore   *web.CookieStoreDatabase
+	tokenService   *web.TokenService
 	userRepository *repositories.UserRepository
 }

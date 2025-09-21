@@ -6,8 +6,8 @@ import (
 	"database/sql"
 	"embed"
 	"errors"
+	"fmt"
 	"io/fs"
-	"log"
 	"net/http"
 
 	authApp "gitlab.com/shaninalex/flowreon/apps/auth"
@@ -27,19 +27,16 @@ func main() {
 	database.ApplyMigrationsEmbed(sqlDB)
 	static, _ := fs.Sub(webFS, "web/browser")
 
-	router := web.DefaultRouter(sqlDB, "standalone")
+	router := web.DefaultRouter(sqlDB)
 	router.GET("/", frontendHandler(static))
 
-	sessionStore := web.NewCookieStoreDatabase(sqlDB, []byte("very-secret-key"))
-	authApp.NewAuthController(router, sessionStore)
+	authApp.NewAuthController(router)
 
-	router.Use(web.SessionMiddleware(sessionStore, "app_session"))
-	router.Use(web.AuthSessionMiddleware(sqlDB))
-	userApp.NewUserController(router, sessionStore)
+	router.Use(web.TokenMiddleware)
+	userApp.NewUserController(router)
 	// other private apps.
 
-	log.Println("server started...")
 	if err = router.Run(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Printf("Server error: %v\n", err)
+		panic(fmt.Errorf("server error: %v\n", err))
 	}
 }

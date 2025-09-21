@@ -7,8 +7,8 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
-func NewAuthController(router *web.Router, sessionStore *web.CookieStoreDatabase) {
-	h := handlers.NewAuthHandler(sessionStore)
+func NewAuthController(router *web.Router) {
+	h := handlers.NewAuthHandler()
 	router.POST("/api/auth/login", h.HandleLogin)
 	router.POST("/api/auth/register", h.HandleRegistration)
 }

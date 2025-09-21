@@ -4,6 +4,7 @@ package web
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
 	"path"
 
@@ -75,24 +76,24 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 }
 
 func (r *Router) Run() error {
-	handler := corsMiddleware(r)
-	return http.ListenAndServe(":8000", handler)
+	log.Println("server started... on port :8000")
+	return http.ListenAndServe(":8000", corsMiddleware(r))
 }
 
 // DefaultRouter - default router.
-func DefaultRouter(db *sql.DB, name string) *Router {
+func DefaultRouter(db *sql.DB) *Router {
 	r := NewRouter()
 	r.Use(NewRecoveryMiddleware().Wrap)
 	r.Use(database.NewMiddleware(db).Wrap)
-	r.Use(NewLoggerMiddleware(name).Wrap)
+	r.Use(NewLoggerMiddleware().Wrap)
 	r.Use(NewCommonMiddleware().Wrap)
 	r.GET("/_health", HandleHealth)
 	return r
 }
 
 // AuthRouter - auth router.
-func AuthRouter(db *sql.DB, store *CookieStoreDatabase, name string) *Router {
-	router := DefaultRouter(db, name)
-	router.Use(SessionMiddleware(store, "app_session"))
+func AuthRouter(db *sql.DB) *Router {
+	router := DefaultRouter(db)
+	router.Use(TokenMiddleware)
 	return router
 }
