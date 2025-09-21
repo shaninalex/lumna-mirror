@@ -2,11 +2,10 @@ import {Component, inject} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {map, Observable} from 'rxjs';
-import {selectSession} from '@client/entities/auth';
 import {AsyncPipe} from '@angular/common';
-import {CdkMenu, CdkMenuItem, CdkMenuModule} from '@angular/cdk/menu';
 import {RouterLink} from '@angular/router';
 import {UserLogoutFeature} from '@client/features/user';
+import {selectUser} from '@client/entities/user';
 
 @Component({
     selector: 'fr-header',
@@ -18,8 +17,8 @@ import {UserLogoutFeature} from '@client/features/user';
     template: `
         <div class="bg-white dark:bg-slate-800 py-2 px-4 flex items-center justify-between">
             <div class="flex items-center gap-2 ms-auto">
-                @if (email$ | async; as email) {
-                    <div>{{ email }}</div>
+                @if (code$ | async; as code) {
+                    <div>{{ code }}</div>
                     <div class="dropdown">
                         <div tabindex="0" role="button" class="">
                             <img src="img/1.png" class="rounded-full w-8" alt="">
@@ -37,7 +36,7 @@ import {UserLogoutFeature} from '@client/features/user';
 })
 export class Header {
     private store: Store<AppState> = inject(Store<AppState>);
-    email$: Observable<string> = this.store.select(selectSession).pipe(
-        map(session => session?.identity?.traits?.email)
+    code$: Observable<string | undefined> = this.store.select(selectUser).pipe(
+        map(user => user?.code)
     )
 }

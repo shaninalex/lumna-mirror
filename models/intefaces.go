@@ -37,8 +37,6 @@ type Timestamped interface {
 	Identifiable
 	GetCreatedAt() time.Time
 	GetUpdatedAt() time.Time
-	GetDeletedAt() *time.Time // optional for soft-delete
-	IsDeleted() bool
 }
 
 // Auditable get id of an entity created

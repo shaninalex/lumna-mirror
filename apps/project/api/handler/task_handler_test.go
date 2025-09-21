@@ -18,7 +18,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/apps/project/api/handler"
 	"gitlab.com/shaninalex/flowreon/apps/project/domain"
 	"gitlab.com/shaninalex/flowreon/apps/project/dto"
-	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/tdata"

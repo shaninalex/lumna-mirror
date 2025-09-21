@@ -1,7 +1,10 @@
 export interface UserModel {
     id: string
-    settings: Settings
     code: string
+    email: string
+    active: boolean
+    state: string
+    settings: Settings
 }
 
 export interface Settings {

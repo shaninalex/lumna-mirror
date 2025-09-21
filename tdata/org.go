@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	ory "github.com/ory/kratos-client-go"
-	"gitlab.com/shaninalex/flowreon/database"
+	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/utils"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/models/builders"

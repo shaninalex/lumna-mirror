@@ -7,9 +7,7 @@ import (
 	"net/http"
 	"path"
 
-	"gitlab.com/shaninalex/flowreon/database"
-	"gitlab.com/shaninalex/flowreon/internal/base"
-	"gitlab.com/shaninalex/flowreon/internal/kratos"
+	"gitlab.com/shaninalex/flowreon/internal/database"
 )
 
 type Middleware func(http.Handler) http.Handler
@@ -67,15 +65,18 @@ func (r *Router) Use(m Middleware) {
 }
 
 func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, handler http.Handler) {
-	// Apply global middlewares
 	for i := len(r.middlewares) - 1; i >= 0; i-- {
 		handler = r.middlewares[i](handler)
 	}
-
 	mux.HandleFunc(pattern, func(w http.ResponseWriter, req *http.Request) {
 		//NoCache(w)
 		handler.ServeHTTP(w, req)
 	})
+}
+
+func (r *Router) Run() error {
+	handler := corsMiddleware(r)
+	return http.ListenAndServe(":8000", handler)
 }
 
 // DefaultRouter - default router.
@@ -90,9 +91,8 @@ func DefaultRouter(db *sql.DB, name string) *Router {
 }
 
 // AuthRouter - auth router.
-func AuthRouter(cnf base.IConfig, db *sql.DB, name string) *Router {
+func AuthRouter(db *sql.DB, store *CookieStoreDatabase, name string) *Router {
 	router := DefaultRouter(db, name)
-	kratosClient := kratos.NewKratosService(cnf.String("kratos.url_browser"))
-	router.Use(NewAuthMiddleware(kratosClient).Wrap)
+	router.Use(SessionMiddleware(store, "app_session"))
 	return router
 }

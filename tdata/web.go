@@ -16,8 +16,6 @@ import (
 func AuthTestRouter(ctx context.Context) *web.Router {
 	db := ctx.Value(base.ContextDB).(*sql.DB)
 	router := web.DefaultRouter(db, "test_router")
-	kratosClient := NewMockKratosService()
-	router.Use(web.NewAuthMiddleware(kratosClient).Wrap)
 	return router
 }
 

@@ -10,18 +10,13 @@ import (
 
 // TaskStatus - task status.
 type TaskStatus struct {
-	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-
-	ProjectID uuid.UUID
-	Project   *Project `gorm:"foreignKey:ProjectID;references:ID"`
-
-	Tasks []*Task `gorm:"foreignKey:TaskStatusID;references:ID"`
-
-	Title       string `gorm:"uniqueIndex"`
-	Description string
-	Complete    bool
-	Index       uint
-	Config      string
+	ID          uuid.UUID `db:"id"`
+	ProjectID   uuid.UUID `db:"project_id"`
+	Title       string    `db:"title"`
+	Description string    `db:"description"`
+	Complete    bool      `db:"complete"`
+	Index       uint      `db:"index"`
+	Config      string    `db:"config"`
 }
 
 // GetID - returns the id.

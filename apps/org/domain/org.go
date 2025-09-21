@@ -7,8 +7,8 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/flowreon/database"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gorm.io/gorm"
 )
