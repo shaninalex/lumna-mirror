@@ -33,45 +33,15 @@ func (b *TaskBuilder) UserID(userID uuid.UUID) *TaskBuilder {
 	return b
 }
 
-// User - user.
-func (b *TaskBuilder) User(user models.User) *TaskBuilder {
-	b.task.User = &user
-	return b
-}
-
-// EpicID - epic id.
-func (b *TaskBuilder) EpicID(epicID uuid.UUID) *TaskBuilder {
-	b.task.EpicID = &epicID
-	return b
-}
-
-// Epic - epic.
-func (b *TaskBuilder) Epic(epic models.Epic) *TaskBuilder {
-	b.task.Epic = &epic
-	return b
-}
-
 // OrganizationID - organization id.
 func (b *TaskBuilder) OrganizationID(organizationID uuid.UUID) *TaskBuilder {
 	b.task.OrganizationID = organizationID
 	return b
 }
 
-// Organization - organization.
-func (b *TaskBuilder) Organization(organization models.Organization) *TaskBuilder {
-	b.task.Organization = &organization
-	return b
-}
-
 // SprintID - sprint id.
 func (b *TaskBuilder) SprintID(sprintID uuid.UUID) *TaskBuilder {
 	b.task.SprintID = &sprintID
-	return b
-}
-
-// Sprint - sprint.
-func (b *TaskBuilder) Sprint(sprint models.Sprint) *TaskBuilder {
-	b.task.Sprint = &sprint
 	return b
 }
 
@@ -90,18 +60,6 @@ func (b *TaskBuilder) TaskStatusID(taskStatusID uuid.UUID) *TaskBuilder {
 // Code - set task code
 func (b *TaskBuilder) Code(code string) *TaskBuilder {
 	b.task.Code = code
-	return b
-}
-
-// TaskStatus - task status
-func (b *TaskBuilder) TaskStatus(taskStatus *models.TaskStatus) *TaskBuilder {
-	b.task.TaskStatus = taskStatus
-	return b
-}
-
-// Project - project.
-func (b *TaskBuilder) Project(project models.Project) *TaskBuilder {
-	b.task.Project = &project
 	return b
 }
 

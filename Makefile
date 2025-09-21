@@ -27,11 +27,11 @@ seed:
 	go run ./dev/cli/main.go --action=seed --userID=$(id)
 
 migrate_create:
-	~/go/bin/migrate create -ext sql -dir ./migrations -format "20060102150405" $(name)
+	~/go/bin/migrate create -ext sql -dir ./internal/database/migrations -format "20060102150405" $(name)
 
 migrate_up:
 	~/go/bin/migrate \
-		-path ./migrations/ \
+		-path ./internal/database/migrations/ \
 		-database "sqlite3://flowreon.db" \
 		-verbose up
 
@@ -39,7 +39,7 @@ migrate_up:
 # 	make migrate_down N=1 - for one migration down
 migrate_down:
 	~/go/bin/migrate \
-		-path ./migrations/ \
+		-path ./internal/database/migrations/ \
 		-database "sqlite3://flowreon.db" \
 		-verbose down $(N)
 

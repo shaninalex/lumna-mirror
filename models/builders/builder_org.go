@@ -33,12 +33,6 @@ func (b *OrganizationBuilder) UserID(userID uuid.UUID) *OrganizationBuilder {
 	return b
 }
 
-// User - user.
-func (b *OrganizationBuilder) User(user models.User) *OrganizationBuilder {
-	b.organization.User = &user
-	return b
-}
-
 // Title - title.
 func (b *OrganizationBuilder) Title(title string) *OrganizationBuilder {
 	b.organization.Title = title

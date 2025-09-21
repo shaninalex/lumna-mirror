@@ -11,12 +11,12 @@ import (
 
 // ProjectDto - project dto.
 type ProjectDto struct {
-	ID         uuid.UUID        `json:"id"`
-	Title      string           `json:"title"`
-	ProjectKey string           `json:"project_key"`
-	Statuses   []*TaskStatusDto `json:"statuses"`
-	CreatedAt  time.Time        `json:"created_at"`
-	UpdatedAt  time.Time        `json:"updated_at"`
+	ID        uuid.UUID        `json:"id"`
+	Title     string           `json:"title"`
+	Code      string           `json:"project_key"`
+	Statuses  []*TaskStatusDto `json:"statuses"`
+	CreatedAt time.Time        `json:"created_at"`
+	UpdatedAt time.Time        `json:"updated_at"`
 }
 
 // TaskDto - task dto.

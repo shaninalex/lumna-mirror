@@ -24,9 +24,9 @@ import {selectUser} from '@client/entities/user';
                             <img src="img/1.png" class="rounded-full w-8" alt="">
                         </div>
                         <ul tabindex="0" class="dropdown-content right-0 menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm">
-                            <li><a [routerLink]="['account']">account</a></li>
-                            <li><a [routerLink]="['settings']">settings</a></li>
-                            <kr-user-logout-feature />
+                            <li><a [routerLink]="['account']">Account</a></li>
+                            <li><a [routerLink]="['settings']">Settings</a></li>
+                            <li><kr-user-logout-feature /></li>
                         </ul>
                     </div>
                 }

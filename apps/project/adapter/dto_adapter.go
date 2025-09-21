@@ -10,12 +10,11 @@ import (
 // NewProjectDto - new project dto.
 func NewProjectDto(p *models.Project) *dto.ProjectDto {
 	return &dto.ProjectDto{
-		ID:         p.ID,
-		Title:      p.Title,
-		ProjectKey: p.ProjectKey,
-		Statuses:   NewIssueStatusesDto(p.Statuses),
-		CreatedAt:  p.CreatedAt,
-		UpdatedAt:  p.UpdatedAt,
+		ID:        p.ID,
+		Title:     p.Title,
+		Code:      p.Code,
+		CreatedAt: p.CreatedAt,
+		UpdatedAt: p.UpdatedAt,
 	}
 }
 
@@ -45,7 +44,6 @@ func NewTaskDto(t *models.Task) *dto.TaskDto {
 		Code:        t.Code,
 		CreatedAt:   t.CreatedAt,
 		UpdatedAt:   t.UpdatedAt,
-		DeletedAt:   &t.DeletedAt.Time,
 	}
 }
 

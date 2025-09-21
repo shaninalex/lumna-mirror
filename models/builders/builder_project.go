@@ -33,33 +33,21 @@ func (b *ProjectBuilder) UserID(userID uuid.UUID) *ProjectBuilder {
 	return b
 }
 
-// User - user.
-func (b *ProjectBuilder) User(user models.User) *ProjectBuilder {
-	b.project.User = &user
-	return b
-}
-
 // OrganizationID - organization id.
 func (b *ProjectBuilder) OrganizationID(organizationID uuid.UUID) *ProjectBuilder {
 	b.project.OrganizationID = organizationID
 	return b
 }
 
-// Organization - organization.
-func (b *ProjectBuilder) Organization(organization models.Organization) *ProjectBuilder {
-	b.project.Organization = organization
+// Code - project code id.
+func (b *ProjectBuilder) Code(code string) *ProjectBuilder {
+	b.project.Code = code
 	return b
 }
 
 // Title - title.
 func (b *ProjectBuilder) Title(title string) *ProjectBuilder {
 	b.project.Title = title
-	return b
-}
-
-// ProjectKey - set project code
-func (b *ProjectBuilder) ProjectKey(code string) *ProjectBuilder {
-	b.project.ProjectKey = code
 	return b
 }
 

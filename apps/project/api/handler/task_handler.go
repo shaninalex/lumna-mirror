@@ -30,7 +30,7 @@ func (s *TaskHandler) HandleTaskPatchStatus(w http.ResponseWriter, r *http.Reque
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	if err = s.manager.PatchTaskStatus(r.Context(), web.GetOrganizationID(r), in.ProjectCode, in.TaskCode, in.Data); err != nil {
+	if err = s.manager.PatchTaskStatus(r.Context(), web.GetUserID(r), in.ProjectCode, in.TaskCode, in.Data); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
@@ -41,7 +41,7 @@ func (s *TaskHandler) HandleTaskPatchStatus(w http.ResponseWriter, r *http.Reque
 func (s *TaskHandler) HandleTaskDetail(w http.ResponseWriter, r *http.Request) {
 	projectCode := r.PathValue("projectCode")
 	taskCode := r.PathValue("taskCode")
-	task, err := s.manager.TaskDetail(r.Context(), web.GetOrganizationID(r), projectCode, taskCode)
+	task, err := s.manager.TaskDetail(r.Context(), web.GetUserID(r), projectCode, taskCode)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -56,7 +56,7 @@ func (s *TaskHandler) HandleTaskUpdate(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	if err = s.manager.TaskUpdate(r.Context(), web.GetOrganizationID(r), data.ProjectCode, data.TaskCode, data.Data); err != nil {
+	if err = s.manager.TaskUpdate(r.Context(), web.GetUserID(r), data.ProjectCode, data.TaskCode, data.Data); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
@@ -70,7 +70,7 @@ func (s *TaskHandler) HandleTaskCreate(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	task, err := s.manager.TaskCreate(r.Context(), web.GetOrganizationID(r), web.GetUserID(r), data)
+	task, err := s.manager.TaskCreate(r.Context(), web.GetUserID(r), data)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

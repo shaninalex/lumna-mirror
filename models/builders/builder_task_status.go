@@ -31,12 +31,6 @@ func (b *TaskStatusBuilder) ProjectID(projectID uuid.UUID) *TaskStatusBuilder {
 	return b
 }
 
-// Project - project.
-func (b *TaskStatusBuilder) Project(project *models.Project) *TaskStatusBuilder {
-	b.issueStatus.Project = project
-	return b
-}
-
 // Title - title.
 func (b *TaskStatusBuilder) Title(title string) *TaskStatusBuilder {
 	b.issueStatus.Title = title

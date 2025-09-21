@@ -28,7 +28,7 @@ func NewProjectHandler(manager domain.ProjectManager) *ProjectHandler {
 
 // HandleProjectsList - handle projects list.
 func (s *ProjectHandler) HandleProjectsList(w http.ResponseWriter, r *http.Request) {
-	projects, err := s.manager.List(r.Context(), web.GetOrganizationID(r))
+	projects, err := s.manager.List(r.Context(), web.GetUserID(r))
 	if err != nil {
 		if errors.Is(err, apperrors.ProjectNotFound) {
 			web.Success(w, adapter.NewProjectsDto(nil))
@@ -44,7 +44,7 @@ func (s *ProjectHandler) HandleProjectsList(w http.ResponseWriter, r *http.Reque
 func (s *ProjectHandler) HandleProjectTasksList(w http.ResponseWriter, r *http.Request) {
 	projectCode := r.PathValue("projectCode")
 
-	tasks, err := s.manager.TasksList(r.Context(), web.GetOrganizationID(r), projectCode)
+	tasks, err := s.manager.TasksList(r.Context(), web.GetUserID(r), projectCode)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -59,7 +59,7 @@ func (s *ProjectHandler) HandleProjectCreate(w http.ResponseWriter, r *http.Requ
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	project, err := s.manager.CreateProject(r.Context(), web.GetUserID(r), web.GetOrganizationID(r), projectDto)
+	project, err := s.manager.CreateProject(r.Context(), web.GetUserID(r), projectDto)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

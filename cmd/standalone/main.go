@@ -11,6 +11,7 @@ import (
 	"net/http"
 
 	authApp "gitlab.com/shaninalex/flowreon/apps/auth"
+	projectApp "gitlab.com/shaninalex/flowreon/apps/project/api"
 	userApp "gitlab.com/shaninalex/flowreon/apps/user/api"
 	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
@@ -34,6 +35,7 @@ func main() {
 
 	router.Use(web.TokenMiddleware)
 	userApp.NewUserController(router)
+	projectApp.NewProjectController(router)
 	// other private apps.
 
 	if err = router.Run(); err != nil && !errors.Is(err, http.ErrServerClosed) {

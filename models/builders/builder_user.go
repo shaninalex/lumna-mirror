@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	ory "github.com/ory/kratos-client-go"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
@@ -37,12 +36,6 @@ func (b *UserBuilder) Settings(settings string) *UserBuilder {
 // Code - code.
 func (b *UserBuilder) Code(code string) *UserBuilder {
 	b.user.Code = code
-	return b
-}
-
-// Identity - identity.
-func (b *UserBuilder) Identity(identity *ory.Identity) *UserBuilder {
-	b.user.Identity = identity
 	return b
 }
 
