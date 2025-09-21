@@ -9,13 +9,15 @@ import (
 )
 
 type UserController struct {
-	router *web.Router
+	router       *web.Router
+	sessionStore *web.CookieStoreDatabase
 }
 
 // NewUserController - new user controller.
-func NewUserController(router *web.Router) *UserController {
+func NewUserController(router *web.Router, sessionStore *web.CookieStoreDatabase) *UserController {
 	c := &UserController{
-		router: router,
+		router:       router,
+		sessionStore: sessionStore,
 	}
 	c.init()
 	return c
@@ -26,7 +28,8 @@ func (s *UserController) init() {
 }
 
 func (s *UserController) setRoutes() {
-	h := handler.NewUserHandler(domain.NewUserService())
+	h := handler.NewUserHandler(domain.NewUserService(), s.sessionStore)
 	s.router.GET("/api/user/me", h.HandleGetUser)
 	s.router.POST("/api/user/settings", h.HandleUpdateSettings)
+	s.router.GET("/api/user/logout", h.HandleLogout)
 }

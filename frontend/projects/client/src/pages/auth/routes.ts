@@ -1,28 +1,16 @@
 import {Routes} from '@angular/router';
-import {Login} from './login/login';
-import {Registration} from './registration/registration';
-import {Verification} from './verification/verification';
-import {registrationFlowResolver} from './registration/registration.resolver';
-import {Recovery} from './recovery/recovery';
-import {recoveryFlowResolver} from '@client/pages/auth/recovery/recovery.resolver';
+import {AuthService} from '@client/entities/auth';
+import {LoginPageComponent} from '@client/pages/auth/login';
+import {RegisterPageComponent} from '@client/pages/auth/register';
+
 
 export const authRoutes: Routes = [
     {
         path: "auth/login",
-        component: Login,
+        component: LoginPageComponent,
     },
     {
-        path: "auth/registration",
-        resolve: {form: registrationFlowResolver},
-        component: Registration,
-    },
-    {
-        path: "auth/verification",
-        component: Verification,
-    },
-    {
-        path: "auth/recovery",
-        resolve: {form: recoveryFlowResolver},
-        component: Recovery,
-    },
+        path: "auth/register",
+        component: RegisterPageComponent,
+    }
 ]

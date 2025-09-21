@@ -3,38 +3,36 @@
 package handlers
 
 import (
-	"log"
+	"errors"
 	"net/http"
 
-	"github.com/gorilla/csrf"
-	"gitlab.com/shaninalex/flowreon/apps/auth/handlers/templates"
 	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (s *AuthHandler) HandleLoginTemplate(w http.ResponseWriter, r *http.Request) {
-	csrfInput := csrf.TemplateField(r)
-	templates.LoginTemplate(string(csrfInput), nil).Render(r.Context(), w)
+type loginPayload struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	db := database.GetDb(r.Context())
-	err := r.ParseForm()
+	payload, err := web.BodyParser[loginPayload](r)
 	if err != nil {
-		csrfInput := csrf.TemplateField(r)
-		templates.LoginTemplate(string(csrfInput), err).Render(r.Context(), w)
+		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
-	user, err := s.userRepository.GetByField(ctx, db, "email", r.PostFormValue("email"))
+	user, err := s.userRepository.GetByField(ctx, db, "email", payload.Email)
 	if err != nil {
-		templates.LoginTemplate(string(csrf.TemplateField(r)), err).Render(r.Context(), w)
+		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
-	if err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(r.PostFormValue("password"))); err != nil {
-		templates.LoginTemplate(string(csrf.TemplateField(r)), err).Render(r.Context(), w)
+	if err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(payload.Password)); err != nil {
+		web.Error(w, http.StatusBadRequest, errors.New("invalid password"))
 		return
 	}
 
@@ -44,11 +42,8 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	session.Options.MaxAge = 86400 * 7
 	err = s.sessionStore.Save(r, w, session)
 	if err != nil {
-		csrfInput := csrf.TemplateField(r)
-		templates.LoginTemplate(string(csrfInput), err).Render(r.Context(), w)
+		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-
-	log.Printf("user found: %s. Create and set session.\nRedirect to home page", user.Email)
-	http.Redirect(w, r, "/", http.StatusFound)
+	web.Success(w, nil, "Login Successful")
 }

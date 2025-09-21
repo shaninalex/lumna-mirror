@@ -64,3 +64,13 @@ func SaveSession(ctx context.Context, db *sql.DB, sm *models.SessionModel) error
 	)
 	return err
 }
+
+// DeleteSessionByID loads a session from DB by session ID.
+func DeleteSessionByID(ctx context.Context, db *sql.DB, id string) error {
+	query := `DELETE FROM user_sessions WHERE id = ?`
+	_, err := db.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

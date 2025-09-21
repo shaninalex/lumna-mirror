@@ -10,7 +10,8 @@ import (
 	"log"
 	"net/http"
 
-	"gitlab.com/shaninalex/flowreon/apps/auth"
+	authApp "gitlab.com/shaninalex/flowreon/apps/auth"
+	userApp "gitlab.com/shaninalex/flowreon/apps/user/api"
 	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
@@ -30,10 +31,15 @@ func main() {
 	router.GET("/", frontendHandler(static))
 
 	sessionStore := web.NewCookieStoreDatabase(sqlDB, []byte("very-secret-key"))
-	auth.NewAuthController(router, sessionStore)
+	authApp.NewAuthController(router, sessionStore)
+
+	router.Use(web.SessionMiddleware(sessionStore, "app_session"))
+	router.Use(web.AuthSessionMiddleware(sqlDB))
+	userApp.NewUserController(router, sessionStore)
+	// other private apps.
 
 	log.Println("server started...")
-	if err := router.Run(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	if err = router.Run(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Printf("Server error: %v\n", err)
 	}
 }

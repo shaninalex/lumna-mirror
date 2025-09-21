@@ -1,6 +1,7 @@
 package web
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -137,4 +138,8 @@ func (s *CookieStoreDatabase) Save(r *http.Request, w http.ResponseWriter, sessi
 	}
 	http.SetCookie(w, sessions.NewCookie(session.Name(), encoded, session.Options))
 	return nil
+}
+
+func (s *CookieStoreDatabase) Delete(ctx context.Context, session *sessions.Session) error {
+	return repositories.DeleteSessionByID(ctx, s.db, session.ID)
 }

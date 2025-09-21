@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"path"
 
-	"github.com/gorilla/csrf"
 	"gitlab.com/shaninalex/flowreon/internal/database"
 )
 
@@ -25,11 +24,7 @@ func NewRouter() *Router {
 }
 
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	var handler http.Handler = r.mux
-	for i := len(r.middlewares) - 1; i >= 0; i-- {
-		handler = r.middlewares[i](handler)
-	}
-	handler.ServeHTTP(w, req)
+	r.mux.ServeHTTP(w, req)
 }
 
 func (r *Router) GET(path string, handler http.HandlerFunc) {
@@ -61,7 +56,7 @@ func (r *Router) HandlerFunc(method, route string, handler http.HandlerFunc) {
 		method + " " + path.Join(route),
 		method + " " + path.Join(route, "{$}"),
 	} {
-		r.mux.HandleFunc(pattern, handler)
+		r.handleWithAllMiddlewares(r.mux, pattern, handler)
 	}
 }
 
@@ -73,7 +68,6 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 	for i := len(r.middlewares) - 1; i >= 0; i-- {
 		handler = r.middlewares[i](handler)
 	}
-
 	mux.HandleFunc(pattern, func(w http.ResponseWriter, req *http.Request) {
 		//NoCache(w)
 		handler.ServeHTTP(w, req)
@@ -81,15 +75,8 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 }
 
 func (r *Router) Run() error {
-	csrfMiddleware := csrf.Protect(
-		[]byte("32-byte-long-auth-key-123456789012"),
-		csrf.Secure(false), // requires HTTPS. True in production
-		csrf.Path("/"),
-		csrf.FieldName("csrf_token"),
-		csrf.CookieName("csrf_token"),
-		csrf.TrustedOrigins([]string{"localhost:8000", "127.0.0.1:8000"}),
-	)
-	return http.ListenAndServe(":8000", csrfMiddleware(r))
+	handler := corsMiddleware(r)
+	return http.ListenAndServe(":8000", handler)
 }
 
 // DefaultRouter - default router.

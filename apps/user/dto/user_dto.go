@@ -9,14 +9,20 @@ import (
 
 type UserDto struct {
 	ID       uuid.UUID            `json:"id"`
-	Settings *models.UserSettings `json:"settings"`
 	Code     string               `json:"code"`
+	Email    string               `json:"email"`
+	Active   bool                 `json:"active"`
+	State    models.UserState     `json:"state"`
+	Settings *models.UserSettings `json:"settings"`
 }
 
 func ToUserDto(user *models.User) *UserDto {
 	return &UserDto{
 		ID:       user.ID,
-		Settings: user.GetSettings(),
 		Code:     user.GetCode(),
+		Email:    user.Email,
+		Active:   user.Active,
+		State:    user.State,
+		Settings: user.GetSettings(),
 	}
 }

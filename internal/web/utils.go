@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	ory "github.com/ory/kratos-client-go"
+	"github.com/gorilla/sessions"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 	"gitlab.com/shaninalex/flowreon/models"
@@ -60,8 +60,8 @@ func Error(w http.ResponseWriter, status int, err error) {
 
 // GetUserID retrieves the user ID from context
 func GetUserID(r *http.Request) uuid.UUID {
-	if id, ok := r.Context().Value(base.ContextUserID).(uuid.UUID); ok {
-		return id
+	if id, ok := r.Context().Value(base.ContextUserID).(string); ok {
+		return uuid.MustParse(id)
 	}
 	return uuid.Nil
 }
@@ -83,9 +83,9 @@ func GetUser(r *http.Request) *models.User {
 }
 
 // GetSession retrieves the session object from context
-func GetSession(r *http.Request) *ory.Session {
-	if session, ok := r.Context().Value(base.ContextSession).(*ory.Session); ok {
-		return session
+func GetSession(r *http.Request) *sessions.Session {
+	if sess, ok := r.Context().Value(base.ContextSession).(*sessions.Session); ok {
+		return sess
 	}
 	return nil
 }

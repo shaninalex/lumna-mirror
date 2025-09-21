@@ -1,6 +1,9 @@
 import {Component, inject} from '@angular/core';
-import {AuthService} from '@client/entities/auth';
 import {LoaderComponent} from '@client/shared/ui/loader';
+import {filter, finalize, tap} from 'rxjs';
+import {APIResponse} from '@client/shared/models';
+import {Router} from '@angular/router';
+import {UserService} from '@client/entities/user';
 
 @Component({
     selector: 'kr-user-logout-feature',
@@ -15,24 +18,32 @@ import {LoaderComponent} from '@client/shared/ui/loader';
                 <ui-loader />
             }
         </button>
-        @if (error) {
-            <div class="text-sm text-red-500">{{ error }}</div>
+        @if (errors) {
+            @for (err of errors; track $index) {
+                <div class="text-red-500 text-sm">{{ err }}</div>
+            }
         }
     `,
 })
 export class UserLogoutFeature {
-    private api = inject(AuthService);
-    loading: boolean = false
-    error: string | undefined = undefined
+    loading: boolean = false;
+    errors: string[] = [];
+    api = inject(UserService);
+    router = inject(Router);
 
     logoutAction(): void {
-        this.error = undefined
+        this.errors = []
         this.loading = true
-        this.api.logoutFlow().subscribe({
-            next: data => window.location.href = data.logout_url,
-            error: (err) => {
-                this.error = err.error?.error?.reason
-                this.loading = false
+        this.api.logout().pipe(
+            tap({
+                error: (err: APIResponse<any>) => this.errors = err.messages,
+            }),
+            filter(resp => resp.status === true),
+            finalize(() => this.loading = false),
+        ).subscribe({
+            next: data => {
+                // Clear state
+                this.router.navigate(['/auth/login'])
             },
         })
     }

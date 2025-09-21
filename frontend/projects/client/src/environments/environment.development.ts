@@ -1,6 +1,6 @@
 export const environment = {
     BASE_URL: "http://localhost:4200",
-    API_ROOT: "http://localhost:8080",
+    API_ROOT: "http://localhost:8000",
     WS_URL: "http://localhost:8080/ws",
 
     KRATOS_ROOT: "http://localhost:4433",

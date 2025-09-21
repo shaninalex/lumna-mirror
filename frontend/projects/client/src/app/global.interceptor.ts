@@ -5,7 +5,6 @@ import {APIResponse} from '@client/shared/models';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {AppErrorAction} from '@client/shared/store/app.actions';
-import {GenericError} from '@ory/kratos-client';
 import {Router} from '@angular/router';
 
 @Injectable({providedIn: 'root'})
@@ -21,13 +20,8 @@ export class GlobalInterceptor {
                 }
             }),
             catchError((err: HttpErrorResponse) => {
-                if ("error" in err.error) {
-                    if ("id" in err.error.error && "code" in err.error.error) {
-                        const kratosError: GenericError = err.error.error;
-                        if (kratosError.id === "session_already_available") {
-                            this.router.navigate(['/'])
-                        }
-                    }
+                if (err.status === 401) {
+                    this.router.navigate(['/auth/login'])
                 }
 
                 if ("errors" in err.error) { // <= ???

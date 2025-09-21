@@ -4,6 +4,7 @@ package handler
 
 import (
 	"net/http"
+	"time"
 
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
 	"gitlab.com/shaninalex/flowreon/apps/user/dto"
@@ -12,13 +13,15 @@ import (
 )
 
 type UserHandler struct {
-	manager domain.UserManager
+	manager      domain.UserManager
+	sessionStore *web.CookieStoreDatabase
 }
 
 // NewUserHandler - new user handler
-func NewUserHandler(manager domain.UserManager) *UserHandler {
+func NewUserHandler(manager domain.UserManager, sessionStore *web.CookieStoreDatabase) *UserHandler {
 	return &UserHandler{
-		manager: manager,
+		manager:      manager,
+		sessionStore: sessionStore,
 	}
 }
 
@@ -50,4 +53,20 @@ func (s *UserHandler) HandleUpdateSettings(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	web.Success(w, dto.ToUserDto(user), "Settings updated")
+}
+
+func (s *UserHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	sess := web.GetSession(r)
+	if err := s.sessionStore.Delete(ctx, sess); err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:     "app_session",
+		Value:    "",
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+		HttpOnly: true,
+	})
+	web.Success(w, nil, "Logout Successful")
 }
