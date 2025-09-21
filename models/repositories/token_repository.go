@@ -17,7 +17,7 @@ func GetTokenByField(ctx context.Context, db *sql.DB, field, value string) (*mod
 	token := &models.UserToken{}
 	query := fmt.Sprintf(`
 	SELECT id, user_id, claims, device, expires_at, created_at
-	FROM users_tokens WHERE %s LIMIT 1`, field)
+	FROM users_tokens WHERE %s = ? LIMIT 1`, field)
 	row := db.QueryRowContext(ctx, query, value)
 	err := row.Scan(
 		&token.ID,

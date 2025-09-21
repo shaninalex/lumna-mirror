@@ -10,6 +10,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
@@ -21,7 +22,8 @@ type TokenManager interface {
 	DeleteToken(ctx context.Context, userID, tokenID uuid.UUID) error
 }
 
-var sampleSecretKey = []byte("GoLinuxCloudKey")
+var sampleSecretKey = []byte(utils.GetEnv("FLOWREON_SECRET_KEY", "a-string-secret-at-least-256-bits-long"))
+var expDelta = 7 * 24 * time.Hour // 1 week
 
 type TokenService struct {
 }
@@ -35,7 +37,7 @@ func (s *TokenService) CreateToken(ctx context.Context, userID uuid.UUID) (strin
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	now := time.Now()
-	exp := now.Add(time.Minute * 30)
+	exp := now.Add(expDelta)
 	jti := uuid.New()
 	claims["jti"] = jti.String()
 	claims["iat"] = now.Unix()
@@ -139,7 +141,8 @@ func (s *TokenService) claimsValidation(ctx context.Context, claims jwt.MapClaim
 // getTokenFromDB get token from database1
 func (s *TokenService) getTokenFromDB(ctx context.Context, userID, tokenID uuid.UUID) (*models.UserToken, error) {
 	db := database.GetDb(ctx)
-	token, err := repositories.GetTokenByField(ctx, db, "id", tokenID.String())
+	tokenIdStr := tokenID.String()
+	token, err := repositories.GetTokenByField(ctx, db, "id", tokenIdStr)
 	if err != nil {
 		return nil, err
 	}

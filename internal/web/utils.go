@@ -5,20 +5,12 @@ package web
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/gorilla/sessions"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 	"gitlab.com/shaninalex/flowreon/internal/base"
-	"gitlab.com/shaninalex/flowreon/models"
 )
-
-// GetKratosRedirectURL returns redirect URL using Kratos base URL from config
-func GetKratosRedirectURL(c base.IConfig, path string) string {
-	return fmt.Sprintf("%s%s", c.String("kratos.url_browser"), path)
-}
 
 // ReturnJSON writes JSON response
 func ReturnJSON(w http.ResponseWriter, status int, data any, params ...any) {
@@ -74,50 +66,12 @@ func GetOrganizationID(r *http.Request) uuid.UUID {
 	return uuid.Nil
 }
 
-// GetUser retrieves the user object from context
-func GetUser(r *http.Request) *models.User {
-	if user, ok := r.Context().Value(base.ContextUser).(*models.User); ok {
-		return user
-	}
-	return nil
-}
-
-// GetSession retrieves the session object from context
-func GetSession(r *http.Request) *sessions.Session {
-	if sess, ok := r.Context().Value(base.ContextSession).(*sessions.Session); ok {
-		return sess
-	}
-	return nil
-}
-
 // GetAppName retrieves the app name from context
 func GetAppName(r *http.Request) *string {
 	if user, ok := r.Context().Value(base.ContextAppName).(*string); ok {
 		return user
 	}
 	return nil
-}
-
-// ParamUUID parses a URL param as UUID
-func ParamUUID(r *http.Request, name string, params map[string]string) (uuid.UUID, error) {
-	val, ok := params[name]
-	if !ok {
-		return uuid.Nil, fmt.Errorf("%s is required", name)
-	}
-	id, err := uuid.Parse(val)
-	if err != nil {
-		return uuid.Nil, fmt.Errorf("%s is not a valid UUID", name)
-	}
-	return id, nil
-}
-
-// ParamString retrieves a string param
-func ParamString(r *http.Request, name string, params map[string]string) (string, error) {
-	val, ok := params[name]
-	if !ok || val == "" {
-		return "", fmt.Errorf("%s is required", name)
-	}
-	return val, nil
 }
 
 // BodyParser parse request POST body into generic type
