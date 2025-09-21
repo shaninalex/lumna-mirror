@@ -66,3 +66,6 @@ db_restore:
 tests:
 	go clean -testcache
 	CONFIG_PATH=$$(pwd)/config/development.test.yml go test -v -p 1 ./...
+
+build_standalone:
+	go build -o bin/standalone ./cmd/standalone/
