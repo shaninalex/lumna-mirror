@@ -25,10 +25,7 @@ func ApplyMigrationsEmbed(db *sql.DB) {
 		panic(err)
 	}
 
-	m, err := migrate.NewWithInstance(
-		"iofs", d,
-		"sqlite3", driver,
-	)
+	m, err := migrate.NewWithInstance("iofs", d, "sqlite3", driver)
 	if err != nil {
 		panic(err)
 	}
