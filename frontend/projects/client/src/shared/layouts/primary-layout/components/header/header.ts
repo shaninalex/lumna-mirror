@@ -7,16 +7,20 @@ import {RouterLink} from '@angular/router';
 import {UserLogoutFeature} from '@client/features/user';
 import {selectUser} from '@client/entities/user';
 
+import { ThemeSwitcherComponent } from './theme-switcher.component'
+
 @Component({
     selector: 'fr-header',
     imports: [
         AsyncPipe,
         RouterLink,
         UserLogoutFeature,
+        ThemeSwitcherComponent,
     ],
     template: `
         <div class="py-2 px-4 flex items-center justify-between border-b border-base-300 bg-base-100">
             <div class="flex items-center gap-2 ms-auto">
+                <fr-theme-switcher />
                 @if (code$ | async; as code) {
                     <div>{{ code }}</div>
                     <div class="dropdown">
