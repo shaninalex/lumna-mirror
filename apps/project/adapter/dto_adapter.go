@@ -59,12 +59,11 @@ func NewTasksDto(ii []*models.Task) []*dto.TaskDto {
 // NewIssueStatusDto - new issue status dto.
 func NewIssueStatusDto(i *models.TaskStatus) *dto.TaskStatusDto {
 	return &dto.TaskStatusDto{
-		ID:          i.GetID(),
-		Title:       i.Title,
-		Description: i.Description,
-		Complete:    i.Completed,
-		Index:       i.ListIndex,
-		Config:      i.GetConfig(),
+		ID:       i.GetID(),
+		Title:    i.Title,
+		Complete: i.Completed,
+		Index:    i.ListIndex,
+		Config:   i.GetConfig(),
 	}
 }
 

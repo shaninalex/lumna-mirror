@@ -3,14 +3,14 @@
 package handler
 
 import (
-	"errors"
 	"net/http"
 
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
 	"gitlab.com/shaninalex/flowreon/apps/project/domain"
 	"gitlab.com/shaninalex/flowreon/apps/project/dto"
-	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
+	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
 
 // ProjectHandler - project handler.
@@ -30,26 +30,21 @@ func NewProjectHandler(manager domain.ProjectManager) *ProjectHandler {
 func (s *ProjectHandler) HandleProjectsList(w http.ResponseWriter, r *http.Request) {
 	projects, err := s.manager.List(r.Context())
 	if err != nil {
-		if errors.Is(err, apperrors.ProjectNotFound) {
-			web.Success(w, adapter.NewProjectsDto(nil))
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	pr := []*dto.ProjectDto{}
+	for _, project := range projects {
+		statuses, err := repositories.TaskStatusListByProject(r.Context(), database.GetDb(r.Context()), project.Code)
+		if err != nil {
+			web.Error(w, http.StatusInternalServerError, err)
 			return
 		}
-		web.Error(w, http.StatusBadRequest, err)
-		return
+		projectDto := adapter.NewProjectDto(project)
+		projectDto.Statuses = adapter.NewIssueStatusesDto(statuses)
+		pr = append(pr, projectDto)
 	}
-	web.Success(w, adapter.NewProjectsDto(projects))
-}
-
-// HandleProjectTasksList - handle project tasks list.
-func (s *ProjectHandler) HandleProjectTasksList(w http.ResponseWriter, r *http.Request) {
-	projectCode := r.PathValue("projectCode")
-
-	tasks, err := s.manager.TasksList(r.Context(), projectCode)
-	if err != nil {
-		web.Error(w, http.StatusBadRequest, err)
-		return
-	}
-	web.Success(w, adapter.NewTasksDto(tasks))
+	web.Success(w, pr)
 }
 
 // HandleProjectCreate - handle project tasks list.

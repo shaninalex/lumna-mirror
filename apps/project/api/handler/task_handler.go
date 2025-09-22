@@ -48,6 +48,18 @@ func (s *TaskHandler) HandleTaskDetail(w http.ResponseWriter, r *http.Request) {
 	web.Success(w, adapter.NewTaskDto(task))
 }
 
+// HandleProjectTasksList - handle project tasks list.
+func (s *TaskHandler) HandleProjectTasksList(w http.ResponseWriter, r *http.Request) {
+	projectCode := r.PathValue("projectCode")
+
+	tasks, err := s.manager.TasksList(r.Context(), projectCode)
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	web.Success(w, adapter.NewTasksDto(tasks))
+}
+
 // HandleTaskUpdate - handle task update.
 func (s *TaskHandler) HandleTaskUpdate(w http.ResponseWriter, r *http.Request) {
 	data, err := adapter.NewUpdateTaskInput(r)

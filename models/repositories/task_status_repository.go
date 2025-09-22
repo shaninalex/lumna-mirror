@@ -19,3 +19,26 @@ func TaskStatusByID(ctx context.Context, db *sql.DB, id uint) (*models.TaskStatu
 	}
 	return s, nil
 }
+
+// TaskStatusListByProject get task status list by project code
+func TaskStatusListByProject(ctx context.Context, db *sql.DB, code string) ([]*models.TaskStatus, error) {
+	q := `
+	select s.id, s.project_id, s.title, s.completed, s.list_index, s.config 
+	from statuses s
+	join projects p on p.id = s.project_id                                              
+	where p.code = ?
+	`
+	rows, err := db.QueryContext(ctx, q, code)
+	if err != nil {
+		return nil, err
+	}
+	statuses := []*models.TaskStatus{}
+	for rows.Next() {
+		s := &models.TaskStatus{}
+		if err = rows.Scan(&s.ID, &s.ProjectID, &s.Title, &s.Completed, &s.ListIndex, &s.Config); err != nil {
+			return nil, err
+		}
+		statuses = append(statuses, s)
+	}
+	return statuses, nil
+}

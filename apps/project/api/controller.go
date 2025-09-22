@@ -23,11 +23,10 @@ func (s *ProjectController) init() {
 	projectHandler := handler.NewProjectHandler(domain.NewProjectManagement())
 	s.router.GET("/api/project/", projectHandler.HandleProjectsList)
 	s.router.POST("/api/project/", projectHandler.HandleProjectCreate)
-	// TODO: !!! it should be taskHandler not projectHandler !!!
-	s.router.GET("/api/project/{projectCode}/tasks", projectHandler.HandleProjectTasksList)
 
 	taskHandler := handler.NewTaskHandler(domain.NewProjectManagement())
 	s.router.POST("/api/project/tasks", taskHandler.HandleTaskCreate)
+	s.router.GET("/api/project/{projectCode}/tasks", taskHandler.HandleProjectTasksList)
 	s.router.GET("/api/project/{projectCode}/tasks/{taskCode}", taskHandler.HandleTaskDetail)
 	s.router.PATCH("/api/project/{projectCode}/tasks/{taskCode}", taskHandler.HandleTaskUpdate)
 	s.router.PATCH("/api/project/{projectCode}/tasks/{taskCode}/status", taskHandler.HandleTaskPatchStatus)

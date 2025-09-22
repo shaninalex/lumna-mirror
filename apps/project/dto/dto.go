@@ -36,12 +36,11 @@ type TaskDto struct {
 
 // TaskStatusDto - task status dto.
 type TaskStatusDto struct {
-	ID          uint                     `json:"id"`
-	Title       string                   `json:"title"`
-	Description string                   `json:"description"`
-	Complete    bool                     `json:"complete"`
-	Index       uint                     `json:"index"`
-	Config      *models.TaskStatusConfig `json:"config"`
+	ID       uint                     `json:"id"`
+	Title    string                   `json:"title"`
+	Complete bool                     `json:"complete"`
+	Index    uint                     `json:"index"`
+	Config   *models.TaskStatusConfig `json:"config"`
 	//Tasks       []*TaskDto               `json:"tasks"`
 }
 

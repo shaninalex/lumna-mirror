@@ -36,12 +36,6 @@ func (b *TaskStatusBuilder) Title(title string) *TaskStatusBuilder {
 	return b
 }
 
-// Description - description.
-func (b *TaskStatusBuilder) Description(description string) *TaskStatusBuilder {
-	b.issueStatus.Description = description
-	return b
-}
-
 // Complete - complete.
 func (b *TaskStatusBuilder) Complete(complete bool) *TaskStatusBuilder {
 	b.issueStatus.Completed = complete
@@ -56,7 +50,7 @@ func (b *TaskStatusBuilder) Index(index uint) *TaskStatusBuilder {
 
 // Config - config.
 func (b *TaskStatusBuilder) Config(config string) *TaskStatusBuilder {
-	b.issueStatus.Config = config
+	b.issueStatus.Config = &config
 	return b
 }
 

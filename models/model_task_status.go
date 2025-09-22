@@ -8,13 +8,12 @@ import (
 
 // TaskStatus - task status.
 type TaskStatus struct {
-	ID          uint   `db:"id"`
-	ProjectID   uint   `db:"project_id"`
-	Title       string `db:"title"`
-	Description string `db:"description"`
-	Completed   bool   `db:"complete"`
-	ListIndex   uint   `db:"list_index"`
-	Config      string `db:"config"`
+	ID        uint    `db:"id"`
+	ProjectID uint    `db:"project_id"`
+	Title     string  `db:"title"`
+	Completed bool    `db:"complete"`
+	ListIndex uint    `db:"list_index"`
+	Config    *string `db:"config"`
 }
 
 // GetID - returns the id.
@@ -29,16 +28,17 @@ func (s *TaskStatus) SaveConfig(cnf TaskStatusConfig) {
 	if err != nil {
 		panic(err)
 	}
-	s.Config = string(b)
+	res := string(b)
+	s.Config = &res
 }
 
 // GetConfig - returns the config.
 func (s *TaskStatus) GetConfig() *TaskStatusConfig {
-	if s.Config == "" {
+	if s.Config == nil {
 		return NewTaskStatusConfig()
 	}
 	var config TaskStatusConfig
-	err := json.Unmarshal([]byte(s.Config), &config)
+	err := json.Unmarshal([]byte(*s.Config), &config)
 	if err != nil {
 		return NewTaskStatusConfig()
 	}
