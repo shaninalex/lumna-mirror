@@ -9,6 +9,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/models/repositories"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -26,7 +27,7 @@ func (s *AuthHandler) HandleRegistration(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	_, err = s.userRepository.GetByField(ctx, db, "email", payload.Email)
+	_, err = repositories.UserGetByField(ctx, db, "email", payload.Email)
 	if err == nil {
 		web.Error(w, http.StatusBadRequest, errors.New("user with email already exists"))
 		return
@@ -42,7 +43,7 @@ func (s *AuthHandler) HandleRegistration(w http.ResponseWriter, r *http.Request)
 		Email:        payload.Email,
 		PasswordHash: string(hash),
 	}
-	user, err = s.userRepository.Save(ctx, db, user)
+	user, err = repositories.UserSave(ctx, db, user)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

@@ -4,17 +4,14 @@ package handlers
 
 import (
 	"gitlab.com/shaninalex/flowreon/internal/web"
-	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
 
 func NewAuthHandler() *AuthHandler {
 	return &AuthHandler{
-		tokenService:   web.NewTokenService(),
-		userRepository: repositories.NewUserRepository(),
+		tokenService: web.NewTokenService(),
 	}
 }
 
 type AuthHandler struct {
-	tokenService   *web.TokenService
-	userRepository *repositories.UserRepository
+	tokenService *web.TokenService
 }

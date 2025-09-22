@@ -6,22 +6,14 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"math/rand/v2"
-	"strings"
 	"time"
 
-	"github.com/Pallinder/go-randomdata"
 	"gitlab.com/shaninalex/flowreon/internal/utils"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
-type UserRepository struct{}
-
-func NewUserRepository() *UserRepository {
-	return &UserRepository{}
-}
-
-func (s *UserRepository) GetByField(ctx context.Context, db *sql.DB, field, value string) (*models.User, error) {
+// UserGetByField get user by field
+func UserGetByField(ctx context.Context, db *sql.DB, field string, value any) (*models.User, error) {
 	user := &models.User{}
 	query := fmt.Sprintf(`
 	SELECT id, email, settings, active, state, code, password_hash, created_at, updated_at
@@ -39,7 +31,8 @@ func (s *UserRepository) GetByField(ctx context.Context, db *sql.DB, field, valu
 	return user, nil
 }
 
-func (s *UserRepository) Save(ctx context.Context, db *sql.DB, user *models.User) (*models.User, error) {
+// UserSave save user
+func UserSave(ctx context.Context, db *sql.DB, user *models.User) (*models.User, error) {
 	if user.CreatedAt.IsZero() {
 		user.CreatedAt = time.Now()
 	}
@@ -49,7 +42,7 @@ func (s *UserRepository) Save(ctx context.Context, db *sql.DB, user *models.User
 	user.SetSettings(&models.DefaultUserSettings)
 	user.Active = false
 	user.State = models.UserStatePending
-	user.Code = s.generateUniqueUserCode(ctx, db, 5)
+	user.Code = utils.GenerateEntityCode("user")
 	query := `
 	INSERT INTO users (email, settings, code, password_hash)
 	VALUES (?, ?, ?, ?)
@@ -61,17 +54,26 @@ func (s *UserRepository) Save(ctx context.Context, db *sql.DB, user *models.User
 	return user, nil
 }
 
-// GenerateUniqueUserCode - generate unique user code.
-func (s *UserRepository) generateUniqueUserCode(ctx context.Context, db *sql.DB, maxAttempts int) string {
-	for i := 0; i < maxAttempts; i++ {
-		b := strings.ToLower(randomdata.SillyName())
-		code := fmt.Sprintf("%s%d", b, rand.IntN(100_000))
-
-		_, err := s.GetByField(ctx, db, "code", code)
-		if err != nil {
-			return code
-		}
-		// Code exists. Retry
-	}
-	return utils.GenerateEntityCode("user")
+// UserUpdate update user
+func UserUpdate(ctx context.Context, db *sql.DB, user *models.User) error {
+	query := `
+		UPDATE users
+		SET 
+		    email = ?, 
+		    settings = ?, 
+		    active = ?, 
+		    state = ?, 
+		    code = ?,
+			updated_at = ?
+		WHERE id = ?
+	`
+	_, err := db.ExecContext(ctx, query,
+		user.Email,
+		user.Settings,
+		user.Active,
+		user.State,
+		user.Code,
+		user.UpdatedAt,
+	)
+	return err
 }

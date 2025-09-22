@@ -44,13 +44,13 @@ func (b *TaskStatusBuilder) Description(description string) *TaskStatusBuilder {
 
 // Complete - complete.
 func (b *TaskStatusBuilder) Complete(complete bool) *TaskStatusBuilder {
-	b.issueStatus.Complete = complete
+	b.issueStatus.Completed = complete
 	return b
 }
 
 // Index - index.
 func (b *TaskStatusBuilder) Index(index uint) *TaskStatusBuilder {
-	b.issueStatus.Index = index
+	b.issueStatus.ListIndex = index
 	return b
 }
 

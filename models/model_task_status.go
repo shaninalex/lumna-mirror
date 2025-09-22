@@ -12,8 +12,8 @@ type TaskStatus struct {
 	ProjectID   uint   `db:"project_id"`
 	Title       string `db:"title"`
 	Description string `db:"description"`
-	Complete    bool   `db:"complete"`
-	Index       uint   `db:"index"`
+	Completed   bool   `db:"complete"`
+	ListIndex   uint   `db:"list_index"`
 	Config      string `db:"config"`
 }
 

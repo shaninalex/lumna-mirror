@@ -8,18 +8,17 @@ import (
 
 // Task - task.
 type Task struct {
-	ID           uint      `db:"id"`
-	UserID       uint      `db:"user_id"`
-	ProjectID    uint      `db:"project_id"`
-	TaskStatusID uint      `db:"tas_status_id"`
-	Assignee     string    `db:"assignee"`
-	Title        string    `db:"title"`
-	Completed    bool      `db:"completed"`
-	Description  string    `db:"description"`
-	ListIndex    uint      `db:"list_index"`
-	Code         string    `db:"code"`
-	CreatedAt    time.Time `db:"created_at"`
-	UpdatedAt    time.Time `db:"updated_at"`
+	ID          uint      `db:"id"`
+	UserID      uint      `db:"user_id"`
+	ProjectID   uint      `db:"project_id"`
+	StatusID    uint      `db:"status_id"`
+	Title       string    `db:"title"`
+	Completed   bool      `db:"completed"`
+	Description *string   `db:"description"`
+	ListIndex   uint      `db:"list_index"`
+	Code        string    `db:"code"`
+	CreatedAt   time.Time `db:"created_at"`
+	UpdatedAt   time.Time `db:"updated_at"`
 }
 
 // GetID - returns the id.

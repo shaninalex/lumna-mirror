@@ -40,19 +40,13 @@ func (b *TaskBuilder) ProjectID(projectID uint) *TaskBuilder {
 
 // TaskStatusID - task status id.
 func (b *TaskBuilder) TaskStatusID(taskStatusID uint) *TaskBuilder {
-	b.task.TaskStatusID = taskStatusID
+	b.task.StatusID = taskStatusID
 	return b
 }
 
 // Code - set task code
 func (b *TaskBuilder) Code(code string) *TaskBuilder {
 	b.task.Code = code
-	return b
-}
-
-// Assignee - assignee.
-func (b *TaskBuilder) Assignee(assignee string) *TaskBuilder {
-	b.task.Assignee = assignee
 	return b
 }
 
@@ -64,7 +58,7 @@ func (b *TaskBuilder) Title(title string) *TaskBuilder {
 
 // Description - description.
 func (b *TaskBuilder) Description(description string) *TaskBuilder {
-	b.task.Description = description
+	b.task.Description = &description
 	return b
 }
 

@@ -68,4 +68,7 @@ tests:
 	CONFIG_PATH=$$(pwd)/config/development.test.yml go test -v -p 1 ./...
 
 build_standalone:
+	cd frontend && \
+	yarn build && \
+	cd ../ && \
 	go build -o bin/standalone ./cmd/standalone/

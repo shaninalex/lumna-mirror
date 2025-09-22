@@ -29,20 +29,22 @@ func NewProjectsDto(ps []*models.Project) []*dto.ProjectDto {
 
 // NewTaskDto - new task dto.
 func NewTaskDto(t *models.Task) *dto.TaskDto {
-	return &dto.TaskDto{
-		ID:          t.ID,
-		UserID:      t.UserID,
-		ProjectID:   t.ProjectID,
-		Assignee:    t.Assignee,
-		Completed:   t.Completed,
-		Title:       t.Title,
-		Description: t.Description,
-		StatusID:    t.TaskStatusID,
-		ListIdx:     t.ListIndex,
-		Code:        t.Code,
-		CreatedAt:   t.CreatedAt,
-		UpdatedAt:   t.UpdatedAt,
+	s := &dto.TaskDto{
+		ID:        t.ID,
+		UserID:    t.UserID,
+		ProjectID: t.ProjectID,
+		Completed: t.Completed,
+		Title:     t.Title,
+		StatusID:  t.StatusID,
+		ListIdx:   t.ListIndex,
+		Code:      t.Code,
+		CreatedAt: t.CreatedAt,
+		UpdatedAt: t.UpdatedAt,
 	}
+	if t.Description != nil {
+		s.Description = *t.Description
+	}
+	return s
 }
 
 // NewTasksDto - new tasks dto.
@@ -60,10 +62,9 @@ func NewIssueStatusDto(i *models.TaskStatus) *dto.TaskStatusDto {
 		ID:          i.GetID(),
 		Title:       i.Title,
 		Description: i.Description,
-		Complete:    i.Complete,
-		Index:       i.Index,
+		Complete:    i.Completed,
+		Index:       i.ListIndex,
 		Config:      i.GetConfig(),
-		//Tasks:       NewTasksDto(i.Tasks),
 	}
 }
 

@@ -4,8 +4,8 @@ CREATE TABLE users
     email         TEXT NOT NULL,
     settings      TEXT,
     active        BOOLEAN   DEFAULT false,
-    state         TEXT      DEFAULT 'pending',
-    code          TEXT,
+    state         VARCHAR   DEFAULT 'pending',
+    code          VARCHAR,
     password_hash TEXT NOT NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -17,8 +17,8 @@ CREATE TABLE users_tokens
 (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id    INTEGER  NOT NULL,
-    claims     TEXT     NOT NULL,
-    device     TEXT,
+    claims     VARCHAR  NOT NULL,
+    device     VARCHAR,
     expires_at DATETIME NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
@@ -26,15 +26,16 @@ CREATE TABLE users_tokens
 
 CREATE TABLE projects
 (
-    id         INTEGER PRIMARY KEY NOT NULL,
-    user_id    INTEGER             NOT NULL,
-    title      INTEGER             NOT NULL,
-    code       INTEGER             NOT NULL,
-    created_at DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id    INTEGER  NOT NULL,
+    title      VARCHAR  NOT NULL,
+    code       VARCHAR  NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
 
-    CONSTRAINT projects_unique_title_code UNIQUE (title, code)
+    CONSTRAINT projects_unique_title UNIQUE (title),
+    CONSTRAINT projects_unique_code UNIQUE (code)
 );
 
 CREATE TABLE statuses
@@ -57,10 +58,10 @@ CREATE TABLE tasks
     project_id  INTEGER  NOT NULL,
     status_id   INTEGER  NOT NULL,
     title       VARCHAR  NOT NULL,
+    code        VARCHAR  NOT NULL,
     completed   BOOLEAN           DEFAULT false,
     description VARCHAR  NULL,
-    list_index  INT               default 0,
-    code        TEXT     NOT NULL,
+    list_index  INTEGER           default 0,
     created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

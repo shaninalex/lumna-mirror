@@ -23,7 +23,6 @@ type TaskDto struct {
 	ID          uint       `json:"id"`
 	UserID      uint       `json:"creator_id"`
 	ProjectID   uint       `json:"project_id"`
-	Assignee    string     `json:"assignee"`
 	Completed   bool       `json:"completed"`
 	Title       string     `json:"title"`
 	Description string     `json:"description"`

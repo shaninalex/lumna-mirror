@@ -6,23 +6,11 @@ package base
 type ContextKey string
 
 const (
-	// ContextSession ory session context key
-	ContextSession = "session"
-
-	// ContextUser - user object
-	ContextUser = "user"
-
 	// ContextUserID - user id
 	ContextUserID = "user_id"
 
-	// ContextOrgID - user organization id
-	ContextOrgID = "org_id"
-
-	// ContextDB - gorm db
-	ContextDB = "postgres_database"
-
-	// ContextCookie - authentication cookie
-	ContextCookie = "auth_cookie"
+	// ContextDB - database
+	ContextDB = "database"
 
 	// ContextAppName - used to map request to a service
 	ContextAppName = "app_name"

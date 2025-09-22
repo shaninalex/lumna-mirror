@@ -9,6 +9,7 @@ import (
 
 	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
+	"gitlab.com/shaninalex/flowreon/models/repositories"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -26,7 +27,7 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := s.userRepository.GetByField(ctx, db, "email", payload.Email)
+	user, err := repositories.UserGetByField(ctx, db, "email", payload.Email)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

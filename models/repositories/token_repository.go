@@ -71,27 +71,19 @@ func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*models.UserToke
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err = rows.Close(); err != nil {
+			panic(err)
+		}
+	}()
 
 	tokens := make([]*models.UserToken, 0)
 	for rows.Next() {
 		t := &models.UserToken{}
-		err := rows.Scan(
-			&t.ID,
-			&t.UserID,
-			&t.Claims,
-			&t.Device,
-			&t.ExpiresAt,
-			&t.CreatedAt,
-		)
-		if err != nil {
+		if err = rows.Scan(&t.ID, &t.UserID, &t.Claims, &t.Device, &t.ExpiresAt, &t.CreatedAt); err != nil {
 			return nil, err
 		}
 		tokens = append(tokens, t)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
 	}
 	return tokens, nil
 }

@@ -4,9 +4,11 @@ package domain
 
 import (
 	"context"
+	"time"
 
 	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
 
 type UserManager interface {
@@ -14,33 +16,32 @@ type UserManager interface {
 	UpdateUserSettings(ctx context.Context, userID uint, settings *models.UserSettings) error
 }
 
-type UserService struct {
-}
+type UserService struct{}
 
 func NewUserService() *UserService {
 	return &UserService{}
 }
 
+// GetUser get user
 func (s UserService) GetUser(ctx context.Context, userID uint) (*models.User, error) {
-	user := models.User{ID: userID}
-	tx := database.GetDB(ctx).First(&user)
-	if tx.Error != nil {
-		return nil, tx.Error
+	user, err := repositories.UserGetByField(ctx, database.GetDb(ctx), "id", userID)
+	if err != nil {
+		return nil, err
 	}
-	return &user, nil
+	return user, nil
 }
 
+// UpdateUserSettings update user settings
 func (s UserService) UpdateUserSettings(ctx context.Context, userID uint, settings *models.UserSettings) error {
-	user := models.User{ID: userID}
-	db := database.GetDB(ctx)
-	tx := db.First(&user)
-	if tx.Error != nil {
-		return tx.Error
+	db := database.GetDb(ctx)
+	user, err := repositories.UserGetByField(ctx, db, "id", userID)
+	if err != nil {
+		return err
 	}
 	user.SetSettings(settings)
-	tx = db.Save(&user)
-	if tx.Error != nil {
-		return tx.Error
+	user.UpdatedAt = time.Now()
+	if err = repositories.UserUpdate(ctx, db, user); err != nil {
+		return err
 	}
 	return nil
 }

@@ -30,7 +30,7 @@ func (s *TaskHandler) HandleTaskPatchStatus(w http.ResponseWriter, r *http.Reque
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	if err = s.manager.PatchTaskStatus(r.Context(), web.GetUserID(r), in.ProjectCode, in.TaskCode, in.Data); err != nil {
+	if err = s.manager.PatchTaskStatus(r.Context(), in.TaskCode, in.Data); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
@@ -39,9 +39,8 @@ func (s *TaskHandler) HandleTaskPatchStatus(w http.ResponseWriter, r *http.Reque
 
 // HandleTaskDetail - handle task detail.
 func (s *TaskHandler) HandleTaskDetail(w http.ResponseWriter, r *http.Request) {
-	projectCode := r.PathValue("projectCode")
 	taskCode := r.PathValue("taskCode")
-	task, err := s.manager.TaskDetail(r.Context(), web.GetUserID(r), projectCode, taskCode)
+	task, err := s.manager.TaskDetail(r.Context(), taskCode)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -56,7 +55,7 @@ func (s *TaskHandler) HandleTaskUpdate(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	if err = s.manager.TaskUpdate(r.Context(), web.GetUserID(r), data.ProjectCode, data.TaskCode, data.Data); err != nil {
+	if err = s.manager.TaskUpdate(r.Context(), data.TaskCode, data.Data); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
