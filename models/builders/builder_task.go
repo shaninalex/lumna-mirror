@@ -5,7 +5,6 @@ package builders
 import (
 	"time"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
@@ -22,37 +21,25 @@ func NewTaskBuilder() *TaskBuilder {
 }
 
 // ID - id.
-func (b *TaskBuilder) ID(iD uuid.UUID) *TaskBuilder {
+func (b *TaskBuilder) ID(iD uint) *TaskBuilder {
 	b.task.ID = iD
 	return b
 }
 
 // UserID - user id.
-func (b *TaskBuilder) UserID(userID uuid.UUID) *TaskBuilder {
+func (b *TaskBuilder) UserID(userID uint) *TaskBuilder {
 	b.task.UserID = userID
 	return b
 }
 
-// OrganizationID - organization id.
-func (b *TaskBuilder) OrganizationID(organizationID uuid.UUID) *TaskBuilder {
-	b.task.OrganizationID = organizationID
-	return b
-}
-
-// SprintID - sprint id.
-func (b *TaskBuilder) SprintID(sprintID uuid.UUID) *TaskBuilder {
-	b.task.SprintID = &sprintID
-	return b
-}
-
 // ProjectID - project id.
-func (b *TaskBuilder) ProjectID(projectID uuid.UUID) *TaskBuilder {
+func (b *TaskBuilder) ProjectID(projectID uint) *TaskBuilder {
 	b.task.ProjectID = projectID
 	return b
 }
 
 // TaskStatusID - task status id.
-func (b *TaskBuilder) TaskStatusID(taskStatusID uuid.UUID) *TaskBuilder {
+func (b *TaskBuilder) TaskStatusID(taskStatusID uint) *TaskBuilder {
 	b.task.TaskStatusID = taskStatusID
 	return b
 }

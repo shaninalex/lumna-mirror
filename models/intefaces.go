@@ -4,14 +4,12 @@ package models
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 // Identifiable each database model has ID and can set/get its
 type Identifiable interface {
-	GetID() uuid.UUID
-	SetID(uuid.UUID)
+	GetID() uint
+	SetID(uint)
 }
 
 // AuthUser describe an authenticated model interface that should has Traits ( email, name, code etc )
@@ -27,7 +25,7 @@ type AuthUser interface {
 // Ownable has an owner and can validate other
 type Ownable interface {
 	Identifiable
-	GetOwnerID() uuid.UUID
+	GetOwnerID() uint
 	GetOwner() AuthUser
 	IsOwner(entity AuthUser) bool
 }
@@ -41,7 +39,7 @@ type Timestamped interface {
 
 // Auditable get id of an entity created
 type Auditable interface {
-	GetCreatedBy() uuid.UUID
+	GetCreatedBy() uint
 }
 
 // Coded describe an entity has and use codes

@@ -4,26 +4,24 @@ package models
 
 import (
 	"encoding/json"
-
-	"github.com/google/uuid"
 )
 
 // TaskStatus - task status.
 type TaskStatus struct {
-	ID          uuid.UUID `db:"id"`
-	ProjectID   uuid.UUID `db:"project_id"`
-	Title       string    `db:"title"`
-	Description string    `db:"description"`
-	Complete    bool      `db:"complete"`
-	Index       uint      `db:"index"`
-	Config      string    `db:"config"`
+	ID          uint   `db:"id"`
+	ProjectID   uint   `db:"project_id"`
+	Title       string `db:"title"`
+	Description string `db:"description"`
+	Complete    bool   `db:"complete"`
+	Index       uint   `db:"index"`
+	Config      string `db:"config"`
 }
 
 // GetID - returns the id.
-func (s *TaskStatus) GetID() uuid.UUID { return s.ID }
+func (s *TaskStatus) GetID() uint { return s.ID }
 
 // SetID - sets the id.
-func (s *TaskStatus) SetID(id uuid.UUID) { s.ID = id }
+func (s *TaskStatus) SetID(id uint) { s.ID = id }
 
 // SaveConfig - saves the config.
 func (s *TaskStatus) SaveConfig(cnf TaskStatusConfig) {

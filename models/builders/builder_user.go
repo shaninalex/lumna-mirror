@@ -5,7 +5,6 @@ package builders
 import (
 	"time"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
@@ -22,7 +21,7 @@ func NewUserBuilder() *UserBuilder {
 }
 
 // ID - id.
-func (b *UserBuilder) ID(iD uuid.UUID) *UserBuilder {
+func (b *UserBuilder) ID(iD uint) *UserBuilder {
 	b.user.ID = iD
 	return b
 }

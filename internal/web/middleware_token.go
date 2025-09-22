@@ -24,8 +24,8 @@ func TokenMiddleware(next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		ctx := context.WithValue(r.Context(), "jti", claims["jti"].(string))
-		ctx = context.WithValue(ctx, base.ContextUserID, claims["sub"].(string))
+		ctx := context.WithValue(r.Context(), "jti", uint(claims["jti"].(float64)))
+		ctx = context.WithValue(ctx, base.ContextUserID, uint(claims["sub"].(float64)))
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

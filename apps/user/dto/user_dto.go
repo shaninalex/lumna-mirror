@@ -3,12 +3,11 @@
 package dto
 
 import (
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
 type UserDto struct {
-	ID       uuid.UUID            `json:"id"`
+	ID       uint                 `json:"id"`
 	Code     string               `json:"code"`
 	Email    string               `json:"email"`
 	Active   bool                 `json:"active"`
@@ -18,7 +17,7 @@ type UserDto struct {
 
 func ToUserDto(user *models.User) *UserDto {
 	return &UserDto{
-		ID:       user.ID,
+		ID:       user.GetID(),
 		Code:     user.GetCode(),
 		Email:    user.Email,
 		Active:   user.Active,

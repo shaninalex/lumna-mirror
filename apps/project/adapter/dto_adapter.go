@@ -32,8 +32,6 @@ func NewTaskDto(t *models.Task) *dto.TaskDto {
 	return &dto.TaskDto{
 		ID:          t.ID,
 		UserID:      t.UserID,
-		EpicID:      t.EpicID,
-		SprintID:    t.SprintID,
 		ProjectID:   t.ProjectID,
 		Assignee:    t.Assignee,
 		Completed:   t.Completed,

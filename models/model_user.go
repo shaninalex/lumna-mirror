@@ -6,8 +6,6 @@ import (
 	"encoding/json"
 	"log"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type UserState string
@@ -21,23 +19,22 @@ const (
 
 // User - user.
 type User struct {
-	ID             uuid.UUID `db:"id"`
-	OrganizationID uuid.UUID `db:"organization_id"`
-	Email          string    `db:"email"`
-	Settings       string    `db:"settings"`
-	Active         bool      `db:"active"`
-	State          UserState `db:"state"`
-	Code           string    `db:"code"`
-	PasswordHash   string    `db:"password_hash"`
-	CreatedAt      time.Time `db:"created_at"`
-	UpdatedAt      time.Time `db:"updated_at"`
+	ID           uint      `db:"id"`
+	Email        string    `db:"email"`
+	Settings     string    `db:"settings"`
+	Active       bool      `db:"active"`
+	State        UserState `db:"state"`
+	Code         string    `db:"code"`
+	PasswordHash string    `db:"password_hash"`
+	CreatedAt    time.Time `db:"created_at"`
+	UpdatedAt    time.Time `db:"updated_at"`
 }
 
 // GetID - returns the id.
-func (s *User) GetID() uuid.UUID { return s.ID }
+func (s *User) GetID() uint { return s.ID }
 
 // SetID - sets the id.
-func (s *User) SetID(id uuid.UUID) { s.ID = id }
+func (s *User) SetID(id uint) { s.ID = id }
 
 // IsActive - checks if it is active.
 func (s *User) IsActive() bool { return s.Active }

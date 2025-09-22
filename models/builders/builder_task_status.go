@@ -3,7 +3,6 @@
 package builders
 
 import (
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
@@ -20,13 +19,13 @@ func NewIssueStatusBuilder() *TaskStatusBuilder {
 }
 
 // ID - id.
-func (b *TaskStatusBuilder) ID(iD uuid.UUID) *TaskStatusBuilder {
+func (b *TaskStatusBuilder) ID(iD uint) *TaskStatusBuilder {
 	b.issueStatus.ID = iD
 	return b
 }
 
 // ProjectID - project id.
-func (b *TaskStatusBuilder) ProjectID(projectID uuid.UUID) *TaskStatusBuilder {
+func (b *TaskStatusBuilder) ProjectID(projectID uint) *TaskStatusBuilder {
 	b.issueStatus.ProjectID = projectID
 	return b
 }

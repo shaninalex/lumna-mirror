@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/Pallinder/go-randomdata"
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/internal/utils"
 	"gitlab.com/shaninalex/flowreon/models"
 )
@@ -25,11 +24,11 @@ func NewUserRepository() *UserRepository {
 func (s *UserRepository) GetByField(ctx context.Context, db *sql.DB, field, value string) (*models.User, error) {
 	user := &models.User{}
 	query := fmt.Sprintf(`
-	SELECT id, organization_id, email, settings, active, state, code, password_hash, created_at, updated_at
+	SELECT id, email, settings, active, state, code, password_hash, created_at, updated_at
 	FROM users WHERE %s = ? LIMIT 1
 	`, field)
 	row := db.QueryRowContext(ctx, query, value)
-	err := row.Scan(&user.ID, &user.OrganizationID, &user.Email, &user.Settings, &user.Active, &user.State, &user.Code, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.Settings, &user.Active, &user.State, &user.Code, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, sql.ErrNoRows
@@ -47,16 +46,15 @@ func (s *UserRepository) Save(ctx context.Context, db *sql.DB, user *models.User
 	if user.UpdatedAt.IsZero() {
 		user.UpdatedAt = time.Now()
 	}
-	user.ID = uuid.New()
 	user.SetSettings(&models.DefaultUserSettings)
 	user.Active = false
 	user.State = models.UserStatePending
 	user.Code = s.generateUniqueUserCode(ctx, db, 5)
 	query := `
-	INSERT INTO users (id, organization_id, email, settings, active, state, code, password_hash)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+	INSERT INTO users (email, settings, code, password_hash)
+	VALUES (?, ?, ?, ?)
 	`
-	_, err := db.ExecContext(ctx, query, &user.ID, &user.OrganizationID, &user.Email, &user.Settings, &user.Active, &user.State, &user.Code, &user.PasswordHash)
+	_, err := db.ExecContext(ctx, query, &user.Email, &user.Settings, &user.Code, &user.PasswordHash)
 	if err != nil {
 		return nil, err
 	}

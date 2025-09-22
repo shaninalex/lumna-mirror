@@ -7,7 +7,6 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 	"gitlab.com/shaninalex/flowreon/internal/base"
 )
@@ -51,19 +50,11 @@ func Error(w http.ResponseWriter, status int, err error) {
 }
 
 // GetUserID retrieves the user ID from context
-func GetUserID(r *http.Request) uuid.UUID {
-	if id, ok := r.Context().Value(base.ContextUserID).(string); ok {
-		return uuid.MustParse(id)
-	}
-	return uuid.Nil
-}
-
-// GetOrganizationID retrieves the organization ID from context
-func GetOrganizationID(r *http.Request) uuid.UUID {
-	if id, ok := r.Context().Value(base.ContextOrgID).(uuid.UUID); ok {
+func GetUserID(r *http.Request) uint {
+	if id, ok := r.Context().Value(base.ContextUserID).(uint); ok {
 		return id
 	}
-	return uuid.Nil
+	panic("user was not found in request")
 }
 
 // GetAppName retrieves the app name from context

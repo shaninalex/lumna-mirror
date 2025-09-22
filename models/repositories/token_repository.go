@@ -8,12 +8,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
 // GetTokenByField loads a token from DB by field.
-func GetTokenByField(ctx context.Context, db *sql.DB, field, value string) (*models.UserToken, error) {
+func GetTokenByField(ctx context.Context, db *sql.DB, field string, value any) (*models.UserToken, error) {
 	token := &models.UserToken{}
 	query := fmt.Sprintf(`
 	SELECT id, user_id, claims, device, expires_at, created_at
@@ -39,28 +38,31 @@ func GetTokenByField(ctx context.Context, db *sql.DB, field, value string) (*mod
 
 // SaveToken inserts or updates a session in the DB.
 func SaveToken(ctx context.Context, db *sql.DB, token *models.UserToken) error {
-	if token.CreatedAt.IsZero() {
-		token.CreatedAt = time.Now()
-	}
 	if token.ExpiresAt.IsZero() {
 		token.ExpiresAt = time.Now().Add(7 * 24 * time.Hour) // default 7 days
 	}
 	query := `
-	INSERT INTO users_tokens (id, user_id, claims, device, expires_at)
-	VALUES (?, ?, ?, ?, ?)`
-	_, err := db.ExecContext(ctx, query,
-		&token.ID,
+	INSERT INTO users_tokens (user_id, claims, device, expires_at)
+	VALUES (?, ?, ?, ?)`
+	result, err := db.ExecContext(ctx, query,
 		&token.UserID,
 		&token.Claims,
 		&token.Device,
 		&token.ExpiresAt,
-		&token.CreatedAt,
 	)
+	if err != nil {
+		return err
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+	token.SetID(uint(id))
 	return err
 }
 
 // GetTokens retrieves all tokens for a given user.
-func GetTokens(ctx context.Context, db *sql.DB, userID uuid.UUID) ([]*models.UserToken, error) {
+func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*models.UserToken, error) {
 	query := `
 	SELECT id, user_id, claims, device, expires_at, created_at
 	FROM users_tokens
@@ -95,7 +97,7 @@ func GetTokens(ctx context.Context, db *sql.DB, userID uuid.UUID) ([]*models.Use
 }
 
 // DeleteToken removes a specific token for a user by token ID.
-func DeleteToken(ctx context.Context, db *sql.DB, userID, tokenID uuid.UUID) error {
+func DeleteToken(ctx context.Context, db *sql.DB, userID, tokenID uint) error {
 	query := `
 	DELETE FROM users_tokens
 	WHERE user_id = ? AND id = ?`

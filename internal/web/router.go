@@ -83,7 +83,7 @@ func (r *Router) Run() error {
 // DefaultRouter - default router.
 func DefaultRouter(db *sql.DB) *Router {
 	r := NewRouter()
-	r.Use(NewRecoveryMiddleware().Wrap)
+	//r.Use(NewRecoveryMiddleware().Wrap)
 	r.Use(database.NewMiddleware(db).Wrap)
 	r.Use(NewLoggerMiddleware().Wrap)
 	r.Use(NewCommonMiddleware().Wrap)

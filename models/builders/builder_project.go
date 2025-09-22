@@ -5,7 +5,6 @@ package builders
 import (
 	"time"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
@@ -22,20 +21,14 @@ func NewProjectBuilder() *ProjectBuilder {
 }
 
 // ID - id.
-func (b *ProjectBuilder) ID(iD uuid.UUID) *ProjectBuilder {
+func (b *ProjectBuilder) ID(iD uint) *ProjectBuilder {
 	b.project.ID = iD
 	return b
 }
 
 // UserID - user id.
-func (b *ProjectBuilder) UserID(userID uuid.UUID) *ProjectBuilder {
+func (b *ProjectBuilder) UserID(userID uint) *ProjectBuilder {
 	b.project.UserID = userID
-	return b
-}
-
-// OrganizationID - organization id.
-func (b *ProjectBuilder) OrganizationID(organizationID uuid.UUID) *ProjectBuilder {
-	b.project.OrganizationID = organizationID
 	return b
 }
 

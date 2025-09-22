@@ -5,14 +5,13 @@ package domain
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
 type UserManager interface {
-	GetUser(ctx context.Context, userID uuid.UUID) (*models.User, error)
-	UpdateUserSettings(ctx context.Context, userID uuid.UUID, settings *models.UserSettings) error
+	GetUser(ctx context.Context, userID uint) (*models.User, error)
+	UpdateUserSettings(ctx context.Context, userID uint, settings *models.UserSettings) error
 }
 
 type UserService struct {
@@ -22,7 +21,7 @@ func NewUserService() *UserService {
 	return &UserService{}
 }
 
-func (s UserService) GetUser(ctx context.Context, userID uuid.UUID) (*models.User, error) {
+func (s UserService) GetUser(ctx context.Context, userID uint) (*models.User, error) {
 	user := models.User{ID: userID}
 	tx := database.GetDB(ctx).First(&user)
 	if tx.Error != nil {
@@ -31,7 +30,7 @@ func (s UserService) GetUser(ctx context.Context, userID uuid.UUID) (*models.Use
 	return &user, nil
 }
 
-func (s UserService) UpdateUserSettings(ctx context.Context, userID uuid.UUID, settings *models.UserSettings) error {
+func (s UserService) UpdateUserSettings(ctx context.Context, userID uint, settings *models.UserSettings) error {
 	user := models.User{ID: userID}
 	db := database.GetDB(ctx)
 	tx := db.First(&user)

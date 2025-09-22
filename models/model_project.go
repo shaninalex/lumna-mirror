@@ -4,29 +4,26 @@ package models
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 // Project - project.
 type Project struct {
-	ID             uuid.UUID `db:"id"`
-	UserID         uuid.UUID `db:"user_id"`
-	OrganizationID uuid.UUID `db:"organization_id"`
-	Title          string    `db:"title"`
-	Code           string    `db:"code"`
-	CreatedAt      time.Time `db:"created_at"`
-	UpdatedAt      time.Time `db:"updated_at"`
+	ID        uint      `db:"id"`
+	UserID    uint      `db:"user_id"`
+	Title     string    `db:"title"`
+	Code      string    `db:"code"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 // GetID - returns the id.
-func (s *Project) GetID() uuid.UUID { return s.ID }
+func (s *Project) GetID() uint { return s.ID }
 
 // SetID - sets the id.
-func (s *Project) SetID(id uuid.UUID) { s.ID = id }
+func (s *Project) SetID(id uint) { s.ID = id }
 
 // GetOwnerID - returns the owner id.
-func (s *Project) GetOwnerID() uuid.UUID { return s.UserID }
+func (s *Project) GetOwnerID() uint { return s.UserID }
 
 // IsOwner - checks if it is owner.
 func (s *Project) IsOwner(entity AuthUser) bool { return entity.GetID() == s.GetOwnerID() }
@@ -38,4 +35,4 @@ func (s *Project) GetCreatedAt() time.Time { return s.CreatedAt }
 func (s *Project) GetUpdatedAt() time.Time { return s.UpdatedAt }
 
 // GetCreatedBy - returns the created by.
-func (s *Project) GetCreatedBy() uuid.UUID { return s.GetOwnerID() }
+func (s *Project) GetCreatedBy() uint { return s.GetOwnerID() }

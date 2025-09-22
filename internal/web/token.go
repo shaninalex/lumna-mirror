@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/utils"
 	"gitlab.com/shaninalex/flowreon/models"
@@ -16,10 +15,10 @@ import (
 )
 
 type TokenManager interface {
-	CreateToken(ctx context.Context, userID uuid.UUID) (string, error)
+	CreateToken(ctx context.Context, userID uint) (string, error)
 	ValidateToken(ctx context.Context, rawToken string) (jwt.MapClaims, error)
-	GetTokens(ctx context.Context, userID uuid.UUID) ([]*models.UserToken, error)
-	DeleteToken(ctx context.Context, userID, tokenID uuid.UUID) error
+	GetTokens(ctx context.Context, userID uint) ([]*models.UserToken, error)
+	DeleteToken(ctx context.Context, userID, tokenID uint) error
 }
 
 var sampleSecretKey = []byte(utils.GetEnv("FLOWREON_SECRET_KEY", "a-string-secret-at-least-256-bits-long"))
@@ -33,39 +32,38 @@ func NewTokenService() *TokenService {
 }
 
 // CreateToken - create token
-func (s *TokenService) CreateToken(ctx context.Context, userID uuid.UUID) (string, error) {
+func (s *TokenService) CreateToken(ctx context.Context, userID uint) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	now := time.Now()
 	exp := now.Add(expDelta)
-	jti := uuid.New()
-	claims["jti"] = jti.String()
 	claims["iat"] = now.Unix()
-	claims["sub"] = userID.String()
+	claims["sub"] = userID
 	claims["exp"] = exp.Unix()
 	claims["roles"] = []string{"user"}
-	tokenString, err := token.SignedString(sampleSecretKey)
-	if err != nil {
-		return "", err
-	}
+
 	claimsMap := map[string]any{}
 	for k, v := range claims {
 		claimsMap[k] = v
 	}
 	device := ctx.Value("device").(string)
 	tokenModel := &models.UserToken{
-		ID:        jti,
 		UserID:    userID,
 		Device:    device,
 		ExpiresAt: exp,
 		CreatedAt: now,
 	}
-
 	tokenModel.SetClaims(claimsMap)
-	err = repositories.SaveToken(ctx, database.GetDb(ctx), tokenModel)
+	err := repositories.SaveToken(ctx, database.GetDb(ctx), tokenModel)
 	if err != nil {
 		return "", err
 	}
+	claims["jti"] = tokenModel.ID
+	tokenString, err := token.SignedString(sampleSecretKey)
+	if err != nil {
+		return "", err
+	}
+
 	return tokenString, nil
 }
 
@@ -96,39 +94,30 @@ func (s *TokenService) ValidateToken(ctx context.Context, rawToken string) (jwt.
 }
 
 // GetTokens - get tokens from database
-func (s *TokenService) GetTokens(ctx context.Context, userID uuid.UUID) ([]*models.UserToken, error) {
+func (s *TokenService) GetTokens(ctx context.Context, userID uint) ([]*models.UserToken, error) {
 	return repositories.GetTokens(ctx, database.GetDb(ctx), userID)
 }
 
 // DeleteToken - delete token from database
-func (s *TokenService) DeleteToken(ctx context.Context, userID, tokenID uuid.UUID) error {
+func (s *TokenService) DeleteToken(ctx context.Context, userID, tokenID uint) error {
 	return repositories.DeleteToken(ctx, database.GetDb(ctx), userID, tokenID)
 }
 
 // claimsValidation - token claims validation
 func (s *TokenService) claimsValidation(ctx context.Context, claims jwt.MapClaims) error {
 	// Check jti exists in DB
-	jti, ok := claims["jti"].(string)
-	if !ok || jti == "" {
+	tokenID, ok := claims["jti"].(float64)
+	if !ok {
 		return fmt.Errorf("token missing jti claim")
 	}
 
-	userIDStr, ok := claims["sub"].(string)
-	if !ok || userIDStr == "" {
+	userID, ok := claims["sub"].(float64)
+	if !ok {
 		return fmt.Errorf("token missing sub claim")
-	}
-	userID, err := uuid.Parse(userIDStr)
-	if err != nil {
-		return fmt.Errorf("invalid user_id in token")
-	}
-
-	tokenID, err := uuid.Parse(jti)
-	if err != nil {
-		return fmt.Errorf("invalid token id")
 	}
 
 	// Example DB lookup (replace with your actual DB call)
-	dbToken, err := s.getTokenFromDB(ctx, userID, tokenID)
+	dbToken, err := s.getTokenFromDB(ctx, uint(userID), uint(tokenID))
 	if err != nil {
 		return fmt.Errorf("token not found or revoked")
 	}
@@ -139,10 +128,9 @@ func (s *TokenService) claimsValidation(ctx context.Context, claims jwt.MapClaim
 }
 
 // getTokenFromDB get token from database1
-func (s *TokenService) getTokenFromDB(ctx context.Context, userID, tokenID uuid.UUID) (*models.UserToken, error) {
+func (s *TokenService) getTokenFromDB(ctx context.Context, userID, tokenID uint) (*models.UserToken, error) {
 	db := database.GetDb(ctx)
-	tokenIdStr := tokenID.String()
-	token, err := repositories.GetTokenByField(ctx, db, "id", tokenIdStr)
+	token, err := repositories.GetTokenByField(ctx, db, "id", tokenID)
 	if err != nil {
 		return nil, err
 	}

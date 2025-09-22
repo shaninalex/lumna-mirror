@@ -5,7 +5,6 @@ package handler
 import (
 	"net/http"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
 	"gitlab.com/shaninalex/flowreon/apps/user/dto"
 	"gitlab.com/shaninalex/flowreon/internal/web"
@@ -57,7 +56,7 @@ func (s *UserHandler) HandleUpdateSettings(w http.ResponseWriter, r *http.Reques
 
 func (s *UserHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	jti := uuid.MustParse(ctx.Value("jti").(string))
+	jti := ctx.Value("jti").(uint)
 	userID := web.GetUserID(r)
 	if err := s.tokenService.DeleteToken(ctx, userID, jti); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
