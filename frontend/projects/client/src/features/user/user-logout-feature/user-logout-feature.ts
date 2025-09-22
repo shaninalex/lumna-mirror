@@ -21,7 +21,7 @@ import {TokenService} from '@client/shared/common';
         </button>
         @if (errors) {
             @for (err of errors; track $index) {
-                <div class="text-red-500 text-sm">{{ err }}</div>
+                <div class="text-warning text-sm">{{ err }}</div>
             }
         }
     `,

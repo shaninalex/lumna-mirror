@@ -21,7 +21,7 @@ import {TokenService} from '@client/shared/common';
             <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mb-4">
                 <input type="email" formControlName="email" class="input block mb-4" placeholder="email"/>
                 <input type="password" formControlName="password" class="input block mb-4" placeholder="password"/>
-                <button class="btn mb-4">
+                <button class="btn btn-primary mb-4">
                     @if (loading) {
                         <ui-loader />
                     } @else {
@@ -30,7 +30,7 @@ import {TokenService} from '@client/shared/common';
                 </button>
                 @if (errors) {
                     @for (err of errors; track $index) {
-                        <div class="text-red-500 text-sm">{{ err }}</div>
+                        <div class="text-warning text-sm">{{ err }}</div>
                     }
                 }
             </form>

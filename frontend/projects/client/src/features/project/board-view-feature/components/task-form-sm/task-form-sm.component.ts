@@ -26,7 +26,7 @@ import {StatusColumn} from '@client/features/project/board-view-feature/board.mo
                         <ui-loader/>
                     } @else {
                         <button
-                            class="btn"
+                            class="btn btn-primary"
                             [disabled]="loading || !form.valid" type="submit">
                             +
                         </button>
@@ -35,10 +35,10 @@ import {StatusColumn} from '@client/features/project/board-view-feature/board.mo
             </div>
             @if (form.controls['title'].dirty && form.controls['title'].errors) {
                 @if (form.controls['title'].errors['required']) {
-                    <small class="text-red-500">This field is required</small>
+                    <small class="text-warning">This field is required</small>
                 }
                 @if (form.controls['title'].errors['pattern']) {
-                    <small class="text-red-500">Special characters! Only a-z, A-Z and 0-9 are available</small>
+                    <small class="text-warning">Special characters! Only a-z, A-Z and 0-9 are available</small>
                 }
             }
         </form>

@@ -19,7 +19,7 @@ import {Actions, ofType} from '@ngrx/effects';
             </div>
         }
 
-        <hr class="my-4 border-slate-300">
+        <hr class="my-4 border-gray-300">
 
         <form [formGroup]="form" (ngSubmit)="save()">
             <div class="mb-4">

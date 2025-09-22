@@ -15,10 +15,10 @@ import {LoaderComponent} from '@client/shared/ui/loader';
                 <input id="projectTitle" type="text" class="input" formControlName="title" pattern="[a-zA-Z0-9 ]*">
                 @if (form.controls['title'].dirty && form.controls['title'].errors) {
                     @if (form.controls['title'].errors['required']) {
-                        <small class="text-red-500">This field is required</small>
+                        <small class="text-warning">This field is required</small>
                     }
                     @if (form.controls['title'].errors['pattern']) {
-                        <small class="text-red-500">Special characters! Only a-z, A-Z and 0-9 are available</small>
+                        <small class="text-warning">Special characters! Only a-z, A-Z and 0-9 are available</small>
                     }
                 }
             </div>

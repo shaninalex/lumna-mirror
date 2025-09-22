@@ -15,7 +15,7 @@ import {selectUser} from '@client/entities/user';
         UserLogoutFeature,
     ],
     template: `
-        <div class="bg-white dark:bg-slate-800 py-2 px-4 flex items-center justify-between">
+        <div class="py-2 px-4 flex items-center justify-between border-b border-base-300 bg-base-100">
             <div class="flex items-center gap-2 ms-auto">
                 @if (code$ | async; as code) {
                     <div>{{ code }}</div>

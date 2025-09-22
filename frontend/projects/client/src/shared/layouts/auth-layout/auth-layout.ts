@@ -11,11 +11,13 @@ import {version} from '@root/package.json';
         <div class="flex items-center justify-center h-screen">
             <div>
                 <fr-logo />
-                <div class="min-h-64 border border-slate-400 rounded p-4 w-xs">
-                    <div class="text-center text-lg font-bold mb-4">{{ title }}</div>
-                    <ng-content></ng-content>
+                <div class="card border border-base-300 mb-2 bg-base-100">
+                    <div class="card-body">
+                        <div class="text-center text-lg font-bold mb-4">{{ title }}</div>
+                        <ng-content></ng-content>
+                    </div>
                 </div>
-                <div class="text-xs text-slate-400 text-end">v{{ version }}</div>
+                <div class="text-xs text-base-300 text-end">v{{ version }}</div>
             </div>
         </div>
     `

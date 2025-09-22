@@ -1,17 +1,8 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
-import {selectTasksByProjectID, Task, TaskCardComponent} from '@client/entities/task';
-import {
-    CdkDrag,
-    CdkDragDrop,
-    CdkDropList,
-    CdkDropListGroup,
-    moveItemInArray,
-    transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {selectTasksByProjectID, TaskCardComponent} from '@client/entities/task';
+
 import {BoardViewApiService} from './board-view-api.service';
 import {StatusColumn} from './board.model';
-import {MatCardModule} from '@angular/material/card';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {Project} from '@client/entities/project';
@@ -21,29 +12,19 @@ import {byMostRecent} from '@client/shared/common';
 @Component({
     selector: "fr-board-view-feature",
     imports: [
-        CdkDropList,
-        CdkDrag,
-        MatProgressSpinnerModule,
-        CdkDropListGroup,
-        MatCardModule,
         TaskCardComponent,
         ColumnHeaderComponent,
     ],
     providers: [BoardViewApiService],
     styleUrl: './board-view.component.scss',
     template: `
-        <div cdkDropListGroup class="flex flex-row no-wrap gap-4">
+        <div class="flex flex-row no-wrap gap-4">
             @for (column of columns; track column) {
-                <div class="bg-slate-200 dark:bg-slate-700 w-xs rounded p-4">
+                <div class="bg-base-100 w-xs rounded-lg border border-base-300 p-4">
                     <fr-column-header [project]="project" [column]="column"/>
-                    <div class="flex flex-col gap-2 min-h-20"
-                         cdkDropList
-                         [id]="column.id"
-                         [cdkDropListData]="column.tasks"
-                         (cdkDropListDropped)="drop($event)">
+                    <div class="flex flex-col gap-2 min-h-20" [id]="column.id">
                         @for (task of column.tasks; track task.id) {
-                            <fr-task-card [projectKey]="project.project_key" [task]="task" [cdkDragData]="task"
-                                          cdkDrag/>
+                            <fr-task-card [projectKey]="project.project_key" [task]="task"/>
                         }
                     </div>
                 </div>
@@ -68,24 +49,24 @@ export class BoardViewComponent implements OnInit {
                 }));
             });
     }
-
-    drop(event: CdkDragDrop<Task[]>) {
-        if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        } else {
-            transferArrayItem(
-                event.previousContainer.data,
-                event.container.data,
-                event.previousIndex,
-                event.currentIndex,
-            );
-        }
-
-        this.boardApi.ChangeStatus(this.project.project_key, event.item.data.code, {
-            from_status: event.previousContainer.id,
-            to_status: event.container.id,
-            from_idx: event.previousIndex,
-            to_idx: event.currentIndex,
-        }).subscribe()
-    }
+    //
+    // drop(event: CdkDragDrop<Task[]>) {
+    //     if (event.previousContainer === event.container) {
+    //         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    //     } else {
+    //         transferArrayItem(
+    //             event.previousContainer.data,
+    //             event.container.data,
+    //             event.previousIndex,
+    //             event.currentIndex,
+    //         );
+    //     }
+    //
+    //     this.boardApi.ChangeStatus(this.project.project_key, event.item.data.code, {
+    //         from_status: event.previousContainer.id,
+    //         to_status: event.container.id,
+    //         from_idx: event.previousIndex,
+    //         to_idx: event.currentIndex,
+    //     }).subscribe()
+    // }
 }

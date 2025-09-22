@@ -8,8 +8,8 @@ import {TaskFormSmComponent} from '../task-form-sm';
     selector: 'fr-column-header',
     template: `
         <div class="mb-2 flex justify-between">
-            <div class="font-bold text-slate-500 dark:text-slate-300">{{ column.title }}</div>
-            <button (click)="toggleForm()" class="text-xl font-bold text-slate-500 dark:text-slate-300 cursor-pointer">+</button>
+            <div class="font-bold text-gray-500 dark:text-gray-300">{{ column.title }}</div>
+            <button (click)="toggleForm()" class="text-xl font-bold text-gray-500 dark:text-gray-300 cursor-pointer">+</button>
         </div>
         @if (newTaskForm) {
             <fr-task-form-sm [project]="project" [column]="column" />

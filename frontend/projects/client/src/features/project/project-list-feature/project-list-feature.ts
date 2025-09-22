@@ -22,7 +22,7 @@ import {Actions, ofType} from '@ngrx/effects';
                 <fr-new-project-form [loading]="loading" (onCancel)="toggleProjectForm()"
                                      (onSubmit)="onSubmit($event)"/>
             } @else {
-                <button class="btn" (click)="toggleProjectForm()">Create</button>
+                <button class="btn btn-primary" (click)="toggleProjectForm()">Create</button>
             }
         </div>
 
