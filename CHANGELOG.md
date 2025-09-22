@@ -1,3 +1,21 @@
+## 0.10.0 (2025-09-22)
+
+### Feat
+
+- **db**: remove GORM
+- **db**: add tasks table
+- include project and fixed it to start at least
+- jwt based authentication
+- login/logout/register pages + functionality
+- **api**: replace fiber with std http router
+
+### Fix
+
+- **api**: task create
+- **api**: additional fixes and manual testings
+- jwt validation
+- **api**: change task status
+
 ## 0.9.1 (2025-09-14)
 
 ### Fix
