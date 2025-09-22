@@ -17,7 +17,7 @@ import (
 // ProjectReader - project reader.
 type ProjectReader interface {
 	List(ctx context.Context) ([]*models.Project, error)
-	GetProject(ctx context.Context, userID uint, projectCode string) (*models.Project, error)
+	GetProject(ctx context.Context, projectCode string) (*models.Project, error)
 }
 
 type ProjectWriter interface {
@@ -60,8 +60,8 @@ func NewProjectManagement() *ProjectManagement {
 }
 
 // GetProject - project
-func (s *ProjectManagement) GetProject(ctx context.Context, userID uint, projectCode string) (*models.Project, error) {
-	project, err := repositories.ProjectGetByUserIDAndCode(ctx, database.GetDb(ctx), userID, projectCode)
+func (s *ProjectManagement) GetProject(ctx context.Context, projectCode string) (*models.Project, error) {
+	project, err := repositories.ProjectGetByUserIDAndCode(ctx, database.GetDb(ctx), projectCode)
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +147,7 @@ func (s *ProjectManagement) TaskUpdate(ctx context.Context, taskCode string, dat
 // TaskCreate - create new task.
 func (s *ProjectManagement) TaskCreate(ctx context.Context, userID uint, taskDto *dto.CreateTaskDto) (*models.Task, error) {
 	db := database.GetDb(ctx)
-	project, err := s.GetProject(ctx, userID, taskDto.ProjectCode)
+	project, err := s.GetProject(ctx, taskDto.ProjectCode)
 	if err != nil {
 		return nil, err
 	}

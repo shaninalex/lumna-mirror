@@ -10,10 +10,10 @@ import (
 )
 
 // ProjectGetByUserIDAndCode get project by userID and project code
-func ProjectGetByUserIDAndCode(ctx context.Context, db *sql.DB, userID uint, code string) (*models.Project, error) {
+func ProjectGetByUserIDAndCode(ctx context.Context, db *sql.DB, code string) (*models.Project, error) {
 	var project models.Project
-	query := `SELECT id, user_id, title, code, created_at, updated_at FROM projects WHERE user_id = ? AND code = ?`
-	row := db.QueryRowContext(ctx, query, userID, code)
+	query := `SELECT id, user_id, title, code, created_at, updated_at FROM projects WHERE code = ?`
+	row := db.QueryRowContext(ctx, query, code)
 	if err := row.Scan(&project.ID, &project.UserID, &project.Title, &project.Code, &project.CreatedAt, &project.UpdatedAt); err != nil {
 		return nil, err
 	}
