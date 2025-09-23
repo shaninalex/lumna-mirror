@@ -5,11 +5,71 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/user/login": {
-      "get": {
+    "/api/auth/login": {
+      "post": {
+        "summary": "Basic user login with email/password",
+        "description": "Authenticates user and sets an HTTP-only cookie `access_token`. \nThe token is automatically sent with subsequent requests.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "supersecret"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "Successful login, access_token set in HTTP-only cookie",
+            "headers": {
+              "Set-Cookie": {
+                "description": "Contains the access_token cookie. HttpOnly, Secure, SameSite=Strict.\n",
+                "schema": {
+                  "type": "string",
+                  "example": "access_token=eyJhbGciOi...; HttpOnly; Secure; Path=/; Max-Age=900; SameSite=Strict"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Login successful"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -306,10 +366,6 @@
       "Meta": {
         "type": "object",
         "properties": {
-          "api_version": {
-            "type": "string",
-            "example": "v1"
-          },
           "total": {
             "type": "integer"
           },
@@ -319,10 +375,7 @@
           "offset": {
             "type": "integer"
           }
-        },
-        "required": [
-          "code"
-        ]
+        }
       },
       "Message": {
         "type": "object",
@@ -370,5 +423,18 @@
         }
       }
     }
-  }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "variables": {},
+      "description": "Default local server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth",
+      "description": "User Authentication"
+    }
+  ]
 }
