@@ -23,14 +23,12 @@ import {GetTasksActions} from '@client/entities/task';
                 <img src="/img/project.svg" class="w-6 rounded"/>
                 <h3 class="font-bold text-xl">{{ project.title }}</h3>
                 <div class="dropdown">
-                    <div tabindex="0" role="button">
+                    <div tabindex="0" role="button" class="btn btn-primary btn-sm">
                         menu
                     </div>
                     <ul tabindex="0" class="dropdown-content left-0 menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm">
-                        <a>Refresh</a>
-                        <a>Settings</a>
-                        <a>Help</a>
-                        <a>Sign out</a>
+                        <li>Change view</li>
+                        <li>Settings</li>
                     </ul>
                 </div>
             </div>

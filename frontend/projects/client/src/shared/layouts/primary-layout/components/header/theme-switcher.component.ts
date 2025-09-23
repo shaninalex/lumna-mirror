@@ -4,15 +4,32 @@ import {Component, OnInit} from '@angular/core';
     selector: 'fr-theme-switcher',
     imports: [],
     template: `
-        <select name="theme" id="theme" [value]="theme" (change)="onThemeChange($event)">
-            <option value="device">device</option>
-            <option value="light">light</option>
-            <option value="dark">dark</option>
-        </select>
+        <div class="dropdown flex">
+            <button tabindex="0" role="button">
+                @if (isDark) {
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.23517 0.629845C9.85768 1.21519 9.71424 2.10867 9.41778 2.78943L9.41727 2.7906C8.96799 3.81751 8.72097 4.94337 8.73013 6.13421L8.73015 6.13688C8.74844 10.5563 12.422 14.3266 16.9208 14.5106L16.9214 14.5106C17.5856 14.5383 18.2205 14.4922 18.837 14.3819C19.2418 14.3082 19.6358 14.2958 19.9885 14.378C20.3479 14.4619 20.7051 14.6568 20.9264 15.0189C21.1467 15.3795 21.1582 15.7846 21.0737 16.14C20.9905 16.4901 20.8069 16.8358 20.5646 17.164C18.4404 20.0702 14.9042 21.9104 10.9577 21.7393L10.9572 21.7393C5.35649 21.493 0.669745 17.0129 0.282039 11.4732C-0.0721984 6.5624 2.8423 2.28549 7.07872 0.498922C7.75853 0.21098 8.63602 0.0664645 9.23517 0.629845ZM8.17031 1.74535C8.07022 1.74811 7.90207 1.77908 7.66292 1.88048L7.66158 1.88105C3.97825 3.43437 1.47284 7.13707 1.7782 11.366L1.77833 11.3677C2.11104 16.1274 6.16385 20.0268 11.0226 20.2407M8.25063 1.7515C8.2506 1.75153 8.24977 1.75131 8.24825 1.75071C8.24991 1.75116 8.25067 1.75146 8.25063 1.7515ZM8.17031 1.74535C8.16436 1.83328 8.13423 1.97978 8.04281 2.18988C7.51239 3.40245 7.21952 4.73596 7.23016 6.14442C7.25259 11.3844 11.5787 15.7934 16.8595 16.0094C17.6347 16.0416 18.3793 15.9877 19.1024 15.8582L19.1048 15.8578C19.3442 15.8141 19.5064 15.8161 19.604 15.8306C19.574 15.9267 19.5034 16.0761 19.3569 16.2743L19.3546 16.2775C17.5187 18.7903 14.4556 20.3894 11.0231 20.2407M19.6954 15.854C19.6954 15.854 19.6949 15.8538 19.6941 15.8533L19.6954 15.854ZM19.6227 15.74C19.6226 15.7387 19.6226 15.738 19.6226 15.7379C19.6227 15.7379 19.6227 15.7386 19.6227 15.74Z" fill="currentColor"/>
+                    </svg>
+                } @else {
+                    <svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11 5.25C7.82436 5.25 5.25 7.82436 5.25 11C5.25 14.1756 7.82436 16.75 11 16.75C14.1756 16.75 16.75 14.1756 16.75 11C16.75 7.82436 14.1756 5.25 11 5.25ZM3.75 11C3.75 6.99594 6.99594 3.75 11 3.75C15.0041 3.75 18.25 6.99594 18.25 11C18.25 15.0041 15.0041 18.25 11 18.25C6.99594 18.25 3.75 15.0041 3.75 11Z" fill="currentColor" />
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11 0.25C11.4142 0.25 11.75 0.585786 11.75 1V1.08C11.75 1.49421 11.4142 1.83 11 1.83C10.5858 1.83 10.25 1.49421 10.25 1.08V1C10.25 0.585786 10.5858 0.25 11 0.25ZM3.32967 3.32967C3.62256 3.03678 4.09744 3.03678 4.39033 3.32967L4.52033 3.45967C4.81322 3.75256 4.81322 4.22744 4.52033 4.52033C4.22744 4.81322 3.75256 4.81322 3.45967 4.52033L3.32967 4.39033C3.03678 4.09744 3.03678 3.62256 3.32967 3.32967ZM18.6703 3.32967C18.9632 3.62256 18.9632 4.09744 18.6703 4.39033L18.5403 4.52033C18.2474 4.81322 17.7726 4.81322 17.4797 4.52033C17.1868 4.22744 17.1868 3.75256 17.4797 3.45967L17.6097 3.32967C17.9026 3.03678 18.3774 3.03678 18.6703 3.32967ZM0.25 11C0.25 10.5858 0.585786 10.25 1 10.25H1.08C1.49421 10.25 1.83 10.5858 1.83 11C1.83 11.4142 1.49421 11.75 1.08 11.75H1C0.585786 11.75 0.25 11.4142 0.25 11ZM20.17 11C20.17 10.5858 20.5058 10.25 20.92 10.25H21C21.4142 10.25 21.75 10.5858 21.75 11C21.75 11.4142 21.4142 11.75 21 11.75H20.92C20.5058 11.75 20.17 11.4142 20.17 11ZM4.52033 17.4797C4.81322 17.7726 4.81322 18.2474 4.52033 18.5403L4.39033 18.6703C4.09744 18.9632 3.62256 18.9632 3.32967 18.6703C3.03678 18.3774 3.03678 17.9026 3.32967 17.6097L3.45967 17.4797C3.75256 17.1868 4.22744 17.1868 4.52033 17.4797ZM17.4797 17.4797C17.7726 17.1868 18.2474 17.1868 18.5403 17.4797L18.6703 17.6097C18.9632 17.9026 18.9632 18.3774 18.6703 18.6703C18.3774 18.9632 17.9026 18.9632 17.6097 18.6703L17.4797 18.5403C17.1868 18.2474 17.1868 17.7726 17.4797 17.4797ZM11 20.17C11.4142 20.17 11.75 20.5058 11.75 20.92V21C11.75 21.4142 11.4142 21.75 11 21.75C10.5858 21.75 10.25 21.4142 10.25 21V20.92C10.25 20.5058 10.5858 20.17 11 20.17Z" fill="currentColor" />
+                    </svg>
+                }
+            </button>
+            <div tabindex="0" class="dropdown-content menu top-8 card card-sm bg-base-100 z-1 shadow-md">
+                <div class="card-body">
+                    <button type="button" class="block cursor-pointer" (click)="setTheme('device')">device</button>
+                    <button type="button" class="block cursor-pointer" (click)="setTheme('light')">light</button>
+                    <button type="button" class="block cursor-pointer" (click)="setTheme('dark')">dark</button>
+                </div>
+            </div>
+        </div>
     `
 })
 export class ThemeSwitcherComponent implements OnInit {
     theme: string = 'device';
+    isDark: boolean = false;
 
     ngOnInit() {
         const saved = localStorage.getItem('theme');
@@ -20,9 +37,8 @@ export class ThemeSwitcherComponent implements OnInit {
         this.applyTheme(this.theme);
     }
 
-    onThemeChange(event: Event) {
-        const select = event.target as HTMLSelectElement;
-        this.theme = select.value;
+    setTheme(theme: string) {
+        this.theme = theme;
         localStorage.setItem('theme', this.theme);
         this.applyTheme(this.theme);
     }
@@ -31,9 +47,15 @@ export class ThemeSwitcherComponent implements OnInit {
         const html = document.documentElement;
         html.removeAttribute('data-theme');
         if (theme === 'light') {
-            html.setAttribute('data-theme', 'retro');
+            html.setAttribute('data-theme', 'light');
+            this.isDark = false;
         } else if (theme === 'dark') {
-            html.setAttribute('data-theme', 'halloween');
+            html.setAttribute('data-theme', 'dark');
+            this.isDark = true;
+        } else {
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            this.isDark = isDark;
         }
     }
 }

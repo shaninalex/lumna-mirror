@@ -22,9 +22,9 @@ import { ThemeSwitcherComponent } from './theme-switcher.component'
             <div class="flex items-center gap-2 ms-auto">
                 <fr-theme-switcher />
                 @if (code$ | async; as code) {
-                    <div>{{ code }}</div>
                     <div class="dropdown">
-                        <div tabindex="0" role="button" class="">
+                        <div tabindex="0" role="button" class="flex items-center gap-2">
+                            <div>{{ code }}</div>
                             <img src="img/1.png" class="rounded-full w-8" alt="">
                         </div>
                         <ul tabindex="0" class="dropdown-content right-0 menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm">

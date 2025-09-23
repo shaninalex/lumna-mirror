@@ -8,7 +8,7 @@ import {FormsModule} from '@angular/forms';
     selector: "fr-task-card",
     imports: [DatePipe, RouterLink, FormsModule],
     template: `
-        <div class="card border border-base-300 bg-amber-100 dark:bg-stone-800">
+        <div class="card card-sm border border-base-300 bg-base-200">
             <div class="card-body">
                 <a [routerLink]="['/projects', projectKey, task.code]" class="card-title cursor-pointer text-left">
                     {{ task.title }}
