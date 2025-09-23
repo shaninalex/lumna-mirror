@@ -1,3 +1,15 @@
+## 0.11.0 (2025-09-24)
+
+### Feat
+
+- **ui**: theme switcher icon + theme
+- **ui**: theme switcher
+
+### Fix
+
+- **api**: use http-only cookies instead of localStorage
+- **ui**: select themes
+
 ## 0.10.0 (2025-09-22)
 
 ### Feat
