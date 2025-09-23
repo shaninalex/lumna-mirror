@@ -7,7 +7,7 @@ export const GetUserAction = createAction(
 
 export const SetUserAction = createAction(
     "[user] set",
-    props<{ payload: UserModel }>(),
+    props<{ payload: UserModel | null }>(),
 )
 
 export const UpdateUserSettingsAction = createAction(

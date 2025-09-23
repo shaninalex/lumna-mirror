@@ -4,7 +4,6 @@ import {filter, finalize, tap} from 'rxjs';
 import {APIResponse} from '@client/shared/models';
 import {Router} from '@angular/router';
 import {UserService} from '@client/entities/user';
-import {TokenService} from '@client/shared/common';
 
 @Component({
     selector: 'kr-user-logout-feature',
@@ -30,7 +29,6 @@ export class UserLogoutFeature {
     loading: boolean = false;
     errors: string[] = [];
     api = inject(UserService);
-    tokenService = inject(TokenService)
     router = inject(Router);
 
     logoutAction(): void {
@@ -44,7 +42,6 @@ export class UserLogoutFeature {
             finalize(() => this.loading = false),
         ).subscribe({
             next: data => {
-                this.tokenService.removeAuthToken()
                 this.router.navigate(['/auth/login'])
             },
         })

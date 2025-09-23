@@ -6,7 +6,6 @@ import {Router, RouterLink} from '@angular/router';
 import {filter, finalize, tap} from 'rxjs';
 import {APIResponse} from '@client/shared/models';
 import {LoaderComponent} from '@client/shared/ui';
-import {TokenService} from '@client/shared/common';
 
 @Component({
     selector: "fr-login-page",
@@ -41,7 +40,6 @@ import {TokenService} from '@client/shared/common';
 })
 export class LoginPageComponent {
     api = inject(AuthService);
-    tokenService = inject(TokenService);
 
     router = inject(Router)
     form: FormGroup = new FormGroup({
@@ -62,7 +60,6 @@ export class LoginPageComponent {
             finalize(() => this.loading = false),
         ).subscribe({
             next: (data: APIResponse<{ "token": string }>) => {
-                this.tokenService.saveAuthToken(data.data.token)
                 this.router.navigate(['/'])
             },
         })

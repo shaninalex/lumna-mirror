@@ -5,6 +5,7 @@ package web
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -15,7 +16,7 @@ import (
 )
 
 type TokenManager interface {
-	CreateToken(ctx context.Context, userID uint) (string, error)
+	CreateToken(ctx context.Context, userID uint) (*models.UserToken, string, error)
 	ValidateToken(ctx context.Context, rawToken string) (jwt.MapClaims, error)
 	GetTokens(ctx context.Context, userID uint) ([]*models.UserToken, error)
 	DeleteToken(ctx context.Context, userID, tokenID uint) error
@@ -32,7 +33,7 @@ func NewTokenService() *TokenService {
 }
 
 // CreateToken - create token
-func (s *TokenService) CreateToken(ctx context.Context, userID uint) (string, error) {
+func (s *TokenService) CreateToken(ctx context.Context, userID uint) (*models.UserToken, string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	now := time.Now()
@@ -56,15 +57,15 @@ func (s *TokenService) CreateToken(ctx context.Context, userID uint) (string, er
 	tokenModel.SetClaims(claimsMap)
 	err := repositories.SaveToken(ctx, database.GetDb(ctx), tokenModel)
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 	claims["jti"] = tokenModel.ID
 	tokenString, err := token.SignedString(sampleSecretKey)
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 
-	return tokenString, nil
+	return tokenModel, tokenString, nil
 }
 
 // ValidateToken - validate given raw access token
@@ -138,4 +139,16 @@ func (s *TokenService) getTokenFromDB(ctx context.Context, userID, tokenID uint)
 		return nil, fmt.Errorf("invalid user id")
 	}
 	return token, nil
+}
+
+func ClearAccessTokenCookie(w http.ResponseWriter) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     "access_token",
+		Value:    "",
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		MaxAge:   -1, // expire immediately
+		SameSite: http.SameSiteStrictMode,
+	})
 }

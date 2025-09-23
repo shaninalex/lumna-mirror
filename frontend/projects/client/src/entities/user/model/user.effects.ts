@@ -15,13 +15,20 @@ export const GetUserEffect = createEffect(
     ) => {
         return actions$.pipe(
             ofType(GetUserAction),
-            exhaustMap(() => service.getUser().pipe(
-                map(result => SetUserAction({payload: result})),
-                catchError(() => EMPTY)
-            ))
-        )
+            exhaustMap(() =>
+                service.getUser().pipe(
+                    map(user => SetUserAction({ payload: user })),
+                    catchError((err) => {
+                        if (err.status === 401) {
+                            return of(SetUserAction({ payload: null }));
+                        }
+                        return of({ type: "api_error", error: err });
+                    })
+                )
+            )
+        );
     },
-    {functional: true, dispatch: true}
+    { functional: true, dispatch: true }
 );
 
 export const UpdateUserSettingsEffect = createEffect(

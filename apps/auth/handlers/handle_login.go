@@ -39,11 +39,21 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx = context.WithValue(ctx, "device", r.UserAgent())
-	tokenString, err := s.tokenService.CreateToken(ctx, user.ID)
+	token, tokenString, err := s.tokenService.CreateToken(ctx, user.ID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
-	web.Success(w, map[string]any{"token": tokenString}, "Login Successful")
+	http.SetCookie(w, &http.Cookie{
+		Name:     "access_token",
+		Value:    tokenString,
+		HttpOnly: true,
+		Secure:   true,
+		Path:     "/",
+		SameSite: http.SameSiteStrictMode,
+		MaxAge:   int(token.ExpiresAt.Sub(token.CreatedAt).Seconds()),
+	})
+
+	web.Success(w, nil, "Login Successful")
 }

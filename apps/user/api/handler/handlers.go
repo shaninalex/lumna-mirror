@@ -62,5 +62,6 @@ func (s *UserHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
+	web.ClearAccessTokenCookie(w)
 	web.Success(w, nil, "Logout Successful")
 }
