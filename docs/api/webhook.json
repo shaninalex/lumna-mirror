@@ -1,0 +1,13 @@
+{
+    "success": true,
+    "data": {
+        "id": 123123123,
+        "event": "task.created",
+        "callbackURL": "https://mywebhookurl.com/webhook/on/new/task",
+        "active": true
+    },
+    "error": null,
+    "meta": {
+        "api_version": "v1"
+    }
+}
