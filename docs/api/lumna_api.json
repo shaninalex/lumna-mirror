@@ -1,0 +1,374 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Swagger Lumna - OpenAPI 3.0",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/user/login": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "title": {
+            "type": "string",
+            "example": "Project"
+          },
+          "code": {
+            "type": "string",
+            "example": "project-324234"
+          },
+          "boards": {
+            "type": "array",
+            "description": "List of boards within the project",
+            "items": {
+              "$ref": "#/components/schemas/BoardListItem"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-22T12:34:56Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-22T12:34:56Z"
+          }
+        }
+      },
+      "BoardListItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "title": {
+            "type": "string",
+            "example": "Main board"
+          },
+          "code": {
+            "type": "string",
+            "example": "board-324234"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "owner_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "ID of the user who owns the task (optional if using roles/permissions)",
+            "example": 123
+          },
+          "board_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "project_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "status_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "title": {
+            "type": "string",
+            "example": "Hello world"
+          },
+          "code": {
+            "type": "string",
+            "example": "task-324234"
+          },
+          "completed": {
+            "type": "boolean",
+            "example": false
+          },
+          "description": {
+            "type": "string",
+            "example": "Long task description"
+          },
+          "list_index": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Position of the task in the column",
+            "example": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-22T12:34:56Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-22T12:34:56Z"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123123123
+          },
+          "code": {
+            "type": "string",
+            "example": "@username123875"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "email@example.com"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/UserSettings"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive",
+              "banned"
+            ],
+            "example": "active"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-22T12:34:56Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-22T12:34:56Z"
+          }
+        }
+      },
+      "UserSettings": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": [
+              "light",
+              "dark",
+              "device"
+            ],
+            "example": "light"
+          },
+          "language": {
+            "type": "string",
+            "example": "en"
+          },
+          "timezone": {
+            "type": "string",
+            "example": "UTC"
+          },
+          "date_format": {
+            "type": "string",
+            "example": "02.01.2006"
+          },
+          "time_format": {
+            "type": "string",
+            "example": "15:04"
+          },
+          "week_start_day": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Day of week the user prefers to start (1 = Monday)",
+            "example": 1
+          }
+        }
+      },
+      "Board": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "title": {
+            "type": "string",
+            "example": "Main board"
+          },
+          "code": {
+            "type": "string",
+            "example": "board-123123"
+          },
+          "columns": {
+            "type": "array",
+            "description": "List of columns in the board",
+            "items": {
+              "$ref": "#/components/schemas/Column"
+            }
+          }
+        }
+      },
+      "Column": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "title": {
+            "type": "string",
+            "example": "Main board"
+          },
+          "index": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "error": {
+            "$ref": "#/components/schemas/Error",
+            "nullable": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "messages": {
+            "type": "array",
+            "description": "Optional system messages",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "data": {
+            "description": "Can be any JSON value",
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": [
+          "code",
+          "meta"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Meta": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "type": "string",
+            "example": "v1"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "example": "Task completed successfully"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "success",
+              "warning",
+              "error",
+              "info"
+            ],
+            "example": "success"
+          }
+        }
+      },
+      "Webhook": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123123123
+          },
+          "event": {
+            "type": "string",
+            "description": "Event that triggers the webhook",
+            "example": "task.created"
+          },
+          "callback_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to send the webhook payload to",
+            "example": "https://mywebhookurl.com/webhook/on/new/task"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the webhook is currently active",
+            "example": true
+          }
+        }
+      }
+    }
+  }
+}
