@@ -13,9 +13,12 @@ tags:
     description: User details requests
   - name: Members
     description: Team members ( do not confuse with "User" requests )
-    
+  - name: Project
+    description: Project list, details, basic CRUD requests
+  - name: Task
+    description: Task CRUD requests and specific actions
 paths:
-  /api/auth/login:
+  /api/v1/auth/login:
     post:
       summary: Basic user login with email/password
       tags:
@@ -45,31 +48,17 @@ paths:
           content:
             application/json:
               example:
-                {
-                  "success": true,
-                  "messages": [
-                    {
-                      "text": "login successfull",
-                      "type": "success"
-                    }
-                  ]
-                }
-        '401':
+                status: true
+                messages:
+                  - text: login successfull
+                    type: success
+        '400':
           description: Invalid credentials
           content:
             application/json:
-              example:
-                {
-                  "success": true,
-                  "messages": [
-                    {
-                      "text": "invalid credentials",
-                      "type": "error"
-                    }
-                  ]
-                }
-
-  /api/auth/register:
+              schema:
+                $ref: '#/components/schemas/ErrorApiResponse'
+  /api/v1/auth/register:
     post:
       summary: User registration with email and password
       tags:
@@ -88,31 +77,17 @@ paths:
           content:
             application/json:
               example:
-                {
-                  "success": true,
-                  "messages": [
-                    {
-                      "text": "registration successfull",
-                      "type": "success"
-                    }
-                  ]
-                }
+                status: true
+                messages:
+                  - text: registration successfull
+                    type: success
         '400':
           description: Unsuccessfull registration return error message
           content:
             application/json:
-              example:
-                {
-                  "success": false,
-                  "messages": [
-                    {
-                      "text": "user already exist",
-                      "type": "error"
-                    }
-                  ]
-                }
-
-  /api/user/me:
+              schema:
+                $ref: '#/components/schemas/ErrorApiResponse'
+  /api/v1/user/me:
     get:
       summary: Return user object
       tags:
@@ -122,29 +97,15 @@ paths:
           description: Return user object
           content:
             application/json:
-              example:
-                {
-                    "success": true,
-                    "data": {
-                        "id": 123123123,
-                        "code": "@username123875",
-                        "email": "email@example.com",
-                        "settings": {
-                            "theme":  "light",
-                            "language": "en",
-                            "timezone":  "UTC",
-                            "date_format": "02.01.2006",
-                            "time_format":  "15:04",
-                            "week_start_day": 1
-                        },
-                        "active":  true,
-                        "state": "active",
-                        "created_at": "2025-09-22T12:34:56Z",
-                        "updated_at":  "2025-09-22T12:34:56Z"
-                    }
-                }
-        
-  /api/user/update:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/User'
+  /api/v1/user/update:
     post:
       summary: Update user
       tags:
@@ -154,46 +115,29 @@ paths:
         content:
           application/json:
             example:
-              {
-                "code": "@username123875",
-                "email": "email@example.com",
-                "settings": {
-                    "theme":  "light",
-                    "language": "en",
-                    "timezone":  "UTC",
-                    "date_format": "02.01.2006",
-                    "time_format":  "15:04",
-                    "week_start_day": 1
-                },
-              }
+              code: '@username123875'
+              email: email@example.com
+              settings:
+                theme: light
+                language: en
+                timezone: UTC
+                date_format: 02.01.2006
+                time_format: '15:04'
+                week_start_day: 1
       responses:
         '200':
           description: Updated user object
           content:
             application/json:
-              example:
-                {
-                    "success": true,
-                    "data": {
-                        "id": 123123123,
-                        "code": "@username123875",
-                        "email": "email@example.com",
-                        "settings": {
-                            "theme":  "light",
-                            "language": "en",
-                            "timezone":  "UTC",
-                            "date_format": "02.01.2006",
-                            "time_format":  "15:04",
-                            "week_start_day": 1
-                        },
-                        "active":  true,
-                        "state": "active",
-                        "created_at": "2025-09-22T12:34:56Z",
-                        "updated_at":  "2025-09-22T12:34:56Z"
-                    }
-                }
-          
-  /api/user/logout:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/User'
+  /api/v1/user/logout:
     get:
       tags:
         - User
@@ -203,16 +147,234 @@ paths:
           content:
             application/json:
               example:
-                {
-                  "success": true,
-                  "messages": [
-                    {
-                      "text": "logout successfull",
-                      "type": "success"
-                    }
-                  ]
-                }
+                status: true
+                messages:
+                  - text: logout successfull
+                    type: success
+  /api/v1/projects:
+    get:
+      summary: Get projects
+      tags:
+        - Project
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
+    post:
+      summary: Create project
+      tags:
+        - Project
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
+  /api/v1/projects/{id}:
+    get:
+      summary: Get project
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique code of the project
+          example: 324234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
+  /api/v1/projects/{id}/tasks:
+    get:
+      summary: Get project tasks
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique code of the project
+          example: 324234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
+    post:
+      summary: Create task
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique code of the project
+          example: 324234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
+  /api/v1/tasks/{id}:
+    get:
+      summary: Get task detail
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique id of the task
+          example: 324234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
+    post:
+      summary: Update task
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique id of the task
+          example: 324234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
+  /api/v1/tasks/{id}/status:
+    patch:
+      summary: Update task status
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique id of the task
+          example: 324234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
+  /api/v1/tasks/{id}/badges:
+    post:
+      summary: Add badge to task
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique id of the task
+          example: 324234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
+  /api/v1/tasks/{id}/badges/{badgeId}:
+    delete:
+      summary: Remove badge from task
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique id of the task
+          example: 324234
+        - name: badgeId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique id of the badge
+          example: 324234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
+  /api/v1/tasks/{id}/tags:
+    post:
+      summary: Add tags to task
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique id of the task
+          example: 324234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
 
+  /api/v1/tasks/{id}/tags/{tagId}:
+    delete:
+      summary: Remove tags from task
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique id of the task
+          example: 324234
+        - name: tagId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique id of the badge
+          example: 324234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example: {}
 components:
   schemas:
     AuthPayload:
@@ -415,9 +577,9 @@ components:
     ApiResponse:
       type: object
       properties:
-        code:
-          type: integer
-          format: int32
+        status:
+          type: boolean
+          example: true
         error:
           $ref: '#/components/schemas/Error'
           nullable: true
@@ -437,6 +599,18 @@ components:
       required:
         - code
         - meta
+    ErrorApiResponse:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        error:
+          $ref: '#/components/schemas/Error'
+          nullable: true
+      required:
+        - status
+        - error
     Error:
       type: object
       properties:
