@@ -4,29 +4,41 @@
     "title": "Swagger Lumna - OpenAPI 3.0",
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "variables": {},
+      "description": "Default local server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authentication"
+    },
+    {
+      "name": "User",
+      "description": "User details requests"
+    },
+    {
+      "name": "Members",
+      "description": "Team members ( do not confuse with \"User\" requests )"
+    }
+  ],
   "paths": {
     "/api/auth/login": {
       "post": {
         "summary": "Basic user login with email/password",
+        "tags": [
+          "Auth"
+        ],
         "description": "Authenticates user and sets an HTTP-only cookie `access_token`. \nThe token is automatically sent with subsequent requests.\n",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email",
-                    "example": "user@example.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "format": "password",
-                    "example": "supersecret"
-                  }
-                }
+                "$ref": "#/components/schemas/AuthPayload"
               }
             }
           }
@@ -45,18 +57,14 @@
             },
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Login successful"
+                "example": {
+                  "success": true,
+                  "messages": [
+                    {
+                      "text": "login successfull",
+                      "type": "success"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -65,8 +73,184 @@
             "description": "Invalid credentials",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                "example": {
+                  "success": true,
+                  "messages": [
+                    {
+                      "text": "invalid credentials",
+                      "type": "error"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "summary": "User registration with email and password",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful registration just return empty response and success message",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "messages": [
+                    {
+                      "text": "registration successfull",
+                      "type": "success"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unsuccessfull registration return error message",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "messages": [
+                    {
+                      "text": "user already exist",
+                      "type": "error"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/me": {
+      "get": {
+        "summary": "Return user object",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Return user object",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 123123123,
+                    "code": "@username123875",
+                    "email": "email@example.com",
+                    "settings": {
+                      "theme": "light",
+                      "language": "en",
+                      "timezone": "UTC",
+                      "date_format": "02.01.2006",
+                      "time_format": "15:04",
+                      "week_start_day": 1
+                    },
+                    "active": true,
+                    "state": "active",
+                    "created_at": "2025-09-22T12:34:56Z",
+                    "updated_at": "2025-09-22T12:34:56Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/update": {
+      "post": {
+        "summary": "Update user",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "code": "@username123875",
+                "email": "email@example.com",
+                "settings": {
+                  "theme": "light",
+                  "language": "en",
+                  "timezone": "UTC",
+                  "date_format": "02.01.2006",
+                  "time_format": "15:04",
+                  "week_start_day": 1
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated user object",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 123123123,
+                    "code": "@username123875",
+                    "email": "email@example.com",
+                    "settings": {
+                      "theme": "light",
+                      "language": "en",
+                      "timezone": "UTC",
+                      "date_format": "02.01.2006",
+                      "time_format": "15:04",
+                      "week_start_day": 1
+                    },
+                    "active": true,
+                    "state": "active",
+                    "created_at": "2025-09-22T12:34:56Z",
+                    "updated_at": "2025-09-22T12:34:56Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/logout": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Clear auth cookie",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "messages": [
+                    {
+                      "text": "logout successfull",
+                      "type": "success"
+                    }
+                  ]
                 }
               }
             }
@@ -77,6 +261,25 @@
   },
   "components": {
     "schemas": {
+      "AuthPayload": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "supersecret"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
       "Project": {
         "type": "object",
         "properties": {
@@ -423,18 +626,5 @@
         }
       }
     }
-  },
-  "servers": [
-    {
-      "url": "http://localhost:8000",
-      "variables": {},
-      "description": "Default local server"
-    }
-  ],
-  "tags": [
-    {
-      "name": "auth",
-      "description": "User Authentication"
-    }
-  ]
+  }
 }
