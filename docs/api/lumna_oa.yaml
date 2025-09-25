@@ -271,6 +271,461 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/Project'
+    delete:
+      summary: Delete Project
+      description: >
+        Delete project by ID
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the task
+          example: 324234
+      responses:
+        '200':
+          description: Success delete project response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+    patch:
+      summary: Update specific project
+      description: Update the details of a single project by its unique identifier.
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  example: Project name
+      responses:
+        '200':
+          description: Successfully updated project response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Project'
+  /api/v1/projects/{id}/boards:
+    get:
+      summary: Retrieve project boards
+      description: Return all project specific boards
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      responses:
+        '200':
+          description: Successfully retrieved project board
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Board'
+    post:
+      summary: Create project board
+      description: Create project specific board
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  format: string
+                  example: Board title
+      responses:
+        '200':
+          description: Successfully created project board
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Board'
+  /api/v1/projects/{id}/boards/{board_id}:
+    get:
+      summary: Retrieve project board
+      description: Retrieve project specific board by id
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: board_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project board
+          example: 324234
+      responses:
+        '200':
+          description: Successfully retrieved project board
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Board'
+    patch:
+      summary: Patch project board
+      description: Patch project specific board
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: board_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project board
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  format: string
+                  example: Board title
+      responses:
+        '200':
+          description: Successfully retrieved project board
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Board'
+    delete:
+      summary: Delete project board
+      description: Delete project specific board
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: board_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project board
+          example: 324234
+      responses:
+        '200':
+          description: Successfully delete project board response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+  /api/v1/projects/{id}/boards/{board_id}/columns:
+    get:
+      summary: Retrieve board columns
+      description: Return all board specific columns
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: board_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project board
+          example: 324234
+      responses:
+        '200':
+          description: Successfully retrieved all board columns
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Column'
+    post:
+      summary: Create column
+      description: Create column
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: board_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project board
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  format: string
+                  example: Column title
+      responses:
+        '200':
+          description: Successfully created project column
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Column'
+  /api/v1/projects/{id}/boards/{board_id}/columns/{column_id}:
+    get:
+      summary: Retrieve column
+      description: Return specific board column
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: board_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project board
+          example: 324234
+        - name: column_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the column
+          example: 324234
+      responses:
+        '200':
+          description: Successfully retrieved column
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Column'
+    patch:
+      summary: Patch column
+      description: Update project column
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: board_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project board
+          example: 324234
+        - name: column_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the column
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  format: string
+                  example: Status title
+      responses:
+        '200':
+          description: Successfully updated board column
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Column'
+    delete:
+      summary: Delete column
+      description: >-
+        Delete project specific column.
+        Important! Deleting column will delete all tasks inside that column
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: board_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project board
+          example: 324234
+        - name: column_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the column
+          example: 324234
+      responses:
+        '200':
+          description: Successfully delete project column response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
   /api/v1/projects/{id}/tasks:
     get:
       summary: Retrieve tasks for a project
@@ -407,6 +862,90 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/Badge'
+  /api/v1/project/{id}/badges/{badge_id}:
+    patch:
+      summary: Patch project badge
+      description: Patch badge by ID
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the task
+          example: 324234
+        - name: badge_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the badge
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  format: string
+                  example: Badge title
+                color:
+                  type: string
+                  format: string
+                  example: "#dcdcdc"
+      responses:
+        '200':
+          description: Successfully updated board badge
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Badge'
+    delete:
+      summary: Delete project badge
+      description: >
+        Deleta task by ID
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the task
+          example: 324234
+        - name: badge_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the badge
+          example: 324234
+      responses:
+        '200':
+          description: Success delete badge response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
   /api/v1/tasks/{id}:
     get:
       summary: Retrieve task details
@@ -483,6 +1022,11 @@ paths:
                   format: int32
                   description: Position of the task within its column or list
                   example: 1
+                badge_id:
+                  type: integer
+                  format: int32
+                  description: Badge id
+                  example: 1
                 tags:
                   type: array
                   description: Array of string labels (tags) associated with the task
@@ -514,6 +1058,35 @@ paths:
                     example: false
                   errors:
                     $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete task
+      description: >
+        Deleta task by ID
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the task
+          example: 324234
+      responses:
+        '200':
+          description: Success delete task response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
   /api/v1/tasks/{id}/status:
     patch:
       summary: Update task status
@@ -638,7 +1211,7 @@ paths:
                     example: false
                   errors:
                     $ref: '#/components/schemas/Error'
-  /api/v1/tasks/{id}/badges/{badgeId}:
+  /api/v1/tasks/{id}/badges/{badge_id}:
     delete:
       summary: Remove badge from task
       description: >
@@ -654,7 +1227,7 @@ paths:
             type: integer
           description: Unique id of the task
           example: 324234
-        - name: badgeId
+        - name: badge_id
           in: path
           required: true
           schema:
@@ -923,7 +1496,7 @@ components:
           example: 10
         title:
           type: string
-          example: Main board
+          example: In progress
         index:
           type: integer
           format: int64
