@@ -5,6 +5,7 @@ go 1.24.2
 require (
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/golang-migrate/migrate/v4 v4.19.0
+	github.com/google/uuid v1.6.0
 	golang.org/x/crypto v0.42.0
 )
 

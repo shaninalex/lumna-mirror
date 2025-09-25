@@ -87,6 +87,7 @@ func DefaultRouter(db *sql.DB) *Router {
 	r.Use(database.NewMiddleware(db).Wrap)
 	r.Use(NewLoggerMiddleware().Wrap)
 	r.Use(NewCommonMiddleware().Wrap)
+	r.Use(NewHeadersMiddleware().Wrap)
 	r.GET("/_health", HandleHealth)
 	return r
 }
