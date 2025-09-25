@@ -12,6 +12,8 @@ tags:
     description: Authentication
   - name: User
     description: User details requests
+  - name: Company
+    description: Company endpoints
   - name: Project
     description: Project list, details, basic CRUD requests
   - name: Task
@@ -42,7 +44,8 @@ paths:
               schema:
                 type: string
                 example: >-
-                  access_token=eyJhbGciOi...; HttpOnly; Secure; Path=/; Max-Age=900; SameSite=Strict
+                  access_token=eyJhbGciOi...; HttpOnly; Secure; Path=/;
+                  Max-Age=900; SameSite=Strict
           content:
             application/json:
               example:
@@ -107,7 +110,9 @@ paths:
   /api/v1/user/update:
     post:
       summary: Update authenticated user
-      description: Updates the authenticated user’s profile information (e.g., username, email, or settings).
+      description: >-
+        Updates the authenticated user’s profile information (e.g., username,
+        email, or settings).
       tags:
         - User
       requestBody:
@@ -138,11 +143,12 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/User'
-
   /api/v1/user/logout:
     get:
       summary: Log out authenticated user
-      description: Logs out the currently authenticated user by revoking their session in the database and clearing the authentication cookie from the response.
+      description: >-
+        Logs out the currently authenticated user by revoking their session in
+        the database and clearing the authentication cookie from the response.
       tags:
         - User
       responses:
@@ -155,7 +161,25 @@ paths:
                 messages:
                   - text: logout successful
                     type: success
-
+  /api/v1/company:
+    get:
+      summary: Retrieve user company
+      description: Every user and projects are belongs to the company
+      tags:
+        - Company
+      responses:
+        '200':
+          description: Successfully retrieved company
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Company'
   /api/v1/projects:
     get:
       summary: Retrieve all projects
@@ -179,7 +203,9 @@ paths:
                       $ref: '#/components/schemas/Project'
     post:
       summary: Create a new project
-      description: Creates a new project with the provided details and returns the created project object.
+      description: >-
+        Creates a new project with the provided details and returns the created
+        project object.
       tags:
         - Project
       requestBody:
@@ -206,7 +232,6 @@ paths:
                     $ref: '#/components/schemas/Project'
                   messages:
                     $ref: '#/components/schemas/Message'
-
   /api/v1/projects/{id}:
     get:
       summary: Retrieve a specific project
@@ -234,23 +259,12 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/Project'
-        '404':
-          description: Project not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: boolean
-                    example: false
-                  errors:
-                      $ref: '#/components/schemas/Error'
-
   /api/v1/projects/{id}/tasks:
     get:
       summary: Retrieve tasks for a project
-      description: Returns a list of all tasks that belong to the specified project, identified by its unique ID.
+      description: >-
+        Returns a list of all tasks that belong to the specified project,
+        identified by its unique ID.
       tags:
         - Project
       parameters:
@@ -276,22 +290,11 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Task'
-        '404':
-          description: Project not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: boolean
-                    example: false
-                  errors:
-                    $ref: '#/components/schemas/Error'
-
     post:
       summary: Create a new task in a project
-      description: Adds a new task to the specified project, identified by its unique ID. Requires a task title and may include other task details.
+      description: >-
+        Adds a new task to the specified project, identified by its unique ID.
+        Requires a task title and may include other task details.
       tags:
         - Project
       parameters:
@@ -325,19 +328,6 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/Task'
-        '404':
-          description: Project not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: boolean
-                    example: false
-                  errors:
-                    $ref: '#/components/schemas/Error'
-
   /api/v1/project/{id}/badges:
     get:
       summary: Retrieve all badges
@@ -391,7 +381,7 @@ paths:
                   type: string
                 color:
                   type: string
-                  example: "#dcdcdc"
+                  example: '#dcdcdc'
       responses:
         '200':
           description: Successfully retrieved project badges
@@ -405,14 +395,13 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/Badge'
-
   /api/v1/tasks/{id}:
     get:
       summary: Retrieve task details
       description: >
-        Returns the full details of a specific task, identified by its unique ID.  
-        This includes task title, description, status, completion state, tags, and other metadata.  
-        Requires authentication.
+        Returns the full details of a specific task, identified by its unique
+        ID.   This includes task title, description, status, completion state,
+        tags, and other metadata.   Requires authentication.
       tags:
         - Task
       parameters:
@@ -436,38 +425,13 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/Task'
-        '401':
-          description: Unauthorized — missing or invalid authentication token
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: boolean
-                    example: false
-                  errors:
-                    $ref: '#/components/schemas/Error'
-        '404':
-          description: Task not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: boolean
-                    example: false
-                  errors:
-                    $ref: '#/components/schemas/Error'
-
     patch:
       summary: Update task details
       description: >
-        Updates the properties of an existing task, identified by its unique ID.  
-        Fields such as title, description, status, completion state, tags, or list position can be modified.  
-        Only the provided fields will be updated; others remain unchanged.  
-        Requires authentication.
+        Updates the properties of an existing task, identified by its unique
+        ID.   Fields such as title, description, status, completion state, tags,
+        or list position can be modified.   Only the provided fields will be
+        updated; others remain unchanged.   Requires authentication.
       tags:
         - Task
       parameters:
@@ -525,7 +489,7 @@ paths:
                     type: boolean
                     example: true
                   data:
-                    $ref: "#/components/schemas/Task"
+                    $ref: '#/components/schemas/Task'
         '400':
           description: Bad request — invalid or malformed input data
           content:
@@ -538,38 +502,13 @@ paths:
                     example: false
                   errors:
                     $ref: '#/components/schemas/Error'
-        '401':
-          description: Unauthorized — missing or invalid authentication token
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: boolean
-                    example: false
-                  errors:
-                    $ref: '#/components/schemas/Error'
-        '404':
-          description: Task not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: boolean
-                    example: false
-                  errors:
-                    $ref: '#/components/schemas/Error'
-
   /api/v1/tasks/{id}/status:
     patch:
       summary: Update task status
       description: >
-        Updates the status (column) and order of a task within a project board.  
-        This endpoint is typically used when moving a task between columns or reordering within the same column.  
-        Requires authentication.
+        Updates the status (column) and order of a task within a project
+        board.   This endpoint is typically used when moving a task between
+        columns or reordering within the same column.   Requires authentication.
       tags:
         - Task
       parameters:
@@ -590,7 +529,9 @@ paths:
                 from_status:
                   type: integer
                   format: int64
-                  description: Identifier of the current status/column the task is moving from
+                  description: >-
+                    Identifier of the current status/column the task is moving
+                    from
                   example: 12
                 to_status:
                   type: integer
@@ -619,7 +560,7 @@ paths:
                     type: boolean
                     example: true
                   data:
-                    $ref: "#/components/schemas/Task"
+                    $ref: '#/components/schemas/Task'
         '400':
           description: Bad request — invalid status or index values
           content:
@@ -632,13 +573,12 @@ paths:
                     example: false
                   errors:
                     $ref: '#/components/schemas/Error'
-
   /api/v1/tasks/{id}/badges:
     post:
       summary: Add badge to task
       description: >
-        Attaches a badge (e.g., *blocked*, *priority*) to a task.  
-        Requires the badge identifier and task ID.
+        Attaches a badge (e.g., *blocked*, *priority*) to a task.   Requires the
+        badge identifier and task ID.
       tags:
         - Task
       parameters:
@@ -673,7 +613,7 @@ paths:
                     type: boolean
                     example: true
                   data:
-                    $ref: "#/components/schemas/Task"
+                    $ref: '#/components/schemas/Task'
         '400':
           description: Bad request — invalid task or badge id
           content:
@@ -686,13 +626,12 @@ paths:
                     example: false
                   errors:
                     $ref: '#/components/schemas/Error'
-
   /api/v1/tasks/{id}/badges/{badgeId}:
     delete:
       summary: Remove badge from task
       description: >
-        Removes a specific badge from a task.  
-        Requires both the task ID and the badge ID.
+        Removes a specific badge from a task.   Requires both the task ID and
+        the badge ID.
       tags:
         - Task
       parameters:
@@ -722,7 +661,7 @@ paths:
                     type: boolean
                     example: true
                   data:
-                    $ref: "#/components/schemas/Task"
+                    $ref: '#/components/schemas/Task'
         '400':
           description: Bad request — invalid task or badge id
           content:
@@ -735,9 +674,22 @@ paths:
                     example: false
                   errors:
                     $ref: '#/components/schemas/Error'
-
 components:
   schemas:
+    Company:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        title:
+          type: string
+          example: Default company name
+        created_at:
+          type: string
+          format: timestamp
+          example: 2025-09-22T12:34:56Z
     Tag:
       type: object
       properties:
@@ -760,7 +712,7 @@ components:
           example: blocked
         color:
           type: string
-          example: "#dcdcdc"
+          example: '#dcdcdc'
     AuthPayload:
       type: object
       properties:
@@ -844,11 +796,11 @@ components:
           type: string
           example: Hello world
         badge:
-          $ref: "#/components/schemas/Badge"
+          $ref: '#/components/schemas/Badge'
         tags:
           type: array
           items:
-            $ref: "#/components/schemas/Tag"
+            $ref: '#/components/schemas/Tag'
         code:
           type: string
           example: task-324234
