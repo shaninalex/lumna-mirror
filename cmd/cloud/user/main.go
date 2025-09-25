@@ -2,45 +2,31 @@
 
 package main
 
-import (
-	"errors"
-	"fmt"
-	"log"
-	"net/http"
-	"os"
-	"time"
-
-	userApp "gitlab.com/shaninalex/flowreon/apps/user/api"
-	"gitlab.com/shaninalex/flowreon/internal/base"
-	"gitlab.com/shaninalex/flowreon/internal/database"
-	"gitlab.com/shaninalex/flowreon/internal/web"
-)
-
 func main() {
-	args := os.Args
-	var configPath string
-	if len(args) < 2 || os.Getenv("CONFIG_PATH") != "" {
-		configPath = os.Getenv("CONFIG_PATH")
-	} else {
-		configPath = args[1]
-	}
-
-	config := base.NewConfig(configPath)
-	db := database.InitDB(database.BuildDSN(config))
-	sqlDB, err := db.DB()
-	if err != nil {
-		panic(err)
-	}
-	router := web.AuthRouter(config, sqlDB, "user_service")
-	userApp.NewUserController(router)
-
-	srv := &http.Server{
-		Handler:      router,
-		Addr:         fmt.Sprintf(":%s", config.String("user_service.port")),
-		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 30 * time.Second,
-	}
-	if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Printf("Server error: %v\n", err)
-	}
+	//args := os.Args
+	//var configPath string
+	//if len(args) < 2 || os.Getenv("CONFIG_PATH") != "" {
+	//	configPath = os.Getenv("CONFIG_PATH")
+	//} else {
+	//	configPath = args[1]
+	//}
+	//
+	//config := base.NewConfig(configPath)
+	//db := database.InitDB(database.BuildDSN(config))
+	//sqlDB, err := db.DB()
+	//if err != nil {
+	//	panic(err)
+	//}
+	//router := web.AuthRouter(config, sqlDB, "user_service")
+	//userApp.NewUserController(router)
+	//
+	//srv := &http.Server{
+	//	Handler:      router,
+	//	Addr:         fmt.Sprintf(":%s", config.String("user_service.port")),
+	//	ReadTimeout:  15 * time.Second,
+	//	WriteTimeout: 30 * time.Second,
+	//}
+	//if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	//	log.Printf("Server error: %v\n", err)
+	//}
 }
