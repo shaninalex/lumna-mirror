@@ -1,12 +1,24 @@
 openapi: 3.0.0
 info:
-  title: Swagger Lumna - OpenAPI 3.0
-  description: Title
+  title: Lumna API - OpenAPI 3.0
+  description: |
+    Lumna is a lightweight project and task management platform designed to help teams
+    stay organized and productive.  
+    
+    This API provides access to the core functionality of Lumna, including:
+    
+    - **Projects**: create and manage projects that group related tasks.  
+    - **Tasks**: manage work items within projects, including status, assignments, and deadlines.  
+    - **Badges & Labels**: tag tasks with custom identifiers for filtering and categorization.  
+    - **Users & Auth**: authenticate, manage user sessions, and assign responsibilities.  
+    - **Companies**: look up your company
+    
+    Use these endpoints to build integrations, automate workflows, or create custom
+    front-end experiences on top of Lumna.
   version: 1.0.0
 servers:
   - url: http://localhost:8000
-    variables: {}
-    description: Default local server
+    description: Default local development server
 tags:
   - name: Auth
     description: Authentication
