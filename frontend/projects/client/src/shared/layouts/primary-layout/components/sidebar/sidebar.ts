@@ -11,8 +11,7 @@ import {RouterLink, RouterLinkActive} from '@angular/router';
     template: `
         <div class="h-full flex flex-col space-between w-48 bg-base-100 border-e border-base-300">
             <a [routerLink]="['/']" class="flex items-center gap-2 p-4">
-                <img src="img/logo-icon.svg" class="w-10" alt="Flowreon"/>
-                <span class="font-bold text-lg">Flowreon</span>
+                <img src="img/logo-h.svg" class="w-full" alt="Flowreon"/>
             </a>
             <div class="p-4 flex flex-col flex-grow">
                 <div class="flex flex-col gap-2">

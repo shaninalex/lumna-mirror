@@ -18,11 +18,7 @@ export const authGuard: CanMatchFn = () => {
         filter(state => state.loaded),
         take(1),
         map(state => {
-            if (state.user) {
-                return true;
-            } else {
-                return router.createUrlTree(['/auth/login']);
-            }
+            return state.user ? true : router.createUrlTree(['/auth/login']);
         })
     );
 };

@@ -24,8 +24,8 @@ import {LoaderComponent} from '@client/shared/ui/loader';
             </div>
 
             <div class="flex gap-2 items-center">
-                <button [disabled]="loading || !form.valid" class="btn" type="submit">Create</button>
-                <button [disabled]="loading" class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>
+                <button [disabled]="loading || !form.valid" class="btn btn-primary" type="submit">Create</button>
+                <button [disabled]="loading" class="btn" type="button" (click)="cancel()">Cancel</button>
                 @if (loading) {
                     <ui-loader />
                 }

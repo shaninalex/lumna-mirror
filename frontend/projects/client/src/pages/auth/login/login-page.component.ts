@@ -17,7 +17,7 @@ import {LoaderComponent} from '@client/shared/ui';
     ],
     template: `
         <fr-auth-layout title="Login">
-            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mb-4">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
                 <input type="email" formControlName="email" class="input block mb-4" placeholder="email"/>
                 <input type="password" formControlName="password" class="input block mb-4" placeholder="password"/>
                 <button class="btn btn-primary mb-4" [disabled]="!form.valid">

@@ -1,16 +1,12 @@
 import {Component, Input} from '@angular/core';
-import { Logo } from './logo'
 import {version} from '@root/package.json';
 
 @Component({
     selector: 'fr-auth-layout',
-    imports: [
-        Logo
-    ],
     template: `
         <div class="flex items-center justify-center h-screen">
             <div>
-                <fr-logo />
+                <img src="img/logo.svg" alt="Lumna" class="mb-8 w-48 mx-auto" />
                 <div class="card border border-base-300 mb-2 bg-base-100">
                     <div class="card-body">
                         <div class="text-center text-lg font-bold mb-4">{{ title }}</div>
