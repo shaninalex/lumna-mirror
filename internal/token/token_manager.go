@@ -17,10 +17,10 @@ import (
 )
 
 type TokenManager interface {
-	CreateToken(ctx context.Context, userID uint) (string, string, error)
-	ValidateToken(ctx context.Context, rawToken string) (*jwt.RegisteredClaims, error)
-	GetTokens(ctx context.Context, userID uint) ([]*models.UserToken, error)
-	DeleteToken(ctx context.Context, userID uint, tokenID string) error
+	Create(ctx context.Context, userID uint) (string, string, error)
+	Validate(ctx context.Context, rawToken string) (*jwt.RegisteredClaims, error)
+	List(ctx context.Context, userID uint) ([]*models.UserToken, error)
+	Delete(ctx context.Context, userID uint, tokenID string) error
 }
 
 var sampleSecretKey = []byte(utils.GetEnv("FLOWREON_SECRET_KEY", "a-string-secret-at-least-256-bits-long"))
@@ -36,8 +36,8 @@ func NewTokenManager() TokenManager {
 	}
 }
 
-// CreateToken - create token
-func (s *tokenManager) CreateToken(ctx context.Context, userID uint) (string, string, error) {
+// Create - create token
+func (s *tokenManager) Create(ctx context.Context, userID uint) (string, string, error) {
 	result, err := s.tokenService.Create(userID, AudTokenAPIUser)
 	if err != nil {
 		return "", "", err
@@ -58,8 +58,8 @@ func (s *tokenManager) CreateToken(ctx context.Context, userID uint) (string, st
 	return result.AccessToken, result.RefreshToken, nil
 }
 
-// ValidateToken - validate given raw access token
-func (s *tokenManager) ValidateToken(ctx context.Context, rawToken string) (*jwt.RegisteredClaims, error) {
+// Validate - validate given raw access token
+func (s *tokenManager) Validate(ctx context.Context, rawToken string) (*jwt.RegisteredClaims, error) {
 	clms, err := s.tokenService.Validate(rawToken, AudTokenAPIUser)
 	if err != nil {
 		return nil, err
@@ -76,13 +76,13 @@ func (s *tokenManager) ValidateToken(ctx context.Context, rawToken string) (*jwt
 	return claims, nil
 }
 
-// GetTokens - get tokens from database
-func (s *tokenManager) GetTokens(ctx context.Context, userID uint) ([]*models.UserToken, error) {
+// List - get tokens from database
+func (s *tokenManager) List(ctx context.Context, userID uint) ([]*models.UserToken, error) {
 	return repositories.GetTokens(ctx, database.GetDb(ctx), userID)
 }
 
-// DeleteToken - delete token from database
-func (s *tokenManager) DeleteToken(ctx context.Context, userID uint, tokenID string) error {
+// Delete - delete token from database
+func (s *tokenManager) Delete(ctx context.Context, userID uint, tokenID string) error {
 	return repositories.DeleteToken(ctx, database.GetDb(ctx), userID, tokenID)
 }
 
@@ -103,9 +103,9 @@ func (s *tokenManager) claimsValidation(ctx context.Context, claims *jwt.Registe
 }
 
 // getTokenFromDB get token from database1
-func (s *tokenManager) getTokenFromDB(ctx context.Context, userID uint, tokenID string) (*models.UserToken, error) {
+func (s *tokenManager) getTokenFromDB(ctx context.Context, userID uint, jti string) (*models.UserToken, error) {
 	db := database.GetDb(ctx)
-	token, err := repositories.GetTokenByField(ctx, db, "jti", tokenID)
+	token, err := repositories.GetTokenByField(ctx, db, "jti", jti)
 	if err != nil {
 		return nil, err
 	}
@@ -115,9 +115,15 @@ func (s *tokenManager) getTokenFromDB(ctx context.Context, userID uint, tokenID 
 	return token, nil
 }
 
+const (
+	AccessTokenCookieName  = "access_token"
+	RefreshTokenCookieName = "refresh_token"
+)
+
+// ClearAuthCookies clear all auth cookies from response to unauthenticate user
 func ClearAuthCookies(w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
-		Name:     "access_token",
+		Name:     AccessTokenCookieName,
 		Value:    "",
 		Path:     "/",
 		HttpOnly: true,
@@ -126,7 +132,7 @@ func ClearAuthCookies(w http.ResponseWriter) {
 		SameSite: http.SameSiteStrictMode,
 	})
 	http.SetCookie(w, &http.Cookie{
-		Name:     "refresh_token",
+		Name:     RefreshTokenCookieName,
 		Value:    "",
 		Path:     "/",
 		HttpOnly: true,

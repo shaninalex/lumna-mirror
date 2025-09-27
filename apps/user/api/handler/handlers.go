@@ -59,7 +59,7 @@ func (s *UserHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	jti := ctx.Value("jti").(string)
 	userID := web.GetUserID(r)
-	if err := s.tokenManager.DeleteToken(ctx, userID, jti); err != nil {
+	if err := s.tokenManager.Delete(ctx, userID, jti); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}

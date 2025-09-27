@@ -40,14 +40,14 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx = context.WithValue(ctx, "device", r.UserAgent())
-	accessToken, refreshToken, err := s.tokenManager.CreateToken(ctx, user.ID)
+	accessToken, refreshToken, err := s.tokenManager.Create(ctx, user.ID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
 	http.SetCookie(w, &http.Cookie{
-		Name:     "access_token",
+		Name:     token.AccessTokenCookieName,
 		Value:    accessToken,
 		HttpOnly: true,
 		Secure:   true,

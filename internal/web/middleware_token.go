@@ -36,7 +36,7 @@ func (s *TokenMiddleware) Wrap(next http.Handler) http.Handler {
 
 		// If not in header, try HTTP-only cookie
 		if tokenString == "" {
-			cookie, err := r.Cookie("access_token")
+			cookie, err := r.Cookie(token.AccessTokenCookieName)
 			if err != nil {
 				//token.ClearAuthCookies(w)
 				http.Error(w, "missing token", http.StatusUnauthorized)
@@ -46,7 +46,7 @@ func (s *TokenMiddleware) Wrap(next http.Handler) http.Handler {
 		}
 
 		// validate
-		claims, err := s.tokenManager.ValidateToken(r.Context(), tokenString)
+		claims, err := s.tokenManager.Validate(r.Context(), tokenString)
 		if err != nil {
 			//token.ClearAuthCookies(w)
 			w.WriteHeader(http.StatusUnauthorized)
