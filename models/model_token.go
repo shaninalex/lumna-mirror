@@ -8,7 +8,6 @@ import (
 
 type UserToken struct {
 	ID               uint       `db:"id"`
-	Jti              string     `db:"jti"`
 	UserID           uint       `db:"user_id"`
 	Device           string     `db:"device"`
 	RefreshToken     string     `db:"refresh_token"`
@@ -23,3 +22,8 @@ func (s *UserToken) GetID() uint { return s.ID }
 
 // SetID - sets the id.
 func (s *UserToken) SetID(id uint) { s.ID = id }
+
+// IsExpired - check is token expired
+func (s *UserToken) IsExpired() bool {
+	return s.RefreshExpiresAt.Before(time.Now())
+}

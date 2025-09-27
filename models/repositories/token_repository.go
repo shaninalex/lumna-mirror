@@ -15,7 +15,7 @@ func GetTokenByField(ctx context.Context, db *sql.DB, field string, value any) (
 	token := &models.UserToken{}
 	query := fmt.Sprintf(`
 		SELECT 
-		    id, jti, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
+		    id, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
 		FROM users_tokens 
 		WHERE %s = ? 
 		LIMIT 1
@@ -23,7 +23,6 @@ func GetTokenByField(ctx context.Context, db *sql.DB, field string, value any) (
 	row := db.QueryRowContext(ctx, query, value)
 	err := row.Scan(
 		&token.ID,
-		&token.Jti,
 		&token.UserID,
 		&token.Device,
 		&token.RefreshToken,
@@ -46,14 +45,13 @@ func GetTokenByField(ctx context.Context, db *sql.DB, field string, value any) (
 func SaveToken(ctx context.Context, db *sql.DB, token *models.UserToken) error {
 	query := `
 		INSERT INTO users_tokens 
-		    (user_id, device, jti, refresh_token, refresh_expires_at)
+		    (user_id, device, refresh_token, refresh_expires_at)
 		VALUES 
-		    (?, ?, ?, ?, ?)
+		    (?, ?, ?, ?)
 	`
 	result, err := db.ExecContext(ctx, query,
 		&token.UserID,
 		&token.Device,
-		&token.Jti,
 		&token.RefreshToken,
 		&token.RefreshExpiresAt,
 	)
@@ -72,7 +70,7 @@ func SaveToken(ctx context.Context, db *sql.DB, token *models.UserToken) error {
 func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*models.UserToken, error) {
 	query := `
 		SELECT 
-		    id, jti, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
+		    id, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
 		FROM users_tokens
 		WHERE user_id = ?
 	`
@@ -91,7 +89,6 @@ func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*models.UserToke
 		token := &models.UserToken{}
 		if err = rows.Scan(
 			&token.ID,
-			&token.Jti,
 			&token.UserID,
 			&token.Device,
 			&token.RefreshToken,
@@ -108,15 +105,40 @@ func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*models.UserToke
 }
 
 // DeleteToken removes a specific token for a user by token ID.
-func DeleteToken(ctx context.Context, db *sql.DB, userID uint, jti string) error {
+func DeleteToken(ctx context.Context, db *sql.DB, userID uint, id uint) error {
 	query := `
 		DELETE FROM 
 			users_tokens
 		WHERE 
 		    user_id = ? AND 
-		    jti = ?
+		    id = ?
 	`
-	res, err := db.ExecContext(ctx, query, userID, jti)
+	res, err := db.ExecContext(ctx, query, userID, id)
+	if err != nil {
+		return err
+	}
+
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affected == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
+}
+
+// DeleteTokenByRefreshString removes a specific token for a user by token ID.
+func DeleteTokenByRefreshString(ctx context.Context, db *sql.DB, userID uint, refreshToken string) error {
+	query := `
+		DELETE FROM 
+			users_tokens
+		WHERE 
+		    user_id = ? AND 
+		    refresh_token = ?
+	`
+	res, err := db.ExecContext(ctx, query, userID, refreshToken)
 	if err != nil {
 		return err
 	}

@@ -13,15 +13,15 @@ import (
 )
 
 type UserHandler struct {
-	manager      domain.UserManager
-	tokenManager token.TokenManager
+	manager     domain.UserManager
+	authService token.ApiAuthService
 }
 
 // NewUserHandler - new user handler
 func NewUserHandler(manager domain.UserManager) *UserHandler {
 	return &UserHandler{
-		manager:      manager,
-		tokenManager: token.NewTokenManager(),
+		manager:     manager,
+		authService: token.NewAuthService(),
 	}
 }
 
@@ -57,9 +57,14 @@ func (s *UserHandler) HandleUpdateSettings(w http.ResponseWriter, r *http.Reques
 
 func (s *UserHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	jti := ctx.Value("jti").(string)
+	cookie, err := r.Cookie(token.RefreshTokenCookieName)
+	if err != nil {
+		http.Error(w, "missing token", http.StatusUnauthorized)
+		return
+	}
+
 	userID := web.GetUserID(r)
-	if err := s.tokenManager.Delete(ctx, userID, jti); err != nil {
+	if err := s.authService.Logout(ctx, userID, cookie.Value); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}

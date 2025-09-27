@@ -13,12 +13,12 @@ import (
 )
 
 type TokenMiddleware struct {
-	tokenManager token.TokenManager
+	accessTokenService token.AccessTokenService
 }
 
 func NewTokenMiddleware() *TokenMiddleware {
 	return &TokenMiddleware{
-		tokenManager: token.NewTokenManager(),
+		accessTokenService: token.NewDefaultAccessTokenService(),
 	}
 }
 
@@ -46,7 +46,7 @@ func (s *TokenMiddleware) Wrap(next http.Handler) http.Handler {
 		}
 
 		// validate
-		claims, err := s.tokenManager.Validate(r.Context(), tokenString)
+		claims, err := s.accessTokenService.Validate(tokenString, token.AudTokenAPIUser)
 		if err != nil {
 			//token.ClearAuthCookies(w)
 			w.WriteHeader(http.StatusUnauthorized)
@@ -60,8 +60,9 @@ func (s *TokenMiddleware) Wrap(next http.Handler) http.Handler {
 			return
 		}
 
+		ctx := r.Context()
+
 		// store claims in context
-		ctx := context.WithValue(r.Context(), "jti", claims.ID)
 		ctx = context.WithValue(ctx, base.ContextUserID, uint(userID))
 
 		// Call next handler

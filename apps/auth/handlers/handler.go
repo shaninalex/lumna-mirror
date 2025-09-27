@@ -8,10 +8,10 @@ import (
 
 func NewAuthHandler() *AuthHandler {
 	return &AuthHandler{
-		tokenManager: token.NewTokenManager(),
+		authService: token.NewAuthService(),
 	}
 }
 
 type AuthHandler struct {
-	tokenManager token.TokenManager
+	authService token.ApiAuthService
 }

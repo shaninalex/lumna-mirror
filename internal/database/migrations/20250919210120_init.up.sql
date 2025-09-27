@@ -27,7 +27,6 @@ CREATE TABLE users_tokens
 (
     id                 INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id            INTEGER NOT NULL,
-    jti                VARCHAR NOT NULL,
     device             VARCHAR,
     refresh_token      VARCHAR NOT NULL,
     refresh_expires_at DATETIME,
@@ -37,7 +36,7 @@ CREATE TABLE users_tokens
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
-CREATE UNIQUE INDEX idx_users_tokens_jti ON users_tokens (jti);
+CREATE UNIQUE INDEX idx_users_tokens_refresh_token ON users_tokens (refresh_token);
 
 CREATE TABLE projects
 (

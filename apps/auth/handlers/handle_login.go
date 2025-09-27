@@ -40,7 +40,7 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx = context.WithValue(ctx, "device", r.UserAgent())
-	accessToken, refreshToken, err := s.tokenManager.Create(ctx, user.ID)
+	accessToken, refreshToken, err := s.authService.Login(ctx, user.ID, r.UserAgent())
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -48,7 +48,7 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &http.Cookie{
 		Name:     token.AccessTokenCookieName,
-		Value:    accessToken,
+		Value:    accessToken.Token,
 		HttpOnly: true,
 		Secure:   true,
 		Path:     "/",
@@ -58,7 +58,7 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &http.Cookie{
 		Name:     "refresh_token",
-		Value:    refreshToken,
+		Value:    refreshToken.Token,
 		HttpOnly: true,
 		Secure:   true,
 		Path:     "/",
