@@ -26,17 +26,14 @@ export class GlobalInterceptor {
         if (!this.isRefreshing) {
             this.isRefreshing = true;
             this.refreshSubject.next(false);
-            console.log("step 1")
 
             return this.authService.refresh().pipe(
                 switchMap(() => {
-                    console.log("step 2")
                     this.isRefreshing = false;
                     this.refreshSubject.next(true);
                     return next.handle(req);
                 }),
                 catchError(err => {
-                    console.log("step 3")
                     this.isRefreshing = false;
                     this.refreshSubject.next(false); // unblock waiting requests
                     this.router.navigate(['/auth/login']);
@@ -44,11 +41,9 @@ export class GlobalInterceptor {
                 })
             );
         } else {
-            console.log("step 4")
             return this.refreshSubject.pipe(
                 take(1),
                 switchMap(success => {
-                    console.log("step 5", success)
                     if (success) {
                         return next.handle(req);
                     } else {

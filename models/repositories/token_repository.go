@@ -135,7 +135,7 @@ func DeleteTokenByRefreshString(ctx context.Context, db *sql.DB, userID uint, re
 		DELETE FROM 
 			users_tokens
 		WHERE 
-		    user_id = ? AND id = ?
+		    user_id = ? AND refresh_token = ?
 	`
 	res, err := db.ExecContext(ctx, query, userID, refreshToken)
 	if err != nil {

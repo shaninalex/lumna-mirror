@@ -11,7 +11,6 @@ export const HandleError = createEffect(
     ) => actions$.pipe(
         ofType(AppErrorAction.type),
         exhaustMap((action) => {
-                console.log("HandleError: ", action)
                 switch (action.err.key) {
                     case "org_not_attached":
                         router.navigate(['/set-organization']);
