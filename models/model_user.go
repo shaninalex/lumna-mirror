@@ -19,15 +19,17 @@ const (
 
 // User - user.
 type User struct {
-	ID           uint      `db:"id"`
-	Email        string    `db:"email"`
-	Settings     string    `db:"settings"`
-	Active       bool      `db:"active"`
-	State        UserState `db:"state"`
-	Code         string    `db:"code"`
-	PasswordHash string    `db:"password_hash"`
-	CreatedAt    time.Time `db:"created_at"`
-	UpdatedAt    time.Time `db:"updated_at"`
+	ID       uint      `db:"id"`
+	Email    string    `db:"email"`
+	Settings string    `db:"settings"`
+	Active   bool      `db:"active"`
+	State    UserState `db:"state"`
+	Code     string    `db:"code"`
+
+	PasswordHash string `db:"password_hash" json:"-"`
+
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 // GetID - returns the id.

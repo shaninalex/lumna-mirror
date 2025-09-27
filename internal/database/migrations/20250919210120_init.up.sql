@@ -1,10 +1,3 @@
-CREATE TABLE companies
-(
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    title      VARCHAR NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE users
 (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,11 +7,9 @@ CREATE TABLE users
     state         VARCHAR   DEFAULT 'pending',
     code          VARCHAR,
     password_hash TEXT    NOT NULL,
-    company_id    INTEGER NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE,
     CONSTRAINT users_unique_email_code UNIQUE (email, code)
 );
 CREATE UNIQUE INDEX idx_users_code ON users (code);
@@ -44,11 +35,9 @@ CREATE TABLE projects
     user_id    INTEGER  NOT NULL,
     title      VARCHAR  NOT NULL,
     code       VARCHAR  NOT NULL,
-    company_id INTEGER  NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-    FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE,
 
     CONSTRAINT projects_unique_title UNIQUE (title),
     CONSTRAINT projects_unique_code UNIQUE (code)
