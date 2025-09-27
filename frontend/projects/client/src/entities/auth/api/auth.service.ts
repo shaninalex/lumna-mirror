@@ -9,15 +9,15 @@ export class AuthService {
     http = inject(HttpClient)
 
     login(data: any): Observable<APIResponse<any>> {
-        return this.http.post<APIResponse<any>>(`${env.API_ROOT}/api/auth/login`, data, {withCredentials: true})
+        return this.http.post<APIResponse<any>>(`${env.API_ROOT}/api/v1/auth/login`, data, {withCredentials: true})
     }
 
     register(data: any): Observable<APIResponse<any>> {
-        return this.http.post<APIResponse<any>>(`${env.API_ROOT}/api/auth/register`, data, {withCredentials: true})
+        return this.http.post<APIResponse<any>>(`${env.API_ROOT}/api/v1/auth/register`, data, {withCredentials: true})
     }
 
     refresh(): Observable<void> {
-        return this.http.post(`${env.API_ROOT}/api/auth/refresh`, {}, { withCredentials: true }).pipe(
+        return this.http.post(`${env.API_ROOT}/api/v1/auth/refresh`, {}, { withCredentials: true }).pipe(
             map(() => void 0), // emit something
             catchError(err => {
                 return throwError(() => err); // propagate error

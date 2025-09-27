@@ -5,8 +5,8 @@ import {CommonApiService} from '@client/shared/common';
 import {CreateTaskDto, Task} from '@client/entities/task';
 
 const tasksUrl = {
-    tasksRoot: (projectCode: string) => `${env.API_ROOT}/api/project/${projectCode}/tasks`,
-    tasksCreate: `${env.API_ROOT}/api/project/tasks`,
+    tasksRoot: (projectCode: string) => `${env.API_ROOT}/api/v1/project/${projectCode}/tasks`,
+    tasksCreate: `${env.API_ROOT}/api/v1/project/tasks`,
 }
 
 @Injectable({providedIn: "root"}) // TODO: does it has to be root?

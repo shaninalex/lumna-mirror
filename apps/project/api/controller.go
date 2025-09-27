@@ -21,13 +21,13 @@ func NewProjectController(router *web.Router) {
 
 func (s *ProjectController) init() {
 	projectHandler := handler.NewProjectHandler(domain.NewProjectManagement())
-	s.router.GET("/api/project", projectHandler.HandleProjectsList)
-	s.router.POST("/api/project", projectHandler.HandleProjectCreate)
+	s.router.GET("/api/v1/project", projectHandler.HandleProjectsList)
+	s.router.POST("/api/v1/project", projectHandler.HandleProjectCreate)
 
 	taskHandler := handler.NewTaskHandler(domain.NewProjectManagement())
-	s.router.POST("/api/project/tasks", taskHandler.HandleTaskCreate)
-	s.router.GET("/api/project/{projectCode}/tasks", taskHandler.HandleProjectTasksList)
-	s.router.GET("/api/project/{projectCode}/tasks/{taskCode}", taskHandler.HandleTaskDetail)
-	s.router.PATCH("/api/project/{projectCode}/tasks/{taskCode}", taskHandler.HandleTaskUpdate)
-	s.router.PATCH("/api/project/{projectCode}/tasks/{taskCode}/status", taskHandler.HandleTaskPatchStatus)
+	s.router.POST("/api/v1/project/tasks", taskHandler.HandleTaskCreate)
+	s.router.GET("/api/v1/project/{projectCode}/tasks", taskHandler.HandleProjectTasksList)
+	s.router.GET("/api/v1/project/{projectCode}/tasks/{taskCode}", taskHandler.HandleTaskDetail)
+	s.router.PATCH("/api/v1/project/{projectCode}/tasks/{taskCode}", taskHandler.HandleTaskUpdate)
+	s.router.PATCH("/api/v1/project/{projectCode}/tasks/{taskCode}/status", taskHandler.HandleTaskPatchStatus)
 }

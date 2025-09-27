@@ -4,7 +4,7 @@ import {environment as env} from '@client/environments/environment.development'
 import {CommonApiService} from '@client/shared/common';
 
 const boardUrls = {
-    TaskAction: (projectKey: string, taskID: string) => `${env.API_ROOT}/api/project/${projectKey}/tasks/${taskID}/status`,
+    TaskAction: (projectKey: string, taskID: string) => `${env.API_ROOT}/api/v1/project/${projectKey}/tasks/${taskID}/status`,
 }
 
 interface ChangeStatusPayload {

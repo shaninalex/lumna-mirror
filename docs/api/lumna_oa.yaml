@@ -110,7 +110,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorApiResponse'
-  /auth/refresh:
+  /auth/v1/refresh:
     post:
       summary: Refresh access token
       description: |

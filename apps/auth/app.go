@@ -9,7 +9,7 @@ import (
 
 func NewAuthController(router *web.Router) {
 	h := handlers.NewAuthHandler()
-	router.POST("/api/auth/login", h.HandleLogin)
-	router.POST("/api/auth/register", h.HandleRegistration)
-	router.POST("/api/auth/refresh", h.HandleRefresh)
+	router.POST("/api/v1/auth/login", h.HandleLogin)
+	router.POST("/api/v1/auth/register", h.HandleRegistration)
+	router.POST("/api/v1/auth/refresh", h.HandleRefresh)
 }

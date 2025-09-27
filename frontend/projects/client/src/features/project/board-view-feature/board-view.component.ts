@@ -8,7 +8,7 @@ import {
     moveItemInArray,
     transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import {BoardViewApiService} from './board-view-api.service';
+import {BoardViewApiService} from './api';
 import {StatusColumn} from './board.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';

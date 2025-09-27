@@ -34,9 +34,9 @@ func (s *UserController) init() {
 func (s *UserController) setRoutes() {
 	// User-related endpoints
 	h := handler.NewUserHandler(domain.NewUserService())
-	s.router.GET("/api/user/me", h.HandleGetUser)               // fetch current user info
-	s.router.POST("/api/user/settings", h.HandleUpdateSettings) // update user settings
-	s.router.GET("/api/user/logout", h.HandleLogout)            // logout user
+	s.router.GET("/api/v1/user/me", h.HandleGetUser)               // fetch current user info
+	s.router.POST("/api/v1/user/settings", h.HandleUpdateSettings) // update user settings
+	s.router.GET("/api/v1/user/logout", h.HandleLogout)            // logout user
 
 	// Token-related endpoints
 	t := handler.NewTokenHandler()
