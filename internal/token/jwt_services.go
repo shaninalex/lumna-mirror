@@ -114,7 +114,7 @@ type RefreshTokenService interface {
 	Create(userID uint, device string) (*RefreshTokenResult, error)
 
 	// Validate checks if a given refresh token string is valid (signature/format)
-	Validate(token string) (*RefreshTokenClaims, error)
+	Validate(token string) (*jwt.RegisteredClaims, error)
 }
 
 type RefreshTokenJWTService struct {
@@ -138,15 +138,12 @@ func (s *RefreshTokenJWTService) Create(userID uint, device string) (*RefreshTok
 	now := time.Now()
 	exp := now.Add(RefreshTokenLifeTime)
 	jti := uuid.NewString()
-	claims := RefreshTokenClaims{
-		Device: device,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    s.issuer,
-			Subject:   strconv.Itoa(int(userID)),
-			ExpiresAt: jwt.NewNumericDate(exp),
-			IssuedAt:  jwt.NewNumericDate(now),
-			ID:        jti,
-		},
+	claims := jwt.RegisteredClaims{
+		Issuer:    s.issuer,
+		Subject:   strconv.Itoa(int(userID)),
+		ExpiresAt: jwt.NewNumericDate(exp),
+		IssuedAt:  jwt.NewNumericDate(now),
+		ID:        jti,
 	}
 	refreshToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(s.signingKey)
 	if err != nil {
@@ -159,8 +156,8 @@ func (s *RefreshTokenJWTService) Create(userID uint, device string) (*RefreshTok
 	}, nil
 }
 
-func (s *RefreshTokenJWTService) Validate(rawToken string) (*RefreshTokenClaims, error) {
-	claims := &RefreshTokenClaims{}
+func (s *RefreshTokenJWTService) Validate(rawToken string) (*jwt.RegisteredClaims, error) {
+	claims := &jwt.RegisteredClaims{}
 	token, err := jwt.ParseWithClaims(rawToken, claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method")

@@ -11,5 +11,5 @@ func NewAuthController(router *web.Router) {
 	h := handlers.NewAuthHandler()
 	router.POST("/api/auth/login", h.HandleLogin)
 	router.POST("/api/auth/register", h.HandleRegistration)
-	router.POST("/api/auth/refresh-token", h.HandleRefresh)
+	router.POST("/api/auth/refresh", h.HandleRefresh)
 }

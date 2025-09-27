@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {environment as env} from '@client/environments/environment.development';
-import {Observable} from 'rxjs';
+import {catchError, map, Observable, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {APIResponse} from '@client/shared/models';
 
@@ -14,5 +14,14 @@ export class AuthService {
 
     register(data: any): Observable<APIResponse<any>> {
         return this.http.post<APIResponse<any>>(`${env.API_ROOT}/api/auth/register`, data, {withCredentials: true})
+    }
+
+    refresh(): Observable<void> {
+        return this.http.post(`${env.API_ROOT}/api/auth/refresh`, {}, { withCredentials: true }).pipe(
+            map(() => void 0), // emit something
+            catchError(err => {
+                return throwError(() => err); // propagate error
+            })
+        );
     }
 }
