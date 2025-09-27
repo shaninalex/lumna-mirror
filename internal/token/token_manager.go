@@ -1,123 +1,137 @@
+// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+
 package token
 
 import (
-	"crypto/rand"
-	"encoding/base64"
+	"context"
 	"fmt"
-	"slices"
+	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/google/uuid"
+	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/utils"
-)
-
-const (
-	AccessTokenLifeTime  = 15 * time.Minute
-	RefreshTokenLifeTime = 7 * 24 * time.Hour
-	RefreshTokenLength   = 64
-	Issuer               = "authserver"
-)
-
-type AudToken string
-
-var (
-	AudTokenAPIUser   AudToken = "api"
-	AudTokenAdminUser AudToken = "admin"
-	AudTokenExternal  AudToken = "external"
+	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
 
 type TokenManager interface {
-	Create(userID uint, aud AudToken) (*TokenResult, error)
-	Validate(rawToken string, aud AudToken) (jwt.Claims, error)
+	CreateToken(ctx context.Context, userID uint) (string, string, error)
+	ValidateToken(ctx context.Context, rawToken string) (*jwt.RegisteredClaims, error)
+	GetTokens(ctx context.Context, userID uint) ([]*models.UserToken, error)
+	DeleteToken(ctx context.Context, userID uint, tokenID string) error
 }
 
-func NewDefaultTokenManager() TokenManager {
-	key := utils.GetEnv("LUMNA_SECRET_KEY", "a-string-secret-at-least-256-bits-long")
-	return NewTokenService(key, RefreshTokenLength, Issuer)
+var sampleSecretKey = []byte(utils.GetEnv("FLOWREON_SECRET_KEY", "a-string-secret-at-least-256-bits-long"))
+var expDelta = 7 * 24 * time.Hour // 1 week
+
+type tokenManager struct {
+	tokenService TokenService
 }
 
-func NewTokenService(signingKey string, refreshStrLenght int, issuer string) *TokenService {
-	return &TokenService{
-		signingKey:       []byte(signingKey),
-		refreshStrLenght: refreshStrLenght,
-		issuer:           issuer,
+func NewTokenManager() TokenManager {
+	return &tokenManager{
+		tokenService: NewDefaultTokenService(),
 	}
 }
 
-type TokenService struct {
-	signingKey       []byte
-	refreshStrLenght int
-	issuer           string
-}
-
-type TokenResult struct {
-	AccessToken  string
-	RefreshToken string
-	Jti          string
-	Sub          uint
-}
-
-func (s *TokenService) Create(userID uint, aud AudToken) (*TokenResult, error) {
-	now := time.Now()
-
-	jti := uuid.NewString()
-	claims := jwt.RegisteredClaims{
-		Issuer:    s.issuer,
-		Subject:   strconv.Itoa(int(userID)),
-		Audience:  []string{string(aud)},
-		ExpiresAt: jwt.NewNumericDate(now.Add(AccessTokenLifeTime)),
-		NotBefore: jwt.NewNumericDate(now),
-		IssuedAt:  jwt.NewNumericDate(now),
-		ID:        jti,
+// CreateToken - create token
+func (s *tokenManager) CreateToken(ctx context.Context, userID uint) (string, string, error) {
+	result, err := s.tokenService.Create(userID, AudTokenAPIUser)
+	if err != nil {
+		return "", "", err
+	}
+	device := ctx.Value("device").(string)
+	tokenModel := &models.UserToken{
+		UserID:           userID,
+		Device:           device,
+		Jti:              result.Jti,
+		RefreshToken:     result.RefreshToken,
+		RefreshExpiresAt: result.RefreshExpAt,
+	}
+	err = repositories.SaveToken(ctx, database.GetDb(ctx), tokenModel)
+	if err != nil {
+		return "", "", err
 	}
 
-	accessToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(s.signingKey)
+	return result.AccessToken, result.RefreshToken, nil
+}
+
+// ValidateToken - validate given raw access token
+func (s *tokenManager) ValidateToken(ctx context.Context, rawToken string) (*jwt.RegisteredClaims, error) {
+	clms, err := s.tokenService.Validate(rawToken, AudTokenAPIUser)
 	if err != nil {
 		return nil, err
 	}
 
-	refreshToken, err := generateSecureString(RefreshTokenLength)
-	if err != nil {
-		return nil, err
-	}
-
-	return &TokenResult{
-		RefreshToken: refreshToken,
-		AccessToken:  accessToken,
-		Jti:          jti,
-		Sub:          userID,
-	}, nil
-}
-
-func (s *TokenService) Validate(rawToken string, aud AudToken) (jwt.Claims, error) {
-	token, err := jwt.ParseWithClaims(rawToken, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method")
-		}
-		return s.signingKey, nil
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	claims, ok := token.Claims.(*jwt.RegisteredClaims)
-	if !ok || !token.Valid {
+	claims, ok := clms.(*jwt.RegisteredClaims)
+	if !ok {
 		return nil, fmt.Errorf("invalid token claims")
 	}
-
-	if !slices.Contains(claims.Audience, string(aud)) {
-		return nil, fmt.Errorf("invalid audience")
+	if err = s.claimsValidation(ctx, claims); err != nil {
+		return nil, err
 	}
 
 	return claims, nil
 }
 
-func generateSecureString(length int) (string, error) {
-	bytes := make([]byte, length)
-	if _, err := rand.Read(bytes); err != nil {
-		return "", err
+// GetTokens - get tokens from database
+func (s *tokenManager) GetTokens(ctx context.Context, userID uint) ([]*models.UserToken, error) {
+	return repositories.GetTokens(ctx, database.GetDb(ctx), userID)
+}
+
+// DeleteToken - delete token from database
+func (s *tokenManager) DeleteToken(ctx context.Context, userID uint, tokenID string) error {
+	return repositories.DeleteToken(ctx, database.GetDb(ctx), userID, tokenID)
+}
+
+// claimsValidation - token claims validation
+func (s *tokenManager) claimsValidation(ctx context.Context, claims *jwt.RegisteredClaims) error {
+	// Check jti exists in DB
+	userID, err := strconv.ParseInt(claims.Subject, 10, 64)
+	if err != nil {
+		return fmt.Errorf("invalid user id")
 	}
-	return base64.URLEncoding.EncodeToString(bytes), nil
+
+	// Example DB lookup (replace with your actual DB call)
+	_, err = s.getTokenFromDB(ctx, uint(userID), claims.ID)
+	if err != nil {
+		return fmt.Errorf("token not found or revoked")
+	}
+	return nil
+}
+
+// getTokenFromDB get token from database1
+func (s *tokenManager) getTokenFromDB(ctx context.Context, userID uint, tokenID string) (*models.UserToken, error) {
+	db := database.GetDb(ctx)
+	token, err := repositories.GetTokenByField(ctx, db, "jti", tokenID)
+	if err != nil {
+		return nil, err
+	}
+	if token.UserID != userID {
+		return nil, fmt.Errorf("invalid user id")
+	}
+	return token, nil
+}
+
+func ClearAuthCookies(w http.ResponseWriter) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     "access_token",
+		Value:    "",
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		MaxAge:   -1, // expire immediately
+		SameSite: http.SameSiteStrictMode,
+	})
+	http.SetCookie(w, &http.Cookie{
+		Name:     "refresh_token",
+		Value:    "",
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		MaxAge:   -1, // expire immediately
+		SameSite: http.SameSiteStrictMode,
+	})
 }

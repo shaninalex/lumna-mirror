@@ -14,24 +14,30 @@ CREATE TABLE users
     state         VARCHAR   DEFAULT 'pending',
     code          VARCHAR,
     password_hash TEXT    NOT NULL,
-    company_id    INTEGER NOT NULL,
+    company_id    INTEGER NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE,
     CONSTRAINT users_unique_email_code UNIQUE (email, code)
 );
+CREATE UNIQUE INDEX idx_users_code ON users (code);
 
 CREATE TABLE users_tokens
 (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id    INTEGER  NOT NULL,
-    claims     VARCHAR  NOT NULL,
-    device     VARCHAR,
-    expires_at DATETIME NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id            INTEGER NOT NULL,
+    jti                VARCHAR NOT NULL,
+    device             VARCHAR,
+    refresh_token      VARCHAR NOT NULL,
+    refresh_expires_at DATETIME,
+    revoked            BOOLEAN  DEFAULT 0,
+    revoked_at         DATETIME,
+    created_at         DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+CREATE UNIQUE INDEX idx_users_tokens_jti ON users_tokens (jti);
 
 CREATE TABLE projects
 (

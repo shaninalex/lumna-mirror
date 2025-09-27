@@ -7,20 +7,21 @@ import (
 
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
 	"gitlab.com/shaninalex/flowreon/apps/user/dto"
+	"gitlab.com/shaninalex/flowreon/internal/token"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
 type UserHandler struct {
 	manager      domain.UserManager
-	tokenService web.TokenManager
+	tokenManager token.TokenManager
 }
 
 // NewUserHandler - new user handler
 func NewUserHandler(manager domain.UserManager) *UserHandler {
 	return &UserHandler{
 		manager:      manager,
-		tokenService: web.NewTokenService(),
+		tokenManager: token.NewTokenManager(),
 	}
 }
 
@@ -56,12 +57,12 @@ func (s *UserHandler) HandleUpdateSettings(w http.ResponseWriter, r *http.Reques
 
 func (s *UserHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	jti := ctx.Value("jti").(uint)
+	jti := ctx.Value("jti").(string)
 	userID := web.GetUserID(r)
-	if err := s.tokenService.DeleteToken(ctx, userID, jti); err != nil {
+	if err := s.tokenManager.DeleteToken(ctx, userID, jti); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	web.ClearAccessTokenCookie(w)
+	token.ClearAuthCookies(w)
 	web.Success(w, nil, "Logout Successful")
 }

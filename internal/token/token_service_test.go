@@ -20,7 +20,7 @@ var (
 )
 
 func Test_CreateToken(t *testing.T) {
-	service := token.NewTokenService(signingKey, refreshStrLength, issuer)
+	service := token.NewJwtService(signingKey, refreshStrLength, issuer)
 	userId := uint(100)
 	result, err := service.Create(userId, aud)
 
@@ -38,7 +38,7 @@ func Test_CreateToken(t *testing.T) {
 }
 
 func Test_ValidateToken(t *testing.T) {
-	service := token.NewTokenService(signingKey, refreshStrLength, issuer)
+	service := token.NewJwtService(signingKey, refreshStrLength, issuer)
 	userId := uint(100)
 	result, _ := service.Create(userId, aud)
 	claims, err := service.Validate(result.AccessToken, aud)

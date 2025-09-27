@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/internal/token"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 	"gitlab.com/shaninalex/flowreon/models/repositories"
 	"golang.org/x/crypto/bcrypt"
@@ -39,7 +40,7 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx = context.WithValue(ctx, "device", r.UserAgent())
-	token, tokenString, err := s.tokenService.CreateToken(ctx, user.ID)
+	accessToken, refreshToken, err := s.tokenManager.CreateToken(ctx, user.ID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -47,12 +48,22 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &http.Cookie{
 		Name:     "access_token",
-		Value:    tokenString,
+		Value:    accessToken,
+		HttpOnly: true,
+		Secure:   true,
+		Path:     "/",
+		SameSite: http.SameSiteLaxMode,
+		MaxAge:   token.NumericAccessTokenLifeTime,
+	})
+
+	http.SetCookie(w, &http.Cookie{
+		Name:     "refresh_token",
+		Value:    refreshToken,
 		HttpOnly: true,
 		Secure:   true,
 		Path:     "/",
 		SameSite: http.SameSiteStrictMode,
-		MaxAge:   int(token.ExpiresAt.Sub(token.CreatedAt).Seconds()),
+		MaxAge:   token.NumericRefreshTokenLifeTime,
 	})
 
 	web.Success(w, nil, "Login Successful")

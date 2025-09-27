@@ -6,7 +6,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"time"
 
 	"gitlab.com/shaninalex/flowreon/models"
 )
@@ -15,15 +14,22 @@ import (
 func GetTokenByField(ctx context.Context, db *sql.DB, field string, value any) (*models.UserToken, error) {
 	token := &models.UserToken{}
 	query := fmt.Sprintf(`
-	SELECT id, user_id, claims, device, expires_at, created_at
-	FROM users_tokens WHERE %s = ? LIMIT 1`, field)
+		SELECT 
+		    id, jti, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
+		FROM users_tokens 
+		WHERE %s = ? 
+		LIMIT 1
+	`, field)
 	row := db.QueryRowContext(ctx, query, value)
 	err := row.Scan(
 		&token.ID,
+		&token.Jti,
 		&token.UserID,
-		&token.Claims,
 		&token.Device,
-		&token.ExpiresAt,
+		&token.RefreshToken,
+		&token.RefreshExpiresAt,
+		&token.Revoked,
+		&token.RevokedAt,
 		&token.CreatedAt,
 	)
 	if err != nil {
@@ -38,17 +44,18 @@ func GetTokenByField(ctx context.Context, db *sql.DB, field string, value any) (
 
 // SaveToken inserts or updates a session in the DB.
 func SaveToken(ctx context.Context, db *sql.DB, token *models.UserToken) error {
-	if token.ExpiresAt.IsZero() {
-		token.ExpiresAt = time.Now().Add(7 * 24 * time.Hour) // default 7 days
-	}
 	query := `
-	INSERT INTO users_tokens (user_id, claims, device, expires_at)
-	VALUES (?, ?, ?, ?)`
+		INSERT INTO users_tokens 
+		    (user_id, device, jti, refresh_token, refresh_expires_at)
+		VALUES 
+		    (?, ?, ?, ?, ?)
+	`
 	result, err := db.ExecContext(ctx, query,
 		&token.UserID,
-		&token.Claims,
 		&token.Device,
-		&token.ExpiresAt,
+		&token.Jti,
+		&token.RefreshToken,
+		&token.RefreshExpiresAt,
 	)
 	if err != nil {
 		return err
@@ -64,9 +71,11 @@ func SaveToken(ctx context.Context, db *sql.DB, token *models.UserToken) error {
 // GetTokens retrieves all tokens for a given user.
 func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*models.UserToken, error) {
 	query := `
-	SELECT id, user_id, claims, device, expires_at, created_at
-	FROM users_tokens
-	WHERE user_id = ?`
+		SELECT 
+		    id, jti, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
+		FROM users_tokens
+		WHERE user_id = ?
+	`
 	rows, err := db.QueryContext(ctx, query, userID)
 	if err != nil {
 		return nil, err
@@ -79,21 +88,35 @@ func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*models.UserToke
 
 	tokens := make([]*models.UserToken, 0)
 	for rows.Next() {
-		t := &models.UserToken{}
-		if err = rows.Scan(&t.ID, &t.UserID, &t.Claims, &t.Device, &t.ExpiresAt, &t.CreatedAt); err != nil {
+		token := &models.UserToken{}
+		if err = rows.Scan(
+			&token.ID,
+			&token.Jti,
+			&token.UserID,
+			&token.Device,
+			&token.RefreshToken,
+			&token.RefreshExpiresAt,
+			&token.Revoked,
+			&token.RevokedAt,
+			&token.CreatedAt,
+		); err != nil {
 			return nil, err
 		}
-		tokens = append(tokens, t)
+		tokens = append(tokens, token)
 	}
 	return tokens, nil
 }
 
 // DeleteToken removes a specific token for a user by token ID.
-func DeleteToken(ctx context.Context, db *sql.DB, userID, tokenID uint) error {
+func DeleteToken(ctx context.Context, db *sql.DB, userID uint, jti string) error {
 	query := `
-	DELETE FROM users_tokens
-	WHERE user_id = ? AND id = ?`
-	res, err := db.ExecContext(ctx, query, userID, tokenID)
+		DELETE FROM 
+			users_tokens
+		WHERE 
+		    user_id = ? AND 
+		    jti = ?
+	`
+	res, err := db.ExecContext(ctx, query, userID, jti)
 	if err != nil {
 		return err
 	}

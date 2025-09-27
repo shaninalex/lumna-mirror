@@ -33,7 +33,7 @@ func main() {
 
 	authApp.NewAuthController(router)
 
-	router.Use(web.TokenMiddleware)
+	router.Use(web.NewTokenMiddleware().Wrap)
 	userApp.NewUserController(router)
 	projectApp.NewProjectController(router)
 	// other private apps.

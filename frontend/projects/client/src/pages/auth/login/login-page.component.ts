@@ -20,7 +20,7 @@ import {LoaderComponent} from '@client/shared/ui';
             <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mb-4">
                 <input type="email" formControlName="email" class="input block mb-4" placeholder="email"/>
                 <input type="password" formControlName="password" class="input block mb-4" placeholder="password"/>
-                <button class="btn btn-primary mb-4">
+                <button class="btn btn-primary mb-4" [disabled]="!form.valid">
                     @if (loading) {
                         <ui-loader />
                     } @else {

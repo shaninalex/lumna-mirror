@@ -5,12 +5,24 @@ package web
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"gitlab.com/shaninalex/flowreon/internal/base"
+	"gitlab.com/shaninalex/flowreon/internal/token"
 )
 
-func TokenMiddleware(next http.Handler) http.Handler {
+type TokenMiddleware struct {
+	tokenManager token.TokenManager
+}
+
+func NewTokenMiddleware() *TokenMiddleware {
+	return &TokenMiddleware{
+		tokenManager: token.NewTokenManager(),
+	}
+}
+
+func (s *TokenMiddleware) Wrap(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Try to read token from Authorization header first
 		tokenString := ""
@@ -26,6 +38,7 @@ func TokenMiddleware(next http.Handler) http.Handler {
 		if tokenString == "" {
 			cookie, err := r.Cookie("access_token")
 			if err != nil {
+				//token.ClearAuthCookies(w)
 				http.Error(w, "missing token", http.StatusUnauthorized)
 				return
 			}
@@ -33,17 +46,23 @@ func TokenMiddleware(next http.Handler) http.Handler {
 		}
 
 		// validate
-		tokenService := new(TokenService)
-		claims, err := tokenService.ValidateToken(r.Context(), tokenString)
+		claims, err := s.tokenManager.ValidateToken(r.Context(), tokenString)
 		if err != nil {
-			ClearAccessTokenCookie(w)
+			//token.ClearAuthCookies(w)
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		userID, err := strconv.ParseUint(claims.Subject, 10, 64)
+		if err != nil {
+			//token.ClearAuthCookies(w)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
 		// store claims in context
-		ctx := context.WithValue(r.Context(), "jti", uint(claims["jti"].(float64)))
-		ctx = context.WithValue(ctx, base.ContextUserID, uint(claims["sub"].(float64)))
+		ctx := context.WithValue(r.Context(), "jti", claims.ID)
+		ctx = context.WithValue(ctx, base.ContextUserID, uint(userID))
 
 		// Call next handler
 		next.ServeHTTP(w, r.WithContext(ctx))
