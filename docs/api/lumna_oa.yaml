@@ -100,6 +100,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorApiResponse'
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      description: |
+        Issues a new access token using the refresh token stored in an HttpOnly cookie.  
+        The client does not need to send any body, only the cookie must be present.  
+        The server may also rotate the refresh token and return a new one.
+      tags:
+        - Auth
+      requestBody:
+        description: Optional empty body
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      responses:
+        "200":
+          description: Successfully issued a new access token
+          headers:
+            Set-Cookie:
+              description: >
+                Contains the new `access_token` cookie.  
+                Optionally also a new `refresh_token` cookie if rotation is enabled.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+      security: []
   /api/v1/user/me:
     get:
       summary: Get the authenticated user
