@@ -7,11 +7,9 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	"gitlab.com/shaninalex/flowreon/internal/database"
-	"gitlab.com/shaninalex/flowreon/internal/utils"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
@@ -22,9 +20,6 @@ type TokenManager interface {
 	List(ctx context.Context, userID uint) ([]*models.UserToken, error)
 	Delete(ctx context.Context, userID uint, tokenID string) error
 }
-
-var sampleSecretKey = []byte(utils.GetEnv("FLOWREON_SECRET_KEY", "a-string-secret-at-least-256-bits-long"))
-var expDelta = 7 * 24 * time.Hour // 1 week
 
 type tokenManager struct {
 	tokenService TokenService
