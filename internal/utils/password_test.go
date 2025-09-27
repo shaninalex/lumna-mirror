@@ -3,9 +3,8 @@ package utils_test
 import (
 	"testing"
 
-	"authserver/app/pkg/utils"
-
 	"github.com/stretchr/testify/assert"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
 )
 
 func Test_CreatePasswordHash(t *testing.T) {

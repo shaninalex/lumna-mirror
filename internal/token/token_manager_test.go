@@ -6,11 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"authserver/app/pkg/token"
-
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"gitlab.com/shaninalex/flowreon/internal/token"
 )
 
 var (
