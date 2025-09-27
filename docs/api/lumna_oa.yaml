@@ -60,11 +60,16 @@ paths:
                   Max-Age=900; SameSite=Strict
           content:
             application/json:
-              example:
-                status: true
-                messages:
-                  - text: login successfull
-                    type: success
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
         '400':
           description: Invalid credentials
           content:
@@ -89,11 +94,16 @@ paths:
             message
           content:
             application/json:
-              example:
-                status: true
-                messages:
-                  - text: registration successfull
-                    type: success
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
         '400':
           description: Unsuccessfull registration return error message
           content:
@@ -208,11 +218,97 @@ paths:
           description: Successfully logged out
           content:
             application/json:
-              example:
-                status: true
-                messages:
-                  - text: logout successful
-                    type: success
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+  /api/v1/user/tokens:
+    get:
+      summary: List of user tokens
+      description: >-
+        Return list of user tokens ( all of them - valid, revoked, expired )
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successfully logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserToken'
+
+  /api/v1/user/tokens/{token_id}:
+    delete:
+      summary: Delete token
+      description: Delete user token by id
+      tags:
+        - User
+      parameters:
+        - name: token_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the user token
+          example: 324234
+      responses:
+        '200':
+          description: Successfully delete user token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+
+  /api/v1/user/tokens/{token_id}/revoke:
+    get:
+      summary: Revoke token
+      description: revoke user token by id
+      tags:
+        - User
+      parameters:
+        - name: token_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the user token
+          example: 324234
+      responses:
+        '200':
+          description: Successfully revoke user token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    $ref: '#/components/schemas/UserToken'
+
   /api/v1/company:
     get:
       summary: Retrieve user company
@@ -1273,3 +1369,28 @@ components:
           type: boolean
           description: Whether the webhook is currently active
           example: true
+    UserToken:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 876458
+        device:
+          type: string
+          example: "For now this is user agent. Will be changed later"
+        refresh_expires_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+        revoked:
+          type: boolean
+          example: false
+        revoked_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
