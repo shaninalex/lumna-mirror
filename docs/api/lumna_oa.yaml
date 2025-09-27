@@ -623,7 +623,7 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Message'
-  /api/v1/tasks/{id}:
+  /api/v1/task/{id}:
     get:
       summary: Retrieve task details
       description: >
@@ -759,7 +759,7 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Message'
-  /api/v1/tasks/{id}/status:
+  /api/v1/task/{id}/status:
     patch:
       summary: Update task status
       description: >
@@ -830,7 +830,7 @@ paths:
                     example: false
                   errors:
                     $ref: '#/components/schemas/Error'
-  /api/v1/tasks/{id}/badges:
+  /api/v1/task/{id}/badges:
     post:
       summary: Add badge to task
       description: >
@@ -883,7 +883,7 @@ paths:
                     example: false
                   errors:
                     $ref: '#/components/schemas/Error'
-  /api/v1/tasks/{id}/badges/{badgeId}:
+  /api/v1/task/{id}/badges/{badgeId}:
     delete:
       summary: Remove badge from task
       description: >
