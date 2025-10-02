@@ -68,7 +68,7 @@ export class TaskFormSmComponent {
             payload: {
                 title: this.form.value['title'],
                 status_id: this.column.id,
-                project_code: this.project.project_key,
+                project_code: this.project.code,
             }
         }))
     }

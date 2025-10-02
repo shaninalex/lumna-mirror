@@ -11,5 +11,5 @@ export const selectProjects = createSelector(
 
 export const selectProject = (code: string) => createSelector(
     selectProjectsFeature,
-    (state: ProjectState) => projectsSelectors.selectAll(state).find(p => p.project_key === code)
+    (state: ProjectState) => projectsSelectors.selectAll(state).find(p => p.code === code)
 )

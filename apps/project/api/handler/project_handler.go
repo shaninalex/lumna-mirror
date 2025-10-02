@@ -14,24 +14,25 @@ import (
 
 // ProjectHandler - project handler.
 type ProjectHandler struct {
-	projectReader services.ProjectReader
-	projectWriter services.ProjectWriter
+	projectService services.ProjectManager
 }
 
 // NewProjectHandler - new project handler.
 func NewProjectHandler() *ProjectHandler {
-	h := &ProjectHandler{}
+	h := &ProjectHandler{
+		projectService: services.NewProjectService(),
+	}
 	return h
 }
 
 // List - retrieve all projects
 func (s *ProjectHandler) List(w http.ResponseWriter, r *http.Request) {
-	projects, err := s.projectReader.List(r.Context())
+	projects, err := s.projectService.List(r.Context())
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	web.Success(w, http.StatusOK, adapter.ToProjectsDto(projects))
+	web.Success(w, adapter.ToProjectsDto(projects))
 }
 
 // Create - create a new project
@@ -44,13 +45,13 @@ func (s *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	project, err := s.projectReader.GetProject(r.Context(), uint(projectID))
+	project, err := s.projectService.GetProject(r.Context(), uint(projectID))
 	if err != nil {
 		web.Error(w, http.StatusNotFound, err)
 		return
 	}
 	projectDto := adapter.ToProjectDetailDto(project)
-	web.Success(w, http.StatusOK, projectDto)
+	web.Success(w, projectDto)
 }
 
 // Delete - delete Project
@@ -60,11 +61,11 @@ func (s *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	if err := s.projectWriter.DeleteProject(r.Context(), uint(projectID)); err != nil {
+	if err := s.projectService.DeleteProject(r.Context(), uint(projectID)); err != nil {
 		web.Error(w, http.StatusNotFound, err)
 		return
 	}
-	web.Success(w, http.StatusOK, nil, "Project deleted")
+	web.Success(w, nil, "Project deleted")
 }
 
 // Patch - update specific project
@@ -79,7 +80,7 @@ func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusNotFound, err)
 		return
 	}
-	project, err := s.projectWriter.UpdateProject(r.Context(), &models.Project{
+	project, err := s.projectService.UpdateProject(r.Context(), &models.Project{
 		ID:    uint(projectID),
 		Title: input.Title,
 	})
@@ -87,5 +88,5 @@ func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	web.Success(w, http.StatusOK, project, "Project patched")
+	web.Success(w, project, "Project patched")
 }

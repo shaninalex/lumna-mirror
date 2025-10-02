@@ -9,6 +9,7 @@ import (
 	"path"
 
 	"gitlab.com/shaninalex/flowreon/internal/db"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
 )
 
 type Middleware func(http.Handler) http.Handler
@@ -83,7 +84,9 @@ func (r *Router) Run() error {
 // DefaultRouter - default router.
 func DefaultRouter(dbConnection *sql.DB) *Router {
 	r := NewRouter()
-	r.Use(NewRecoveryMiddleware().Wrap)
+	if env := utils.GetEnv("LUMNA_ENVIRONMENT", "development"); env != "development" {
+		r.Use(NewRecoveryMiddleware().Wrap)
+	}
 	r.Use(db.NewMiddleware(dbConnection).Wrap)
 	r.Use(NewLoggerMiddleware().Wrap)
 	r.Use(NewCommonMiddleware().Wrap)

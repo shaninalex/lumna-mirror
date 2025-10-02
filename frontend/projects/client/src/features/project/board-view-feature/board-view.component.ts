@@ -38,7 +38,7 @@ import {byMostRecent} from '@client/shared/common';
                          [cdkDropListData]="column.tasks"
                          (cdkDropListDropped)="drop($event)">
                         @for (task of column.tasks; track task.id) {
-                            <fr-task-card [projectKey]="project.project_key"
+                            <fr-task-card [projectKey]="project.code"
                                           [task]="task"
                                           [cdkDragData]="task"
                                           cdkDrag/>
@@ -79,7 +79,7 @@ export class BoardViewComponent implements OnInit {
             );
         }
 
-        this.boardApi.ChangeStatus(this.project.project_key, event.item.data.code, {
+        this.boardApi.ChangeStatus(this.project.code, event.item.data.code, {
             from_status: event.previousContainer.id,
             to_status: event.container.id,
             from_idx: event.previousIndex,

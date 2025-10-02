@@ -49,6 +49,10 @@ type ProjectManager interface {
 type ProjectService struct {
 }
 
+func NewProjectService() *ProjectService {
+	return &ProjectService{}
+}
+
 func (p ProjectService) List(ctx context.Context) ([]*models.Project, error) {
 	connection := db.GetDb(ctx)
 	projects, err := db.ProjectList(ctx, connection)
@@ -56,12 +60,12 @@ func (p ProjectService) List(ctx context.Context) ([]*models.Project, error) {
 		return nil, err
 	}
 	output := make([]*models.Project, len(projects))
-	for _, project := range projects {
+	for i, project := range projects {
 		statuses, err := db.TaskStatusListByProject(ctx, connection, project.ID)
 		if err != nil {
 			return nil, err
 		}
-		output = append(output, MakeProject(project, statuses))
+		output[i] = MakeProject(project, statuses)
 	}
 
 	return output, nil
