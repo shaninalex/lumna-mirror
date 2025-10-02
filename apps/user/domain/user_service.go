@@ -6,7 +6,7 @@ import (
 	"context"
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
@@ -24,7 +24,7 @@ func NewUserService() *UserService {
 
 // GetUser get user
 func (s UserService) GetUser(ctx context.Context, userID uint) (*models.User, error) {
-	user, err := repositories.UserGetByField(ctx, database.GetDb(ctx), "id", userID)
+	user, err := repositories.UserGetByField(ctx, db.GetDb(ctx), "id", userID)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func (s UserService) GetUser(ctx context.Context, userID uint) (*models.User, er
 
 // UpdateUserSettings update user settings
 func (s UserService) UpdateUserSettings(ctx context.Context, userID uint, settings *models.UserSettings) error {
-	db := database.GetDb(ctx)
+	db := db.GetDb(ctx)
 	user, err := repositories.UserGetByField(ctx, db, "id", userID)
 	if err != nil {
 		return err

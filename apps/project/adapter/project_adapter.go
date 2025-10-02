@@ -5,8 +5,12 @@ package adapter
 import (
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/apps/project/domain"
+	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
 )
+
+type ProjectPatchInput struct {
+	Title string `json:"title"`
+}
 
 // ProjectDto - project dto.
 type ProjectDto struct {
@@ -18,7 +22,7 @@ type ProjectDto struct {
 }
 
 // ToProjectDto - new project dto.
-func ToProjectDto(p *domain.Project) *ProjectDto {
+func ToProjectDto(p *models.Project) *ProjectDto {
 	return &ProjectDto{
 		ID:        p.ID,
 		Title:     p.Title,
@@ -29,7 +33,7 @@ func ToProjectDto(p *domain.Project) *ProjectDto {
 }
 
 // ToProjectsDto - new projects dto.
-func ToProjectsDto(ps []*domain.Project) []*ProjectDto {
+func ToProjectsDto(ps []*models.Project) []*ProjectDto {
 	projects := make([]*ProjectDto, len(ps))
 	for i, p := range ps {
 		projects[i] = ToProjectDto(p)
@@ -48,12 +52,12 @@ type ProjectDetailDto struct {
 }
 
 // ToProjectDetailDto - new project detail dto.
-func ToProjectDetailDto(p *domain.Project, statuses []*domain.TaskStatus) *ProjectDetailDto {
+func ToProjectDetailDto(p *models.Project) *ProjectDetailDto {
 	return &ProjectDetailDto{
 		ID:        p.ID,
 		Title:     p.Title,
 		Code:      p.Code,
-		Statues:   ToTaskStatusesDto(statuses),
+		Statues:   ToTaskStatusesDto(p.Statuses),
 		CreatedAt: p.CreatedAt,
 		UpdatedAt: p.UpdatedAt,
 	}

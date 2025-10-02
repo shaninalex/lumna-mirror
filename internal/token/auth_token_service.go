@@ -5,7 +5,7 @@ package token
 import (
 	"context"
 
-	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
@@ -53,7 +53,7 @@ func (s *AuthService) Login(ctx context.Context, userID uint, device string) (*A
 		RefreshToken:     refreshResults.Token,
 		RefreshExpiresAt: refreshResults.ExpiresAt,
 	}
-	db := database.GetDb(ctx)
+	db := db.GetDb(ctx)
 	err = repositories.SaveToken(ctx, db, tokenModel)
 	if err != nil {
 		return nil, nil, err
@@ -62,12 +62,12 @@ func (s *AuthService) Login(ctx context.Context, userID uint, device string) (*A
 }
 
 func (s *AuthService) Logout(ctx context.Context, userID uint, refreshToken string) error {
-	db := database.GetDb(ctx)
+	db := db.GetDb(ctx)
 	return repositories.DeleteTokenByRefreshString(ctx, db, userID, refreshToken)
 }
 
 func (s *AuthService) ListSessions(ctx context.Context, userID uint) ([]*models.UserToken, error) {
-	db := database.GetDb(ctx)
+	db := db.GetDb(ctx)
 	tokens, err := repositories.GetTokens(ctx, db, userID)
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func (s *AuthService) ListSessions(ctx context.Context, userID uint) ([]*models.
 }
 
 func (s *AuthService) RefreshAccessToken(ctx context.Context, refreshToken string) (*AccessTokenResult, error) {
-	db := database.GetDb(ctx)
+	db := db.GetDb(ctx)
 	if _, err := s.refreshTokenService.Validate(refreshToken); err != nil {
 		return nil, err
 	}

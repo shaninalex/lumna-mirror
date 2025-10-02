@@ -7,9 +7,7 @@ import (
 	"time"
 
 	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
-	"gitlab.com/shaninalex/flowreon/internal/database"
-	db "gitlab.com/shaninalex/flowreon/models"
-	"gitlab.com/shaninalex/flowreon/models/repositories"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 )
 
 func MakeProject(project *db.Project, statuses []*db.TaskStatus) *models.Project {
@@ -38,7 +36,7 @@ type ProjectReader interface {
 
 // ProjectWriter - project writer
 type ProjectWriter interface {
-	CreateProject(ctx context.Context, userID uint, project *models.Project) (*models.Project, error)
+	CreateProject(ctx context.Context, project *models.Project) (*models.Project, error)
 	UpdateProject(ctx context.Context, project *models.Project) (*models.Project, error)
 	DeleteProject(ctx context.Context, id uint) error
 }
@@ -52,14 +50,14 @@ type ProjectService struct {
 }
 
 func (p ProjectService) List(ctx context.Context) ([]*models.Project, error) {
-	db := database.GetDb(ctx)
-	projects, err := repositories.ProjectList(ctx, db)
+	connection := db.GetDb(ctx)
+	projects, err := db.ProjectList(ctx, connection)
 	if err != nil {
 		return nil, err
 	}
 	output := make([]*models.Project, len(projects))
 	for _, project := range projects {
-		statuses, err := repositories.TaskStatusListByProject(ctx, db, project.ID)
+		statuses, err := db.TaskStatusListByProject(ctx, connection, project.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -70,12 +68,12 @@ func (p ProjectService) List(ctx context.Context) ([]*models.Project, error) {
 }
 
 func (p ProjectService) GetProject(ctx context.Context, id uint) (*models.Project, error) {
-	db := database.GetDb(ctx)
-	project, err := repositories.ProjectGetByID(ctx, db, id)
+	connection := db.GetDb(ctx)
+	project, err := db.ProjectGetByID(ctx, connection, id)
 	if err != nil {
 		return nil, err
 	}
-	statuses, err := repositories.TaskStatusListByProject(ctx, db, project.ID)
+	statuses, err := db.TaskStatusListByProject(ctx, connection, project.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +85,7 @@ func (p ProjectService) CreateProject(ctx context.Context, project *models.Proje
 		Title: project.Title,
 		Code:  project.Code,
 	}
-	err := repositories.ProjectSave(ctx, database.GetDb(ctx), _project)
+	err := db.ProjectSave(ctx, db.GetDb(ctx), _project)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +97,11 @@ func (p ProjectService) CreateProject(ctx context.Context, project *models.Proje
 }
 
 func (p ProjectService) UpdateProject(ctx context.Context, project *models.Project) (*models.Project, error) {
-	err := repositories.ProjectUpdate(ctx, database.GetDb(ctx), &db.Project{ID: project.ID, Title: project.Title, Code: project.Code})
+	err := db.ProjectUpdate(ctx, db.GetDb(ctx), &db.Project{ID: project.ID, Title: project.Title})
+	if err != nil {
+		return nil, err
+	}
+	project, err = p.GetProject(ctx, project.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -107,5 +109,5 @@ func (p ProjectService) UpdateProject(ctx context.Context, project *models.Proje
 }
 
 func (p ProjectService) DeleteProject(ctx context.Context, id uint) error {
-	return repositories.ProjectDelete(ctx, database.GetDb(ctx), id)
+	return db.ProjectDelete(ctx, db.GetDb(ctx), id)
 }

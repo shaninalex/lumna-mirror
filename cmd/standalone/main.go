@@ -13,7 +13,7 @@ import (
 	authApp "gitlab.com/shaninalex/flowreon/apps/auth"
 	projectApp "gitlab.com/shaninalex/flowreon/apps/project/api"
 	userApp "gitlab.com/shaninalex/flowreon/apps/user/api"
-	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
@@ -25,7 +25,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	database.ApplyMigrationsEmbed(sqlDB)
+	db.ApplyMigrationsEmbed(sqlDB)
 	static, _ := fs.Sub(webFS, "web/browser")
 
 	router := web.DefaultRouter(sqlDB)

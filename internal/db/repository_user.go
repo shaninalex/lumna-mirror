@@ -1,6 +1,6 @@
 // Copyright © 2025 Lumna. All rights reserved.
 
-package repositories
+package db
 
 import (
 	"context"
@@ -9,12 +9,11 @@ import (
 	"time"
 
 	"gitlab.com/shaninalex/flowreon/internal/utils"
-	"gitlab.com/shaninalex/flowreon/models"
 )
 
 // UserGetByField get user by field
-func UserGetByField(ctx context.Context, db *sql.DB, field string, value any) (*models.User, error) {
-	user := &models.User{}
+func UserGetByField(ctx context.Context, db *sql.DB, field string, value any) (*User, error) {
+	user := &User{}
 	query := fmt.Sprintf(`
 	SELECT id, email, settings, active, state, code, password_hash, created_at, updated_at
 	FROM users WHERE %s = ? LIMIT 1
@@ -32,16 +31,16 @@ func UserGetByField(ctx context.Context, db *sql.DB, field string, value any) (*
 }
 
 // UserSave save user
-func UserSave(ctx context.Context, db *sql.DB, user *models.User) (*models.User, error) {
+func UserSave(ctx context.Context, db *sql.DB, user *User) (*User, error) {
 	if user.CreatedAt.IsZero() {
 		user.CreatedAt = time.Now()
 	}
 	if user.UpdatedAt.IsZero() {
 		user.UpdatedAt = time.Now()
 	}
-	user.SetSettings(&models.DefaultUserSettings)
+	user.SetSettings(&DefaultUserSettings)
 	user.Active = false
-	user.State = models.UserStatePending
+	user.State = UserStatePending
 	user.Code = utils.GenerateEntityCode("user")
 	query := `
 	INSERT INTO users (email, settings, code, password_hash)
@@ -55,7 +54,7 @@ func UserSave(ctx context.Context, db *sql.DB, user *models.User) (*models.User,
 }
 
 // UserUpdate update user
-func UserUpdate(ctx context.Context, db *sql.DB, user *models.User) error {
+func UserUpdate(ctx context.Context, db *sql.DB, user *User) error {
 	query := `
 		UPDATE users
 		SET 

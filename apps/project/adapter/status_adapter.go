@@ -1,7 +1,7 @@
 package adapter
 
 import (
-	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
 )
 
 // TaskStatusDto - task status dto.
@@ -22,9 +22,9 @@ type ChangeTaskStatusInput struct {
 }
 
 // NewTaskStatusDto - new issue status dto.
-func NewTaskStatusDto(i *models.TaskStatus) *TaskStatusDto {
+func NewTaskStatusDto(i models.Status) *TaskStatusDto {
 	return &TaskStatusDto{
-		ID:       i.GetID(),
+		ID:       i.ID,
 		Title:    i.Title,
 		Complete: i.Completed,
 		Index:    i.ListIndex,
@@ -33,7 +33,7 @@ func NewTaskStatusDto(i *models.TaskStatus) *TaskStatusDto {
 }
 
 // ToTaskStatusesDto - new tasks status dto.
-func ToTaskStatusesDto(statuses []*models.TaskStatus) []*TaskStatusDto {
+func ToTaskStatusesDto(statuses []models.Status) []*TaskStatusDto {
 	dtos := make([]*TaskStatusDto, len(statuses))
 	for i, status := range statuses {
 		dtos[i] = NewTaskStatusDto(status)

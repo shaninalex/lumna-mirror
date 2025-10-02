@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"path"
 
-	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 )
 
 type Middleware func(http.Handler) http.Handler
@@ -84,7 +84,7 @@ func (r *Router) Run() error {
 func DefaultRouter(db *sql.DB) *Router {
 	r := NewRouter()
 	r.Use(NewRecoveryMiddleware().Wrap)
-	r.Use(database.NewMiddleware(db).Wrap)
+	r.Use(db.NewMiddleware(db).Wrap)
 	r.Use(NewLoggerMiddleware().Wrap)
 	r.Use(NewCommonMiddleware().Wrap)
 	r.Use(NewHeadersMiddleware().Wrap)

@@ -1,6 +1,6 @@
 // Copyright © 2025 Lumna. All rights reserved.
 
-package database
+package db
 
 import (
 	"context"

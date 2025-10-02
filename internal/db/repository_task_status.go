@@ -1,19 +1,17 @@
 // Copyright © 2025 Lumna. All rights reserved.
 
-package repositories
+package db
 
 import (
 	"context"
 	"database/sql"
-
-	"gitlab.com/shaninalex/flowreon/models"
 )
 
 // TaskStatusByID get task status by id
-func TaskStatusByID(ctx context.Context, db *sql.DB, id uint) (*models.TaskStatus, error) {
+func TaskStatusByID(ctx context.Context, db *sql.DB, id uint) (*TaskStatus, error) {
 	q := `select id, project_id, title, completed, list_index, config from statuses where id = ?`
 	row := db.QueryRowContext(ctx, q, id)
-	s := &models.TaskStatus{}
+	s := &TaskStatus{}
 	if err := row.Scan(&s.ID, &s.ProjectID, &s.Title, &s.Completed, &s.ListIndex, &s.Config); err != nil {
 		return nil, err
 	}
@@ -21,7 +19,7 @@ func TaskStatusByID(ctx context.Context, db *sql.DB, id uint) (*models.TaskStatu
 }
 
 // TaskStatusListByProject get task status list by project code
-func TaskStatusListByProject(ctx context.Context, db *sql.DB, id uint) ([]*models.TaskStatus, error) {
+func TaskStatusListByProject(ctx context.Context, db *sql.DB, id uint) ([]*TaskStatus, error) {
 	q := `
 	select s.id, s.project_id, s.title, s.completed, s.list_index, s.config 
 	from statuses s
@@ -32,9 +30,9 @@ func TaskStatusListByProject(ctx context.Context, db *sql.DB, id uint) ([]*model
 	if err != nil {
 		return nil, err
 	}
-	statuses := []*models.TaskStatus{}
+	statuses := []*TaskStatus{}
 	for rows.Next() {
-		s := &models.TaskStatus{}
+		s := &TaskStatus{}
 		if err = rows.Scan(&s.ID, &s.ProjectID, &s.Title, &s.Completed, &s.ListIndex, &s.Config); err != nil {
 			return nil, err
 		}

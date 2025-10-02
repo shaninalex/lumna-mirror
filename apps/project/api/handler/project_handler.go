@@ -7,14 +7,15 @@ import (
 	"strconv"
 
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
-	"gitlab.com/shaninalex/flowreon/apps/project/domain"
+	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
+	"gitlab.com/shaninalex/flowreon/apps/project/domain/services"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 // ProjectHandler - project handler.
 type ProjectHandler struct {
-	projectReader domain.ProjectReader
-	projectWriter domain.ProjectWriter
+	projectReader services.ProjectReader
+	projectWriter services.ProjectWriter
 }
 
 // NewProjectHandler - new project handler.
@@ -38,12 +39,12 @@ func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {}
 
 // Get - retrieve a specific project
 func (s *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
-	tokenID, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+	projectID, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	project, err := s.projectReader.GetProject(r.Context(), uint(tokenID))
+	project, err := s.projectReader.GetProject(r.Context(), uint(projectID))
 	if err != nil {
 		web.Error(w, http.StatusNotFound, err)
 		return
@@ -53,9 +54,38 @@ func (s *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 // Delete - delete Project
-func (s *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {}
+func (s *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	projectID, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	if err := s.projectWriter.DeleteProject(r.Context(), uint(projectID)); err != nil {
+		web.Error(w, http.StatusNotFound, err)
+		return
+	}
+	web.Success(w, http.StatusOK, nil, "Project deleted")
+}
 
 // Patch - update specific project
 func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
-	// This request return project WITH columns. Returns after update
+	projectID, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	input, err := web.BodyParser[adapter.ProjectPatchInput](r)
+	if err != nil {
+		web.Error(w, http.StatusNotFound, err)
+		return
+	}
+	project, err := s.projectWriter.UpdateProject(r.Context(), &models.Project{
+		ID:    uint(projectID),
+		Title: input.Title,
+	})
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	web.Success(w, http.StatusOK, project, "Project patched")
 }

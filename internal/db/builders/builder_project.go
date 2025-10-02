@@ -5,17 +5,17 @@ package builders
 import (
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 )
 
 // ProjectBuilder builder pattern code
 type ProjectBuilder struct {
-	project *models.Project
+	project *Project
 }
 
 // NewProjectBuilder - new project builder.
 func NewProjectBuilder() *ProjectBuilder {
-	project := &models.Project{}
+	project := &Project{}
 	b := &ProjectBuilder{project: project}
 	return b
 }
@@ -57,6 +57,6 @@ func (b *ProjectBuilder) UpdatedAt(updatedAt time.Time) *ProjectBuilder {
 }
 
 // Build - builds the value.
-func (b *ProjectBuilder) Build() *models.Project {
+func (b *ProjectBuilder) Build() *Project {
 	return b.project
 }

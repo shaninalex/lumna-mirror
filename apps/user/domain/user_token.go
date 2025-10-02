@@ -5,7 +5,7 @@ package domain
 import (
 	"context"
 
-	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 	"gitlab.com/shaninalex/flowreon/models"
 	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
@@ -37,7 +37,7 @@ func NewUserTokenService() *UserTokenService {
 // List fetches all tokens for a given user from the database.
 // It calls the repositories layer and returns any database errors.
 func (u UserTokenService) List(ctx context.Context, userID uint) ([]*models.UserToken, error) {
-	tokens, err := repositories.GetTokens(ctx, database.GetDb(ctx), userID)
+	tokens, err := repositories.GetTokens(ctx, db.GetDb(ctx), userID)
 	if err != nil {
 		return nil, err
 	}
@@ -47,11 +47,11 @@ func (u UserTokenService) List(ctx context.Context, userID uint) ([]*models.User
 // Delete removes a token for a specific user from the database.
 // Typically used for logout or administrative token cleanup.
 func (u UserTokenService) Delete(ctx context.Context, userID, tokenID uint) error {
-	return repositories.DeleteToken(ctx, database.GetDb(ctx), userID, tokenID)
+	return repositories.DeleteToken(ctx, db.GetDb(ctx), userID, tokenID)
 }
 
 // Revoke invalidates a token without deleting it from the database.
 // Useful for forcing logouts or invalidating refresh tokens.
 func (u UserTokenService) Revoke(ctx context.Context, userID, tokenID uint) error {
-	return repositories.RevokeToken(ctx, database.GetDb(ctx), userID, tokenID)
+	return repositories.RevokeToken(ctx, db.GetDb(ctx), userID, tokenID)
 }

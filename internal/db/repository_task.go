@@ -1,16 +1,14 @@
 // Copyright © 2025 Lumna. All rights reserved.
 
-package repositories
+package db
 
 import (
 	"context"
 	"database/sql"
-
-	"gitlab.com/shaninalex/flowreon/models"
 )
 
 // TaskList task list
-func TaskList(ctx context.Context, db *sql.DB, code string) ([]*models.Task, error) {
+func TaskList(ctx context.Context, db *sql.DB, code string) ([]*Task, error) {
 	query := `select t.id, t.user_id, t.project_id, t.status_id, t.title, t.code, t.completed, t.description, t.list_index, t.created_at, t.updated_at
 		from tasks t
 		join projects p on p.id = t.project_id
@@ -25,9 +23,9 @@ func TaskList(ctx context.Context, db *sql.DB, code string) ([]*models.Task, err
 			panic(err)
 		}
 	}()
-	tasks := make([]*models.Task, 0)
+	tasks := make([]*Task, 0)
 	for rows.Next() {
-		t := &models.Task{}
+		t := &Task{}
 		if err = rows.Scan(&t.ID, &t.UserID, &t.ProjectID, &t.StatusID, &t.Title, &t.Code, &t.Completed, &t.Description, &t.ListIndex, &t.CreatedAt, &t.UpdatedAt); err != nil {
 			return nil, err
 		}
@@ -37,7 +35,7 @@ func TaskList(ctx context.Context, db *sql.DB, code string) ([]*models.Task, err
 }
 
 // UpdateTask update task
-func UpdateTask(ctx context.Context, db *sql.DB, code string, task *models.Task) error {
+func UpdateTask(ctx context.Context, db *sql.DB, code string, task *Task) error {
 	query := `
 		UPDATE tasks
 		SET 
@@ -63,13 +61,13 @@ func UpdateTask(ctx context.Context, db *sql.DB, code string, task *models.Task)
 }
 
 // TaskGet get task
-func TaskGet(ctx context.Context, db *sql.DB, code string) (*models.Task, error) {
+func TaskGet(ctx context.Context, db *sql.DB, code string) (*Task, error) {
 	query := `select t.id, t.user_id, t.project_id, t.status_id, t.title, t.code, t.completed, t.description, t.list_index, t.created_at, t.updated_at
 		from tasks t
 		where t.code = ?
 	`
 	row := db.QueryRowContext(ctx, query, code)
-	t := &models.Task{}
+	t := &Task{}
 	if err := row.Scan(&t.ID, &t.UserID, &t.ProjectID, &t.StatusID, &t.Title, &t.Code, &t.Completed, &t.Description, &t.ListIndex, &t.CreatedAt, &t.UpdatedAt); err != nil {
 		return nil, err
 	}
@@ -77,7 +75,7 @@ func TaskGet(ctx context.Context, db *sql.DB, code string) (*models.Task, error)
 }
 
 // TaskSave save task
-func TaskSave(ctx context.Context, db *sql.DB, t *models.Task) error {
+func TaskSave(ctx context.Context, db *sql.DB, t *Task) error {
 	query := `
 		insert into tasks (user_id, project_id, status_id, title, code, completed, description, list_index)
 		values (?, ?, ?, ?, ?, ?, ?, ?);

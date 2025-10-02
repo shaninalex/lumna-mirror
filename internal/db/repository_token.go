@@ -1,18 +1,16 @@
 // Copyright © 2025 Lumna. All rights reserved.
 
-package repositories
+package db
 
 import (
 	"context"
 	"database/sql"
 	"fmt"
-
-	"gitlab.com/shaninalex/flowreon/models"
 )
 
 // GetTokenByField loads a token from DB by field.
-func GetTokenByField(ctx context.Context, db *sql.DB, field string, value any) (*models.UserToken, error) {
-	token := &models.UserToken{}
+func GetTokenByField(ctx context.Context, db *sql.DB, field string, value any) (*UserToken, error) {
+	token := &UserToken{}
 	query := fmt.Sprintf(`
 		SELECT 
 		    id, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
@@ -42,7 +40,7 @@ func GetTokenByField(ctx context.Context, db *sql.DB, field string, value any) (
 }
 
 // SaveToken inserts or updates a session in the DB.
-func SaveToken(ctx context.Context, db *sql.DB, token *models.UserToken) error {
+func SaveToken(ctx context.Context, db *sql.DB, token *UserToken) error {
 	query := `
 		INSERT INTO users_tokens 
 		    (user_id, device, refresh_token, refresh_expires_at)
@@ -67,7 +65,7 @@ func SaveToken(ctx context.Context, db *sql.DB, token *models.UserToken) error {
 }
 
 // GetTokens retrieves all tokens for a given user.
-func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*models.UserToken, error) {
+func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*UserToken, error) {
 	query := `
 		SELECT 
 		    id, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
@@ -84,9 +82,9 @@ func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*models.UserToke
 		}
 	}()
 
-	tokens := make([]*models.UserToken, 0)
+	tokens := make([]*UserToken, 0)
 	for rows.Next() {
-		token := &models.UserToken{}
+		token := &UserToken{}
 		if err = rows.Scan(
 			&token.ID,
 			&token.UserID,

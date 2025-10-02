@@ -1,18 +1,16 @@
 // Copyright © 2025 Lumna. All rights reserved.
 
-package repositories
+package db
 
 import (
 	"context"
 	"database/sql"
 	"errors"
-
-	"gitlab.com/shaninalex/flowreon/models"
 )
 
 // ProjectGetByID get project by userID and project code
-func ProjectGetByID(ctx context.Context, db *sql.DB, id uint) (*models.Project, error) {
-	var project models.Project
+func ProjectGetByID(ctx context.Context, db *sql.DB, id uint) (*Project, error) {
+	var project Project
 	query := `SELECT id, user_id, title, code, created_at, updated_at FROM projects WHERE id = ?`
 	row := db.QueryRowContext(ctx, query, id)
 	if err := row.Scan(&project.ID, &project.UserID, &project.Title, &project.Code, &project.CreatedAt, &project.UpdatedAt); err != nil {
@@ -22,7 +20,7 @@ func ProjectGetByID(ctx context.Context, db *sql.DB, id uint) (*models.Project, 
 }
 
 // ProjectSave save project
-func ProjectSave(ctx context.Context, db *sql.DB, project *models.Project) error {
+func ProjectSave(ctx context.Context, db *sql.DB, project *Project) error {
 	query := `INSERT INTO projects (user_id, title, code) VALUES (?, ?, ?)`
 	result, err := db.ExecContext(ctx, query, &project.UserID, &project.Title, &project.Code)
 	if err != nil {
@@ -37,7 +35,7 @@ func ProjectSave(ctx context.Context, db *sql.DB, project *models.Project) error
 }
 
 // ProjectList projects list
-func ProjectList(ctx context.Context, db *sql.DB) ([]*models.Project, error) {
+func ProjectList(ctx context.Context, db *sql.DB) ([]*Project, error) {
 	query := `SELECT id, user_id, title, code, created_at, updated_at FROM projects`
 	rows, err := db.QueryContext(ctx, query)
 	if err != nil {
@@ -48,9 +46,9 @@ func ProjectList(ctx context.Context, db *sql.DB) ([]*models.Project, error) {
 			panic(err)
 		}
 	}()
-	projects := make([]*models.Project, 0)
+	projects := make([]*Project, 0)
 	for rows.Next() {
-		project := &models.Project{}
+		project := &Project{}
 		if err = rows.Scan(&project.ID, &project.UserID, &project.Title, &project.Code, &project.CreatedAt, &project.UpdatedAt); err != nil {
 			return nil, err
 		}
@@ -59,17 +57,16 @@ func ProjectList(ctx context.Context, db *sql.DB) ([]*models.Project, error) {
 	return projects, nil
 }
 
-func ProjectUpdate(ctx context.Context, db *sql.DB, project *models.Project) error {
+func ProjectUpdate(ctx context.Context, db *sql.DB, project *Project) error {
 	query := `
 		UPDATE 
 		    projects
 		SET 
 			title = ?,
-			code = ?,
 			updated_at = CURRENT_TIMESTAMP
 		WHERE id = ?
 	`
-	result, err := db.ExecContext(ctx, query, project.Title, project.Code, project.ID)
+	result, err := db.ExecContext(ctx, query, project.Title, project.ID)
 	if err != nil {
 		return err
 	}
