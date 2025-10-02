@@ -358,7 +358,7 @@ paths:
                     $ref: '#/components/schemas/Project'
                   messages:
                     $ref: '#/components/schemas/Message'
-  /api/v1/projects/{id}:
+  /api/v1/project/{id}:
     get:
       summary: Retrieve a specific project
       description: Returns the details of a single project by its unique identifier.
@@ -449,7 +449,7 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/Project'
-  /api/v1/projects/{id}/tasks:
+  /api/v1/project/{id}/tasks:
     get:
       summary: Retrieve tasks for a project
       description: >-
@@ -585,7 +585,6 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/Badge'
-
   /api/v1/project/{id}/badges/{badgeId}:
     delete:
       summary: Delete project badge

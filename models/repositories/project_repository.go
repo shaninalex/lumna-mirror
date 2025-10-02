@@ -5,15 +5,16 @@ package repositories
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"gitlab.com/shaninalex/flowreon/models"
 )
 
-// ProjectGetByUserIDAndCode get project by userID and project code
-func ProjectGetByUserIDAndCode(ctx context.Context, db *sql.DB, code string) (*models.Project, error) {
+// ProjectGetByID get project by userID and project code
+func ProjectGetByID(ctx context.Context, db *sql.DB, id uint) (*models.Project, error) {
 	var project models.Project
-	query := `SELECT id, user_id, title, code, created_at, updated_at FROM projects WHERE code = ?`
-	row := db.QueryRowContext(ctx, query, code)
+	query := `SELECT id, user_id, title, code, created_at, updated_at FROM projects WHERE id = ?`
+	row := db.QueryRowContext(ctx, query, id)
 	if err := row.Scan(&project.ID, &project.UserID, &project.Title, &project.Code, &project.CreatedAt, &project.UpdatedAt); err != nil {
 		return nil, err
 	}
@@ -56,4 +57,47 @@ func ProjectList(ctx context.Context, db *sql.DB) ([]*models.Project, error) {
 		projects = append(projects, project)
 	}
 	return projects, nil
+}
+
+func ProjectUpdate(ctx context.Context, db *sql.DB, project *models.Project) error {
+	query := `
+		UPDATE 
+		    projects
+		SET 
+			title = ?,
+			code = ?,
+			updated_at = CURRENT_TIMESTAMP
+		WHERE id = ?
+	`
+	result, err := db.ExecContext(ctx, query, project.Title, project.Code, project.ID)
+	if err != nil {
+		return err
+	}
+	f, err := result.RowsAffected()
+	if f == 0 || err != nil {
+		return errors.New("no rows affected")
+	}
+	return nil
+}
+
+func ProjectDelete(ctx context.Context, db *sql.DB, id uint) error {
+	query := `
+		DELETE FROM 
+			projects
+		WHERE 
+		    id = ?
+	`
+	res, err := db.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affected == 0 {
+		return errors.New("no rows affected")
+	}
+	return nil
 }

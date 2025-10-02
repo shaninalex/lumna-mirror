@@ -4,66 +4,58 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
 	"gitlab.com/shaninalex/flowreon/apps/project/domain"
-	"gitlab.com/shaninalex/flowreon/apps/project/dto"
-	"gitlab.com/shaninalex/flowreon/internal/database"
 	"gitlab.com/shaninalex/flowreon/internal/web"
-	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
 
 // ProjectHandler - project handler.
 type ProjectHandler struct {
-	manager domain.ProjectManager
+	projectReader domain.ProjectReader
+	projectWriter domain.ProjectWriter
 }
 
 // NewProjectHandler - new project handler.
-func NewProjectHandler(manager domain.ProjectManager) *ProjectHandler {
-	h := &ProjectHandler{
-		manager: manager,
-	}
+func NewProjectHandler() *ProjectHandler {
+	h := &ProjectHandler{}
 	return h
 }
 
-// HandleProjectsList - handle projects list.
-func (s *ProjectHandler) HandleProjectsList(w http.ResponseWriter, r *http.Request) {
-	projects, err := s.manager.List(r.Context())
+// List - retrieve all projects
+func (s *ProjectHandler) List(w http.ResponseWriter, r *http.Request) {
+	projects, err := s.projectReader.List(r.Context())
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	pr := []*dto.ProjectDto{}
-	for _, project := range projects {
-		statuses, err := repositories.TaskStatusListByProject(r.Context(), database.GetDb(r.Context()), project.Code)
-		if err != nil {
-			web.Error(w, http.StatusInternalServerError, err)
-			return
-		}
-		projectDto := adapter.NewProjectDto(project)
-		projectDto.Statuses = adapter.NewIssueStatusesDto(statuses)
-		pr = append(pr, projectDto)
-	}
-	web.Success(w, pr)
+	web.Success(w, http.StatusOK, adapter.ToProjectsDto(projects))
 }
 
-// HandleProjectCreate - handle project tasks list.
-func (s *ProjectHandler) HandleProjectCreate(w http.ResponseWriter, r *http.Request) {
-	projectDto, err := web.BodyParser[dto.ProjectDto](r)
+// Create - create a new project
+func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {}
+
+// Get - retrieve a specific project
+func (s *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
+	tokenID, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	project, err := s.manager.CreateProject(r.Context(), web.GetUserID(r), projectDto)
+	project, err := s.projectReader.GetProject(r.Context(), uint(tokenID))
 	if err != nil {
-		web.Error(w, http.StatusBadRequest, err)
+		web.Error(w, http.StatusNotFound, err)
 		return
 	}
-	web.Success(w, adapter.NewProjectDto(project))
+	projectDto := adapter.ToProjectDetailDto(project)
+	web.Success(w, http.StatusOK, projectDto)
 }
 
-// TaskFilter - task filter.
-type TaskFilter struct {
-	Project  string `query:"project,required"`
-	TaskCode string `query:"taskCode"`
+// Delete - delete Project
+func (s *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {}
+
+// Patch - update specific project
+func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
+	// This request return project WITH columns. Returns after update
 }
