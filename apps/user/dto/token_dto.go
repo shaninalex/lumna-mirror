@@ -3,7 +3,7 @@ package dto
 import (
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 )
 
 // UserTokenDto is a Data Transfer Object (DTO) for user tokens.
@@ -20,7 +20,7 @@ type UserTokenDto struct {
 
 // ToUserTokenDto converts a models.UserToken entity from the database
 // into a UserTokenDto for safe exposure to clients.
-func ToUserTokenDto(token *models.UserToken) *UserTokenDto {
+func ToUserTokenDto(token *db.UserToken) *UserTokenDto {
 	return &UserTokenDto{
 		Id:               token.ID,
 		Device:           token.Device,
@@ -33,7 +33,7 @@ func ToUserTokenDto(token *models.UserToken) *UserTokenDto {
 
 // ToUserTokenDtoList converts a slice of UserToken entities into a slice of UserTokenDto.
 // Useful for returning a list of user tokens in an API response.
-func ToUserTokenDtoList(tokens []*models.UserToken) []*UserTokenDto {
+func ToUserTokenDtoList(tokens []*db.UserToken) []*UserTokenDto {
 	output := make([]*UserTokenDto, len(tokens)) // pre-allocate slice for performance
 	for i, token := range tokens {
 		output[i] = ToUserTokenDto(token) // convert each token individually

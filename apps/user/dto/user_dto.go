@@ -3,19 +3,19 @@
 package dto
 
 import (
-	"gitlab.com/shaninalex/flowreon/models"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 )
 
 type UserDto struct {
-	ID       uint                 `json:"id"`
-	Code     string               `json:"code"`
-	Email    string               `json:"email"`
-	Active   bool                 `json:"active"`
-	State    models.UserState     `json:"state"`
-	Settings *models.UserSettings `json:"settings"`
+	ID       uint             `json:"id"`
+	Code     string           `json:"code"`
+	Email    string           `json:"email"`
+	Active   bool             `json:"active"`
+	State    db.UserState     `json:"state"`
+	Settings *db.UserSettings `json:"settings"`
 }
 
-func ToUserDto(user *models.User) *UserDto {
+func ToUserDto(user *db.User) *UserDto {
 	return &UserDto{
 		ID:       user.GetID(),
 		Code:     user.GetCode(),

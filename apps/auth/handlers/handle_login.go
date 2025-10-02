@@ -10,7 +10,6 @@ import (
 	"gitlab.com/shaninalex/flowreon/internal/db"
 	"gitlab.com/shaninalex/flowreon/internal/token"
 	"gitlab.com/shaninalex/flowreon/internal/web"
-	"gitlab.com/shaninalex/flowreon/models/repositories"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -21,14 +20,13 @@ type loginPayload struct {
 
 func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	db := db.GetDb(r.Context())
 	payload, err := web.BodyParser[loginPayload](r)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
-	user, err := repositories.UserGetByField(ctx, db, "email", payload.Email)
+	user, err := db.UserGetByField(ctx, db.GetDb(r.Context()), "email", payload.Email)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

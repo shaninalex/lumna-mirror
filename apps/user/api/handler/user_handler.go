@@ -7,9 +7,9 @@ import (
 
 	"gitlab.com/shaninalex/flowreon/apps/user/domain"
 	"gitlab.com/shaninalex/flowreon/apps/user/dto"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 	"gitlab.com/shaninalex/flowreon/internal/token"
 	"gitlab.com/shaninalex/flowreon/internal/web"
-	"gitlab.com/shaninalex/flowreon/models"
 )
 
 // UserHandler handles HTTP requests related to user accounts.
@@ -43,7 +43,7 @@ func (s *UserHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
 // It parses the request body into a UserSettings struct, updates the user, and returns the updated user.
 func (s *UserHandler) HandleUpdateSettings(w http.ResponseWriter, r *http.Request) {
 	// Parse request body into UserSettings struct
-	data, err := web.BodyParser[models.UserSettings](r)
+	data, err := web.BodyParser[db.UserSettings](r)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err) // invalid body
 		return

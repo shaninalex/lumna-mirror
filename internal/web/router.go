@@ -81,10 +81,10 @@ func (r *Router) Run() error {
 }
 
 // DefaultRouter - default router.
-func DefaultRouter(db *sql.DB) *Router {
+func DefaultRouter(dbConnection *sql.DB) *Router {
 	r := NewRouter()
 	r.Use(NewRecoveryMiddleware().Wrap)
-	r.Use(db.NewMiddleware(db).Wrap)
+	r.Use(db.NewMiddleware(dbConnection).Wrap)
 	r.Use(NewLoggerMiddleware().Wrap)
 	r.Use(NewCommonMiddleware().Wrap)
 	r.Use(NewHeadersMiddleware().Wrap)

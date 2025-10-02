@@ -7,13 +7,11 @@ import (
 	"time"
 
 	"gitlab.com/shaninalex/flowreon/internal/db"
-	"gitlab.com/shaninalex/flowreon/models"
-	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
 
 type UserManager interface {
-	GetUser(ctx context.Context, userID uint) (*models.User, error)
-	UpdateUserSettings(ctx context.Context, userID uint, settings *models.UserSettings) error
+	GetUser(ctx context.Context, userID uint) (*db.User, error)
+	UpdateUserSettings(ctx context.Context, userID uint, settings *db.UserSettings) error
 }
 
 type UserService struct{}
@@ -23,8 +21,8 @@ func NewUserService() *UserService {
 }
 
 // GetUser get user
-func (s UserService) GetUser(ctx context.Context, userID uint) (*models.User, error) {
-	user, err := repositories.UserGetByField(ctx, db.GetDb(ctx), "id", userID)
+func (s UserService) GetUser(ctx context.Context, userID uint) (*db.User, error) {
+	user, err := db.UserGetByField(ctx, db.GetDb(ctx), "id", userID)
 	if err != nil {
 		return nil, err
 	}
@@ -32,15 +30,15 @@ func (s UserService) GetUser(ctx context.Context, userID uint) (*models.User, er
 }
 
 // UpdateUserSettings update user settings
-func (s UserService) UpdateUserSettings(ctx context.Context, userID uint, settings *models.UserSettings) error {
-	db := db.GetDb(ctx)
-	user, err := repositories.UserGetByField(ctx, db, "id", userID)
+func (s UserService) UpdateUserSettings(ctx context.Context, userID uint, settings *db.UserSettings) error {
+	connection := db.GetDb(ctx)
+	user, err := db.UserGetByField(ctx, connection, "id", userID)
 	if err != nil {
 		return err
 	}
 	user.SetSettings(settings)
 	user.UpdatedAt = time.Now()
-	if err = repositories.UserUpdate(ctx, db, user); err != nil {
+	if err = db.UserUpdate(ctx, connection, user); err != nil {
 		return err
 	}
 	return nil

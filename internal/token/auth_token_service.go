@@ -6,8 +6,6 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/flowreon/internal/db"
-	"gitlab.com/shaninalex/flowreon/models"
-	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
 
 type ApiAuthService interface {
@@ -18,7 +16,7 @@ type ApiAuthService interface {
 	Logout(ctx context.Context, userID uint, refreshToken string) error
 
 	// ListSessions returns all refresh tokens for a user
-	ListSessions(ctx context.Context, userID uint) ([]*models.UserToken, error)
+	ListSessions(ctx context.Context, userID uint) ([]*db.UserToken, error)
 
 	// RefreshAccessToken validates refresh token and returns a new access token
 	RefreshAccessToken(ctx context.Context, refreshToken string) (*AccessTokenResult, error)
@@ -47,14 +45,13 @@ func (s *AuthService) Login(ctx context.Context, userID uint, device string) (*A
 		return nil, nil, err
 	}
 
-	tokenModel := &models.UserToken{
+	tokenModel := &db.UserToken{
 		UserID:           userID,
 		Device:           device,
 		RefreshToken:     refreshResults.Token,
 		RefreshExpiresAt: refreshResults.ExpiresAt,
 	}
-	db := db.GetDb(ctx)
-	err = repositories.SaveToken(ctx, db, tokenModel)
+	err = db.SaveToken(ctx, db.GetDb(ctx), tokenModel)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -62,13 +59,12 @@ func (s *AuthService) Login(ctx context.Context, userID uint, device string) (*A
 }
 
 func (s *AuthService) Logout(ctx context.Context, userID uint, refreshToken string) error {
-	db := db.GetDb(ctx)
-	return repositories.DeleteTokenByRefreshString(ctx, db, userID, refreshToken)
+	connection := db.GetDb(ctx)
+	return db.DeleteTokenByRefreshString(ctx, connection, userID, refreshToken)
 }
 
-func (s *AuthService) ListSessions(ctx context.Context, userID uint) ([]*models.UserToken, error) {
-	db := db.GetDb(ctx)
-	tokens, err := repositories.GetTokens(ctx, db, userID)
+func (s *AuthService) ListSessions(ctx context.Context, userID uint) ([]*db.UserToken, error) {
+	tokens, err := db.GetTokens(ctx, db.GetDb(ctx), userID)
 	if err != nil {
 		return nil, err
 	}
@@ -76,11 +72,10 @@ func (s *AuthService) ListSessions(ctx context.Context, userID uint) ([]*models.
 }
 
 func (s *AuthService) RefreshAccessToken(ctx context.Context, refreshToken string) (*AccessTokenResult, error) {
-	db := db.GetDb(ctx)
 	if _, err := s.refreshTokenService.Validate(refreshToken); err != nil {
 		return nil, err
 	}
-	token, err := repositories.GetTokenByField(ctx, db, "refresh_token", refreshToken)
+	token, err := db.GetTokenByField(ctx, db.GetDb(ctx), "refresh_token", refreshToken)
 	if err != nil {
 		return nil, err
 	}

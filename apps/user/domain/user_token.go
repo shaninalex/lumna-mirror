@@ -6,8 +6,6 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/flowreon/internal/db"
-	"gitlab.com/shaninalex/flowreon/models"
-	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
 
 // UserTokenManager defines the interface for managing user tokens.
@@ -15,7 +13,7 @@ import (
 // Implementations should not care about how tokens are stored.
 type UserTokenManager interface {
 	// List returns all tokens associated with a specific user.
-	List(ctx context.Context, userID uint) ([]*models.UserToken, error)
+	List(ctx context.Context, userID uint) ([]*db.UserToken, error)
 
 	// Delete removes a token record permanently from the database.
 	Delete(ctx context.Context, userID, tokenID uint) error
@@ -36,8 +34,8 @@ func NewUserTokenService() *UserTokenService {
 
 // List fetches all tokens for a given user from the database.
 // It calls the repositories layer and returns any database errors.
-func (u UserTokenService) List(ctx context.Context, userID uint) ([]*models.UserToken, error) {
-	tokens, err := repositories.GetTokens(ctx, db.GetDb(ctx), userID)
+func (u UserTokenService) List(ctx context.Context, userID uint) ([]*db.UserToken, error) {
+	tokens, err := db.GetTokens(ctx, db.GetDb(ctx), userID)
 	if err != nil {
 		return nil, err
 	}
@@ -47,11 +45,11 @@ func (u UserTokenService) List(ctx context.Context, userID uint) ([]*models.User
 // Delete removes a token for a specific user from the database.
 // Typically used for logout or administrative token cleanup.
 func (u UserTokenService) Delete(ctx context.Context, userID, tokenID uint) error {
-	return repositories.DeleteToken(ctx, db.GetDb(ctx), userID, tokenID)
+	return db.DeleteToken(ctx, db.GetDb(ctx), userID, tokenID)
 }
 
 // Revoke invalidates a token without deleting it from the database.
 // Useful for forcing logouts or invalidating refresh tokens.
 func (u UserTokenService) Revoke(ctx context.Context, userID, tokenID uint) error {
-	return repositories.RevokeToken(ctx, db.GetDb(ctx), userID, tokenID)
+	return db.RevokeToken(ctx, db.GetDb(ctx), userID, tokenID)
 }
