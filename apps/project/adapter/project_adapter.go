@@ -8,7 +8,7 @@ import (
 	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
 )
 
-type ProjectPatchInput struct {
+type ProjectInput struct {
 	Title string `json:"title"`
 }
 

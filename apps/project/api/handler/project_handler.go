@@ -36,7 +36,19 @@ func (s *ProjectHandler) List(w http.ResponseWriter, r *http.Request) {
 }
 
 // Create - create a new project
-func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {}
+func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
+	input, err := web.BodyParser[adapter.ProjectInput](r)
+	if err != nil {
+		web.Error(w, http.StatusNotFound, err)
+		return
+	}
+	project, err := s.projectService.CreateProject(r.Context(), &models.Project{Title: input.Title})
+	if err != nil {
+		web.Error(w, http.StatusNotFound, err)
+		return
+	}
+	web.Success(w, adapter.ToProjectDto(project))
+}
 
 // Get - retrieve a specific project
 func (s *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
@@ -75,7 +87,7 @@ func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	input, err := web.BodyParser[adapter.ProjectPatchInput](r)
+	input, err := web.BodyParser[adapter.ProjectInput](r)
 	if err != nil {
 		web.Error(w, http.StatusNotFound, err)
 		return

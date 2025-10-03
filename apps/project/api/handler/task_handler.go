@@ -4,19 +4,65 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
+
+	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
+	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
+	"gitlab.com/shaninalex/flowreon/apps/project/domain/services"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 // ProjectTaskHandler - task handler.
 type ProjectTaskHandler struct {
+	taskManager services.TaskManager
 }
 
 // NewProjectTaskHandler - new task handler.
 func NewProjectTaskHandler() *ProjectTaskHandler {
-	return &ProjectTaskHandler{}
+	return &ProjectTaskHandler{
+		taskManager: services.NewTaskService(),
+	}
 }
 
 // List - retrieve tasks for a project
-func (s *ProjectTaskHandler) List(w http.ResponseWriter, r *http.Request) {}
+func (s *ProjectTaskHandler) List(w http.ResponseWriter, r *http.Request) {
+	projectID, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	tasks, err := s.taskManager.TasksList(r.Context(), uint(projectID))
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	web.Success(w, adapter.ToTaskListDto(tasks))
+}
 
 // Create - create a new task in a project
-func (s *ProjectTaskHandler) Create(w http.ResponseWriter, r *http.Request) {}
+func (s *ProjectTaskHandler) Create(w http.ResponseWriter, r *http.Request) {
+	input, err := web.BodyParser[adapter.ProjectInput](r)
+	if err != nil {
+		web.Error(w, http.StatusNotFound, err)
+		return
+	}
+	projectID, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	ctx := r.Context()
+	userID := web.GetUserID(r)
+
+	task := &models.Task{
+		Title:     input.Title,
+		ProjectID: uint(projectID),
+		UserID:    userID,
+	}
+	task, err = s.taskManager.TaskCreate(ctx, task)
+	if err != nil {
+		web.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	web.Success(w, adapter.ToTaskDto(task))
+}

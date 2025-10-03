@@ -8,6 +8,7 @@ import (
 
 	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
 	"gitlab.com/shaninalex/flowreon/internal/db"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
 )
 
 func MakeProject(project *db.Project, statuses []*db.TaskStatus) *models.Project {
@@ -87,7 +88,7 @@ func (p ProjectService) GetProject(ctx context.Context, id uint) (*models.Projec
 func (p ProjectService) CreateProject(ctx context.Context, project *models.Project) (*models.Project, error) {
 	_project := &db.Project{
 		Title: project.Title,
-		Code:  project.Code,
+		Code:  utils.GenerateEntityCode("project"),
 	}
 	err := db.ProjectSave(ctx, db.GetDb(ctx), _project)
 	if err != nil {
