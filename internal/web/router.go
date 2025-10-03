@@ -13,10 +13,15 @@ import (
 )
 
 type Middleware func(http.Handler) http.Handler
+type route struct {
+	method string
+	path   string
+}
 
 type Router struct {
 	mux         *http.ServeMux
 	middlewares []Middleware
+	routes      []route
 }
 
 func NewRouter() *Router {
@@ -53,10 +58,12 @@ func (r *Router) DELETE(path string, handler http.HandlerFunc) {
 	r.HandlerFunc("DELETE", path, handler)
 }
 
-func (r *Router) HandlerFunc(method, route string, handler http.HandlerFunc) {
+func (r *Router) HandlerFunc(method, url string, handler http.HandlerFunc) {
+	r.routes = append(r.routes, route{method: method, path: url})
+
 	for _, pattern := range []string{
-		method + " " + path.Join(route),
-		method + " " + path.Join(route, "{$}"),
+		method + " " + path.Join(url),
+		method + " " + path.Join(url, "{$}"),
 	} {
 		r.handleWithAllMiddlewares(r.mux, pattern, handler)
 	}
@@ -77,8 +84,15 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 }
 
 func (r *Router) Run() error {
+	r.printRoutes()
 	log.Println("server started... on port :8000")
 	return http.ListenAndServe(":8000", corsMiddleware(r))
+}
+
+func (r *Router) printRoutes() {
+	for _, rt := range r.routes {
+		log.Printf("%s %s\n", rt.method, rt.path)
+	}
 }
 
 // DefaultRouter - default router.
@@ -92,5 +106,6 @@ func DefaultRouter(dbConnection *sql.DB) *Router {
 	r.Use(NewCommonMiddleware().Wrap)
 	r.Use(NewHeadersMiddleware().Wrap)
 	r.GET("/_health", HandleHealth)
+
 	return r
 }
