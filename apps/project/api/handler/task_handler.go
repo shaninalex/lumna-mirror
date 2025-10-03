@@ -4,7 +4,6 @@ package handler
 
 import (
 	"net/http"
-	"strconv"
 
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
 	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
@@ -26,11 +25,7 @@ func NewProjectTaskHandler() *ProjectTaskHandler {
 
 // List - retrieve tasks for a project
 func (s *ProjectTaskHandler) List(w http.ResponseWriter, r *http.Request) {
-	projectID, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
-	if err != nil {
-		web.Error(w, http.StatusBadRequest, err)
-		return
-	}
+	projectID := web.UrlNumericParam(w, r, "id")
 	tasks, err := s.taskManager.TasksList(r.Context(), uint(projectID))
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
@@ -41,14 +36,10 @@ func (s *ProjectTaskHandler) List(w http.ResponseWriter, r *http.Request) {
 
 // Create - create a new task in a project
 func (s *ProjectTaskHandler) Create(w http.ResponseWriter, r *http.Request) {
+	projectID := web.UrlNumericParam(w, r, "id")
 	input, err := web.BodyParser[adapter.ProjectInput](r)
 	if err != nil {
 		web.Error(w, http.StatusNotFound, err)
-		return
-	}
-	projectID, err := strconv.ParseUint(r.PathValue("id"), 10, 64)
-	if err != nil {
-		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 	ctx := r.Context()

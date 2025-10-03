@@ -54,8 +54,8 @@ func BadgeUpdate(ctx context.Context, db *sql.DB, badge *Badge) error {
 }
 
 // BadgeDelete deletes a badge by ID.
-func BadgeDelete(ctx context.Context, db *sql.DB, id uint) error {
-	_, err := db.ExecContext(ctx, `DELETE FROM badge WHERE id = ?`, id)
+func BadgeDelete(ctx context.Context, db *sql.DB, projectId, id uint) error {
+	_, err := db.ExecContext(ctx, `DELETE FROM badge WHERE project_id = ? AND id = ?`, projectId, id)
 	return err
 }
 
