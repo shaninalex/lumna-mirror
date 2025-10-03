@@ -3,16 +3,16 @@
 package adapter
 
 import (
-	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
+	"gitlab.com/shaninalex/flowreon/domain"
 )
 
 type BadgeDto struct {
 	ID     uint
 	Title  string
-	Config *models.BadgeStatusConfig
+	Config *domain.BadgeStatusConfig
 }
 
-func NewBadgeDto(badge *models.Badge) *BadgeDto {
+func NewBadgeDto(badge *domain.Badge) *BadgeDto {
 	return &BadgeDto{
 		ID:     badge.ID,
 		Title:  badge.Title,
@@ -23,5 +23,5 @@ func NewBadgeDto(badge *models.Badge) *BadgeDto {
 type BadgeInput struct {
 	Title     string
 	ProjectID uint
-	Config    *models.BadgeStatusConfig
+	Config    *domain.BadgeStatusConfig
 }
