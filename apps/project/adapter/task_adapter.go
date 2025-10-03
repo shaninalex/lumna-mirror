@@ -5,7 +5,7 @@ package adapter
 import (
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
+	"gitlab.com/shaninalex/flowreon/domain"
 )
 
 type TaskCreateInput struct {
@@ -26,7 +26,7 @@ type TaskDto struct {
 	UpdatedAt time.Time   `json:"updated_at"`
 }
 
-func ToTaskDto(task *models.Task) *TaskDto {
+func ToTaskDto(task *domain.Task) *TaskDto {
 	badges := make([]*BadgeDto, len(task.Badges))
 	for i, badge := range task.Badges {
 		badges[i] = NewBadgeDto(badge)
@@ -46,24 +46,10 @@ func ToTaskDto(task *models.Task) *TaskDto {
 	}
 }
 
-func ToTaskListDto(tasks []*models.Task) []*TaskDto {
+func ToTaskListDto(tasks []*domain.Task) []*TaskDto {
 	output := make([]*TaskDto, len(tasks))
 	for i, task := range tasks {
 		output[i] = ToTaskDto(task)
 	}
 	return output
-}
-
-type TaskDetailDto struct {
-	ID          uint      `json:"id"`
-	UserID      uint      `json:"user_id"`
-	ProjectID   uint      `json:"project_id"`
-	StatusID    uint      `json:"status_id"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	Completed   bool      `json:"completed"`
-	ListIndex   uint      `json:"list_index"`
-	Code        string    `json:"code"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
 }

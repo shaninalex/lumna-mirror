@@ -6,20 +6,19 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
-	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
-	"gitlab.com/shaninalex/flowreon/apps/project/domain/services"
+	"gitlab.com/shaninalex/flowreon/domain"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 // ProjectTaskHandler - task handler.
 type ProjectTaskHandler struct {
-	taskManager services.TaskManager
+	taskManager domain.TaskManager
 }
 
 // NewProjectTaskHandler - new task handler.
 func NewProjectTaskHandler() *ProjectTaskHandler {
 	return &ProjectTaskHandler{
-		taskManager: services.NewTaskService(),
+		taskManager: domain.NewTaskService(),
 	}
 }
 
@@ -45,7 +44,7 @@ func (s *ProjectTaskHandler) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	userID := web.GetUserID(r)
 
-	task := &models.Task{
+	task := &domain.Task{
 		Title:     input.Title,
 		ProjectID: uint(projectID),
 		UserID:    userID,

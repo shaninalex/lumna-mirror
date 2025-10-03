@@ -6,20 +6,19 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
-	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
-	"gitlab.com/shaninalex/flowreon/apps/project/domain/services"
+	"gitlab.com/shaninalex/flowreon/domain"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 // ProjectHandler - project handler.
 type ProjectHandler struct {
-	projectService services.ProjectManager
+	projectService domain.ProjectManager
 }
 
 // NewProjectHandler - new project handler.
 func NewProjectHandler() *ProjectHandler {
 	h := &ProjectHandler{
-		projectService: services.NewProjectService(),
+		projectService: domain.NewProjectService(),
 	}
 	return h
 }
@@ -41,7 +40,7 @@ func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusNotFound, err)
 		return
 	}
-	project, err := s.projectService.CreateProject(r.Context(), &models.Project{Title: input.Title})
+	project, err := s.projectService.CreateProject(r.Context(), &domain.Project{Title: input.Title})
 	if err != nil {
 		web.Error(w, http.StatusNotFound, err)
 		return
@@ -79,7 +78,7 @@ func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusNotFound, err)
 		return
 	}
-	project, err := s.projectService.UpdateProject(r.Context(), &models.Project{
+	project, err := s.projectService.UpdateProject(r.Context(), &domain.Project{
 		ID:    uint(projectID),
 		Title: input.Title,
 	})

@@ -1,2 +1,0 @@
-Task detail Dto will be different then app/project/dto#TaskDto because it will contain more information to
-display detailed task view. Project task dto contain information only to display lists of tasks!

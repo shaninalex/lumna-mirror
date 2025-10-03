@@ -6,20 +6,19 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
-	"gitlab.com/shaninalex/flowreon/apps/project/domain/models"
-	"gitlab.com/shaninalex/flowreon/apps/project/domain/services"
+	"gitlab.com/shaninalex/flowreon/domain"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
 // ProjectBadgeHandler - task handler.
 type ProjectBadgeHandler struct {
-	badgeManager services.BadgeProjectManager
+	badgeManager domain.BadgeManager
 }
 
 // NewProjectBadgeHandler - new task handler.
 func NewProjectBadgeHandler() *ProjectBadgeHandler {
 	return &ProjectBadgeHandler{
-		badgeManager: services.NewBadgeProjectService(),
+		badgeManager: domain.NewBadgeService(),
 	}
 }
 
@@ -46,7 +45,7 @@ func (s *ProjectBadgeHandler) Create(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	badge := &models.Badge{
+	badge := &domain.Badge{
 		ProjectID: uint(projectID),
 		Title:     payload.Title,
 	}
