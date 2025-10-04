@@ -16,7 +16,7 @@ type TaskStatusDto struct {
 }
 
 // NewTaskStatusDto - new issue status dto.
-func NewTaskStatusDto(i domain.Status) *TaskStatusDto {
+func NewTaskStatusDto(i *domain.Status) *TaskStatusDto {
 	return &TaskStatusDto{
 		ID:       i.ID,
 		Title:    i.Title,
@@ -27,10 +27,14 @@ func NewTaskStatusDto(i domain.Status) *TaskStatusDto {
 }
 
 // ToTaskStatusesDto - new tasks status dto.
-func ToTaskStatusesDto(statuses []domain.Status) []*TaskStatusDto {
+func ToTaskStatusesDto(statuses []*domain.Status) []*TaskStatusDto {
 	dtos := make([]*TaskStatusDto, len(statuses))
 	for i, status := range statuses {
 		dtos[i] = NewTaskStatusDto(status)
 	}
 	return dtos
+}
+
+type TaskStatusInput struct {
+	Title string `json:"title"`
 }

@@ -4,7 +4,6 @@ package domain
 
 import (
 	"context"
-	"encoding/json"
 	"time"
 
 	"gitlab.com/shaninalex/flowreon/internal/db"
@@ -15,53 +14,10 @@ type Project struct {
 	ID        uint
 	Title     string
 	Code      string
-	Statuses  []Status
+	Statuses  []*Status
+	Badges    []*Badge
 	CreatedAt time.Time
 	UpdatedAt time.Time
-}
-
-type Status struct {
-	ID        uint
-	Title     string
-	Idx       uint
-	Completed bool
-	ListIndex uint
-	Config    *string
-}
-
-// SaveConfig - saves the config.
-func (s *Status) SaveConfig(cnf TaskStatusConfig) {
-	b, err := json.Marshal(cnf)
-	if err != nil {
-		panic(err)
-	}
-	res := string(b)
-	s.Config = &res
-}
-
-// GetConfig - returns the config.
-func (s *Status) GetConfig() *TaskStatusConfig {
-	if s.Config == nil {
-		return NewTaskStatusConfig()
-	}
-	var config TaskStatusConfig
-	err := json.Unmarshal([]byte(*s.Config), &config)
-	if err != nil {
-		return NewTaskStatusConfig()
-	}
-	return &config
-}
-
-// TaskStatusConfig - task status config.
-type TaskStatusConfig struct {
-	Color string `json:"color,omitempty"`
-}
-
-// NewTaskStatusConfig - new task status config.
-func NewTaskStatusConfig() *TaskStatusConfig {
-	return &TaskStatusConfig{
-		Color: "default",
-	}
 }
 
 func MakeProject(project *db.Project, statuses []*db.TaskStatus) *Project {
@@ -73,10 +29,10 @@ func MakeProject(project *db.Project, statuses []*db.TaskStatus) *Project {
 		UpdatedAt: project.UpdatedAt,
 	}
 	for _, status := range statuses {
-		_project.Statuses = append(_project.Statuses, Status{
-			ID:    status.ID,
-			Title: status.Title,
-			Idx:   status.ListIndex,
+		_project.Statuses = append(_project.Statuses, &Status{
+			ID:        status.ID,
+			Title:     status.Title,
+			ListIndex: status.ListIndex,
 		})
 	}
 	return _project

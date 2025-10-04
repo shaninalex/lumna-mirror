@@ -27,6 +27,13 @@ func (s *ProjectController) init() {
 	s.router.DELETE("/api/v1/project/{id}", projectHandler.Delete)
 	s.router.PATCH("/api/v1/project/{id}", projectHandler.Patch)
 
+	// ProjectStatusHandler
+	projectStatusHandler := handler.NewProjectStatusHandler()
+	s.router.GET("/api/v1/project/{id}/statuses", projectStatusHandler.Get)
+	s.router.POST("/api/v1/project/{id}/statuses", projectStatusHandler.Post)
+	s.router.PATCH("/api/v1/project/{id}/statuses/{statusId}", projectStatusHandler.Patch)
+	s.router.DELETE("/api/v1/project/{id}/statuses/{statusId}", projectStatusHandler.Delete)
+
 	// ProjectTaskHandler
 	projectTaskHandler := handler.NewProjectTaskHandler()
 	s.router.GET("/api/v1/project/{id}/tasks", projectTaskHandler.List)
