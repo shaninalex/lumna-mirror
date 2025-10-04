@@ -1,3 +1,33 @@
+## 0.12.0 (2025-10-04)
+
+### Feat
+
+- task services
+- **api**: task handler placeholders
+- **api**: badge handler
+- **db**: badge table + type + repo
+- task handler
+- **api**: user token (list/delete/revoke)
+- **ui**: access/refresh JWT token
+- **api**: access/refresh JWT token
+- jwt token utility package
+- **api**: headers middleware
+- **db**: company table and relations
+
+### Fix
+
+- **db**: remove company table
+- **api**: logout
+- **api**: api endpoints
+- auth with updated user tokens services and table
+- **ui**: drag&drop board view
+
+### Refactor
+
+- root domain
+- root domain
+- project service
+
 ## 0.11.0 (2025-09-24)
 
 ### Feat
