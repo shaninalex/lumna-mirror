@@ -449,6 +449,147 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/Project'
+  /api/v1/project/{id}/statuses:
+    get:
+      summary: Retrieve statuses for a project
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      responses:
+        '200':
+          description: Successfully retrieved project statuses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Column'
+    post:
+      summary: Retrieve statuses for a project
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        '200':
+          description: Successfully retrieved project statuses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Column'
+
+  /api/v1/project/{id}/statuses/{statusId}:
+    patch:
+      summary: Update statuses for a project
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: statusId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the status
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        '200':
+          description: Successfully update project statuses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Column'
+    delete:
+      summary: Delete status for the project
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: statusId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the status
+          example: 324234
+      responses:
+        '200':
+          description: Successfully delete project status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
   /api/v1/project/{id}/tasks:
     get:
       summary: Retrieve tasks for a project
