@@ -1,5 +1,5 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
-import {Task, TaskCardComponent} from '@client/entities/task';
+import {ChangeTaskStatusAction, selectTasksByProjectID, Task, TaskCardComponent} from '@client/entities/task';
 import {
     CdkDrag,
     CdkDragDrop,
@@ -15,10 +15,12 @@ import {AppState} from '@client/shared/store';
 import {Project} from '@client/entities/project';
 import {ColumnHeaderComponent} from '@client/features/project/board-view-feature/components';
 import {CreateStatusFormComponent, selectProjectStatusList} from '@client/entities/status';
-import {map, Observable} from 'rxjs';
+import {combineLatest, map, Observable} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import {MatCardModule} from '@angular/material/card';
 import {TaskFormSmComponent} from '@client/features/project/board-view-feature/components/task-form-sm';
+import {byMostRecent} from '@client/shared/common';
+
 
 @Component({
     selector: "fr-board-view-feature",
@@ -48,7 +50,7 @@ import {TaskFormSmComponent} from '@client/features/project/board-view-feature/c
                             <fr-task-form-sm [project]="project" [column]="column" />
                         </mat-card-content>
                         <mat-card-content>
-                            <div class="flex flex-col gap-2 min-h-20"
+                            <div class="flex flex-col gap-2 min-h-20 mt-4"
                                  cdkDropList
                                  [id]="column.id"
                                  [cdkDropListData]="column.tasks"
@@ -78,20 +80,24 @@ import {TaskFormSmComponent} from '@client/features/project/board-view-feature/c
 })
 export class BoardViewComponent implements OnInit {
     @Input() project: Project;
-    private boardApi = inject(BoardViewApiService);
     private store = inject(Store<AppState>);
 
     columns$: Observable<StatusColumn[]>;
 
     ngOnInit(): void {
-        this.columns$ = this.store.select(selectProjectStatusList(this.project.id)).pipe(
-            map(statusList => {
+        const status$ = this.store.select(selectProjectStatusList(this.project.id));
+        const tasks$ = this.store.select(selectTasksByProjectID(this.project.id));
+
+        this.columns$ = combineLatest([status$, tasks$]).pipe(
+            map(([statusList, tasks]) => {
                 return statusList.map(status => ({
                     id: status.id.toString(),
                     title: status.title,
                     status: status,
-                    tasks: [],
-                }))
+                    tasks: tasks.filter(t => t.status_id === status.id)
+                        .sort(byMostRecent)
+                        .sort((a, b) => (a.list_index - b.list_index))
+                }));
             })
         );
     }
@@ -108,11 +114,14 @@ export class BoardViewComponent implements OnInit {
             );
         }
 
-        this.boardApi.ChangeStatus(this.project.code, event.item.data.code, {
-            from_status: event.previousContainer.id,
-            to_status: event.container.id,
-            from_idx: event.previousIndex,
-            to_idx: event.currentIndex,
-        }).subscribe()
+        this.store.dispatch(ChangeTaskStatusAction({
+            taskId: event.item.data.id,
+            payload: {
+                from_status: parseInt(event.previousContainer.id),
+                to_status: parseInt(event.container.id),
+                from_idx: event.previousIndex,
+                to_idx: event.currentIndex,
+            }
+        }))
     }
 }

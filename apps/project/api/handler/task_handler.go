@@ -47,6 +47,7 @@ func (s *ProjectTaskHandler) Create(w http.ResponseWriter, r *http.Request) {
 	task := &domain.Task{
 		Title:     input.Title,
 		ProjectID: uint(projectID),
+		StatusID:  uint(input.StatusId),
 		UserID:    userID,
 	}
 	task, err = s.taskManager.TaskCreate(ctx, task)

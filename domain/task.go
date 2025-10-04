@@ -59,7 +59,7 @@ func (t TaskService) TasksList(ctx context.Context, projectID uint) ([]*Task, er
 	if err != nil {
 		return nil, err
 	}
-	tasks := make([]*Task, 0, len(dbTasks))
+	tasks := make([]*Task, len(dbTasks))
 	for i, task := range dbTasks {
 		tasks[i] = &Task{
 			ID:          task.ID,

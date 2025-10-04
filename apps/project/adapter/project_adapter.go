@@ -9,7 +9,8 @@ import (
 )
 
 type ProjectInput struct {
-	Title string `json:"title"`
+	Title    string `json:"title"`
+	StatusId int    `json:"status_id"`
 }
 
 // ProjectDto - project dto.

@@ -52,7 +52,6 @@ import {MatIconModule} from '@angular/material/icon';
         </form>
         } @else {
             <button matButton="outlined" (click)="showForm = true">
-                <mat-icon>add_circle</mat-icon>
                 Create task
             </button>
         }
@@ -79,10 +78,10 @@ export class TaskFormSmComponent {
     submitForm(): void {
         this.loading = true
         this.store.dispatch(CreateTaskAction({
+            projectId: this.project.id,
             payload: {
                 title: this.form.value['title'],
-                status_id: this.column.id,
-                project_code: this.project.code,
+                status_id: this.column.status.id,
             }
         }))
     }

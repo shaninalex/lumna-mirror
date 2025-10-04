@@ -11,12 +11,13 @@ import (
 )
 
 type StatusHandler struct {
-	taskWriter domain.TaskWriter
-	taskReader domain.TaskReader
+	taskManager domain.TaskManager
 }
 
 func NewStatusHandler() *StatusHandler {
-	return &StatusHandler{}
+	return &StatusHandler{
+		taskManager: domain.NewTaskService(),
+	}
 }
 
 func (s *StatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
@@ -27,13 +28,14 @@ func (s *StatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	task, err := s.taskReader.TaskDetail(ctx, uint(taskID))
+	task, err := s.taskManager.TaskDetail(ctx, uint(taskID))
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 	task.StatusID = payload.ToStatusID
-	err = s.taskWriter.TaskUpdate(ctx, task)
+	task.ListIndex = payload.ToIdx
+	err = s.taskManager.TaskUpdate(ctx, task)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

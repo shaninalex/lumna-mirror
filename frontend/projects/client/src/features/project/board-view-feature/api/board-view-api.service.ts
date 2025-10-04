@@ -4,20 +4,20 @@ import {environment as env} from '@client/environments/environment.development'
 import {CommonApiService} from '@client/shared/common';
 
 const boardUrls = {
-    TaskAction: (projectKey: string, taskID: string) => `${env.API_ROOT}/api/v1/project/${projectKey}/tasks/${taskID}/status`,
+    changeTaskStatus: (taskID: number) => `${env.API_ROOT}/api/v1/task/${taskID}/status`,
 }
 
-interface ChangeStatusPayload {
-    from_status: string
-    to_status: string
+export interface ChangeStatusPayload {
+    from_status: number
+    to_status: number
     from_idx: number
     to_idx: number
 }
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class BoardViewApiService extends CommonApiService {
-    public ChangeStatus(projectKey: string, taskCode: string, payload: ChangeStatusPayload): Observable<any> {
-        return this.patch<any>(boardUrls.TaskAction(projectKey, taskCode), payload).pipe(
+    public ChangeStatus(taskId: number, payload: ChangeStatusPayload): Observable<any> {
+        return this.patch<any>(boardUrls.changeTaskStatus(taskId), payload).pipe(
             map(data => data.data),
         );
     }
