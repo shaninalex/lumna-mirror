@@ -64,7 +64,7 @@ CREATE TABLE tasks
     code        VARCHAR  NOT NULL,
     completed   BOOLEAN           DEFAULT false,
     description VARCHAR  NULL,
-    list_index  INTEGER           default 0,
+    list_index  FLOAT           default 0,
     created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

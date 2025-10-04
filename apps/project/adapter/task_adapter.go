@@ -19,7 +19,7 @@ type TaskDto struct {
 	StatusID  uint        `json:"status_id"`
 	Title     string      `json:"title"`
 	Completed bool        `json:"completed"`
-	ListIndex uint        `json:"list_index"`
+	ListIndex float64     `json:"list_index"`
 	Code      string      `json:"code"`
 	Badges    []*BadgeDto `json:"badges"`
 	CreatedAt time.Time   `json:"created_at"`

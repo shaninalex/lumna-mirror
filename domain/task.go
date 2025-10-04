@@ -19,7 +19,7 @@ type Task struct {
 	Title       string
 	Completed   bool
 	Description *string
-	ListIndex   uint
+	ListIndex   float64
 	Code        string
 	Badges      []*Badge
 	CreatedAt   time.Time

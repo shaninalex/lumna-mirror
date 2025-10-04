@@ -95,24 +95,23 @@ export class BoardViewComponent implements OnInit {
                     title: status.title,
                     status: status,
                     tasks: tasks.filter(t => t.status_id === status.id)
-                        .sort(byMostRecent)
-                        .sort((a, b) => (a.list_index - b.list_index))
+                        .sort((a, b) => a.list_index - b.list_index)
                 }));
             })
         );
     }
 
     drop(event: CdkDragDrop<Task[]>) {
-        if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        } else {
-            transferArrayItem(
-                event.previousContainer.data,
-                event.container.data,
-                event.previousIndex,
-                event.currentIndex,
-            );
-        }
+        const container = event.container.data;
+        const previous = event.previousContainer.data;
+
+        let newIndex = 100; // default
+        const before = container[event.currentIndex - 1];
+        const after = container[event.currentIndex + 1];
+
+        if (before && after) newIndex = (before.list_index + after.list_index) / 2;
+        else if (before) newIndex = before.list_index + 100;
+        else if (after) newIndex = after.list_index / 2;
 
         this.store.dispatch(ChangeTaskStatusAction({
             taskId: event.item.data.id,
@@ -120,8 +119,8 @@ export class BoardViewComponent implements OnInit {
                 from_status: parseInt(event.previousContainer.id),
                 to_status: parseInt(event.container.id),
                 from_idx: event.previousIndex,
-                to_idx: event.currentIndex,
+                to_idx: newIndex
             }
-        }))
+        }));
     }
 }

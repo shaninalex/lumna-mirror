@@ -15,7 +15,7 @@ type Task struct {
 	Title       string    `db:"title"`
 	Completed   bool      `db:"completed"`
 	Description *string   `db:"description"`
-	ListIndex   uint      `db:"list_index"`
+	ListIndex   float64   `db:"list_index"`
 	Code        string    `db:"code"`
 	CreatedAt   time.Time `db:"created_at"`
 	UpdatedAt   time.Time `db:"updated_at"`
