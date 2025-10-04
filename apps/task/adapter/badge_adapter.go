@@ -11,7 +11,7 @@ import (
 type BadgeDto struct {
 	ID        uint
 	Title     string
-	Config    *domain.BadgeStatusConfig
+	Config    domain.BadgeConfig
 	CreatedAt time.Time
 }
 
@@ -19,7 +19,11 @@ func NewBadgeDto(badge *domain.Badge) *BadgeDto {
 	return &BadgeDto{
 		ID:        badge.ID,
 		Title:     badge.Title,
-		Config:    badge.GetConfig(),
+		Config:    badge.Config,
 		CreatedAt: time.Now(),
 	}
+}
+
+type BadgeAddToTask struct {
+	BadgeId uint `json:"badgeId"`
 }

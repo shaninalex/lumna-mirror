@@ -48,8 +48,8 @@ func (s *ProjectBadgeHandler) Create(w http.ResponseWriter, r *http.Request) {
 	badge := &domain.Badge{
 		ProjectID: uint(projectID),
 		Title:     payload.Title,
+		Config:    payload.Config,
 	}
-	badge.SaveConfig(*payload.Config)
 	err = s.badgeManager.Create(r.Context(), badge)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)

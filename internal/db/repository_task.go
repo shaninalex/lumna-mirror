@@ -8,13 +8,13 @@ import (
 )
 
 // TaskList task list
-func TaskList(ctx context.Context, db *sql.DB, code string) ([]*Task, error) {
+func TaskList(ctx context.Context, db *sql.DB, projectID uint) ([]*Task, error) {
 	query := `select t.id, t.user_id, t.project_id, t.status_id, t.title, t.code, t.completed, t.description, t.list_index, t.created_at, t.updated_at
 		from tasks t
 		join projects p on p.id = t.project_id
-		where p.code = ?
+		where p.id = ?
 	`
-	rows, err := db.QueryContext(ctx, query, code)
+	rows, err := db.QueryContext(ctx, query, projectID)
 	if err != nil {
 		return nil, err
 	}
@@ -34,8 +34,8 @@ func TaskList(ctx context.Context, db *sql.DB, code string) ([]*Task, error) {
 	return tasks, nil
 }
 
-// UpdateTask update task
-func UpdateTask(ctx context.Context, db *sql.DB, code string, task *Task) error {
+// TaskUpdate update task
+func TaskUpdate(ctx context.Context, db *sql.DB, id uint, task *Task) error {
 	query := `
 		UPDATE tasks
 		SET 
@@ -46,7 +46,7 @@ func UpdateTask(ctx context.Context, db *sql.DB, code string, task *Task) error 
 			completed = ?,
 			list_index = ?,
 			updated_at = CURRENT_TIMESTAMP
-		WHERE code = ?
+		WHERE id = ?
 	`
 	_, err := db.ExecContext(ctx, query,
 		task.Title,
@@ -55,18 +55,18 @@ func UpdateTask(ctx context.Context, db *sql.DB, code string, task *Task) error 
 		task.Description,
 		task.Completed,
 		task.ListIndex,
-		code,
+		id,
 	)
 	return err
 }
 
 // TaskGet get task
-func TaskGet(ctx context.Context, db *sql.DB, code string) (*Task, error) {
+func TaskGet(ctx context.Context, db *sql.DB, id uint) (*Task, error) {
 	query := `select t.id, t.user_id, t.project_id, t.status_id, t.title, t.code, t.completed, t.description, t.list_index, t.created_at, t.updated_at
 		from tasks t
-		where t.code = ?
+		where t.id = ?
 	`
-	row := db.QueryRowContext(ctx, query, code)
+	row := db.QueryRowContext(ctx, query, id)
 	t := &Task{}
 	if err := row.Scan(&t.ID, &t.UserID, &t.ProjectID, &t.StatusID, &t.Title, &t.Code, &t.Completed, &t.Description, &t.ListIndex, &t.CreatedAt, &t.UpdatedAt); err != nil {
 		return nil, err
@@ -90,4 +90,11 @@ func TaskSave(ctx context.Context, db *sql.DB, t *Task) error {
 	}
 	t.ID = uint(id)
 	return nil
+}
+
+// TaskDelete - delete task by id
+func TaskDelete(ctx context.Context, db *sql.DB, id uint) error {
+	query := `delete from tasks where id = ?;`
+	_, err := db.ExecContext(ctx, query, id)
+	return err
 }

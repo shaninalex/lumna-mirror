@@ -4,7 +4,11 @@ package domain
 
 import (
 	"context"
+	"log"
 	"time"
+
+	"gitlab.com/shaninalex/flowreon/internal/db"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
 )
 
 type Task struct {
@@ -30,9 +34,9 @@ type TaskReader interface {
 
 // TaskWriter - task writer.
 type TaskWriter interface {
-	PatchTaskStatus(ctx context.Context, data *Task) error
 	TaskUpdate(ctx context.Context, data *Task) error
 	TaskCreate(ctx context.Context, data *Task) (*Task, error)
+	TaskDelete(ctx context.Context, taskID uint) error
 }
 
 type TaskManager interface {
@@ -40,33 +44,117 @@ type TaskManager interface {
 	TaskWriter
 }
 
+func NewTaskService() *TaskService {
+	return &TaskService{}
+}
+
 type TaskService struct{}
 
+func (t TaskService) TaskDelete(ctx context.Context, taskID uint) error {
+	return db.TaskDelete(ctx, db.GetDb(ctx), taskID)
+}
+
 func (t TaskService) TasksList(ctx context.Context, projectID uint) ([]*Task, error) {
-	//TODO implement me
-	panic("implement me")
+	dbTasks, err := db.TaskList(ctx, db.GetDb(ctx), projectID)
+	if err != nil {
+		return nil, err
+	}
+	tasks := make([]*Task, 0, len(dbTasks))
+	for i, task := range dbTasks {
+		tasks[i] = &Task{
+			ID:          task.ID,
+			UserID:      task.UserID,
+			ProjectID:   task.ProjectID,
+			StatusID:    task.StatusID,
+			Title:       task.Title,
+			Completed:   task.Completed,
+			Description: task.Description,
+			ListIndex:   task.ListIndex,
+			Code:        task.Code,
+			CreatedAt:   task.CreatedAt,
+			UpdatedAt:   task.UpdatedAt,
+		}
+		badges, err := db.BadgeTaskList(ctx, db.GetDb(ctx), task.ID)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		for _, badge := range badges {
+			tasks[i].Badges = append(tasks[i].Badges, &Badge{
+				ID:        badge.ID,
+				ProjectID: badge.ProjectID,
+				Title:     badge.Title,
+				Config:    ToBadgeConfig(badge.Config),
+				CreatedAt: badge.CreatedAt,
+			})
+		}
+	}
+	return tasks, nil
 }
 
 func (t TaskService) TaskDetail(ctx context.Context, taskID uint) (*Task, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (t TaskService) PatchTaskStatus(ctx context.Context, data *Task) error {
-	//TODO implement me
-	panic("implement me")
+	task, err := db.TaskGet(ctx, db.GetDb(ctx), taskID)
+	if err != nil {
+		return nil, err
+	}
+	model := &Task{
+		ID:          task.ID,
+		UserID:      task.UserID,
+		ProjectID:   task.ProjectID,
+		StatusID:    task.StatusID,
+		Title:       task.Title,
+		Completed:   task.Completed,
+		Description: task.Description,
+		ListIndex:   task.ListIndex,
+		Code:        task.Code,
+		CreatedAt:   task.CreatedAt,
+		UpdatedAt:   task.UpdatedAt,
+	}
+	badges, err := db.BadgeTaskList(ctx, db.GetDb(ctx), task.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, badge := range badges {
+		model.Badges = append(model.Badges, &Badge{
+			ID:        badge.ID,
+			ProjectID: badge.ProjectID,
+			Title:     badge.Title,
+			Config:    ToBadgeConfig(badge.Config),
+			CreatedAt: badge.CreatedAt,
+		})
+	}
+	return model, nil
 }
 
 func (t TaskService) TaskUpdate(ctx context.Context, data *Task) error {
-	//TODO implement me
-	panic("implement me")
+	return db.TaskUpdate(ctx, db.GetDb(ctx), data.ID, &db.Task{
+		Title:       data.Title,
+		StatusID:    data.StatusID,
+		UserID:      data.UserID,
+		Description: data.Description,
+		Completed:   data.Completed,
+		ListIndex:   data.ListIndex,
+	})
 }
 
 func (t TaskService) TaskCreate(ctx context.Context, data *Task) (*Task, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func NewTaskService() *TaskService {
-	return &TaskService{}
+	task := db.Task{
+		UserID:      data.UserID,
+		ProjectID:   data.ProjectID,
+		StatusID:    data.StatusID,
+		Title:       data.Title,
+		Code:        utils.GenerateEntityCode("task"),
+		Completed:   data.Completed,
+		Description: data.Description,
+		ListIndex:   data.ListIndex,
+	}
+	err := db.TaskSave(ctx, db.GetDb(ctx), &task)
+	if err != nil {
+		return nil, err
+	}
+	now := time.Now()
+	data.ID = task.ID
+	data.CreatedAt = now
+	data.UpdatedAt = now
+	return data, nil
 }

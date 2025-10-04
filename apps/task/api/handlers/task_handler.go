@@ -4,14 +4,64 @@ package handlers
 
 import (
 	"net/http"
+
+	"gitlab.com/shaninalex/flowreon/apps/task/adapter"
+	"gitlab.com/shaninalex/flowreon/domain"
+	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
-type TaskHandler struct{}
+type TaskHandler struct {
+	taskReader domain.TaskReader
+	taskWriter domain.TaskWriter
+}
 
 func NewTaskHandler() *TaskHandler {
 	return &TaskHandler{}
 }
 
-func (s *TaskHandler) Get(w http.ResponseWriter, r *http.Request)    {}
-func (s *TaskHandler) Patch(w http.ResponseWriter, r *http.Request)  {}
-func (s *TaskHandler) Delete(w http.ResponseWriter, r *http.Request) {}
+func (s *TaskHandler) Get(w http.ResponseWriter, r *http.Request) {
+	taskID := web.UrlNumericParam(w, r, "id")
+	task, err := s.taskReader.TaskDetail(r.Context(), uint(taskID))
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	web.Success(w, adapter.ToTaskDto(task))
+}
+
+func (s *TaskHandler) Patch(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	taskID := web.UrlNumericParam(w, r, "id")
+	payload, err := web.BodyParser[adapter.TaskDetailInput](r)
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	task, err := s.taskReader.TaskDetail(ctx, uint(taskID))
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	task.Title = payload.Title
+	task.Completed = payload.Completed
+	task.Description = &payload.Description
+	task.ListIndex = payload.ListIndex
+	task.StatusID = payload.StatusID
+
+	err = s.taskWriter.TaskUpdate(ctx, task)
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	web.Success(w, adapter.ToTaskDto(task), "updated")
+}
+
+func (s *TaskHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	taskID := web.UrlNumericParam(w, r, "id")
+	if err := s.taskWriter.TaskDelete(r.Context(), uint(taskID)); err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	web.Success(w, nil, "Task deleted")
+}

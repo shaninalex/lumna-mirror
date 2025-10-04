@@ -15,14 +15,6 @@ type TaskStatusDto struct {
 	Config   *domain.TaskStatusConfig `json:"config"`
 }
 
-// ChangeTaskStatusInput - change task status dto.
-type ChangeTaskStatusInput struct {
-	FromStatusID uint `json:"from_status"`
-	ToStatusID   uint `json:"to_status"`
-	FromIdx      uint `json:"from_idx"`
-	ToIdx        uint `json:"to_idx"`
-}
-
 // NewTaskStatusDto - new issue status dto.
 func NewTaskStatusDto(i domain.Status) *TaskStatusDto {
 	return &TaskStatusDto{

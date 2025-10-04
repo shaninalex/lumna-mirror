@@ -9,19 +9,19 @@ import (
 type BadgeDto struct {
 	ID     uint
 	Title  string
-	Config *domain.BadgeStatusConfig
+	Config domain.BadgeConfig
 }
 
 func NewBadgeDto(badge *domain.Badge) *BadgeDto {
 	return &BadgeDto{
 		ID:     badge.ID,
 		Title:  badge.Title,
-		Config: badge.GetConfig(),
+		Config: badge.Config,
 	}
 }
 
 type BadgeInput struct {
 	Title     string
 	ProjectID uint
-	Config    *domain.BadgeStatusConfig
+	Config    domain.BadgeConfig
 }

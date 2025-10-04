@@ -8,6 +8,22 @@ import (
 	"gitlab.com/shaninalex/flowreon/domain"
 )
 
+// ChangeTaskStatusInput - change task status dto.
+type ChangeTaskStatusInput struct {
+	FromStatusID uint `json:"from_status"`
+	ToStatusID   uint `json:"to_status"`
+	FromIdx      uint `json:"from_idx"`
+	ToIdx        uint `json:"to_idx"`
+}
+
+type TaskDetailInput struct {
+	Title       string `json:"title"`
+	Completed   bool   `json:"completed"`
+	Description string `json:"description"`
+	ListIndex   uint   `json:"list_index"`
+	StatusID    uint   `json:"status_id"`
+}
+
 type TaskDto struct {
 	ID          uint        `json:"id"`
 	UserID      uint        `json:"user_id"`
