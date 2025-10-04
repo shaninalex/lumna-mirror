@@ -9,7 +9,7 @@ import {RouterLink, RouterLinkActive} from '@angular/router';
         RouterLinkActive
     ],
     template: `
-        <div class="h-full flex flex-col space-between w-48 bg-base-100 border-e border-base-300">
+        <div class="h-full flex flex-col space-between w-48 bg-base-100 border-e border-gray-300">
             <a [routerLink]="['/']" class="flex items-center gap-2 p-4">
                 <img src="img/logo-h.svg" class="w-full" alt="Flowreon"/>
             </a>
@@ -30,7 +30,7 @@ import {RouterLink, RouterLinkActive} from '@angular/router';
         </div>
     `
 })
-export class Sidebar {
+export class SidebarComponent {
     version: string = version;
 
     // Note: permission server should give proper amount of available links for a user.

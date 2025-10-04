@@ -1,46 +1,73 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {LoaderComponent} from '@client/shared/ui/loader';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatCardModule} from '@angular/material/card';
+import {Actions, ofType} from '@ngrx/effects';
+import {CreateProjectAction, SetProjectAction} from '@client/entities/project';
+import {Store} from '@ngrx/store';
+import {AppState} from '@client/shared/store';
 
 @Component({
     selector: "fr-new-project-form",
     imports: [
         ReactiveFormsModule,
         LoaderComponent,
+        MatButtonModule,
+        MatInputModule,
+        MatCardModule,
     ],
     template: `
-        <form [formGroup]="form" (ngSubmit)="submitForm()">
-            <div class="mb-4">
-                <label for="projectTitle">Project Title</label>
-                <input id="projectTitle" type="text" class="input" formControlName="title" pattern="[a-zA-Z0-9 ]*">
-                @if (form.controls['title'].dirty && form.controls['title'].errors) {
-                    @if (form.controls['title'].errors['required']) {
-                        <small class="text-warning">This field is required</small>
-                    }
-                    @if (form.controls['title'].errors['pattern']) {
-                        <small class="text-warning">Special characters! Only a-z, A-Z and 0-9 are available</small>
-                    }
-                }
-            </div>
+        <mat-card appearance="outlined">
+            <mat-card-content>
+                @if (!showForm) {
+                    <button matButton="outlined" (click)="toggleProjectForm()">Create Project</button>
+                } @else {
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Project Title" type="text" formControlName="title">
+                            @if (form.controls['title'].dirty && form.controls['title'].errors) {
+                                @if (form.controls['title'].errors['required']) {
+                                    <mat-error>This field is required</mat-error>
+                                }
+                                @if (form.controls['title'].errors['pattern']) {
+                                    <mat-error>Special characters! Only a-z, A-Z and 0-9 are available</mat-error>
+                                }
+                            }
+                        </mat-form-field>
 
-            <div class="flex gap-2 items-center">
-                <button [disabled]="loading || !form.valid" class="btn btn-primary" type="submit">Create</button>
-                <button [disabled]="loading" class="btn" type="button" (click)="cancel()">Cancel</button>
-                @if (loading) {
-                    <ui-loader />
+                        <div class="flex gap-2 items-center">
+                            <button matButton="outlined" [disabled]="loading || !form.valid" type="submit">Create
+                            </button>
+                            <button matButton="outlined" [disabled]="loading" type="button" (click)="cancel()">Cancel
+                            </button>
+                            @if (loading) {
+                                <ui-loader/>
+                            }
+                        </div>
+                    </form>
                 }
-            </div>
-        </form>
+            </mat-card-content>
+        </mat-card>
     `
 })
 export class NewProjectFormComponent implements OnChanges {
-    @Output() onSubmit: EventEmitter<string> = new EventEmitter<string>();
     @Output() onCancel: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @Input() loading: boolean = false;
+    loading: boolean = false;
+    showForm: boolean = false;
+    private actions$ = inject(Actions);
+    private store = inject(Store<AppState>);
 
     form: FormGroup = new FormGroup({
         'title': new FormControl({value: '', disabled: this.loading}, [Validators.required]),
     })
+
+    constructor() {
+        this.actions$.pipe(ofType(SetProjectAction)).subscribe(() => {
+            this.loading = this.showForm = false
+        })
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         this.loading = changes["loading"].currentValue
@@ -53,10 +80,16 @@ export class NewProjectFormComponent implements OnChanges {
     }
 
     cancel(): void {
-        this.onCancel.emit()
+        this.showForm = false;
     }
 
-    submitForm(): void {
-        this.onSubmit.emit(this.form.value['title'])
+    toggleProjectForm(): void {
+        this.showForm = !this.showForm;
+    }
+
+    onSubmit(): void {
+        this.loading = true;
+        const project: Record<string, string> = { title: this.form.value['title'] }
+        this.store.dispatch(CreateProjectAction({payload: project}))
     }
 }

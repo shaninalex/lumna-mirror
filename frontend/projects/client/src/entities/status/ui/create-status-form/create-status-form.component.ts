@@ -3,19 +3,22 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {CreateStatusAction} from '@client/entities/status';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
     selector: 'fr-create-status-form',
     imports: [
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule
     ],
     template: `
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend">Status name</legend>
-                <input type="text" class="input" placeholder="Type here" formControlName="title" />
-            </fieldset>
-            <button class="btn btn-primary" type="submit" [disabled]="!form.valid">Save</button>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="my-4">
+            <mat-form-field appearance="outline" class="w-full">
+                <input matInput type="text" placeholder="Status title" formControlName="title" />
+            </mat-form-field>
+            <button matButton="outlined" type="submit" [disabled]="!form.valid">Save</button>
         </form>
     `
 })

@@ -7,47 +7,61 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {Project} from '@client/entities/project';
 import {StatusColumn} from '@client/features/project/board-view-feature/board.model';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
     selector: 'fr-task-form-sm',
     imports: [
         LoaderComponent,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatInputModule,
+        MatIconModule,
     ],
     template: `
+        @if (showForm) {
+
         <form [formGroup]="form" (ngSubmit)="submitForm()" class="mb-4">
-            <div class="flex item-center gap-1">
-                <div class="flex-grow">
-                    <input placeholder="Task title" type="text" class="input block" formControlName="title"
-                           pattern="[a-zA-Z0-9 ]*">
-                </div>
-                <div class="flex items-center">
-                    @if (loading) {
-                        <ui-loader/>
-                    } @else {
-                        <button
-                            class="btn btn-primary"
-                            [disabled]="loading || !form.valid" type="submit">
-                            +
-                        </button>
+            <div class="flex-grow">
+                <mat-form-field appearance="outline" class="w-full">
+                    <input matInput placeholder="Task title" type="text" formControlName="title">
+                    @if (form.controls['title'].dirty && form.controls['title'].errors) {
+                        @if (form.controls['title'].errors['required']) {
+                            <mat-error class="text-sm">This field is required</mat-error>
+                        }
+                        @if (form.controls['title'].errors['pattern']) {
+                            <mat-error class="text-sm">Special characters! Only a-z, A-Z and 0-9 are available</mat-error>
+                        }
                     }
-                </div>
+                </mat-form-field>
             </div>
-            @if (form.controls['title'].dirty && form.controls['title'].errors) {
-                @if (form.controls['title'].errors['required']) {
-                    <small class="text-warning">This field is required</small>
-                }
-                @if (form.controls['title'].errors['pattern']) {
-                    <small class="text-warning">Special characters! Only a-z, A-Z and 0-9 are available</small>
-                }
+            @if (loading) {
+                <ui-loader/>
+            } @else {
+                <button matButton="outlined" type="submit"
+                    [disabled]="loading || !form.valid" >
+                    <mat-icon>add_circle</mat-icon>
+                    Add
+                </button>
             }
+            <button matButton="outlined" type="button" (click)="cancel()">
+                Cancel
+            </button>
         </form>
+        } @else {
+            <button matButton="outlined" (click)="showForm = true">
+                <mat-icon>add_circle</mat-icon>
+                Create task
+            </button>
+        }
     `
 })
 export class TaskFormSmComponent {
     @Input() project: Project;
     @Input() column: StatusColumn;
-
+    showForm: boolean = false;
     loading: boolean = false;
     form: FormGroup = new FormGroup({
         'title': new FormControl({value: '', disabled: this.loading}, [Validators.required]),
@@ -71,5 +85,10 @@ export class TaskFormSmComponent {
                 project_code: this.project.code,
             }
         }))
+    }
+
+    cancel(): void {
+        this.form.reset();
+        this.showForm = false;
     }
 }

@@ -54,12 +54,13 @@ func NewTaskStatusConfig() *TaskStatusConfig {
 }
 
 type StatusReader interface {
+	Get(ctx context.Context, id uint) (*Status, error)
 	ProjectStatuses(ctx context.Context, projectId uint) ([]*Status, error)
 }
 
 type StatusWriter interface {
 	Create(ctx context.Context, projectId uint, title string) (*Status, error)
-	Patch(ctx context.Context, projectId uint, data *Status) (*Status, error)
+	Patch(ctx context.Context, data *Status) (*Status, error)
 	Delete(ctx context.Context, statusId uint) error
 }
 
@@ -69,6 +70,21 @@ type StatusManager interface {
 }
 
 type StatusService struct {
+}
+
+func (s StatusService) Get(ctx context.Context, id uint) (*Status, error) {
+	status, err := db.TaskStatusByID(ctx, db.GetDb(ctx), id)
+	if err != nil {
+		return nil, err
+	}
+	return &Status{
+		ID:        status.ID,
+		Title:     status.Title,
+		Completed: status.Completed,
+		ListIndex: status.ListIndex,
+		ProjectId: status.ProjectID,
+		Config:    status.Config,
+	}, nil
 }
 
 func (s StatusService) ProjectStatuses(ctx context.Context, projectId uint) ([]*Status, error) {
@@ -109,10 +125,10 @@ func (s StatusService) Create(ctx context.Context, projectId uint, title string)
 	}, nil
 }
 
-func (s StatusService) Patch(ctx context.Context, projectId uint, data *Status) (*Status, error) {
+func (s StatusService) Patch(ctx context.Context, data *Status) (*Status, error) {
 	if err := db.TaskStatusUpdate(ctx, db.GetDb(ctx), &db.TaskStatus{
 		ID:        data.ID,
-		ProjectID: projectId,
+		ProjectID: data.ProjectId,
 		Title:     data.Title,
 		Completed: data.Completed,
 		ListIndex: data.ListIndex,

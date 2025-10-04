@@ -6,6 +6,9 @@ import {Router, RouterLink} from '@angular/router';
 import {filter, finalize, tap} from 'rxjs';
 import {APIResponse} from '@client/shared/models';
 import {LoaderComponent} from '@client/shared/ui';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatButton} from '@angular/material/button';
 
 @Component({
     selector: "fr-login-page",
@@ -13,14 +16,21 @@ import {LoaderComponent} from '@client/shared/ui';
         AuthLayout,
         ReactiveFormsModule,
         RouterLink,
-        LoaderComponent
+        LoaderComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButton
     ],
     template: `
         <fr-auth-layout title="Register">
-            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mb-4">
-                <input type="email" formControlName="email" class="input block mb-4" placeholder="email"/>
-                <input type="password" formControlName="password" class="input block mb-4" placeholder="password"/>
-                <button class="btn btn-primary mb-4">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col mt-4 items-start">
+                <mat-form-field appearance="outline">
+                    <input matInput type="email" formControlName="email" placeholder="Email"/>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <input matInput type="password" formControlName="password" placeholder="Password"/>
+                </mat-form-field>
+                <button matButton="outlined" class="mb-4" [disabled]="!form.valid">
                     @if (loading) {
                         <ui-loader />
                     } @else {

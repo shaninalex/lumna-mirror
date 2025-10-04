@@ -17,6 +17,8 @@ import {ColumnHeaderComponent} from '@client/features/project/board-view-feature
 import {CreateStatusFormComponent, selectProjectStatusList} from '@client/entities/status';
 import {map, Observable} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
+import {MatCardModule} from '@angular/material/card';
+import {TaskFormSmComponent} from '@client/features/project/board-view-feature/components/task-form-sm';
 
 @Component({
     selector: "fr-board-view-feature",
@@ -28,6 +30,8 @@ import {AsyncPipe} from '@angular/common';
         ColumnHeaderComponent,
         AsyncPipe,
         CreateStatusFormComponent,
+        MatCardModule,
+        TaskFormSmComponent,
     ],
     providers: [BoardViewApiService],
     styleUrl: './board-view.component.scss',
@@ -35,26 +39,38 @@ import {AsyncPipe} from '@angular/common';
         @if (columns$ | async; as columns) {
             <div cdkDropListGroup class="flex flex-row no-wrap gap-4">
                 @for (column of columns; track column) {
-                    <div class="bg-base-100 w-xs rounded-lg border border-base-300 p-4">
-                        <fr-column-header [project]="project" [column]="column"/>
-                        <div class="flex flex-col gap-2 min-h-20"
-                             cdkDropList
-                             [id]="column.id"
-                             [cdkDropListData]="column.tasks"
-                             (cdkDropListDropped)="drop($event)">
-                            @for (task of column.tasks; track task.id) {
-                                <fr-task-card [projectKey]="project.code"
-                                              [task]="task"
-                                              [cdkDragData]="task"
-                                              cdkDrag/>
-                            }
-                        </div>
-                    </div>
+                    <mat-card appearance="outlined" class="w-xs">
+                        <mat-card-header class="flex justify-between items-start">
+                            <mat-card-title class="text-slate-600">{{ column.title }}</mat-card-title>
+                            <fr-column-header [project]="project" [column]="column"/>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <fr-task-form-sm [project]="project" [column]="column" />
+                        </mat-card-content>
+                        <mat-card-content>
+                            <div class="flex flex-col gap-2 min-h-20"
+                                 cdkDropList
+                                 [id]="column.id"
+                                 [cdkDropListData]="column.tasks"
+                                 (cdkDropListDropped)="drop($event)">
+                                @for (task of column.tasks; track task.id) {
+                                    <fr-task-card [projectKey]="project.code"
+                                                  [task]="task"
+                                                  [cdkDragData]="task"
+                                                  cdkDrag/>
+                                }
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
                 }
-                <div class="bg-base-100 w-xs rounded-lg border border-base-300 p-4">
-                    Create status
-                    <fr-create-status-form [projectId]="project.id" />
-                </div>
+                <mat-card appearance="outlined" class="w-xs">
+                    <mat-card-header>
+                        <mat-card-title class="text-slate-600">Create status</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <fr-create-status-form [projectId]="project.id" />
+                    </mat-card-content>
+                </mat-card>
             </div>
         }
 

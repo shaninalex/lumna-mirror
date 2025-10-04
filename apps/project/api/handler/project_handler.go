@@ -37,12 +37,12 @@ func (s *ProjectHandler) List(w http.ResponseWriter, r *http.Request) {
 func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
 	input, err := web.BodyParser[adapter.ProjectInput](r)
 	if err != nil {
-		web.Error(w, http.StatusNotFound, err)
+		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 	project, err := s.projectService.CreateProject(r.Context(), &domain.Project{Title: input.Title})
 	if err != nil {
-		web.Error(w, http.StatusNotFound, err)
+		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 	web.Success(w, adapter.ToProjectDto(project))
@@ -63,7 +63,7 @@ func (s *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
 func (s *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	projectID := web.UrlNumericParam(w, r, "id")
 	if err := s.projectService.DeleteProject(r.Context(), uint(projectID)); err != nil {
-		web.Error(w, http.StatusNotFound, err)
+		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 	web.Success(w, nil, "Project deleted")
@@ -74,7 +74,7 @@ func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
 	projectID := web.UrlNumericParam(w, r, "id")
 	input, err := web.BodyParser[adapter.ProjectInput](r)
 	if err != nil {
-		web.Error(w, http.StatusNotFound, err)
+		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 	project, err := s.projectService.UpdateProject(r.Context(), &domain.Project{

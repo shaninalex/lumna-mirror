@@ -1,19 +1,18 @@
 import {Component} from '@angular/core';
-import {Header} from '@client/shared/layouts/primary-layout/components/header/header';
-import {Sidebar} from '@client/shared/layouts/primary-layout/components/sidebar/sidebar';
+import {HeaderComponent, SidebarComponent} from './components';
 
 @Component({
     selector: 'fr-primary-layout',
     imports: [
-        Header,
-        Sidebar
+        SidebarComponent,
+        HeaderComponent
     ],
     template: `
         <div class="h-screen overflow-hidden flex">
             <fr-sidebar />
             <div class="flex flex-col flex-grow ">
                 <fr-header />
-                <div class="flex-grow p-4 overflow-y-auto">
+                <div class="flex-grow p-4 overflow-y-auto bg-slate-100">
                     <ng-content></ng-content>
                 </div>
             </div>

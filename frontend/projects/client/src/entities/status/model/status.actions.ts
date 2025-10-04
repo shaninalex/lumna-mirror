@@ -27,7 +27,7 @@ export const PatchStatusAction = createAction(
 )
 
 export const PatchStatusSuccessAction = createAction(
-    "[status] patch status result",
+    "[status] patch status success",
     props<{ payload: Status }>(),
 )
 
