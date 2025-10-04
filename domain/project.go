@@ -14,28 +14,18 @@ type Project struct {
 	ID        uint
 	Title     string
 	Code      string
-	Statuses  []*Status
-	Badges    []*Badge
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-func MakeProject(project *db.Project, statuses []*db.TaskStatus) *Project {
-	_project := &Project{
+func MakeProject(project *db.Project) *Project {
+	return &Project{
 		ID:        project.ID,
 		Title:     project.Title,
 		Code:      project.Code,
 		CreatedAt: project.CreatedAt,
 		UpdatedAt: project.UpdatedAt,
 	}
-	for _, status := range statuses {
-		_project.Statuses = append(_project.Statuses, &Status{
-			ID:        status.ID,
-			Title:     status.Title,
-			ListIndex: status.ListIndex,
-		})
-	}
-	return _project
 }
 
 // ProjectReader - project reader.
@@ -71,11 +61,7 @@ func (p ProjectService) List(ctx context.Context) ([]*Project, error) {
 	}
 	output := make([]*Project, len(projects))
 	for i, project := range projects {
-		statuses, err := db.TaskStatusListByProject(ctx, connection, project.ID)
-		if err != nil {
-			return nil, err
-		}
-		output[i] = MakeProject(project, statuses)
+		output[i] = MakeProject(project)
 	}
 
 	return output, nil
@@ -87,11 +73,7 @@ func (p ProjectService) GetProject(ctx context.Context, id uint) (*Project, erro
 	if err != nil {
 		return nil, err
 	}
-	statuses, err := db.TaskStatusListByProject(ctx, connection, project.ID)
-	if err != nil {
-		return nil, err
-	}
-	return MakeProject(project, statuses), nil
+	return MakeProject(project), nil
 }
 
 func (p ProjectService) CreateProject(ctx context.Context, project *Project) (*Project, error) {
@@ -105,6 +87,7 @@ func (p ProjectService) CreateProject(ctx context.Context, project *Project) (*P
 	}
 	now := time.Now()
 	project.ID = _project.ID
+	project.Code = _project.Code
 	project.CreatedAt = now
 	project.UpdatedAt = now
 	return project, nil

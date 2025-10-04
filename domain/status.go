@@ -14,6 +14,7 @@ type Status struct {
 	Title     string
 	Completed bool
 	ListIndex uint
+	ProjectId uint
 	Config    *string
 }
 
@@ -82,6 +83,7 @@ func (s StatusService) ProjectStatuses(ctx context.Context, projectId uint) ([]*
 			Title:     status.Title,
 			Completed: status.Completed,
 			ListIndex: status.ListIndex,
+			ProjectId: status.ProjectID,
 			Config:    status.Config,
 		}
 	}
@@ -102,6 +104,7 @@ func (s StatusService) Create(ctx context.Context, projectId uint, title string)
 		Title:     status.Title,
 		Completed: status.Completed,
 		ListIndex: status.ListIndex,
+		ProjectId: status.ProjectID,
 		Config:    status.Config,
 	}, nil
 }

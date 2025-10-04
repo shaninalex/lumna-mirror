@@ -56,8 +56,7 @@ func (s *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusNotFound, err)
 		return
 	}
-	projectDto := adapter.ToProjectDetailDto(project)
-	web.Success(w, projectDto)
+	web.Success(w, adapter.ToProjectDto(project))
 }
 
 // Delete - delete Project

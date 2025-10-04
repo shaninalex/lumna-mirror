@@ -3,7 +3,7 @@ import {CreateTaskDto, Task} from './task.model';
 
 export const GetTasksActions = createAction(
     "[task] get tasks",
-    props<{ projectCode: string }>(),
+    props<{ projectId: number }>(),
 )
 
 export const SetTasksActions = createAction(

@@ -58,7 +58,6 @@ func (s *ProjectStatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusNotFound, err)
 		return
 	}
-
 	status := &domain.Status{
 		ID:    uint(statusID),
 		Title: payload.Title,
@@ -73,7 +72,6 @@ func (s *ProjectStatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
 
 // Delete - Delete status for the project
 func (s *ProjectStatusHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	//projectID := web.UrlNumericParam(w, r, "id")
 	statusID := web.UrlNumericParam(w, r, "statusId")
 	err := s.statusService.Delete(r.Context(), uint(statusID))
 	if err != nil {

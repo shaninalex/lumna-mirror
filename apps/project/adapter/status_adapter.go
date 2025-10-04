@@ -8,21 +8,23 @@ import (
 
 // TaskStatusDto - task status dto.
 type TaskStatusDto struct {
-	ID       uint                     `json:"id"`
-	Title    string                   `json:"title"`
-	Complete bool                     `json:"complete"`
-	Index    uint                     `json:"index"`
-	Config   *domain.TaskStatusConfig `json:"config"`
+	ID        uint                     `json:"id"`
+	Title     string                   `json:"title"`
+	Complete  bool                     `json:"complete"`
+	ProjectId uint                     `json:"project_id"`
+	Index     uint                     `json:"index"`
+	Config    *domain.TaskStatusConfig `json:"config"`
 }
 
 // NewTaskStatusDto - new issue status dto.
 func NewTaskStatusDto(i *domain.Status) *TaskStatusDto {
 	return &TaskStatusDto{
-		ID:       i.ID,
-		Title:    i.Title,
-		Complete: i.Completed,
-		Index:    i.ListIndex,
-		Config:   i.GetConfig(),
+		ID:        i.ID,
+		Title:     i.Title,
+		Complete:  i.Completed,
+		Index:     i.ListIndex,
+		ProjectId: i.ProjectId,
+		Config:    i.GetConfig(),
 	}
 }
 

@@ -12,7 +12,7 @@ export const TasksGetEffect = createEffect(
     ) => actions$.pipe(
         ofType(GetTasksActions),
         exhaustMap((action) => {
-                return api.List(action.projectCode).pipe(
+                return api.List(action.projectId).pipe(
                     switchMap(data => of(SetTasksActions({payload: data}))),
                 )
             }

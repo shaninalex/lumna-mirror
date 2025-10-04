@@ -7,21 +7,23 @@ import (
 )
 
 type BadgeDto struct {
-	ID     uint
-	Title  string
-	Config domain.BadgeConfig
+	ID        uint               `json:"id"`
+	Title     string             `json:"title"`
+	ProjectID uint               `json:"projectId"`
+	Config    domain.BadgeConfig `json:"config"`
 }
 
 func NewBadgeDto(badge *domain.Badge) *BadgeDto {
 	return &BadgeDto{
-		ID:     badge.ID,
-		Title:  badge.Title,
-		Config: badge.Config,
+		ID:        badge.ID,
+		Title:     badge.Title,
+		ProjectID: badge.ProjectID,
+		Config:    badge.Config,
 	}
 }
 
 type BadgeInput struct {
-	Title     string
-	ProjectID uint
-	Config    domain.BadgeConfig
+	Title     string             `json:"title"`
+	ProjectID uint               `json:"projectId"`
+	Config    domain.BadgeConfig `json:"config"`
 }

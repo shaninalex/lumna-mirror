@@ -40,25 +40,3 @@ func ToProjectsDto(ps []*domain.Project) []*ProjectDto {
 	}
 	return projects
 }
-
-// ProjectDetailDto - project detail dto.
-type ProjectDetailDto struct {
-	ID        uint             `json:"id"`
-	Title     string           `json:"title"`
-	Code      string           `json:"code"`
-	Statues   []*TaskStatusDto `json:"statues"`
-	CreatedAt time.Time        `json:"created_at"`
-	UpdatedAt time.Time        `json:"updated_at"`
-}
-
-// ToProjectDetailDto - new project detail dto.
-func ToProjectDetailDto(p *domain.Project) *ProjectDetailDto {
-	return &ProjectDetailDto{
-		ID:        p.ID,
-		Title:     p.Title,
-		Code:      p.Code,
-		Statues:   ToTaskStatusesDto(p.Statuses),
-		CreatedAt: p.CreatedAt,
-		UpdatedAt: p.UpdatedAt,
-	}
-}
