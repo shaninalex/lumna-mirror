@@ -51,9 +51,7 @@ CREATE TABLE statuses
     completed  BOOLEAN DEFAULT false,
     list_index INT     default 0,
     config     VARCHAR,
-    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
-
-    CONSTRAINT statuses_unique_title UNIQUE (title)
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
 );
 
 CREATE TABLE tasks
