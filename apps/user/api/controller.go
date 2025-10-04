@@ -4,7 +4,7 @@ package api
 
 import (
 	"gitlab.com/shaninalex/flowreon/apps/user/api/handler"
-	"gitlab.com/shaninalex/flowreon/apps/user/domain"
+	"gitlab.com/shaninalex/flowreon/domain"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 

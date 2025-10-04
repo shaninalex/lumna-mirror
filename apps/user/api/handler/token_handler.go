@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"gitlab.com/shaninalex/flowreon/apps/user/domain"
-	"gitlab.com/shaninalex/flowreon/apps/user/dto"
+	"gitlab.com/shaninalex/flowreon/apps/user/adapter"
+	"gitlab.com/shaninalex/flowreon/domain"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
@@ -34,7 +34,7 @@ func (s *TokenHandler) HandleGetUserTokens(w http.ResponseWriter, r *http.Reques
 		web.Error(w, http.StatusBadRequest, err) // return 400 if any error occurs
 		return
 	}
-	web.Success(w, dto.ToUserTokenDtoList(tokens)) // return list of tokens as DTOs
+	web.Success(w, adapter.ToUserTokenDtoList(tokens)) // return list of tokens as DTOs
 }
 
 // HandleDeleteUserToken handles a request to delete a specific token for the authenticated user.

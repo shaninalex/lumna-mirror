@@ -1,6 +1,6 @@
 // Copyright © 2025 Lumna. All rights reserved.
 
-package dto
+package adapter
 
 import (
 	"gitlab.com/shaninalex/flowreon/internal/db"

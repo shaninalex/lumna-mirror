@@ -5,8 +5,8 @@ package handler
 import (
 	"net/http"
 
-	"gitlab.com/shaninalex/flowreon/apps/user/domain"
-	"gitlab.com/shaninalex/flowreon/apps/user/dto"
+	"gitlab.com/shaninalex/flowreon/apps/user/adapter"
+	"gitlab.com/shaninalex/flowreon/domain"
 	"gitlab.com/shaninalex/flowreon/internal/db"
 	"gitlab.com/shaninalex/flowreon/internal/token"
 	"gitlab.com/shaninalex/flowreon/internal/web"
@@ -36,7 +36,7 @@ func (s *UserHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err) // return 400 if error occurs
 		return
 	}
-	web.Success(w, dto.ToUserDto(user)) // return user data as DTO
+	web.Success(w, adapter.ToUserDto(user)) // return user data as DTO
 }
 
 // HandleUpdateSettings handles a request to update the authenticated user's settings.
@@ -63,7 +63,7 @@ func (s *UserHandler) HandleUpdateSettings(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	web.Success(w, dto.ToUserDto(user), "Settings updated") // success response
+	web.Success(w, adapter.ToUserDto(user), "Settings updated") // success response
 }
 
 // HandleLogout handles a request to log out the authenticated user.
