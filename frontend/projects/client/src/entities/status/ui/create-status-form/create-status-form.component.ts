@@ -34,5 +34,6 @@ export class CreateStatusFormComponent {
             },
             projectId: this.projectId,
         }))
+        this.form.reset()
     }
 }

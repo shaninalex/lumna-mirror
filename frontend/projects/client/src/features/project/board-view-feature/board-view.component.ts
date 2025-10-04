@@ -1,4 +1,4 @@
-import {Component, inject, Input} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import {Task, TaskCardComponent} from '@client/entities/task';
 import {
     CdkDrag,
@@ -14,7 +14,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {Project} from '@client/entities/project';
 import {ColumnHeaderComponent} from '@client/features/project/board-view-feature/components';
-import {CreateStatusFormComponent, selectStatuses} from '@client/entities/status';
+import {CreateStatusFormComponent, selectProjectStatusList} from '@client/entities/status';
 import {map, Observable} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 
@@ -60,21 +60,25 @@ import {AsyncPipe} from '@angular/common';
 
     `
 })
-export class BoardViewComponent {
+export class BoardViewComponent implements OnInit {
     @Input() project: Project;
     private boardApi = inject(BoardViewApiService);
     private store = inject(Store<AppState>);
 
-    columns$: Observable<StatusColumn[]> = this.store.select(selectStatuses).pipe(
-        map(statusList => {
-            return statusList.map(status => ({
-                id: status.id.toString(),
-                title: status.title,
-                status: status,
-                tasks: [],
-            }))
-        })
-    );
+    columns$: Observable<StatusColumn[]>;
+
+    ngOnInit(): void {
+        this.columns$ = this.store.select(selectProjectStatusList(this.project.id)).pipe(
+            map(statusList => {
+                return statusList.map(status => ({
+                    id: status.id.toString(),
+                    title: status.title,
+                    status: status,
+                    tasks: [],
+                }))
+            })
+        );
+    }
 
     drop(event: CdkDragDrop<Task[]>) {
         if (event.previousContainer === event.container) {
