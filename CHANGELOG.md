@@ -1,3 +1,20 @@
+## 0.13.0 (2025-10-05)
+
+### Feat
+
+- **ui**: project statuses
+- **api**: project statuses
+
+### Fix
+
+- **ui**: reset form status form after submit + properly select statuses
+- **db**: drop constraint unique status name
+
+### Refactor
+
+- **ui**: use material design and angular cdk
+- move user service to root domain
+
 ## 0.12.0 (2025-10-04)
 
 ### Feat
