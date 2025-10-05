@@ -1,9 +1,9 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {filter, map, Observable} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
-import {RouterLink} from '@angular/router';
+import {NavigationStart, Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {UserLogoutFeature} from '@client/features/user';
 import {selectUser} from '@client/entities/user';
 import {OverlayModule} from '@angular/cdk/overlay';
@@ -16,6 +16,7 @@ import {UiService} from '@client/shared/ui/ui.service';
         RouterLink,
         UserLogoutFeature,
         OverlayModule,
+        RouterLinkActive,
     ],
     template: `
         <div class="py-2 px-4 flex items-center justify-between border-b border-gray-300">
@@ -43,7 +44,7 @@ import {UiService} from '@client/shared/ui/ui.service';
                     >
                         <ul class="dropdown">
                             <li>
-                                <a [routerLink]="['settings']">
+                                <a [routerLink]="['settings']" [routerLinkActive]="'active-link'">
                                     <i class="i-settings"></i>
                                     Settings
                                 </a>
@@ -56,9 +57,11 @@ import {UiService} from '@client/shared/ui/ui.service';
         </div>
     `
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
     private uiService = inject(UiService);
     private store: Store<AppState> = inject(Store<AppState>);
+    private router = inject(Router);
+
     email$: Observable<string> = this.store.select(selectUser).pipe(
         filter(user => !!user),
         map(user => user.email)
@@ -69,5 +72,11 @@ export class HeaderComponent {
     toggleSidebar() {
         this.closeSidebar = !this.closeSidebar;
         this.uiService.setExtendSidebar(this.closeSidebar)
+    }
+
+    ngOnInit() {
+        this.router.events
+            .pipe(filter(e => e instanceof NavigationStart))
+            .subscribe(() => this.isOpen = false);
     }
 }
