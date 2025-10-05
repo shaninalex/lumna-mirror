@@ -114,7 +114,6 @@ linters:
             - path: (.+)\.go$
               text: SA1019
         paths:
-            - webclient/
             - tdata/
 formatters:
     enable:
