@@ -16,6 +16,7 @@ import {MatFormField} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {DialogData} from './model';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatCheckbox} from '@angular/material/checkbox';
 
 
 @Component({
@@ -28,7 +29,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
         MatDialogTitle,
         MatFormField,
         MatInput,
-        MatTooltipModule
+        MatTooltipModule,
+        MatCheckbox
     ],
     template: `
         <h2 mat-dialog-title>Config "{{ data.status.title }}" column</h2>
@@ -38,6 +40,10 @@ import {MatTooltipModule} from '@angular/material/tooltip';
                 <mat-form-field appearance="outline" class="w-full">
                     <input matInput formControlName="title" />
                 </mat-form-field>
+                <div>
+                    <mat-checkbox formControlName="complete">Complete</mat-checkbox>
+                    <p class="text-sm">Tasks in that column will be marked as completed</p>
+                </div>
             </form>
         </mat-dialog-content>
 
@@ -55,17 +61,22 @@ export class EditStatusFormComponent implements OnInit {
     private store = inject(Store<AppState>);
 
     form: FormGroup = new FormGroup({
-        title: new FormControl('', Validators.required)
+        title: new FormControl('', Validators.required),
+        complete: new FormControl(false, Validators.required),
     })
 
     ngOnInit() {
-        this.form.setValue({title: this.data.status.title})
+        this.form.setValue({
+            title: this.data.status.title,
+            complete: this.data.status.complete,
+        })
     }
 
     onSubmit(): void {
         this.store.dispatch(PatchStatusAction({
             payload: {
                 title: this.form.value['title'],
+                complete: this.form.value['complete'],
             },
             projectId: this.data.status.project_id,
             statusId: this.data.status.id,

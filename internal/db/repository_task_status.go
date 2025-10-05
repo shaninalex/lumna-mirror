@@ -44,10 +44,10 @@ func TaskStatusListByProject(ctx context.Context, db *sql.DB, id uint) ([]*TaskS
 
 func TaskStatusCreate(ctx context.Context, db *sql.DB, status *TaskStatus) (*TaskStatus, error) {
 	q := `
-	insert into statuses (project_id, title, list_index)
-	values (?, ?, ?)
+	insert into statuses (project_id, title, list_index, completed)
+	values (?, ?, ?, ?)
 	`
-	result, err := db.ExecContext(ctx, q, status.ProjectID, status.Title, status.ListIndex)
+	result, err := db.ExecContext(ctx, q, status.ProjectID, status.Title, status.ListIndex, status.Completed)
 	if err != nil {
 		return nil, err
 	}

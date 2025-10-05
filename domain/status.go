@@ -59,7 +59,7 @@ type StatusReader interface {
 }
 
 type StatusWriter interface {
-	Create(ctx context.Context, projectId uint, title string) (*Status, error)
+	Create(ctx context.Context, projectId uint, title string, complete bool) (*Status, error)
 	Patch(ctx context.Context, data *Status) (*Status, error)
 	Delete(ctx context.Context, statusId uint) error
 }
@@ -106,10 +106,11 @@ func (s StatusService) ProjectStatuses(ctx context.Context, projectId uint) ([]*
 	return statuses, nil
 }
 
-func (s StatusService) Create(ctx context.Context, projectId uint, title string) (*Status, error) {
+func (s StatusService) Create(ctx context.Context, projectId uint, title string, complete bool) (*Status, error) {
 	dbStatus := &db.TaskStatus{
 		ProjectID: projectId,
 		Title:     title,
+		Completed: complete,
 	}
 	status, err := db.TaskStatusCreate(ctx, db.GetDb(ctx), dbStatus)
 	if err != nil {

@@ -3,6 +3,7 @@ import {Task} from '@client/entities/task';
 import {DatePipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
     selector: "fr-task-card",
@@ -10,6 +11,7 @@ import {MatCardModule} from '@angular/material/card';
         DatePipe,
         RouterLink,
         MatCardModule,
+        MatIconModule,
     ],
     template: `
         <mat-card appearance="outlined">
@@ -17,6 +19,9 @@ import {MatCardModule} from '@angular/material/card';
                 <mat-card-title>
                     <a [routerLink]="['/projects', projectKey, task.code]">
                         {{ task.title }}
+                        @if (task.completed) {
+                            <mat-icon class="text-green-500">check_circle</mat-icon>
+                        }
                     </a>
                 </mat-card-title>
             </mat-card-header>

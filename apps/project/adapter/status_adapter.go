@@ -38,5 +38,6 @@ func ToTaskStatusesDto(statuses []*domain.Status) []*TaskStatusDto {
 }
 
 type TaskStatusInput struct {
-	Title string `json:"title"`
+	Title    string `json:"title"`
+	Complete bool   `json:"complete"`
 }

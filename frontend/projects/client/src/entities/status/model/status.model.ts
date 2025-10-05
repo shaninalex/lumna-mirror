@@ -13,4 +13,5 @@ export interface StatusConfig {
 
 export interface StatusInput {
     title: string
+    complete: boolean
 }

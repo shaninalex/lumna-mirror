@@ -41,7 +41,7 @@ func (s *ProjectStatusHandler) Post(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	status, err := s.statusService.Create(r.Context(), uint(projectID), payload.Title)
+	status, err := s.statusService.Create(r.Context(), uint(projectID), payload.Title, payload.Complete)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

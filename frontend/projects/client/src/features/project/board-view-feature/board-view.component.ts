@@ -70,9 +70,6 @@ import {TaskFormSmComponent} from '@client/features/project/board-view-feature/c
                     </mat-card>
                 }
                 <mat-card appearance="outlined" class="w-xs">
-                    <mat-card-header>
-                        <mat-card-title class="text-slate-600">Create status</mat-card-title>
-                    </mat-card-header>
                     <mat-card-content>
                         <fr-create-status-form [projectId]="project.id" />
                     </mat-card-content>
