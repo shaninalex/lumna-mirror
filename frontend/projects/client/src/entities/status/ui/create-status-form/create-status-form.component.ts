@@ -11,22 +11,27 @@ import {CreateStatusAction} from '@client/entities/status';
     ],
     template: `
         @if (showForm) {
-            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="my-4">
-                <div class="w-full mb-4">
-                    <input class="input" type="text" placeholder="Column title" formControlName="title"/>
-                </div>
-                <div class="mb-4">
-                    <input id="status-completed" class="me-2" type="checkbox" formControlName="complete"/>
-                    <label for="status-completed">Completed</label>
-                    <p class="text-sm">Tasks in that column will be marked as completed</p>
-                </div>
-                <div class="flex gap-2">
-                    <button class="btn btn-primary" type="submit" [disabled]="!form.valid">Save</button>
-                    <button class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>
-                </div>
-            </form>
+            <div class="card w-xs">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()" class="my-4">
+                    <div class="w-full mb-4">
+                        <input class="input" type="text" placeholder="Column title" formControlName="title"/>
+                    </div>
+                    <div class="mb-4">
+                        <input id="status-completed" class="me-2" type="checkbox" formControlName="complete"/>
+                        <label for="status-completed">Completed</label>
+                        <p class="text-sm">Tasks in that column will be marked as completed</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="btn btn-primary" type="submit" [disabled]="!form.valid">Save</button>
+                        <button class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>
+                    </div>
+                </form>
+            </div>
         } @else {
-            <button type="button" (click)="showForm = true">New column</button>
+            <button class="btn btn-icon btn-secondary text-slate-600" type="button" (click)="showForm = true">
+                <i class="i-plus-circle text-lg"></i>
+                New column
+            </button>
         }
     `
 })

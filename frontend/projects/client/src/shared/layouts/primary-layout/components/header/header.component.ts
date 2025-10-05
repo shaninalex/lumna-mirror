@@ -7,6 +7,7 @@ import {RouterLink} from '@angular/router';
 import {UserLogoutFeature} from '@client/features/user';
 import {selectUser} from '@client/entities/user';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {UiService} from '@client/shared/ui/ui.service';
 
 @Component({
     selector: 'fr-header',
@@ -18,6 +19,13 @@ import {OverlayModule} from '@angular/cdk/overlay';
     ],
     template: `
         <div class="py-2 px-4 flex items-center justify-between border-b border-gray-300">
+            <button (click)="toggleSidebar()" class="cursor-pointer">
+                @if (closeSidebar) {
+                    <i class="i-arrow-right"></i>
+                } @else {
+                    <i class="i-arrow-left"></i>
+                }
+            </button>
             <div class="flex items-center gap-2 ms-auto">
                 @if (email$ | async; as email) {
                     <div class="dropdown">
@@ -35,7 +43,12 @@ import {OverlayModule} from '@angular/cdk/overlay';
                             (backdropClick)="isOpen = false"
                         >
                             <ul class="p-4 bg-white border rounded">
-                                <li><a [routerLink]="['settings']">Settings</a></li>
+                                <li>
+                                    <a [routerLink]="['settings']">
+                                        <i class="i-settings"></i>
+                                        Settings
+                                    </a>
+                                </li>
                                 <li><kr-user-logout-feature /></li>
                             </ul>
                         </ng-template>
@@ -46,10 +59,17 @@ import {OverlayModule} from '@angular/cdk/overlay';
     `
 })
 export class HeaderComponent {
+    private uiService = inject(UiService);
     private store: Store<AppState> = inject(Store<AppState>);
     email$: Observable<string> = this.store.select(selectUser).pipe(
         filter(user => !!user),
         map(user => user.email)
     )
     isOpen = false;
+    closeSidebar: boolean = false;
+
+    toggleSidebar() {
+        this.closeSidebar = !this.closeSidebar;
+        this.uiService.setExtendSidebar(this.closeSidebar)
+    }
 }

@@ -12,7 +12,7 @@ import {Dialog} from '@angular/cdk/dialog';
         FormsModule,
     ],
     template: `
-        <button (click)="openDialog()">menu</button>
+        <button (click)="openDialog()"><i class="i-dots-menu text-lg"></i></button>
     `,
 })
 export class ColumnHeaderComponent {

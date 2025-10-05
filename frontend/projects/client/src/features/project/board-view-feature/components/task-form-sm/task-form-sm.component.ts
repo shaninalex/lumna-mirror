@@ -33,12 +33,12 @@ import {StatusColumn} from '@client/features/project/board-view-feature/board.mo
                     @if (loading) {
                         <ui-loader/>
                     } @else {
-                        <button class="btn btn-primary" type="submit" [disabled]="loading || !form.valid">
-                            +
+                        <button class="btn btn-primary btn-icon" type="submit" [disabled]="loading || !form.valid">
+                            <i class="i-plus-circle text-lg"></i>
                         </button>
                     }
-                    <button class="btn btn-secondary" type="button" (click)="cancel()">
-                        X
+                    <button class="btn btn-secondary btn-icon" type="button" (click)="cancel()">
+                        <i class="i-close-circle text-lg"></i>
                     </button>
                 </div>
             </form>

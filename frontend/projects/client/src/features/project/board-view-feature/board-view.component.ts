@@ -41,11 +41,11 @@ import {TaskFormSmComponent} from '@client/features/project/board-view-feature/c
     styleUrl: './board-view.component.scss',
     template: `
         @if (columns$ | async; as columns) {
-            <div cdkDropListGroup class="flex flex-row no-wrap gap-4">
+            <div cdkDropListGroup class="flex justify-start no-wrap gap-4 w-full">
                 @for (column of columns; track $index) {
-                    <div class="card w-xs">
+                    <div class="card board-column">
                         <div class="flex justify-between mb-2">
-                            <div class="text-slate-600">{{ column.title }}</div>
+                            <div class="text-slate-600 card-title">{{ column.title }}</div>
                             <fr-column-header [project]="project" [column]="column"/>
                         </div>
 
@@ -65,9 +65,7 @@ import {TaskFormSmComponent} from '@client/features/project/board-view-feature/c
                         </div>
                     </div>
                 }
-                <div class="card-secondary w-xs">
-                    <fr-create-status-form [projectId]="project.id" />
-                </div>
+                <fr-create-status-form [projectId]="project.id" />
             </div>
         }
     `
