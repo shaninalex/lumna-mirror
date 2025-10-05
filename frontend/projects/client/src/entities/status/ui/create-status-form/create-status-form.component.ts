@@ -21,8 +21,8 @@ import {CreateStatusAction} from '@client/entities/status';
                     <p class="text-sm">Tasks in that column will be marked as completed</p>
                 </div>
                 <div class="flex gap-2">
-                    <button class="btn" type="submit" [disabled]="!form.valid">Save</button>
-                    <button class="btn-secondary" type="button" (click)="cancel()">Cancel</button>
+                    <button class="btn btn-primary" type="submit" [disabled]="!form.valid">Save</button>
+                    <button class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>
                 </div>
             </form>
         } @else {

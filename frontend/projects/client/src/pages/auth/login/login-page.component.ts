@@ -26,7 +26,7 @@ import {FormsModule} from '@angular/forms';
                 <div class="mb-4">
                     <input class="input" type="password" formControlName="password" placeholder="Password"/>
                 </div>
-                <button class="mb-4 btn" [disabled]="!form.valid">
+                <button class="btn btn-primary mb-4" [disabled]="!form.valid">
                     @if (loading) {
                         <ui-loader />
                     } @else {

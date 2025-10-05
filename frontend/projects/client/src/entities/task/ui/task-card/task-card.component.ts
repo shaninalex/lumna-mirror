@@ -11,7 +11,7 @@ import {RouterLink} from '@angular/router';
     ],
     template: `
         <div class="card">
-            <div class="card-header">
+            <div class="card-title">
                 <a [routerLink]="['/projects', projectKey, task.code]">
                     {{ task.title }}
                     @if (task.completed) {

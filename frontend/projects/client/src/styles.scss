@@ -8,7 +8,7 @@
     @apply p-4 border rounded border-slate-400 bg-slate-100;
 }
 
-.card-header {
+.card-title {
     @apply font-bold;
 }
 
@@ -17,17 +17,21 @@
 }
 
 .btn {
-    @apply rounded px-2 bg-emerald-400 border border-emerald-500;
+    @apply rounded px-2 border;
+}
+
+.btn-primary {
+    @apply bg-emerald-400 border-emerald-500;
+}
+
+.btn-secondary {
+    @apply bg-slate-200 border-slate-500;
+}
+
+.btn-danger {
+    @apply bg-red-200 border-red-500;
 }
 
 .btn-icon {
     @apply flex items-center justify-center gap-2
-}
-
-.btn-secondary {
-    @apply rounded px-2 bg-slate-200 border border-slate-500;
-}
-
-.btn-danger {
-    @apply rounded px-2 bg-red-200 border border-red-500;
 }

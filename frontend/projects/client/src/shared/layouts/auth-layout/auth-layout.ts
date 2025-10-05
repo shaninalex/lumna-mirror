@@ -9,7 +9,7 @@ import {version} from '@root/package.json';
             <div>
                 <img src="img/logo.svg" alt="Lumna" class="mb-8 w-48 mx-auto"/>
                 <div class="card">
-                    <div class="card-header">{{ title }}</div>
+                    <div class="card-title">{{ title }}</div>
                     <ng-content></ng-content>
                 </div>
                 <div class="text-xs text-base-300 text-end">v{{ version }}</div>
