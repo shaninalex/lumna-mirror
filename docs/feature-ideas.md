@@ -20,3 +20,5 @@ Register webhooks and send request.
 ### Pages, notes, markdown editor, documentation
 
 ### Emails and custom email templates
+
+### Multiple boards per project
