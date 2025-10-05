@@ -3,7 +3,7 @@
 package web
 
 import (
-	"gitlab.com/shaninalex/flowreon/internal/apperrors"
+	"github.com/shaninalex/lumna/internal/apperrors"
 )
 
 // APIResponse standard response structure

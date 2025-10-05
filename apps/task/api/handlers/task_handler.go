@@ -5,9 +5,9 @@ package handlers
 import (
 	"net/http"
 
-	"gitlab.com/shaninalex/flowreon/apps/task/adapter"
-	"gitlab.com/shaninalex/flowreon/domain"
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	"github.com/shaninalex/lumna/apps/task/adapter"
+	"github.com/shaninalex/lumna/domain"
+	"github.com/shaninalex/lumna/internal/web"
 )
 
 type TaskHandler struct {

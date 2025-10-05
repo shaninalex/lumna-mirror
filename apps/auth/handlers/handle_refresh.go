@@ -5,8 +5,8 @@ package handlers
 import (
 	"net/http"
 
-	"gitlab.com/shaninalex/flowreon/internal/token"
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	"github.com/shaninalex/lumna/internal/token"
+	"github.com/shaninalex/lumna/internal/web"
 )
 
 func (s *AuthHandler) HandleRefresh(w http.ResponseWriter, r *http.Request) {

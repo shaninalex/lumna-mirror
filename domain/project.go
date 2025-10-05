@@ -6,8 +6,8 @@ import (
 	"context"
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
-	"gitlab.com/shaninalex/flowreon/internal/utils"
+	"github.com/shaninalex/lumna/internal/db"
+	"github.com/shaninalex/lumna/internal/utils"
 )
 
 type Project struct {

@@ -1,4 +1,4 @@
-module gitlab.com/shaninalex/flowreon
+module github.com/shaninalex/lumna
 
 go 1.24.2
 

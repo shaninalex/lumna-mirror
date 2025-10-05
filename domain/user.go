@@ -6,7 +6,7 @@ import (
 	"context"
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
+	"github.com/shaninalex/lumna/internal/db"
 )
 
 type UserManager interface {

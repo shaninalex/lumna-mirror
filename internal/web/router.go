@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"path"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
-	"gitlab.com/shaninalex/flowreon/internal/utils"
+	"github.com/shaninalex/lumna/internal/db"
+	"github.com/shaninalex/lumna/internal/utils"
 )
 
 type Middleware func(http.Handler) http.Handler

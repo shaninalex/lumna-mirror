@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"gitlab.com/shaninalex/flowreon"
+	"github.com/shaninalex/lumna"
 )
 
 func HandleHealth(w http.ResponseWriter, r *http.Request) {
@@ -15,6 +15,6 @@ func HandleHealth(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(map[string]interface{}{
 		"status":  "ok",
 		"name":    GetAppName(r),
-		"version": flowreon.Version,
+		"version": lumna.Version,
 	})
 }

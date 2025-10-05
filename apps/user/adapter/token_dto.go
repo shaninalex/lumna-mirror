@@ -3,7 +3,7 @@ package adapter
 import (
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
+	"github.com/shaninalex/lumna/internal/db"
 )
 
 // UserTokenDto is a Data Transfer Object (DTO) for user tokens.

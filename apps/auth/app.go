@@ -3,8 +3,8 @@
 package auth
 
 import (
-	"gitlab.com/shaninalex/flowreon/apps/auth/handlers"
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	"github.com/shaninalex/lumna/apps/auth/handlers"
+	"github.com/shaninalex/lumna/internal/web"
 )
 
 func NewAuthController(router *web.Router) {

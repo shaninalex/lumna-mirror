@@ -24,7 +24,7 @@ migrate_create:
 migrate_up:
 	~/go/bin/migrate \
 		-path ./internal/db/migrations \
-		-database "sqlite3://flowreon.db" \
+		-database "sqlite3://lumna.db" \
 		-verbose up
 
 # usage:
@@ -32,7 +32,7 @@ migrate_up:
 migrate_down:
 	~/go/bin/migrate \
 		-path ./internal/db/migrations \
-		-database "sqlite3://flowreon.db" \
+		-database "sqlite3://lumna.db" \
 		-verbose down $(N)
 
 build:

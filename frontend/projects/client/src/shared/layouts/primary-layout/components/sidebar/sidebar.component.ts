@@ -16,9 +16,9 @@ import {Observable} from 'rxjs';
         <div class="h-full flex flex-col space-between bg-base-100 border-e border-gray-300">
             <a [routerLink]="['/']" class="flex items-center gap-2 p-4">
                 @if (!extendSidebar) {
-                    <img src="img/logo-h.svg" class="w-full" alt="Flowreon"/>
+                    <img src="img/logo-h.svg" class="w-full" alt="Lumna"/>
                 } @else {
-                    <img src="img/logo-icon.svg" class="w-full" alt="Flowreon"/>
+                    <img src="img/logo-icon.svg" class="w-full" alt="Lumna"/>
                 }
             </a>
             <div class="p-4 flex flex-col flex-grow"

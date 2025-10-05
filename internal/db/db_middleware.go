@@ -7,7 +7,7 @@ import (
 	"database/sql"
 	"net/http"
 
-	"gitlab.com/shaninalex/flowreon/internal/base"
+	"github.com/shaninalex/lumna/internal/base"
 )
 
 type Middleware struct {

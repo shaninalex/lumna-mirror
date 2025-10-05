@@ -3,8 +3,8 @@
 package api
 
 import (
-	"gitlab.com/shaninalex/flowreon/apps/task/api/handlers"
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	"github.com/shaninalex/lumna/apps/task/api/handlers"
+	"github.com/shaninalex/lumna/internal/web"
 )
 
 // TaskController - task controller.

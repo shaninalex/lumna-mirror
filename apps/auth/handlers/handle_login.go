@@ -7,9 +7,9 @@ import (
 	"errors"
 	"net/http"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
-	"gitlab.com/shaninalex/flowreon/internal/token"
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	"github.com/shaninalex/lumna/internal/db"
+	"github.com/shaninalex/lumna/internal/token"
+	"github.com/shaninalex/lumna/internal/web"
 	"golang.org/x/crypto/bcrypt"
 )
 

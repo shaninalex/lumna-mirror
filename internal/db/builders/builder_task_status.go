@@ -3,7 +3,7 @@
 package builders
 
 import (
-	"gitlab.com/shaninalex/flowreon/internal/db"
+	"github.com/shaninalex/lumna/internal/db"
 )
 
 // TaskStatusBuilder builder pattern code

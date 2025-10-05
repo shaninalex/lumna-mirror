@@ -10,7 +10,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/flowreon/internal/utils"
+	"github.com/shaninalex/lumna/internal/utils"
 )
 
 // AccessTokenResult contains the signed token and metadata

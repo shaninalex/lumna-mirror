@@ -5,7 +5,7 @@ package domain
 import (
 	"context"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
+	"github.com/shaninalex/lumna/internal/db"
 )
 
 // UserTokenManager defines the interface for managing user tokens.
