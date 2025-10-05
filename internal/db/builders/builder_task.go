@@ -10,12 +10,12 @@ import (
 
 // TaskBuilder builder pattern code
 type TaskBuilder struct {
-	task *Task
+	task *db.Task
 }
 
 // NewTaskBuilder - new issue builder.
 func NewTaskBuilder() *TaskBuilder {
-	task := &Task{}
+	task := &db.Task{}
 	b := &TaskBuilder{task: task}
 	return b
 }
@@ -75,6 +75,6 @@ func (b *TaskBuilder) UpdatedAt(updatedAt time.Time) *TaskBuilder {
 }
 
 // Build - builds the value.
-func (b *TaskBuilder) Build() *Task {
+func (b *TaskBuilder) Build() *db.Task {
 	return b.task
 }
