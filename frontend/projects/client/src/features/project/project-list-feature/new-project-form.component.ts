@@ -26,7 +26,7 @@ import {AppState} from '@client/shared/store';
                 } @else {
                     <form [formGroup]="form" (ngSubmit)="onSubmit()">
                         <mat-form-field appearance="outline">
-                            <input matInput placeholder="Project Title" type="text" formControlName="title">
+                            <input matInput autofocus placeholder="Project Title" type="text" formControlName="title">
                             @if (form.controls['title'].dirty && form.controls['title'].errors) {
                                 @if (form.controls['title'].errors['required']) {
                                     <mat-error>This field is required</mat-error>

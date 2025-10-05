@@ -98,3 +98,16 @@ func TaskDelete(ctx context.Context, db *sql.DB, id uint) error {
 	_, err := db.ExecContext(ctx, query, id)
 	return err
 }
+
+// TaskGetIndex - get task index
+func TaskGetIndex(ctx context.Context, db *sql.DB, statusId uint) float64 {
+	var idx float64
+	query := `
+		select list_index from tasks where status_id = ? order by list_index asc limit 1
+	`
+	row := db.QueryRowContext(ctx, query, statusId)
+	if err := row.Scan(&idx); err != nil {
+		return 65536
+	}
+	return idx / 2
+}

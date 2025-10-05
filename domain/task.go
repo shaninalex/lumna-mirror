@@ -138,6 +138,7 @@ func (t TaskService) TaskUpdate(ctx context.Context, data *Task) error {
 }
 
 func (t TaskService) TaskCreate(ctx context.Context, data *Task) (*Task, error) {
+	maxIndex := db.TaskGetIndex(ctx, db.GetDb(ctx), data.StatusID)
 	task := db.Task{
 		UserID:      data.UserID,
 		ProjectID:   data.ProjectID,
@@ -146,7 +147,7 @@ func (t TaskService) TaskCreate(ctx context.Context, data *Task) (*Task, error) 
 		Code:        utils.GenerateEntityCode("task"),
 		Completed:   data.Completed,
 		Description: data.Description,
-		ListIndex:   data.ListIndex,
+		ListIndex:   maxIndex,
 	}
 	err := db.TaskSave(ctx, db.GetDb(ctx), &task)
 	if err != nil {

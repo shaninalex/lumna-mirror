@@ -1,5 +1,11 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
-import {ChangeTaskStatusAction, selectTasksByProjectID, Task, TaskCardComponent} from '@client/entities/task';
+import {
+    ChangeTaskStatusAction,
+    ChangeTaskStatusSuccessAction,
+    selectTasksByProjectID,
+    Task,
+    TaskCardComponent
+} from '@client/entities/task';
 import {
     CdkDrag,
     CdkDragDrop,
@@ -19,8 +25,6 @@ import {combineLatest, map, Observable} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import {MatCardModule} from '@angular/material/card';
 import {TaskFormSmComponent} from '@client/features/project/board-view-feature/components/task-form-sm';
-import {byMostRecent} from '@client/shared/common';
-
 
 @Component({
     selector: "fr-board-view-feature",
@@ -40,7 +44,7 @@ import {byMostRecent} from '@client/shared/common';
     template: `
         @if (columns$ | async; as columns) {
             <div cdkDropListGroup class="flex flex-row no-wrap gap-4">
-                @for (column of columns; track column) {
+                @for (column of columns; track $index) {
                     <mat-card appearance="outlined" class="w-xs">
                         <mat-card-header class="flex justify-between items-start">
                             <mat-card-title class="text-slate-600">{{ column.title }}</mat-card-title>
@@ -103,15 +107,39 @@ export class BoardViewComponent implements OnInit {
 
     drop(event: CdkDragDrop<Task[]>) {
         const container = event.container.data;
-        const previous = event.previousContainer.data;
+        const currentIdx = event.currentIndex;
 
-        let newIndex = 100; // default
-        const before = container[event.currentIndex - 1];
-        const after = container[event.currentIndex + 1];
+        // Local reorder for immediate UI feedback
+        if (event.previousContainer === event.container) {
+            moveItemInArray(container, event.previousIndex, currentIdx);
+        } else {
+            transferArrayItem(
+                event.previousContainer.data,
+                container,
+                event.previousIndex,
+                currentIdx
+            );
+        }
 
-        if (before && after) newIndex = (before.list_index + after.list_index) / 2;
-        else if (before) newIndex = before.list_index + 100;
-        else if (after) newIndex = after.list_index / 2;
+        // Determine neighboring tasks
+        const prev = container[currentIdx - 1];
+        const next = container[currentIdx + 1];
+
+        let newIndex: number;
+
+        if (!prev && !next) {
+            // only item in list
+            newIndex = 10000;
+        } else if (!prev) {
+            // moved to the top
+            newIndex = next.list_index / 2;
+        } else if (!next) {
+            // moved to the bottom
+            newIndex = prev.list_index + 10000;
+        } else {
+            // between two items
+            newIndex = (prev.list_index + next.list_index) / 2;
+        }
 
         this.store.dispatch(ChangeTaskStatusAction({
             taskId: event.item.data.id,
@@ -119,7 +147,7 @@ export class BoardViewComponent implements OnInit {
                 from_status: parseInt(event.previousContainer.id),
                 to_status: parseInt(event.container.id),
                 from_idx: event.previousIndex,
-                to_idx: newIndex
+                to_idx: newIndex,
             }
         }));
     }

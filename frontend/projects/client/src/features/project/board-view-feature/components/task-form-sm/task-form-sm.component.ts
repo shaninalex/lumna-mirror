@@ -26,7 +26,7 @@ import {MatIconModule} from '@angular/material/icon';
         <form [formGroup]="form" (ngSubmit)="submitForm()" class="mb-4">
             <div class="flex-grow">
                 <mat-form-field appearance="outline" class="w-full">
-                    <input matInput placeholder="Task title" type="text" formControlName="title">
+                    <input matInput autofocus placeholder="Task title" type="text" formControlName="title">
                     @if (form.controls['title'].dirty && form.controls['title'].errors) {
                         @if (form.controls['title'].errors['required']) {
                             <mat-error class="text-sm">This field is required</mat-error>
@@ -84,6 +84,7 @@ export class TaskFormSmComponent {
                 status_id: this.column.status.id,
             }
         }))
+        this.form.reset();
     }
 
     cancel(): void {

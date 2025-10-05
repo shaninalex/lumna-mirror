@@ -1,12 +1,12 @@
 CREATE TABLE users
 (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    email         TEXT    NOT NULL,
+    email         TEXT NOT NULL,
     settings      TEXT,
     active        BOOLEAN   DEFAULT false,
     state         VARCHAR   DEFAULT 'pending',
     code          VARCHAR,
-    password_hash TEXT    NOT NULL,
+    password_hash TEXT NOT NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -64,7 +64,7 @@ CREATE TABLE tasks
     code        VARCHAR  NOT NULL,
     completed   BOOLEAN           DEFAULT false,
     description VARCHAR  NULL,
-    list_index  FLOAT           default 0,
+    list_index  FLOAT             default 0,
     created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
