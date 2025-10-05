@@ -28,31 +28,29 @@ import {UiService} from '@client/shared/ui/ui.service';
             </button>
             <div class="flex items-center gap-2 ms-auto">
                 @if (email$ | async; as email) {
-                    <div class="dropdown">
-                        <div tabindex="0" role="button" class="flex items-center gap-2 cursor-pointer" (click)="isOpen = !isOpen"
-                             cdkOverlayOrigin #trigger="cdkOverlayOrigin">
-                            <div>{{ email }}</div>
-                            <img src="img/1.png" class="rounded-full w-8" alt="">
-                        </div>
-                        <ng-template
-                            cdkConnectedOverlay
-                            cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
-                            [cdkConnectedOverlayOrigin]="trigger"
-                            [cdkConnectedOverlayOpen]="isOpen"
-                            [cdkConnectedOverlayHasBackdrop]="true"
-                            (backdropClick)="isOpen = false"
-                        >
-                            <ul class="p-4 bg-white border rounded">
-                                <li>
-                                    <a [routerLink]="['settings']">
-                                        <i class="i-settings"></i>
-                                        Settings
-                                    </a>
-                                </li>
-                                <li><kr-user-logout-feature /></li>
-                            </ul>
-                        </ng-template>
+                    <div tabindex="0" role="button" class="flex items-center gap-2 cursor-pointer" (click)="isOpen = !isOpen"
+                         cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+                        <div>{{ email }}</div>
+                        <img src="img/1.png" class="rounded-full w-8" alt="">
                     </div>
+                    <ng-template
+                        cdkConnectedOverlay
+                        cdkConnectedOverlayBackdropClass="bg-slate-50/25"
+                        [cdkConnectedOverlayOrigin]="trigger"
+                        [cdkConnectedOverlayOpen]="isOpen"
+                        [cdkConnectedOverlayHasBackdrop]="true"
+                        (backdropClick)="isOpen = false"
+                    >
+                        <ul class="dropdown">
+                            <li>
+                                <a [routerLink]="['settings']">
+                                    <i class="i-settings"></i>
+                                    Settings
+                                </a>
+                            </li>
+                            <li><kr-user-logout-feature /></li>
+                        </ul>
+                    </ng-template>
                 }
             </div>
         </div>

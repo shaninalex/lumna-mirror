@@ -23,7 +23,7 @@ import {ColumnHeaderComponent} from '@client/features/project/board-view-feature
 import {CreateStatusFormComponent, selectProjectStatusList} from '@client/entities/status';
 import {combineLatest, map, Observable} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
-import {TaskFormSmComponent} from '@client/features/project/board-view-feature/components/task-form-sm';
+import {TaskFormSmComponent} from '@client/features/project';
 
 @Component({
     selector: "fr-board-view-feature",

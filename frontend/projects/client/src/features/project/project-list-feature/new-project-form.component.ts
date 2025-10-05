@@ -15,7 +15,7 @@ import {AppState} from '@client/shared/store';
     template: `
         <div>
             @if (!showForm) {
-                <button (click)="toggleProjectForm()">Create Project</button>
+                <button class="btn btn-primary" (click)="toggleProjectForm()">Create Project</button>
             } @else {
                 <form [formGroup]="form" (ngSubmit)="onSubmit()">
                     <div class="mb-2">
