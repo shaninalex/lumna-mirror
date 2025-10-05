@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
+	"github.com/shaninalex/lumna/internal/db"
 )
 
 type Badge struct {

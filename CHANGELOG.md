@@ -182,7 +182,6 @@
 
 ### Feat
 
-- rename app to Flowreon
 - update task
 - **ui**: task detail form modal dialog
 - **ui**: task detail form modal dialog

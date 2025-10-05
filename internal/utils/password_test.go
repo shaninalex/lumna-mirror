@@ -5,8 +5,8 @@ package utils_test
 import (
 	"testing"
 
+	"github.com/shaninalex/lumna/internal/utils"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/shaninalex/flowreon/internal/utils"
 )
 
 func Test_CreatePasswordHash(t *testing.T) {

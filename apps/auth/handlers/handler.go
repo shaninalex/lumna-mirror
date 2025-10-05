@@ -3,7 +3,7 @@
 package handlers
 
 import (
-	"gitlab.com/shaninalex/flowreon/internal/token"
+	"github.com/shaninalex/lumna/internal/token"
 )
 
 func NewAuthHandler() *AuthHandler {

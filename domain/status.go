@@ -6,7 +6,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
+	"github.com/shaninalex/lumna/internal/db"
 )
 
 type Status struct {

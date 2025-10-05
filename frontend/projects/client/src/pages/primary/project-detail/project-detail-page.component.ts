@@ -1,7 +1,4 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {AppState} from '@client/shared/store';
-import {Store} from '@ngrx/store';
-import {selectProject} from '@client/entities/project/model/project.selectors';
 import {
     ActivatedRoute,
     NavigationEnd,
@@ -11,8 +8,7 @@ import {
     RouterLinkActive,
     RouterOutlet
 } from '@angular/router';
-import {AsyncPipe, JsonPipe} from '@angular/common';
-import {filter, map, switchMap, take, tap} from 'rxjs';
+import {filter} from 'rxjs';
 import {CdkMenuModule} from '@angular/cdk/menu';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {Project} from '@client/entities/project';

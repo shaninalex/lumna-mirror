@@ -5,17 +5,17 @@ package builders
 import (
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
+	"github.com/shaninalex/lumna/internal/db"
 )
 
 // UserBuilder builder pattern code
 type UserBuilder struct {
-	user *User
+	user *db.User
 }
 
 // NewUserBuilder - new user builder.
 func NewUserBuilder() *UserBuilder {
-	user := &User{}
+	user := &db.User{}
 	b := &UserBuilder{user: user}
 	return b
 }
@@ -51,6 +51,6 @@ func (b *UserBuilder) UpdatedAt(updatedAt time.Time) *UserBuilder {
 }
 
 // Build - builds the value.
-func (b *UserBuilder) Build() *User {
+func (b *UserBuilder) Build() *db.User {
 	return b.user
 }

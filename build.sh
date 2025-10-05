@@ -10,9 +10,9 @@ build_and_push() {
     local dockerfile=$2
 
     echo -e "\nBUILD: $name"
-    docker build -t flowreon_"$name" -f "$dockerfile" .
-    docker tag flowreon_"$name" shanart/flowreon_"$name":"$TAG"
-    docker push shanart/flowreon_"$name":"$TAG"
+    docker build -t lumna_"$name" -f "$dockerfile" .
+    docker tag lumna_"$name" shanart/lumna_"$name":"$TAG"
+    docker push shanart/lumna_"$name":"$TAG"
 }
 
 build_and_push "auth" "./apps/auth/Dockerfile"

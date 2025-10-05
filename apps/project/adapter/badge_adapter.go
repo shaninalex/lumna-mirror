@@ -3,7 +3,7 @@
 package adapter
 
 import (
-	"gitlab.com/shaninalex/flowreon/domain"
+	"github.com/shaninalex/lumna/domain"
 )
 
 type BadgeDto struct {

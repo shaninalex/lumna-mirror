@@ -5,7 +5,7 @@ package token
 import (
 	"context"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
+	"github.com/shaninalex/lumna/internal/db"
 )
 
 type ApiAuthService interface {

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/internal/utils"
+	"github.com/shaninalex/lumna/internal/utils"
 )
 
 // UserGetByField get user by field

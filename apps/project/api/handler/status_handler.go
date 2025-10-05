@@ -5,9 +5,9 @@ package handler
 import (
 	"net/http"
 
-	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
-	"gitlab.com/shaninalex/flowreon/domain"
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	"github.com/shaninalex/lumna/apps/project/adapter"
+	"github.com/shaninalex/lumna/domain"
+	"github.com/shaninalex/lumna/internal/web"
 )
 
 // ProjectStatusHandler - task handler.

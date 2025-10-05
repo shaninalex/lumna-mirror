@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"gitlab.com/shaninalex/flowreon/internal/apperrors"
-	"gitlab.com/shaninalex/flowreon/internal/base"
+	"github.com/shaninalex/lumna/internal/apperrors"
+	"github.com/shaninalex/lumna/internal/base"
 )
 
 // ReturnJSON writes JSON response

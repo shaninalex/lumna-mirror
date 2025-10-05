@@ -3,8 +3,8 @@
 package api
 
 import (
-	"gitlab.com/shaninalex/flowreon/apps/project/api/handler"
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	"github.com/shaninalex/lumna/apps/project/api/handler"
+	"github.com/shaninalex/lumna/internal/web"
 )
 
 // ProjectController - project controller.

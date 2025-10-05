@@ -5,7 +5,7 @@ package adapter
 import (
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/domain"
+	"github.com/shaninalex/lumna/domain"
 )
 
 type TaskCreateInput struct {

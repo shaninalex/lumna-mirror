@@ -6,7 +6,7 @@ import (
 	"context"
 	"database/sql"
 
-	"gitlab.com/shaninalex/flowreon/internal/base"
+	"github.com/shaninalex/lumna/internal/base"
 )
 
 // GetDb - returns the *sql.DB

@@ -3,9 +3,9 @@
 package api
 
 import (
-	"gitlab.com/shaninalex/flowreon/apps/user/api/handler"
-	"gitlab.com/shaninalex/flowreon/domain"
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	"github.com/shaninalex/lumna/apps/user/api/handler"
+	"github.com/shaninalex/lumna/domain"
+	"github.com/shaninalex/lumna/internal/web"
 )
 
 // UserController sets up HTTP routes for user-related operations.

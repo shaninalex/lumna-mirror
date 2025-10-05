@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	"gitlab.com/shaninalex/flowreon/internal/db"
-	"gitlab.com/shaninalex/flowreon/internal/utils"
+	"github.com/shaninalex/lumna/internal/db"
+	"github.com/shaninalex/lumna/internal/utils"
 )
 
 type Task struct {

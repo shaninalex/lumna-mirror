@@ -10,19 +10,19 @@ import (
 	"io/fs"
 	"net/http"
 
-	authApp "gitlab.com/shaninalex/flowreon/apps/auth"
-	projectApp "gitlab.com/shaninalex/flowreon/apps/project/api"
-	taskApp "gitlab.com/shaninalex/flowreon/apps/task/api"
-	userApp "gitlab.com/shaninalex/flowreon/apps/user/api"
-	"gitlab.com/shaninalex/flowreon/internal/db"
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	authApp "github.com/shaninalex/lumna/apps/auth"
+	projectApp "github.com/shaninalex/lumna/apps/project/api"
+	taskApp "github.com/shaninalex/lumna/apps/task/api"
+	userApp "github.com/shaninalex/lumna/apps/user/api"
+	"github.com/shaninalex/lumna/internal/db"
+	"github.com/shaninalex/lumna/internal/web"
 )
 
 //go:embed all:web/browser
 var webFS embed.FS
 
 func main() {
-	sqlDB, err := sql.Open("sqlite3", "file:flowreon.db?cache=shared&mode=rwc")
+	sqlDB, err := sql.Open("sqlite3", "file:lumna.db?cache=shared&mode=rwc")
 	if err != nil {
 		panic(err)
 	}

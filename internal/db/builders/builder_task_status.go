@@ -3,17 +3,17 @@
 package builders
 
 import (
-	"gitlab.com/shaninalex/flowreon/internal/db"
+	"github.com/shaninalex/lumna/internal/db"
 )
 
 // TaskStatusBuilder builder pattern code
 type TaskStatusBuilder struct {
-	issueStatus *TaskStatus
+	issueStatus *db.TaskStatus
 }
 
 // NewIssueStatusBuilder - new issue status builder.
 func NewIssueStatusBuilder() *TaskStatusBuilder {
-	issueStatus := &TaskStatus{}
+	issueStatus := &db.TaskStatus{}
 	b := &TaskStatusBuilder{issueStatus: issueStatus}
 	return b
 }
@@ -55,6 +55,6 @@ func (b *TaskStatusBuilder) Config(config string) *TaskStatusBuilder {
 }
 
 // Build - builds the value.
-func (b *TaskStatusBuilder) Build() *TaskStatus {
+func (b *TaskStatusBuilder) Build() *db.TaskStatus {
 	return b.issueStatus
 }

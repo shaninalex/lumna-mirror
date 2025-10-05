@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"gitlab.com/shaninalex/flowreon/apps/user/adapter"
-	"gitlab.com/shaninalex/flowreon/domain"
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	"github.com/shaninalex/lumna/apps/user/adapter"
+	"github.com/shaninalex/lumna/domain"
+	"github.com/shaninalex/lumna/internal/web"
 )
 
 // TokenHandler handles HTTP requests related to user tokens.
