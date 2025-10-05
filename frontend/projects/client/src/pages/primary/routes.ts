@@ -4,10 +4,15 @@ import {Overview} from './overview/overview';
 import {overviewResolver} from './overview/overview.resolver';
 import {ProjectsListPageComponent} from './projects-list/projects-list-page.component'
 import {projectListResolver} from './projects-list/projects-list.resolver';
-import {ProjectDetailPageComponent} from '@client/pages/primary/project-detail';
+import {
+    BoardViewPageComponent,
+    ProjectDetailPageComponent,
+    ProjectSettingsPageComponent
+} from '@client/pages/primary/project-detail';
 import {ProjectsRootComponent} from '@client/pages/primary/projects-root';
 import {SettingsPageComponent} from '@client/pages/primary/settings-page';
 import {authGuard} from './auth.guard';
+import {BoardViewComponent} from '@client/features/project';
 
 export const mainRoutes: Routes = [
     {
@@ -31,6 +36,20 @@ export const mainRoutes: Routes = [
                     },
                     {
                         path: ":projectKey",
+                        component: ProjectDetailPageComponent,
+                        children: [
+                            {
+                                path: "",
+                                component: BoardViewPageComponent
+                            },
+                            {
+                                path: "settings",
+                                component: ProjectSettingsPageComponent
+                            },
+                        ]
+                    },
+                    {
+                        path: ":projectKey/settings",
                         component: ProjectDetailPageComponent,
                     },
                 ]
