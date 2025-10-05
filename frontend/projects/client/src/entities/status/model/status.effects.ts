@@ -3,7 +3,8 @@ import {inject} from '@angular/core';
 import {exhaustMap, of, switchMap} from 'rxjs';
 import {
     CreateStatusAction, DeleteStatusAction, DeleteStatusSuccessAction,
-    GetStatusListActions, PatchStatusAction, PatchStatusSuccessAction,
+    GetStatusListActions, PatchStatusAction, PatchStatusSortAction,
+    PatchStatusSortSuccessAction, PatchStatusSuccessAction,
     SetStatusAction,
     SetStatusListActions,
     StatusService
@@ -73,3 +74,19 @@ export const statusDeleteEffect = createEffect(
     ),
     {functional: true, dispatch: true}
 )
+
+export const statusSortPatchEffect = createEffect(
+    (
+        actions$ = inject(Actions),
+        api = inject(StatusService),
+    ) => actions$.pipe(
+        ofType(PatchStatusSortAction),
+        exhaustMap((action) => {
+                return api.StatusSort(action.projectId, action.payload).pipe(
+                    switchMap(data => of(PatchStatusSortSuccessAction({payload: data}))),
+                )
+            }
+        )
+    ),
+    {functional: true, dispatch: true}
+);

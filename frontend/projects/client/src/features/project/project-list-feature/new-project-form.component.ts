@@ -15,24 +15,23 @@ import {AppState} from '@client/shared/store';
     template: `
         <div>
             @if (!showForm) {
-                <button (click)="toggleProjectForm()">Create Project</button>
+                <button class="btn btn-primary" (click)="toggleProjectForm()">Create Project</button>
             } @else {
                 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-                    <input autofocus placeholder="Project Title" type="text" formControlName="title">
-                    @if (form.controls['title'].dirty && form.controls['title'].errors) {
-                        @if (form.controls['title'].errors['required']) {
-                            <div class="text-sm">This field is required</div>
+                    <div class="mb-2">
+                        <input class="input" autofocus placeholder="Project Title" type="text" formControlName="title">
+                        @if (form.controls['title'].dirty && form.controls['title'].errors) {
+                            @if (form.controls['title'].errors['required']) {
+                                <div class="text-sm">This field is required</div>
+                            }
+                            @if (form.controls['title'].errors['pattern']) {
+                                <div class="text-sm">Special characters! Only a-z, A-Z and 0-9 are available</div>
+                            }
                         }
-                        @if (form.controls['title'].errors['pattern']) {
-                            <div class="text-sm">Special characters! Only a-z, A-Z and 0-9 are available</div>
-                        }
-                    }
-
+                    </div>
                     <div class="flex gap-2 items-center">
-                        <button [disabled]="loading || !form.valid" type="submit">Create
-                        </button>
-                        <button [disabled]="loading" type="button" (click)="cancel()">Cancel
-                        </button>
+                        <button class="btn btn-primary" [disabled]="loading || !form.valid" type="submit">Create</button>
+                        <button class="btn btn-secondary" [disabled]="loading" type="button" (click)="cancel()">Cancel</button>
                         @if (loading) {
                             <ui-loader/>
                         }

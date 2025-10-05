@@ -1,7 +1,9 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {createReducer, on} from '@ngrx/store';
 import {
-    DeleteStatusSuccessAction, PatchStatusSuccessAction,
+    DeleteStatusSuccessAction,
+    PatchStatusSortSuccessAction,
+    PatchStatusSuccessAction,
     SetStatusAction,
     SetStatusListActions,
     Status
@@ -20,4 +22,8 @@ export const statusReducer = createReducer(
         changes: action.payload
     }, state)),
     on(DeleteStatusSuccessAction, (state, action) => statusAdapter.removeOne(action.statusId, state)),
+    on(PatchStatusSortSuccessAction, (state, action) => statusAdapter.updateMany(action.payload.map(status => ({
+        id: status.id,
+        changes: status,
+    })), state))
 )

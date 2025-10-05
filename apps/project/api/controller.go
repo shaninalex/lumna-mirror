@@ -31,6 +31,7 @@ func (s *ProjectController) init() {
 	projectStatusHandler := handler.NewProjectStatusHandler()
 	s.router.GET("/api/v1/project/{id}/statuses", projectStatusHandler.Get)
 	s.router.POST("/api/v1/project/{id}/statuses", projectStatusHandler.Post)
+	s.router.PATCH("/api/v1/project/{id}/statuses-sort", projectStatusHandler.PatchSort)
 	s.router.PATCH("/api/v1/project/{id}/statuses/{statusId}", projectStatusHandler.Patch)
 	s.router.DELETE("/api/v1/project/{id}/statuses/{statusId}", projectStatusHandler.Delete)
 

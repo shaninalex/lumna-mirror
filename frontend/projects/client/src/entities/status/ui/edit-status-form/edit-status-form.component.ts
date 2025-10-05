@@ -15,12 +15,11 @@ import {DialogRef, DIALOG_DATA} from '@angular/cdk/dialog';
     ],
     template: `
         <div class="card">
-            <div class="card-header mb-4">Config "{{ data.status.title }}" column</div>
-
+            <div class="card-title mb-4">Config "{{ form.value['title'] }}" column</div>
             <div class="mb-4">
                 <form [formGroup]="form">
                     <div class="mb-4">
-                    <input class="input" formControlName="title"/>
+                        <input class="input" formControlName="title"/>
                     </div>
                     <div>
                         <input id="task-complete" class="me-2" type="checkbox" formControlName="complete"/>
@@ -31,9 +30,11 @@ import {DialogRef, DIALOG_DATA} from '@angular/cdk/dialog';
             </div>
 
             <div class="flex gap-2">
-                <button class="btn-secondary" (click)="cancel()">Cancel</button>
-                <button class="btn" (click)="onSubmit()">Update</button>
-                <button class="btn-danger" (click)="onDelete()" title="Deleting status also delete all tasks in it">Delete</button>
+                <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+                <button class="btn btn-primary" (click)="onSubmit()">Update</button>
+                <button class="btn btn-danger" (click)="onDelete()" title="Deleting status also delete all tasks in it">
+                    Delete
+                </button>
             </div>
         </div>
     `

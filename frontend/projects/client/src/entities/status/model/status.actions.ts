@@ -40,3 +40,14 @@ export const DeleteStatusSuccessAction = createAction(
     "[status] delete status success",
     props<{ projectId: number, statusId: number }>(),
 )
+
+export const PatchStatusSortAction = createAction(
+    "[status] update status sort",
+    props<{ projectId: number, payload: Record<number, number>}>()
+)
+
+export const PatchStatusSortSuccessAction = createAction(
+    "[status] update status sort done",
+    props<{ payload: Status[] }>(),
+)
+

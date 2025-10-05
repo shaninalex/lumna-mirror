@@ -13,6 +13,7 @@ import {UserService} from '@client/entities/user';
     template: `
         <button class="cursor-pointer" (click)="logoutAction()">
             @if (!loading) {
+                <i class="i-logout"></i>
                 Logout
             } @else {
                 <ui-loader />

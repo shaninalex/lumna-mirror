@@ -67,7 +67,7 @@ import {Actions, ofType} from '@ngrx/effects';
             @if (loading) {
                 <ui-loader />
             } @else {
-                <button class="btn" type="submit">Save</button>
+                <button class="btn btn-primary" type="submit">Save</button>
             }
         </form>
     `
@@ -79,14 +79,14 @@ export class SettingsFormComponent implements OnInit {
     loading: boolean = false;
     user: UserModel
     weekDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-    form: FormGroup<{
-        theme: FormControl<string>;
-        language: FormControl<string>;
-        timezone: FormControl<string>;
-        date_format: FormControl<string>;
-        time_format: FormControl<string>;
-        week_start_day: FormControl<string>;
-    }>;
+    form: FormGroup = new FormGroup({
+        theme: new FormControl("light"),
+        language: new FormControl("en"),
+        timezone: new FormControl(''),
+        date_format: new FormControl('YYYY-MM-DD'),
+        time_format: new FormControl('HH:mm'),
+        week_start_day: new FormControl("0"),
+    });
 
     constructor() {
         this.actions$.pipe(ofType(SetUserAction)).subscribe(() => this.loading = false)
@@ -105,14 +105,6 @@ export class SettingsFormComponent implements OnInit {
                 week_start_day: user.settings.week_start_day,
             })
         })
-        this.form = this.fb.group({
-            theme: this.fb.control<string>("light", { nonNullable: true }),
-            language: this.fb.control<string>("en", { nonNullable: true }),
-            timezone: this.fb.control<string>('', { nonNullable: true }),
-            date_format: this.fb.control<string>('YYYY-MM-DD', { nonNullable: true }),
-            time_format: this.fb.control<string>('HH:mm', { nonNullable: true }),
-            week_start_day: this.fb.control<string>("0", { nonNullable: true }),
-        });
     }
 
     save() {

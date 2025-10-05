@@ -11,19 +11,19 @@ import {RouterLink} from '@angular/router';
     ],
     template: `
         <div class="card">
-            <div class="card-header">
+            <div class="card-title mb-1">
                 <a [routerLink]="['/projects', projectKey, task.code]">
                     {{ task.title }}
                     @if (task.completed) {
-                        completed
+                        <i class="i-check-circle text-emerald-500 text-lg"></i>
                     }
                 </a>
             </div>
             <div>
                 <div class="flex items-center gap-2">
                     <div class="text-sm">
-                        {{ task.created_at | date:"EEE, MMM d, HH:mm:ss" }} <br>
-                        <small class="text-gray-500 dark:text-gray-300">{{ task.code }}</small>
+                        <div class="text-xs">{{ task.created_at | date:"EEE, MMM d, HH:mm:ss" }}</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-300">{{ task.code }}</div>
                     </div>
                     <div class="ms-auto">
                         <img src="/img/1.png" class="rounded-full w-6">

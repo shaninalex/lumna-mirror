@@ -11,7 +11,7 @@ import {DatePipe} from '@angular/common';
     ],
     template: `
         <div class="card">
-            <div class="card-header">
+            <div class="card-title">
                 <a [routerLink]="[ project.code ]">
                     {{ project.title }}
                 </a>

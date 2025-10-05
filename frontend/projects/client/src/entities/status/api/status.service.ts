@@ -6,6 +6,7 @@ import {Status, StatusInput} from '@client/entities/status/model';
 
 const statusUrl = {
     statusRoot: (projectId: number) => `${env.API_ROOT}/api/v1/project/${projectId}/statuses`,
+    statusSort: (projectId: number) => `${env.API_ROOT}/api/v1/project/${projectId}/statuses-sort`,
     statusItem:  (projectId: number, statusId: number) => `${env.API_ROOT}/api/v1/project/${projectId}/statuses/${statusId}`,
 }
 
@@ -31,6 +32,12 @@ export class StatusService extends CommonApiService {
 
     public Delete(projectId: number, statusId: number): Observable<null> {
         return this.delete<null>(statusUrl.statusItem(projectId, statusId)).pipe(
+            map(data => data.data),
+        );
+    }
+
+    public StatusSort(projectId: number, payload: Record<number, number>): Observable<Status[]> {
+        return this.patch<Status[]>(statusUrl.statusSort(projectId), payload).pipe(
             map(data => data.data),
         );
     }
