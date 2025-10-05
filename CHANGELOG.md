@@ -1,3 +1,16 @@
+## 0.14.0 (2025-10-05)
+
+### Feat
+
+- remove material design again ( use only angular cdk )
+
+### Fix
+
+- complete tasks via status
+- **ui**: task list index
+- **ui**: task list index
+- **ui**: change status
+
 ## 0.13.0 (2025-10-05)
 
 ### Feat
