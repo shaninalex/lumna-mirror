@@ -41,28 +41,27 @@ import {TaskFormSmComponent} from '@client/features/project/board-view-feature/c
     styleUrl: './board-view.component.scss',
     template: `
         @if (columns$ | async; as columns) {
-            <div cdkDropListGroup class="flex justify-start no-wrap gap-4 w-full">
+            <div cdkDropListGroup class="flex justify-start items-start no-wrap gap-4 w-full">
                 @for (column of columns; track $index) {
                     <div class="card board-column">
-                        <div class="flex justify-between mb-2">
+                        <div class="flex justify-between mb-4">
                             <div class="text-slate-600 card-title">{{ column.title }}</div>
                             <fr-column-header [project]="project" [column]="column"/>
                         </div>
 
-                        <fr-task-form-sm [project]="project" [column]="column" />
-
-                        <div class="flex flex-col gap-2 min-h-20 mt-4"
+                        <div class="flex flex-col gap-2 min-h-2 my-4"
                              cdkDropList
                              [id]="column.id"
                              [cdkDropListData]="column.tasks"
                              (cdkDropListDropped)="drop($event)">
                             @for (task of column.tasks; track task.id) {
-                                <fr-task-card [projectKey]="project.code"
+                                <fr-task-card cdkDrag [projectKey]="project.code"
                                               [task]="task"
-                                              [cdkDragData]="task"
-                                              cdkDrag/>
+                                              [cdkDragData]="task" />
                             }
                         </div>
+
+                        <fr-task-form-sm [project]="project" [column]="column" />
                     </div>
                 }
                 <fr-create-status-form [projectId]="project.id" />
