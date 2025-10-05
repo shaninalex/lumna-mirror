@@ -1,3 +1,18 @@
+## 0.15.0 (2025-10-05)
+
+### Feat
+
+- **ui**: sort statuses + breadcrumbs
+- **ui**: ui for project settings page
+
+### Fix
+
+- **ui**: styles
+- **ui**: styles
+- **ui**: create task form position
+- **ui**: icons + sidebar collapse
+- **ui**: styles
+
 ## 0.14.0 (2025-10-05)
 
 ### Feat
