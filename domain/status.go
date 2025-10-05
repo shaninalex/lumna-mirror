@@ -62,6 +62,7 @@ type StatusWriter interface {
 	Create(ctx context.Context, projectId uint, title string, complete bool) (*Status, error)
 	Patch(ctx context.Context, data *Status) (*Status, error)
 	Delete(ctx context.Context, statusId uint) error
+	SortProjectStatus(ctx context.Context, data map[int64]int64) error
 }
 
 type StatusManager interface {
@@ -70,6 +71,20 @@ type StatusManager interface {
 }
 
 type StatusService struct {
+}
+
+func (s StatusService) SortProjectStatus(ctx context.Context, data map[int64]int64) error {
+	for idx, statusId := range data {
+		status, err := db.TaskStatusByID(ctx, db.GetDb(ctx), uint(statusId))
+		if err != nil {
+			return err
+		}
+		status.ListIndex = uint(idx)
+		if err = db.TaskStatusUpdate(ctx, db.GetDb(ctx), status); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (s StatusService) Get(ctx context.Context, id uint) (*Status, error) {

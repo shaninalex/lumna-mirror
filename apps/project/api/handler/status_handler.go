@@ -83,3 +83,23 @@ func (s *ProjectStatusHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 	web.Success(w, nil, "status deleted")
 }
+
+func (s *ProjectStatusHandler) PatchSort(w http.ResponseWriter, r *http.Request) {
+	projectID := web.UrlNumericParam(w, r, "id")
+	payload, err := web.BodyParser[map[int64]int64](r)
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	err = s.statusService.SortProjectStatus(r.Context(), *payload)
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	statuses, err := s.statusService.ProjectStatuses(r.Context(), uint(projectID))
+	if err != nil {
+		web.Error(w, http.StatusNotFound, err)
+		return
+	}
+	web.Success(w, adapter.ToTaskStatusesDto(statuses))
+}

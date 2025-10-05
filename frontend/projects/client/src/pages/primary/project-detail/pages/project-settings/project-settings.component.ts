@@ -3,10 +3,11 @@ import {ActivatedRoute} from '@angular/router';
 import {Project} from '@client/entities/project';
 import {AppState} from '@client/shared/store';
 import {Store} from '@ngrx/store';
-import {selectProjectStatusList, Status} from '@client/entities/status';
+import {PatchStatusSortAction, selectProjectStatusList, Status} from '@client/entities/status';
 import {filter, map, take, tap} from 'rxjs';
 import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {NgClass} from '@angular/common';
 
 
 @Component({
@@ -15,6 +16,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
         CdkDropList,
         CdkDrag,
         ReactiveFormsModule,
+        NgClass,
     ],
     styleUrl: './project-settings.component.scss',
     template: `
@@ -34,14 +36,13 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
             <div class="card-title">Status order:</div>
             <div cdkDropList class="status-sort-list mb-4" (cdkDropListDropped)="drop($event)">
                 @for (status of statusList; track status.id) {
-                    <div cdkDrag class="status-sort-item">
+                    <div cdkDrag class="status-sort-item" [ngClass]="{'accent': status.complete}">
                         {{ status.title }}
                     </div>
                 }
             </div>
             <div class="flex gap-2">
                 <button (click)="saveOrder()" class="btn btn-primary">Save</button>
-                <button (click)="cancelOrder()" class="btn btn-secondary">Reset</button>
             </div>
         </div>
     `
@@ -75,13 +76,11 @@ export class ProjectSettingsPageComponent implements OnInit {
     }
 
     saveOrder(): void {
+        const order: Record<number, number> = {}
         for (let i = 0; i < this.statusList.length; i++) {
-            console.log(this.statusList[i].title)
+            order[i+1] = this.statusList[i].id
         }
-    }
-
-    cancelOrder(): void {
-
+        this.store.dispatch(PatchStatusSortAction({ projectId: this.project.id, payload: order }))
     }
 
     onSubmitTitleForm(): void {}

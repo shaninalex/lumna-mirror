@@ -11,6 +11,10 @@
     font-family: sans-serif;
 }
 
+.status-sort-item.accent {
+    background: oklch(95% .052 163.051) // --color-emerald-100
+}
+
 .cdk-drag-placeholder {
     opacity: 0.25;
 }

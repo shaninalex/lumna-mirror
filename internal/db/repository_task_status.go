@@ -26,6 +26,7 @@ func TaskStatusListByProject(ctx context.Context, db *sql.DB, id uint) ([]*TaskS
 	from statuses s
 	join projects p on p.id = s.project_id                                              
 	where p.id = ?
+	order by s.list_index
 	`
 	rows, err := db.QueryContext(ctx, q, id)
 	if err != nil {

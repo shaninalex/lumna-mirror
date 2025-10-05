@@ -8,6 +8,7 @@ import {UserLogoutFeature} from '@client/features/user';
 import {selectUser} from '@client/entities/user';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {UiService} from '@client/shared/ui/ui.service';
+import {BreadcrumbsComponent} from './breadcrumbs';
 
 @Component({
     selector: 'fr-header',
@@ -17,16 +18,20 @@ import {UiService} from '@client/shared/ui/ui.service';
         UserLogoutFeature,
         OverlayModule,
         RouterLinkActive,
+        BreadcrumbsComponent,
     ],
     template: `
         <div class="py-2 px-4 flex items-center justify-between border-b border-gray-300">
-            <button (click)="toggleSidebar()" class="cursor-pointer">
-                @if (closeSidebar) {
-                    <i class="i-arrow-right"></i>
-                } @else {
-                    <i class="i-arrow-left"></i>
-                }
-            </button>
+            <div class="flex items-center gap-4">
+                <button (click)="toggleSidebar()" class="cursor-pointer">
+                    @if (closeSidebar) {
+                        <i class="i-arrow-right"></i>
+                    } @else {
+                        <i class="i-arrow-left"></i>
+                    }
+                </button>
+                <fr-breadcrumbs />
+            </div>
             <div class="flex items-center gap-2 ms-auto">
                 @if (email$ | async; as email) {
                     <div tabindex="0" role="button" class="flex items-center gap-2 cursor-pointer" (click)="isOpen = !isOpen"
@@ -75,8 +80,6 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.router.events
-            .pipe(filter(e => e instanceof NavigationStart))
-            .subscribe(() => this.isOpen = false);
+        this.router.events.pipe(filter(e => e instanceof NavigationStart)).subscribe(() => this.isOpen = false);
     }
 }

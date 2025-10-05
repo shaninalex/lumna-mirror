@@ -16,5 +16,7 @@ export const selectStatus = (id: number) => createSelector(
 
 export const selectProjectStatusList = (project_id: number) => createSelector(
     selectStatusFeature,
-    (state: StatusState) => statusSelectors.selectAll(state).filter(p => p.project_id === project_id)
+    (state: StatusState) => statusSelectors.selectAll(state)
+        .filter(p => p.project_id === project_id)
+        .sort((a, b) => a.index - b.index)
 )
