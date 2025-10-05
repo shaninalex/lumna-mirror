@@ -64,6 +64,7 @@ func (s *ProjectStatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	status.Title = payload.Title
+	status.Completed = payload.Complete
 	status, err = s.statusService.Patch(ctx, status)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)

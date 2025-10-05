@@ -7,8 +7,6 @@ import {Observable} from 'rxjs';
 import {selectProjects} from '@client/entities/project/model/project.selectors';
 import {AsyncPipe} from '@angular/common';
 import {NewProjectFormComponent} from '@client/features/project/project-list-feature/new-project-form.component';
-import {Actions, ofType} from '@ngrx/effects';
-import { MatButtonModule} from '@angular/material/button';
 
 @Component({
     selector: 'fr-project-list-feature',
@@ -16,7 +14,6 @@ import { MatButtonModule} from '@angular/material/button';
         ProjectCardComponent,
         AsyncPipe,
         NewProjectFormComponent,
-        MatButtonModule,
     ],
     template: `
         <div class="mb-4">

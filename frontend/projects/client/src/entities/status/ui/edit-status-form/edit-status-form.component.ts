@@ -4,60 +4,43 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {AppState} from '@client/shared/store';
 import {Store} from '@ngrx/store';
 
-import {MatButton} from '@angular/material/button';
-import {
-    MAT_DIALOG_DATA,
-    MatDialogActions,
-    MatDialogContent,
-    MatDialogRef,
-    MatDialogTitle,
-} from '@angular/material/dialog';
-import {MatFormField} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
 import {DialogData} from './model';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatCheckbox} from '@angular/material/checkbox';
+import {DialogRef, DIALOG_DATA} from '@angular/cdk/dialog';
 
 
 @Component({
     selector: 'fr-edit-status-form',
     imports: [
         ReactiveFormsModule,
-        MatButton,
-        MatDialogActions,
-        MatDialogContent,
-        MatDialogTitle,
-        MatFormField,
-        MatInput,
-        MatTooltipModule,
-        MatCheckbox
     ],
     template: `
-        <h2 mat-dialog-title>Config "{{ data.status.title }}" column</h2>
+        <div class="card">
+            <div class="card-header mb-4">Config "{{ data.status.title }}" column</div>
 
-        <mat-dialog-content>
-            <form [formGroup]="form">
-                <mat-form-field appearance="outline" class="w-full">
-                    <input matInput formControlName="title" />
-                </mat-form-field>
-                <div>
-                    <mat-checkbox formControlName="complete">Complete</mat-checkbox>
-                    <p class="text-sm">Tasks in that column will be marked as completed</p>
-                </div>
-            </form>
-        </mat-dialog-content>
+            <div class="mb-4">
+                <form [formGroup]="form">
+                    <div class="mb-4">
+                    <input class="input" formControlName="title"/>
+                    </div>
+                    <div>
+                        <input id="task-complete" class="me-2" type="checkbox" formControlName="complete"/>
+                        <label for="task-complete">Task complete</label>
+                        <p class="text-sm">Tasks in that column will be marked as completed</p>
+                    </div>
+                </form>
+            </div>
 
-        <mat-dialog-actions>
-            <button matButton (click)="cancel()">Cancel</button>
-            <button matButton (click)="onSubmit()">Update</button>
-            <button matButton (click)="onDelete()"
-                    matTooltip="Deleting status also delete all tasks in it">Delete</button>
-        </mat-dialog-actions>
+            <div class="flex gap-2">
+                <button class="btn-secondary" (click)="cancel()">Cancel</button>
+                <button class="btn" (click)="onSubmit()">Update</button>
+                <button class="btn-danger" (click)="onDelete()" title="Deleting status also delete all tasks in it">Delete</button>
+            </div>
+        </div>
     `
 })
 export class EditStatusFormComponent implements OnInit {
-    readonly dialogRef = inject(MatDialogRef<EditStatusFormComponent>);
-    readonly data = inject<DialogData>(MAT_DIALOG_DATA);
+    readonly dialogRef = inject(DialogRef<EditStatusFormComponent>);
+    readonly data = inject<DialogData>(DIALOG_DATA);
     private store = inject(Store<AppState>);
 
     form: FormGroup = new FormGroup({
@@ -81,7 +64,7 @@ export class EditStatusFormComponent implements OnInit {
             projectId: this.data.status.project_id,
             statusId: this.data.status.id,
         }))
-        this.dialogRef.close(this.data.status);
+        this.dialogRef.close(); //this.data.status
     }
 
     onDelete(): void {

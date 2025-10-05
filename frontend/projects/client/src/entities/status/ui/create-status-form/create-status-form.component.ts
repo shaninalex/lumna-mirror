@@ -3,33 +3,30 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {CreateStatusAction} from '@client/entities/status';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @Component({
     selector: 'fr-create-status-form',
     imports: [
         ReactiveFormsModule,
-        MatInputModule,
-        MatButtonModule,
-        MatCheckboxModule,
     ],
     template: `
         @if (showForm) {
             <form [formGroup]="form" (ngSubmit)="onSubmit()" class="my-4">
-                <mat-form-field appearance="outline" class="w-full">
-                    <input matInput type="text" placeholder="Column title" formControlName="title"/>
-                </mat-form-field>
+                <div class="w-full mb-4">
+                    <input class="input" type="text" placeholder="Column title" formControlName="title"/>
+                </div>
                 <div class="mb-4">
-                    <mat-checkbox formControlName="complete">Complete</mat-checkbox>
+                    <input id="status-completed" class="me-2" type="checkbox" formControlName="complete"/>
+                    <label for="status-completed">Completed</label>
                     <p class="text-sm">Tasks in that column will be marked as completed</p>
                 </div>
-                <button matButton="outlined" type="submit" [disabled]="!form.valid">Save</button>
-                <button matButton="outlined" type="button" (click)="cancel()">Cancel</button>
+                <div class="flex gap-2">
+                    <button class="btn" type="submit" [disabled]="!form.valid">Save</button>
+                    <button class="btn-secondary" type="button" (click)="cancel()">Cancel</button>
+                </div>
             </form>
         } @else {
-            <button matButton="outlined" type="button" (click)="showForm = true">New column</button>
+            <button type="button" (click)="showForm = true">New column</button>
         }
     `
 })

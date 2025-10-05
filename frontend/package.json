@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -15,7 +15,6 @@
     "@angular/compiler": "^20.0.0",
     "@angular/core": "^20.0.0",
     "@angular/forms": "^20.0.0",
-    "@angular/material": "^20.2.1",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
     "@ngrx/effects": "^20.0.1",

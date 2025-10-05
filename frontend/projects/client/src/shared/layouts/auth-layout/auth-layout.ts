@@ -1,27 +1,17 @@
 import {Component, Input} from '@angular/core';
 import {version} from '@root/package.json';
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
 
 @Component({
     selector: 'fr-auth-layout',
-    imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardTitle,
-        MatCardContent
-    ],
+    imports: [],
     template: `
-        <div class="flex items-center justify-center h-screen">
+        <div class="flex items-center justify-center h-screen bg-slate-100">
             <div>
                 <img src="img/logo.svg" alt="Lumna" class="mb-8 w-48 mx-auto"/>
-                <mat-card appearance="outlined">
-                    <mat-card-header>
-                        <mat-card-title>{{ title }}</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <ng-content></ng-content>
-                    </mat-card-content>
-                </mat-card>
+                <div class="card">
+                    <div class="card-header">{{ title }}</div>
+                    <ng-content></ng-content>
+                </div>
                 <div class="text-xs text-base-300 text-end">v{{ version }}</div>
             </div>
         </div>

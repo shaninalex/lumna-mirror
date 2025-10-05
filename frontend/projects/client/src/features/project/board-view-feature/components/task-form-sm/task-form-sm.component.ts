@@ -7,51 +7,43 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {Project} from '@client/entities/project';
 import {StatusColumn} from '@client/features/project/board-view-feature/board.model';
-import {MatButtonModule} from '@angular/material/button';
-import {MatInputModule} from '@angular/material/input';
-import {MatIconModule} from '@angular/material/icon';
 
 @Component({
     selector: 'fr-task-form-sm',
     imports: [
         LoaderComponent,
         ReactiveFormsModule,
-        MatButtonModule,
-        MatInputModule,
-        MatIconModule,
     ],
     template: `
         @if (showForm) {
-
-        <form [formGroup]="form" (ngSubmit)="submitForm()" class="mb-4">
-            <div class="flex-grow">
-                <mat-form-field appearance="outline" class="w-full">
-                    <input matInput autofocus placeholder="Task title" type="text" formControlName="title">
+            <form [formGroup]="form" (ngSubmit)="submitForm()" class="mb-4 flex gap-2">
+                <div class="flex-grow">
+                    <input class="input" autofocus placeholder="Task title" type="text" formControlName="title">
                     @if (form.controls['title'].dirty && form.controls['title'].errors) {
                         @if (form.controls['title'].errors['required']) {
-                            <mat-error class="text-sm">This field is required</mat-error>
+                            <div class="text-sm">This field is required</div>
                         }
                         @if (form.controls['title'].errors['pattern']) {
-                            <mat-error class="text-sm">Special characters! Only a-z, A-Z and 0-9 are available</mat-error>
+                            <div class="text-sm">Special characters! Only a-z, A-Z and 0-9 are available</div>
                         }
                     }
-                </mat-form-field>
-            </div>
-            @if (loading) {
-                <ui-loader/>
-            } @else {
-                <button matButton="outlined" type="submit"
-                    [disabled]="loading || !form.valid" >
-                    <mat-icon>add_circle</mat-icon>
-                    Add
-                </button>
-            }
-            <button matButton="outlined" type="button" (click)="cancel()">
-                Cancel
-            </button>
-        </form>
+                </div>
+
+                <div class="flex gap-2">
+                    @if (loading) {
+                        <ui-loader/>
+                    } @else {
+                        <button class="btn btn-icon" type="submit" [disabled]="loading || !form.valid">
+                            +
+                        </button>
+                    }
+                    <button class="btn-secondary btn-icon" type="button" (click)="cancel()">
+                        X
+                    </button>
+                </div>
+            </form>
         } @else {
-            <button matButton="outlined" (click)="showForm = true">
+            <button class="btn-secondary btn-icon" (click)="showForm = true">
                 Create task
             </button>
         }

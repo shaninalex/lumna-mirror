@@ -9,8 +9,6 @@ import {BoardViewComponent} from '@client/features/project/board-view-feature';
 import {CdkMenuModule} from '@angular/cdk/menu';
 import {GetTasksActions} from '@client/entities/task';
 import {GetStatusListActions} from '@client/entities/status';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
 import {OverlayModule} from '@angular/cdk/overlay';
 
 @Component({
@@ -19,8 +17,6 @@ import {OverlayModule} from '@angular/cdk/overlay';
         AsyncPipe,
         BoardViewComponent,
         CdkMenuModule,
-        MatButtonModule,
-        MatIconModule,
         OverlayModule,
     ],
     template: `
@@ -29,8 +25,8 @@ import {OverlayModule} from '@angular/cdk/overlay';
                 <img src="/img/project.svg" class="w-6 rounded"/>
                 <h3 class="font-bold text-xl">{{ project.title }}</h3>
 
-                <button matIconButton cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="isOpen = !isOpen">
-                    <mat-icon>more_vert</mat-icon>
+                <button cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="isOpen = !isOpen">
+                    menu
                 </button>
 
                 <ng-template
