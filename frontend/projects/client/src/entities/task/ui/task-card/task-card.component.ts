@@ -2,17 +2,24 @@ import {Component, Input} from '@angular/core';
 import {Task} from '@client/entities/task';
 import {DatePipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
-import {FormsModule} from '@angular/forms';
 
 @Component({
     selector: "fr-task-card",
-    imports: [DatePipe, RouterLink, FormsModule],
+    imports: [
+        DatePipe,
+        RouterLink,
+    ],
     template: `
-        <div class="card card-sm border border-base-300 bg-base-200">
-            <div class="card-body">
-                <a [routerLink]="['/projects', projectKey, task.code]" class="card-title cursor-pointer text-left">
+        <div class="card">
+            <div class="card-header">
+                <a [routerLink]="['/projects', projectKey, task.code]">
                     {{ task.title }}
+                    @if (task.completed) {
+                        completed
+                    }
                 </a>
+            </div>
+            <div>
                 <div class="flex items-center gap-2">
                     <div class="text-sm">
                         {{ task.created_at | date:"EEE, MMM d, HH:mm:ss" }} <br>

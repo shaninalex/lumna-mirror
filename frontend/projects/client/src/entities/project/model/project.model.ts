@@ -1,21 +1,7 @@
 export interface Project {
-    id: string
+    id: number
     title: string
-    project_key: string
-    statuses: TaskStatus[]
+    code: string
     created_at: Date
     updated_at: Date
-}
-
-export interface TaskStatus {
-    id: string
-    title: string
-    description: string
-    complete :boolean
-    index: number
-    config: TaskStatusConfig
-}
-
-export interface TaskStatusConfig {
-    color: string
 }

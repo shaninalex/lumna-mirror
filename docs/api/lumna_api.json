@@ -1,32 +1,49 @@
 {
-  "openapi": "3.0.4",
+  "openapi": "3.0.0",
   "info": {
     "title": "Swagger Lumna - OpenAPI 3.0",
+    "description": "Title",
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "variables": {},
+      "description": "Default local server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authentication"
+    },
+    {
+      "name": "User",
+      "description": "User details requests"
+    },
+    {
+      "name": "Project",
+      "description": "Project list, details, basic CRUD requests"
+    },
+    {
+      "name": "Task",
+      "description": "Task CRUD requests and specific actions"
+    }
+  ],
   "paths": {
-    "/api/auth/login": {
+    "/api/v1/auth/login": {
       "post": {
         "summary": "Basic user login with email/password",
+        "tags": [
+          "Auth"
+        ],
         "description": "Authenticates user and sets an HTTP-only cookie `access_token`. \nThe token is automatically sent with subsequent requests.\n",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email",
-                    "example": "user@example.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "format": "password",
-                    "example": "supersecret"
-                  }
-                }
+                "$ref": "#/components/schemas/AuthPayload"
               }
             }
           }
@@ -45,16 +62,603 @@
             },
             "content": {
               "application/json": {
+                "example": {
+                  "status": true,
+                  "messages": [
+                    {
+                      "text": "login successfull",
+                      "type": "success"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "summary": "User registration with email and password",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful registration just return empty response and success message",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "messages": [
+                    {
+                      "text": "registration successfull",
+                      "type": "success"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unsuccessfull registration return error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/me": {
+      "get": {
+        "summary": "Get the authenticated user",
+        "description": "Returns the full user object of the currently authenticated account.",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user",
+            "content": {
+              "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": {
+                    "status": {
                       "type": "boolean",
                       "example": true
                     },
-                    "message": {
-                      "type": "string",
-                      "example": "Login successful"
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/update": {
+      "post": {
+        "summary": "Update authenticated user",
+        "description": "Updates the authenticated user’s profile information (e.g., username, email, or settings).",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "@username123875"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "email@example.com"
+                  },
+                  "settings": {
+                    "$ref": "#/components/schemas/UserSettings"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/logout": {
+      "get": {
+        "summary": "Log out authenticated user",
+        "description": "Logs out the currently authenticated user by revoking their session in the database and clearing the authentication cookie from the response.",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully logged out",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": true,
+                  "messages": [
+                    {
+                      "text": "logout successful",
+                      "type": "success"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects": {
+      "get": {
+        "summary": "Retrieve all projects",
+        "description": "Returns a list of projects accessible to the authenticated user.",
+        "tags": [
+          "Project"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved projects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Project"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new project",
+        "description": "Creates a new project with the provided details and returns the created project object.",
+        "tags": [
+          "Project"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Project name"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully created project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Project"
+                    },
+                    "messages": {
+                      "$ref": "#/components/schemas/Message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects/{id}": {
+      "get": {
+        "summary": "Retrieve a specific project",
+        "description": "Returns the details of a single project by its unique identifier.",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique identifier of the project",
+            "example": 324234
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects/{id}/tasks": {
+      "get": {
+        "summary": "Retrieve tasks for a project",
+        "description": "Returns a list of all tasks that belong to the specified project, identified by its unique ID.",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique identifier of the project",
+            "example": 324234
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved project tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Task"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new task in a project",
+        "description": "Adds a new task to the specified project, identified by its unique ID. Requires a task title and may include other task details.",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique identifier of the project",
+            "example": 324234
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "Task title"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully created a new task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/project/{id}/badges": {
+      "get": {
+        "summary": "Retrieve all badges",
+        "description": "Returns a list of project depended badges",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique identifier of the project",
+            "example": 324234
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved project badges",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Badge"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create project badge",
+        "description": "Create project depended badge",
+        "tags": [
+          "Project"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique identifier of the project",
+            "example": 324234
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "example": "#dcdcdc"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved project badges",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Badge"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{id}": {
+      "get": {
+        "summary": "Retrieve task details",
+        "description": "Returns the full details of a specific task, identified by its unique ID.   This includes task title, description, status, completion state, tags, and other metadata.   Requires authentication.\n",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique identifier of the task",
+            "example": 324234
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved task details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Task"
                     }
                   }
                 }
@@ -62,11 +666,430 @@
             }
           },
           "401": {
-            "description": "Invalid credentials",
+            "description": "Unauthorized — missing or invalid authentication token",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update task details",
+        "description": "Updates the properties of an existing task, identified by its unique ID.   Fields such as title, description, status, completion state, tags, or list position can be modified.   Only the provided fields will be updated; others remain unchanged.   Requires authentication.\n",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique identifier of the task",
+            "example": 324234
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Identifier of the task's status/column",
+                    "example": 123
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "New title for the task",
+                    "example": "Hello world"
+                  },
+                  "completed": {
+                    "type": "boolean",
+                    "description": "Whether the task is marked as completed",
+                    "example": false
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Detailed description of the task",
+                    "example": "Long task description"
+                  },
+                  "list_index": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Position of the task within its column or list",
+                    "example": 1
+                  },
+                  "tags": {
+                    "type": "array",
+                    "description": "Array of string labels (tags) associated with the task",
+                    "items": {
+                      "type": "string",
+                      "example": "refactoring"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — invalid or malformed input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{id}/status": {
+      "patch": {
+        "summary": "Update task status",
+        "description": "Updates the status (column) and order of a task within a project board.   This endpoint is typically used when moving a task between columns or reordering within the same column.   Requires authentication.\n",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique identifier of the task",
+            "example": 324234
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "from_status": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Identifier of the current status/column the task is moving from",
+                    "example": 12
+                  },
+                  "to_status": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Identifier of the new status/column the task is moving to",
+                    "example": 13
+                  },
+                  "from_index": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Current position (index) of the task in the column",
+                    "example": 2
+                  },
+                  "to_index": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "New position (index) of the task in the column",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated task status and/or position",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — invalid status or index values",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{id}/badges": {
+      "post": {
+        "summary": "Add badge to task",
+        "description": "Attaches a badge (e.g., *blocked*, *priority*) to a task.   Requires the badge identifier and task ID.\n",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique id of the task",
+            "example": 324234
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "badge_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Unique id of the badge to add",
+                    "example": 12
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully added badge to task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — invalid task or badge id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{id}/badges/{badgeId}": {
+      "delete": {
+        "summary": "Remove badge from task",
+        "description": "Removes a specific badge from a task.   Requires both the task ID and the badge ID.\n",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique id of the task",
+            "example": 324234
+          },
+          {
+            "name": "badgeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique id of the badge",
+            "example": 12
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully removed badge from task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — invalid task or badge id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
                 }
               }
             }
@@ -77,6 +1100,57 @@
   },
   "components": {
     "schemas": {
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "title": {
+            "type": "string",
+            "example": "blocked"
+          }
+        }
+      },
+      "Badge": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "title": {
+            "type": "string",
+            "example": "blocked"
+          },
+          "color": {
+            "type": "string",
+            "example": "#dcdcdc"
+          }
+        }
+      },
+      "AuthPayload": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "supersecret"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
       "Project": {
         "type": "object",
         "properties": {
@@ -162,6 +1236,15 @@
           "title": {
             "type": "string",
             "example": "Hello world"
+          },
+          "badge": {
+            "$ref": "#/components/schemas/Badge"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
           },
           "code": {
             "type": "string",
@@ -321,9 +1404,9 @@
       "ApiResponse": {
         "type": "object",
         "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32"
+          "status": {
+            "type": "boolean",
+            "example": true
           },
           "error": {
             "$ref": "#/components/schemas/Error",
@@ -350,6 +1433,23 @@
         "required": [
           "code",
           "meta"
+        ]
+      },
+      "ErrorApiResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "$ref": "#/components/schemas/Error",
+            "nullable": true
+          }
+        },
+        "required": [
+          "status",
+          "error"
         ]
       },
       "Error": {
@@ -382,7 +1482,7 @@
         "properties": {
           "text": {
             "type": "string",
-            "example": "Task completed successfully"
+            "example": "Message text"
           },
           "type": {
             "type": "string",
@@ -402,7 +1502,7 @@
           "id": {
             "type": "integer",
             "format": "int64",
-            "example": 123123123
+            "example": 876458
           },
           "event": {
             "type": "string",
@@ -423,18 +1523,5 @@
         }
       }
     }
-  },
-  "servers": [
-    {
-      "url": "http://localhost:8000",
-      "variables": {},
-      "description": "Default local server"
-    }
-  ],
-  "tags": [
-    {
-      "name": "auth",
-      "description": "User Authentication"
-    }
-  ]
+  }
 }

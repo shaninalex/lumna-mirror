@@ -1,4 +1,4 @@
-// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+// Copyright © 2025 Lumna. All rights reserved.
 
 package handler
 
@@ -6,64 +6,84 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
-	"gitlab.com/shaninalex/flowreon/apps/project/domain"
-	"gitlab.com/shaninalex/flowreon/apps/project/dto"
-	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/domain"
 	"gitlab.com/shaninalex/flowreon/internal/web"
-	"gitlab.com/shaninalex/flowreon/models/repositories"
 )
 
 // ProjectHandler - project handler.
 type ProjectHandler struct {
-	manager domain.ProjectManager
+	projectService domain.ProjectManager
 }
 
 // NewProjectHandler - new project handler.
-func NewProjectHandler(manager domain.ProjectManager) *ProjectHandler {
+func NewProjectHandler() *ProjectHandler {
 	h := &ProjectHandler{
-		manager: manager,
+		projectService: domain.NewProjectService(),
 	}
 	return h
 }
 
-// HandleProjectsList - handle projects list.
-func (s *ProjectHandler) HandleProjectsList(w http.ResponseWriter, r *http.Request) {
-	projects, err := s.manager.List(r.Context())
+// List - retrieve all projects
+func (s *ProjectHandler) List(w http.ResponseWriter, r *http.Request) {
+	projects, err := s.projectService.List(r.Context())
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	pr := []*dto.ProjectDto{}
-	for _, project := range projects {
-		statuses, err := repositories.TaskStatusListByProject(r.Context(), database.GetDb(r.Context()), project.Code)
-		if err != nil {
-			web.Error(w, http.StatusInternalServerError, err)
-			return
-		}
-		projectDto := adapter.NewProjectDto(project)
-		projectDto.Statuses = adapter.NewIssueStatusesDto(statuses)
-		pr = append(pr, projectDto)
-	}
-	web.Success(w, pr)
+	web.Success(w, adapter.ToProjectsDto(projects))
 }
 
-// HandleProjectCreate - handle project tasks list.
-func (s *ProjectHandler) HandleProjectCreate(w http.ResponseWriter, r *http.Request) {
-	projectDto, err := web.BodyParser[dto.ProjectDto](r)
+// Create - create a new project
+func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
+	input, err := web.BodyParser[adapter.ProjectInput](r)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	project, err := s.manager.CreateProject(r.Context(), web.GetUserID(r), projectDto)
+	project, err := s.projectService.CreateProject(r.Context(), &domain.Project{Title: input.Title})
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	web.Success(w, adapter.NewProjectDto(project))
+	web.Success(w, adapter.ToProjectDto(project))
 }
 
-// TaskFilter - task filter.
-type TaskFilter struct {
-	Project  string `query:"project,required"`
-	TaskCode string `query:"taskCode"`
+// Get - retrieve a specific project
+func (s *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
+	projectID := web.UrlNumericParam(w, r, "id")
+	project, err := s.projectService.GetProject(r.Context(), uint(projectID))
+	if err != nil {
+		web.Error(w, http.StatusNotFound, err)
+		return
+	}
+	web.Success(w, adapter.ToProjectDto(project))
+}
+
+// Delete - delete Project
+func (s *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	projectID := web.UrlNumericParam(w, r, "id")
+	if err := s.projectService.DeleteProject(r.Context(), uint(projectID)); err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	web.Success(w, nil, "Project deleted")
+}
+
+// Patch - update specific project
+func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
+	projectID := web.UrlNumericParam(w, r, "id")
+	input, err := web.BodyParser[adapter.ProjectInput](r)
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	project, err := s.projectService.UpdateProject(r.Context(), &domain.Project{
+		ID:    uint(projectID),
+		Title: input.Title,
+	})
+	if err != nil {
+		web.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	web.Success(w, project, "Project patched")
 }

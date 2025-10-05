@@ -1,6 +1,10 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, inject, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {LoaderComponent} from '@client/shared/ui/loader';
+import {Actions, ofType} from '@ngrx/effects';
+import {CreateProjectAction, SetProjectAction} from '@client/entities/project';
+import {Store} from '@ngrx/store';
+import {AppState} from '@client/shared/store';
 
 @Component({
     selector: "fr-new-project-form",
@@ -9,38 +13,51 @@ import {LoaderComponent} from '@client/shared/ui/loader';
         LoaderComponent,
     ],
     template: `
-        <form [formGroup]="form" (ngSubmit)="submitForm()">
-            <div class="mb-4">
-                <label for="projectTitle">Project Title</label>
-                <input id="projectTitle" type="text" class="input" formControlName="title" pattern="[a-zA-Z0-9 ]*">
-                @if (form.controls['title'].dirty && form.controls['title'].errors) {
-                    @if (form.controls['title'].errors['required']) {
-                        <small class="text-warning">This field is required</small>
+        <div>
+            @if (!showForm) {
+                <button (click)="toggleProjectForm()">Create Project</button>
+            } @else {
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <input autofocus placeholder="Project Title" type="text" formControlName="title">
+                    @if (form.controls['title'].dirty && form.controls['title'].errors) {
+                        @if (form.controls['title'].errors['required']) {
+                            <div class="text-sm">This field is required</div>
+                        }
+                        @if (form.controls['title'].errors['pattern']) {
+                            <div class="text-sm">Special characters! Only a-z, A-Z and 0-9 are available</div>
+                        }
                     }
-                    @if (form.controls['title'].errors['pattern']) {
-                        <small class="text-warning">Special characters! Only a-z, A-Z and 0-9 are available</small>
-                    }
-                }
-            </div>
 
-            <div class="flex gap-2 items-center">
-                <button [disabled]="loading || !form.valid" class="btn" type="submit">Create</button>
-                <button [disabled]="loading" class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>
-                @if (loading) {
-                    <ui-loader />
-                }
-            </div>
-        </form>
+                    <div class="flex gap-2 items-center">
+                        <button [disabled]="loading || !form.valid" type="submit">Create
+                        </button>
+                        <button [disabled]="loading" type="button" (click)="cancel()">Cancel
+                        </button>
+                        @if (loading) {
+                            <ui-loader/>
+                        }
+                    </div>
+                </form>
+            }
+        </div>
     `
 })
 export class NewProjectFormComponent implements OnChanges {
-    @Output() onSubmit: EventEmitter<string> = new EventEmitter<string>();
     @Output() onCancel: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @Input() loading: boolean = false;
+    loading: boolean = false;
+    showForm: boolean = false;
+    private actions$ = inject(Actions);
+    private store = inject(Store<AppState>);
 
     form: FormGroup = new FormGroup({
         'title': new FormControl({value: '', disabled: this.loading}, [Validators.required]),
     })
+
+    constructor() {
+        this.actions$.pipe(ofType(SetProjectAction)).subscribe(() => {
+            this.loading = this.showForm = false
+        })
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         this.loading = changes["loading"].currentValue
@@ -53,10 +70,16 @@ export class NewProjectFormComponent implements OnChanges {
     }
 
     cancel(): void {
-        this.onCancel.emit()
+        this.showForm = false;
     }
 
-    submitForm(): void {
-        this.onSubmit.emit(this.form.value['title'])
+    toggleProjectForm(): void {
+        this.showForm = !this.showForm;
+    }
+
+    onSubmit(): void {
+        this.loading = true;
+        const project: Record<string, string> = { title: this.form.value['title'] }
+        this.store.dispatch(CreateProjectAction({payload: project}))
     }
 }

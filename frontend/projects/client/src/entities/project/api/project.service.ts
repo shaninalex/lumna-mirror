@@ -5,7 +5,7 @@ import {Project} from '@client/entities/project';
 import {CommonApiService} from '@client/shared/common';
 
 const projectUrl = {
-    Root: `${env.API_ROOT}/api/project/`,
+    Root: `${env.API_ROOT}/api/v1/projects/`,
 }
 
 @Injectable({providedIn: "root"}) // TODO: does it has to be root?

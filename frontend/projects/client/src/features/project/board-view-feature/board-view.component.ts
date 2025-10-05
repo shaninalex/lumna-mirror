@@ -1,5 +1,11 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
-import {selectTasksByProjectID, Task, TaskCardComponent} from '@client/entities/task';
+import {
+    ChangeTaskStatusAction,
+    ChangeTaskStatusSuccessAction,
+    selectTasksByProjectID,
+    Task,
+    TaskCardComponent
+} from '@client/entities/task';
 import {
     CdkDrag,
     CdkDragDrop,
@@ -8,13 +14,16 @@ import {
     moveItemInArray,
     transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import {BoardViewApiService} from './board-view-api.service';
+import {BoardViewApiService} from './api';
 import {StatusColumn} from './board.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {Project} from '@client/entities/project';
 import {ColumnHeaderComponent} from '@client/features/project/board-view-feature/components';
-import {byMostRecent} from '@client/shared/common';
+import {CreateStatusFormComponent, selectProjectStatusList} from '@client/entities/status';
+import {combineLatest, map, Observable} from 'rxjs';
+import {AsyncPipe} from '@angular/common';
+import {TaskFormSmComponent} from '@client/features/project/board-view-feature/components/task-form-sm';
 
 @Component({
     selector: "fr-board-view-feature",
@@ -24,66 +33,106 @@ import {byMostRecent} from '@client/shared/common';
         CdkDropListGroup,
         TaskCardComponent,
         ColumnHeaderComponent,
+        AsyncPipe,
+        CreateStatusFormComponent,
+        TaskFormSmComponent,
     ],
     providers: [BoardViewApiService],
     styleUrl: './board-view.component.scss',
     template: `
-        <div cdkDropListGroup class="flex flex-row no-wrap gap-4">
-            @for (column of columns; track column) {
-                <div class="bg-base-100 w-xs rounded-lg border border-base-300 p-4">
-                    <fr-column-header [project]="project" [column]="column"/>
-                    <div class="flex flex-col gap-2 min-h-20"
-                         cdkDropList
-                         [id]="column.id"
-                         [cdkDropListData]="column.tasks"
-                         (cdkDropListDropped)="drop($event)">
-                        @for (task of column.tasks; track task.id) {
-                            <fr-task-card [projectKey]="project.project_key"
-                                          [task]="task"
-                                          [cdkDragData]="task"
-                                          cdkDrag/>
-                        }
+        @if (columns$ | async; as columns) {
+            <div cdkDropListGroup class="flex flex-row no-wrap gap-4">
+                @for (column of columns; track $index) {
+                    <div class="card w-xs">
+                        <div class="flex justify-between mb-2">
+                            <div class="text-slate-600">{{ column.title }}</div>
+                            <fr-column-header [project]="project" [column]="column"/>
+                        </div>
+
+                        <fr-task-form-sm [project]="project" [column]="column" />
+
+                        <div class="flex flex-col gap-2 min-h-20 mt-4"
+                             cdkDropList
+                             [id]="column.id"
+                             [cdkDropListData]="column.tasks"
+                             (cdkDropListDropped)="drop($event)">
+                            @for (task of column.tasks; track task.id) {
+                                <fr-task-card [projectKey]="project.code"
+                                              [task]="task"
+                                              [cdkDragData]="task"
+                                              cdkDrag/>
+                            }
+                        </div>
                     </div>
+                }
+                <div class="card-secondary w-xs">
+                    <fr-create-status-form [projectId]="project.id" />
                 </div>
-            }
-        </div>
+            </div>
+        }
     `
 })
 export class BoardViewComponent implements OnInit {
     @Input() project: Project;
-    private boardApi = inject(BoardViewApiService);
     private store = inject(Store<AppState>);
 
-    columns: StatusColumn[] = [];
+    columns$: Observable<StatusColumn[]>;
 
-    ngOnInit() {
-        this.store.select(selectTasksByProjectID(this.project.id))
-            .subscribe(tasks => {
-                this.columns = this.project.statuses.map(status => ({
-                    id: status.id,
+    ngOnInit(): void {
+        const status$ = this.store.select(selectProjectStatusList(this.project.id));
+        const tasks$ = this.store.select(selectTasksByProjectID(this.project.id));
+
+        this.columns$ = combineLatest([status$, tasks$]).pipe(
+            map(([statusList, tasks]) => {
+                return statusList.map(status => ({
+                    id: status.id.toString(),
                     title: status.title,
-                    tasks: tasks.filter(t => t.status === status.id).sort(byMostRecent),
+                    status: status,
+                    tasks: tasks.filter(t => t.status_id === status.id)
+                        .sort((a, b) => a.list_index - b.list_index)
                 }));
-            });
+            })
+        );
     }
 
     drop(event: CdkDragDrop<Task[]>) {
+        const container = event.container.data;
+        const currentIdx = event.currentIndex;
+
         if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            moveItemInArray(container, event.previousIndex, currentIdx);
         } else {
             transferArrayItem(
                 event.previousContainer.data,
-                event.container.data,
+                container,
                 event.previousIndex,
-                event.currentIndex,
+                currentIdx
             );
         }
 
-        this.boardApi.ChangeStatus(this.project.project_key, event.item.data.code, {
-            from_status: event.previousContainer.id,
-            to_status: event.container.id,
-            from_idx: event.previousIndex,
-            to_idx: event.currentIndex,
-        }).subscribe()
+        const prev = container[currentIdx - 1];
+        const next = container[currentIdx + 1];
+
+        let newIndex: number;
+
+        if (!prev && !next) {
+            newIndex = 10000;
+        } else if (!prev) {
+            newIndex = next.list_index / 2;
+        } else if (!next) {
+            newIndex = prev.list_index + 10000;
+        } else {
+            newIndex = (prev.list_index + next.list_index) / 2;
+        }
+
+        this.store.dispatch(ChangeTaskStatusAction({
+            taskId: event.item.data.id,
+            payload: {
+                from_status: parseInt(event.previousContainer.id),
+                to_status: parseInt(event.container.id),
+                from_idx: event.previousIndex,
+                to_idx: newIndex,
+            }
+        }));
     }
 }

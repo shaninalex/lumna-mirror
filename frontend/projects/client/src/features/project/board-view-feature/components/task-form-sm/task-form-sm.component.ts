@@ -12,42 +12,47 @@ import {StatusColumn} from '@client/features/project/board-view-feature/board.mo
     selector: 'fr-task-form-sm',
     imports: [
         LoaderComponent,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     template: `
-        <form [formGroup]="form" (ngSubmit)="submitForm()" class="mb-4">
-            <div class="flex item-center gap-1">
+        @if (showForm) {
+            <form [formGroup]="form" (ngSubmit)="submitForm()" class="mb-4 flex gap-2">
                 <div class="flex-grow">
-                    <input placeholder="Task title" type="text" class="input block" formControlName="title"
-                           pattern="[a-zA-Z0-9 ]*">
+                    <input class="input" autofocus placeholder="Task title" type="text" formControlName="title">
+                    @if (form.controls['title'].dirty && form.controls['title'].errors) {
+                        @if (form.controls['title'].errors['required']) {
+                            <div class="text-sm">This field is required</div>
+                        }
+                        @if (form.controls['title'].errors['pattern']) {
+                            <div class="text-sm">Special characters! Only a-z, A-Z and 0-9 are available</div>
+                        }
+                    }
                 </div>
-                <div class="flex items-center">
+
+                <div class="flex gap-2">
                     @if (loading) {
                         <ui-loader/>
                     } @else {
-                        <button
-                            class="btn btn-primary"
-                            [disabled]="loading || !form.valid" type="submit">
+                        <button class="btn btn-icon" type="submit" [disabled]="loading || !form.valid">
                             +
                         </button>
                     }
+                    <button class="btn-secondary btn-icon" type="button" (click)="cancel()">
+                        X
+                    </button>
                 </div>
-            </div>
-            @if (form.controls['title'].dirty && form.controls['title'].errors) {
-                @if (form.controls['title'].errors['required']) {
-                    <small class="text-warning">This field is required</small>
-                }
-                @if (form.controls['title'].errors['pattern']) {
-                    <small class="text-warning">Special characters! Only a-z, A-Z and 0-9 are available</small>
-                }
-            }
-        </form>
+            </form>
+        } @else {
+            <button class="btn-secondary btn-icon" (click)="showForm = true">
+                Create task
+            </button>
+        }
     `
 })
 export class TaskFormSmComponent {
     @Input() project: Project;
     @Input() column: StatusColumn;
-
+    showForm: boolean = false;
     loading: boolean = false;
     form: FormGroup = new FormGroup({
         'title': new FormControl({value: '', disabled: this.loading}, [Validators.required]),
@@ -65,11 +70,17 @@ export class TaskFormSmComponent {
     submitForm(): void {
         this.loading = true
         this.store.dispatch(CreateTaskAction({
+            projectId: this.project.id,
             payload: {
                 title: this.form.value['title'],
-                status_id: this.column.id,
-                project_code: this.project.project_key,
+                status_id: this.column.status.id,
             }
         }))
+        this.form.reset();
+    }
+
+    cancel(): void {
+        this.form.reset();
+        this.showForm = false;
     }
 }

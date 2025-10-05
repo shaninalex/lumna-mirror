@@ -1,0 +1,1449 @@
+openapi: 3.0.0
+info:
+  title: Lumna API - OpenAPI 3.0
+  description: |
+    Lumna is a lightweight project and task management platform designed to help teams
+    stay organized and productive.  
+    
+    This API provides access to the core functionality of Lumna, including:
+    
+    - **Projects**: create and manage projects that group related tasks.  
+    - **Tasks**: manage work items within projects, including status, assignments, and deadlines.  
+    - **Badges & Labels**: tag tasks with custom identifiers for filtering and categorization.  
+    - **Users & Auth**: authenticate, manage user sessions, and assign responsibilities.  
+    
+    Use these endpoints to build integrations, automate workflows, or create custom
+    front-end experiences on top of Lumna.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Default local development server
+tags:
+  - name: Auth
+    description: Authentication
+  - name: User
+    description: User details requests
+  - name: Project
+    description: Project list, details, basic CRUD requests
+  - name: Task
+    description: Task CRUD requests and specific actions
+paths:
+  /api/v1/auth/login:
+    post:
+      summary: Basic user login with email/password
+      tags:
+        - Auth
+      description: |
+        Authenticates user and sets an HTTP-only cookie `access_token`. 
+        The token is automatically sent with subsequent requests.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthPayload'
+      responses:
+        '200':
+          description: Successful login, access_token set in HTTP-only cookie
+          headers:
+            Set-Cookie:
+              description: >
+                Contains the access_token cookie. HttpOnly, Secure,
+                SameSite=Strict.
+              schema:
+                type: string
+                example: >-
+                  access_token=eyJhbGciOi...; HttpOnly; Secure; Path=/;
+                  Max-Age=900; SameSite=Strict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+        '400':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorApiResponse'
+  /api/v1/auth/register:
+    post:
+      summary: User registration with email and password
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthPayload'
+      responses:
+        '200':
+          description: >-
+            Successful registration just return empty response and success
+            message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+        '400':
+          description: Unsuccessfull registration return error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorApiResponse'
+  /auth/v1/refresh:
+    post:
+      summary: Refresh access token
+      description: |
+        Issues a new access token using the refresh token stored in an HttpOnly cookie.  
+        The client does not need to send any body, only the cookie must be present.  
+        The server may also rotate the refresh token and return a new one.
+      tags:
+        - Auth
+      requestBody:
+        description: Optional empty body
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {}
+      responses:
+        "200":
+          description: Successfully issued a new access token
+          headers:
+            Set-Cookie:
+              description: >
+                Contains the new `access_token` cookie.  
+                Optionally also a new `refresh_token` cookie if rotation is enabled.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+      security: []
+  /api/v1/user/me:
+    get:
+      summary: Get the authenticated user
+      description: Returns the full user object of the currently authenticated account.
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successfully retrieved user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/User'
+  /api/v1/user/update:
+    post:
+      summary: Update authenticated user
+      description: >-
+        Updates the authenticated user’s profile information (e.g., username,
+        email, or settings).
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                code:
+                  type: string
+                  example: '@username123875'
+                email:
+                  type: string
+                  format: email
+                  example: email@example.com
+                settings:
+                  $ref: '#/components/schemas/UserSettings'
+      responses:
+        '200':
+          description: Successfully updated user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/User'
+  /api/v1/user/logout:
+    get:
+      summary: Log out authenticated user
+      description: >-
+        Logs out the currently authenticated user by revoking their session in
+        the database and clearing the authentication cookie from the response.
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successfully logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+  /api/v1/user/tokens:
+    get:
+      summary: List of user tokens
+      description: >-
+        Return list of user tokens ( all of them - valid, revoked, expired )
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successfully logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserToken'
+
+  /api/v1/user/tokens/{token_id}:
+    delete:
+      summary: Delete token
+      description: Delete user token by id
+      tags:
+        - User
+      parameters:
+        - name: token_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the user token
+          example: 324234
+      responses:
+        '200':
+          description: Successfully delete user token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+
+  /api/v1/user/tokens/{token_id}/revoke:
+    get:
+      summary: Revoke token
+      description: revoke user token by id
+      tags:
+        - User
+      parameters:
+        - name: token_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the user token
+          example: 324234
+      responses:
+        '200':
+          description: Successfully revoke user token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    $ref: '#/components/schemas/UserToken'
+
+  /api/v1/projects:
+    get:
+      summary: Retrieve all projects
+      description: Returns a list of projects accessible to the authenticated user.
+      tags:
+        - Project
+      responses:
+        '200':
+          description: Successfully retrieved projects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+    post:
+      summary: Create a new project
+      description: >-
+        Creates a new project with the provided details and returns the created
+        project object.
+      tags:
+        - Project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  example: Project name
+      responses:
+        '200':
+          description: Successfully created project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Project'
+                  messages:
+                    $ref: '#/components/schemas/Message'
+  /api/v1/project/{id}:
+    get:
+      summary: Retrieve a specific project
+      description: Returns the details of a single project by its unique identifier.
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      responses:
+        '200':
+          description: Successfully retrieved project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Project'
+    delete:
+      summary: Delete Project
+      description: >
+        Delete project by ID
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the task
+          example: 324234
+      responses:
+        '200':
+          description: Success delete project response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+    patch:
+      summary: Update specific project
+      description: Update the details of a single project by its unique identifier.
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  example: Project name
+      responses:
+        '200':
+          description: Successfully updated project response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Project'
+  /api/v1/project/{id}/statuses:
+    get:
+      summary: Retrieve statuses for a project
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      responses:
+        '200':
+          description: Successfully retrieved project statuses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Column'
+    post:
+      summary: Retrieve statuses for a project
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        '200':
+          description: Successfully retrieved project statuses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Column'
+
+  /api/v1/project/{id}/statuses/{statusId}:
+    patch:
+      summary: Update statuses for a project
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: statusId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the status
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        '200':
+          description: Successfully update project statuses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Column'
+    delete:
+      summary: Delete status for the project
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+        - name: statusId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the status
+          example: 324234
+      responses:
+        '200':
+          description: Successfully delete project status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+  /api/v1/project/{id}/tasks:
+    get:
+      summary: Retrieve tasks for a project
+      description: >-
+        Returns a list of all tasks that belong to the specified project,
+        identified by its unique ID.
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      responses:
+        '200':
+          description: Successfully retrieved project tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+    post:
+      summary: Create a new task in a project
+      description: >-
+        Adds a new task to the specified project, identified by its unique ID.
+        Requires a task title and may include other task details.
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  format: string
+                  example: Task title
+      responses:
+        '200':
+          description: Successfully created a new task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Task'
+  /api/v1/project/{id}/badges:
+    get:
+      summary: Retrieve all badges
+      description: Returns a list of project depended badges
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      responses:
+        '200':
+          description: Successfully retrieved project badges
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Badge'
+    post:
+      summary: Create project badge
+      description: Create project depended badge
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the project
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                color:
+                  type: string
+                  example: '#dcdcdc'
+      responses:
+        '200':
+          description: Successfully retrieved project badges
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Badge'
+  /api/v1/project/{id}/badges/{badgeId}:
+    delete:
+      summary: Delete project badge
+      description: >
+        Deleta task by ID
+      tags:
+        - Project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the task
+          example: 324234
+        - name: badgeId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the badge
+          example: 324234
+      responses:
+        '200':
+          description: Success delete badge response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+  /api/v1/task/{id}:
+    get:
+      summary: Retrieve task details
+      description: >
+        Returns the full details of a specific task, identified by its unique
+        ID.   This includes task title, description, status, completion state,
+        tags, and other metadata.   Requires authentication.
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the task
+          example: 324234
+      responses:
+        '200':
+          description: Successfully retrieved task details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Task'
+    patch:
+      summary: Update task details
+      description: >
+        Updates the properties of an existing task, identified by its unique
+        ID.   Fields such as title, description, status, completion state, tags,
+        or list position can be modified.   Only the provided fields will be
+        updated; others remain unchanged.   Requires authentication.
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the task
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status_id:
+                  type: integer
+                  format: int64
+                  description: Identifier of the task's status/column
+                  example: 123
+                title:
+                  type: string
+                  description: New title for the task
+                  example: Hello world
+                completed:
+                  type: boolean
+                  description: Whether the task is marked as completed
+                  example: false
+                description:
+                  type: string
+                  description: Detailed description of the task
+                  example: Long task description
+                list_index:
+                  type: integer
+                  format: int32
+                  description: Position of the task within its column or list
+                  example: 1
+                tags:
+                  type: array
+                  description: Array of string labels (tags) associated with the task
+                  items:
+                    type: string
+                    example: refactoring
+      responses:
+        '200':
+          description: Successfully updated the task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad request — invalid or malformed input data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  errors:
+                    $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete task
+      description: >
+        Deleta task by ID
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the task
+          example: 324234
+      responses:
+        '200':
+          description: Success delete task response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+  /api/v1/task/{id}/status:
+    patch:
+      summary: Update task status
+      description: >
+        Updates the status (column) and order of a task within a project
+        board.   This endpoint is typically used when moving a task between
+        columns or reordering within the same column.   Requires authentication.
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the task
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from_status:
+                  type: integer
+                  format: int64
+                  description: >-
+                    Identifier of the current status/column the task is moving
+                    from
+                  example: 12
+                to_status:
+                  type: integer
+                  format: int64
+                  description: Identifier of the new status/column the task is moving to
+                  example: 13
+                from_index:
+                  type: integer
+                  format: int64
+                  description: Current position (index) of the task in the column
+                  example: 2
+                to_index:
+                  type: integer
+                  format: int64
+                  description: New position (index) of the task in the column
+                  example: 1
+      responses:
+        '200':
+          description: Successfully updated task status and/or position
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad request — invalid status or index values
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  errors:
+                    $ref: '#/components/schemas/Error'
+  /api/v1/task/{id}/badges:
+    post:
+      summary: Add badge to task
+      description: >
+        Attaches a badge (e.g., *blocked*, *priority*) to a task.   Requires the
+        badge identifier and task ID.
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique id of the task
+          example: 324234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                badge_id:
+                  type: integer
+                  format: int64
+                  description: Unique id of the badge to add
+                  example: 12
+      responses:
+        '200':
+          description: Successfully added badge to task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad request — invalid task or badge id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  errors:
+                    $ref: '#/components/schemas/Error'
+  /api/v1/task/{id}/badges/{badgeId}:
+    delete:
+      summary: Remove badge from task
+      description: >
+        Removes a specific badge from a task.   Requires both the task ID and
+        the badge ID.
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique id of the task
+          example: 324234
+        - name: badgeId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Unique id of the badge
+          example: 12
+      responses:
+        '200':
+          description: Successfully removed badge from task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad request — invalid task or badge id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  errors:
+                    $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        title:
+          type: string
+          example: blocked
+    Badge:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        title:
+          type: string
+          example: blocked
+        color:
+          type: string
+          example: '#dcdcdc'
+    AuthPayload:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: supersecret
+      required:
+        - email
+        - password
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        title:
+          type: string
+          example: Project
+        code:
+          type: string
+          example: project-324234
+        boards:
+          type: array
+          description: List of boards within the project
+          items:
+            $ref: '#/components/schemas/BoardListItem'
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+    BoardListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        title:
+          type: string
+          example: Main board
+        code:
+          type: string
+          example: board-324234
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        owner_id:
+          type: integer
+          format: int64
+          description: >-
+            ID of the user who owns the task (optional if using
+            roles/permissions)
+          example: 123
+        board_id:
+          type: integer
+          format: int64
+          example: 123
+        project_id:
+          type: integer
+          format: int64
+          example: 123
+        status_id:
+          type: integer
+          format: int64
+          example: 123
+        title:
+          type: string
+          example: Hello world
+        badge:
+          $ref: '#/components/schemas/Badge'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        code:
+          type: string
+          example: task-324234
+        completed:
+          type: boolean
+          example: false
+        description:
+          type: string
+          example: Long task description
+        list_index:
+          type: integer
+          format: int32
+          description: Position of the task in the column
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+    Member:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123123123
+        code:
+          type: string
+          example: '@username123875'
+        email:
+          type: string
+          format: email
+          example: email@example.com
+        image:
+          type: string
+          format: url
+          example: "http://source.domain/images/image.jpg"
+        active:
+          type: boolean
+          example: true
+        state:
+          type: string
+          enum:
+            - active
+            - inactive
+            - banned
+          example: active
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123123123
+        code:
+          type: string
+          example: '@username123875'
+        email:
+          type: string
+          format: email
+          example: email@example.com
+        image:
+          type: string
+          format: url
+          example: "http://source.domain/images/image.jpg"
+        settings:
+          $ref: '#/components/schemas/UserSettings'
+        active:
+          type: boolean
+          example: true
+        state:
+          type: string
+          enum:
+            - active
+            - inactive
+            - banned
+          example: active
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+    UserSettings:
+      type: object
+      properties:
+        theme:
+          type: string
+          enum:
+            - light
+            - dark
+            - device
+          example: light
+        language:
+          type: string
+          example: en
+        timezone:
+          type: string
+          example: UTC
+        date_format:
+          type: string
+          example: 02.01.2006
+        time_format:
+          type: string
+          example: '15:04'
+        week_start_day:
+          type: integer
+          format: int32
+          description: Day of week the user prefers to start (1 = Monday)
+          example: 1
+    Board:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        title:
+          type: string
+          example: Main board
+        code:
+          type: string
+          example: board-123123
+        columns:
+          type: array
+          description: List of columns in the board
+          items:
+            $ref: '#/components/schemas/Column'
+    Column:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        title:
+          type: string
+          example: Main board
+        index:
+          type: integer
+          format: int64
+          example: 10
+    ApiResponse:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        error:
+          $ref: '#/components/schemas/Error'
+          nullable: true
+        meta:
+          $ref: '#/components/schemas/Meta'
+        messages:
+          type: array
+          description: Optional system messages
+          nullable: true
+          items:
+            $ref: '#/components/schemas/Message'
+        data:
+          description: Can be any JSON value
+          type: object
+          additionalProperties: true
+          nullable: true
+      required:
+        - code
+        - meta
+    ErrorApiResponse:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        error:
+          $ref: '#/components/schemas/Error'
+          nullable: true
+      required:
+        - status
+        - error
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    Meta:
+      type: object
+      properties:
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+    Message:
+      type: object
+      properties:
+        text:
+          type: string
+          example: Message text
+        type:
+          type: string
+          enum:
+            - success
+            - warning
+            - error
+            - info
+          example: success
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 876458
+        event:
+          type: string
+          description: Event that triggers the webhook
+          example: task.created
+        callback_url:
+          type: string
+          format: uri
+          description: URL to send the webhook payload to
+          example: https://mywebhookurl.com/webhook/on/new/task
+        active:
+          type: boolean
+          description: Whether the webhook is currently active
+          example: true
+    UserToken:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 876458
+        device:
+          type: string
+          example: "For now this is user agent. Will be changed later"
+        refresh_expires_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+        revoked:
+          type: boolean
+          example: false
+        revoked_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-09-22T12:34:56Z'

@@ -6,6 +6,7 @@ import {Router, RouterLink} from '@angular/router';
 import {filter, finalize, tap} from 'rxjs';
 import {APIResponse} from '@client/shared/models';
 import {LoaderComponent} from '@client/shared/ui';
+import {FormsModule} from '@angular/forms';
 
 @Component({
     selector: "fr-login-page",
@@ -13,14 +14,19 @@ import {LoaderComponent} from '@client/shared/ui';
         AuthLayout,
         ReactiveFormsModule,
         RouterLink,
-        LoaderComponent
+        LoaderComponent,
+        FormsModule,
     ],
     template: `
         <fr-auth-layout title="Login">
-            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mb-4">
-                <input type="email" formControlName="email" class="input block mb-4" placeholder="email"/>
-                <input type="password" formControlName="password" class="input block mb-4" placeholder="password"/>
-                <button class="btn btn-primary mb-4">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col mt-4 items-start">
+                <div class="mb-4">
+                    <input class="input" type="email" formControlName="email" placeholder="Email"/>
+                </div>
+                <div class="mb-4">
+                    <input class="input" type="password" formControlName="password" placeholder="Password"/>
+                </div>
+                <button class="mb-4 btn" [disabled]="!form.valid">
                     @if (loading) {
                         <ui-loader />
                     } @else {

@@ -1030,9 +1030,9 @@
     "@tybys/wasm-util" "^0.10.0"
 
 "@napi-rs/wasm-runtime@^1.0.3":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@napi-rs/wasm-runtime/-/wasm-runtime-1.0.5.tgz#1fc8952d993d476c9e57999a3b886239119ce476"
-  integrity sha512-TBr9Cf9onSAS2LQ2+QHx6XcC6h9+RIzJgbqG3++9TUZSH204AwEy5jg3BTQ0VATsyoGj4ee49tN/y6rvaOOtcg==
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@napi-rs/wasm-runtime/-/wasm-runtime-1.0.6.tgz#ba6cf875b7bf96052d0de29a91b029c94c6e9a48"
+  integrity sha512-DXj75ewm11LIWUk198QSKUTxjyRjsBwk09MuMk5DGK+GDUtyPhhEHOGP/Xwwj3DjQXXkivoBirmOnKrLfc0+9g==
   dependencies:
     "@emnapi/core" "^1.5.0"
     "@emnapi/runtime" "^1.5.0"
@@ -2172,11 +2172,6 @@ custom-event@~1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/custom-event/-/custom-event-1.0.1.tgz"
   integrity sha512-GAj5FOq0Hd+RsCGVJxZuKaIDXDf3h6GQoNEjFgbLLI/trgtavwUbSnZ5pVfg27DVCaWjIohryS0JFwIJyT2cMg==
-
-daisyui@^5.1.14:
-  version "5.1.14"
-  resolved "https://registry.npmjs.org/daisyui/-/daisyui-5.1.14.tgz"
-  integrity sha512-c9Op7tB8vLzzazFaLeyFsmmVMLrU8sYo1sHuStBGTbaAzLVxrulelGQBROo/lS2ZxWm/CnCb9NWdKbTL+MaKFA==
 
 date-format@^4.0.14:
   version "4.0.14"

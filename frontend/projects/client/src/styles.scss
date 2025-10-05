@@ -1,0 +1,33 @@
+@use "tailwindcss";
+
+.card {
+    @apply p-4 border rounded border-slate-400 bg-white;
+}
+
+.card-secondary {
+    @apply p-4 border rounded border-slate-400 bg-slate-100;
+}
+
+.card-header {
+    @apply font-bold;
+}
+
+.input {
+    @apply w-full border border-slate-400 rounded-sm px-2
+}
+
+.btn {
+    @apply rounded px-2 bg-emerald-400 border border-emerald-500;
+}
+
+.btn-icon {
+    @apply flex items-center justify-center gap-2
+}
+
+.btn-secondary {
+    @apply rounded px-2 bg-slate-200 border border-slate-500;
+}
+
+.btn-danger {
+    @apply rounded px-2 bg-red-200 border border-red-500;
+}

@@ -4,11 +4,12 @@ import {Store} from '@ngrx/store';
 import {selectProject} from '@client/entities/project/model/project.selectors';
 import {ActivatedRoute} from '@angular/router';
 import {AsyncPipe} from '@angular/common';
-import {filter, map, switchMap, tap} from 'rxjs';
+import {filter, map, switchMap, take, tap} from 'rxjs';
 import {BoardViewComponent} from '@client/features/project/board-view-feature';
 import {CdkMenuModule} from '@angular/cdk/menu';
 import {GetTasksActions} from '@client/entities/task';
-
+import {GetStatusListActions} from '@client/entities/status';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 @Component({
     selector: "fr-project-detail-page",
@@ -16,37 +17,52 @@ import {GetTasksActions} from '@client/entities/task';
         AsyncPipe,
         BoardViewComponent,
         CdkMenuModule,
+        OverlayModule,
     ],
     template: `
         @if (project$ | async; as project) {
             <div class="flex items-center gap-2 mb-4">
                 <img src="/img/project.svg" class="w-6 rounded"/>
                 <h3 class="font-bold text-xl">{{ project.title }}</h3>
-                <div class="dropdown">
-                    <div tabindex="0" role="button" class="btn btn-primary btn-sm">
-                        menu
-                    </div>
-                    <ul tabindex="0" class="dropdown-content left-0 menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm">
+
+                <button cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="isOpen = !isOpen">
+                    menu
+                </button>
+
+                <ng-template
+                    cdkConnectedOverlay
+                    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+                    [cdkConnectedOverlayOrigin]="trigger"
+                    [cdkConnectedOverlayOpen]="isOpen"
+                    [cdkConnectedOverlayHasBackdrop]="true"
+                    (backdropClick)="isOpen = false"
+                >
+                    <ul class="p-4 bg-white border rounded">
                         <li>Change view</li>
                         <li>Settings</li>
                     </ul>
-                </div>
+                </ng-template>
             </div>
 
-            <fr-board-view-feature [project]="project" />
+            <fr-board-view-feature [project]="project"/>
         }
     `
 })
 export class ProjectDetailPageComponent {
     private store = inject(Store<AppState>);
     private route = inject(ActivatedRoute);
-
+    isOpen = false
     project$ = this.route.params.pipe(
         filter(params => "projectKey" in params),
         map(params => params["projectKey"]),
-        switchMap(code => {
-            this.store.dispatch(GetTasksActions({ projectCode: code }))
-            return this.store.select(selectProject(code))
-        })
+        switchMap(code => this.store.select(selectProject(code)).pipe(
+                take(1),
+                filter(project => !!project),
+                tap(project => {
+                    this.store.dispatch(GetStatusListActions({projectId: project.id}))
+                    this.store.dispatch(GetTasksActions({projectId: project.id}))
+                })
+            )
+        )
     );
 }

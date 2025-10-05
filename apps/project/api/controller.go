@@ -1,10 +1,9 @@
-// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+// Copyright © 2025 Lumna. All rights reserved.
 
 package api
 
 import (
 	"gitlab.com/shaninalex/flowreon/apps/project/api/handler"
-	"gitlab.com/shaninalex/flowreon/apps/project/domain"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
@@ -20,14 +19,29 @@ func NewProjectController(router *web.Router) {
 }
 
 func (s *ProjectController) init() {
-	projectHandler := handler.NewProjectHandler(domain.NewProjectManagement())
-	s.router.GET("/api/project/", projectHandler.HandleProjectsList)
-	s.router.POST("/api/project/", projectHandler.HandleProjectCreate)
+	// ProjectHandler
+	projectHandler := handler.NewProjectHandler()
+	s.router.GET("/api/v1/projects", projectHandler.List)
+	s.router.POST("/api/v1/projects", projectHandler.Create)
+	s.router.GET("/api/v1/project/{id}", projectHandler.Get)
+	s.router.DELETE("/api/v1/project/{id}", projectHandler.Delete)
+	s.router.PATCH("/api/v1/project/{id}", projectHandler.Patch)
 
-	taskHandler := handler.NewTaskHandler(domain.NewProjectManagement())
-	s.router.POST("/api/project/tasks", taskHandler.HandleTaskCreate)
-	s.router.GET("/api/project/{projectCode}/tasks", taskHandler.HandleProjectTasksList)
-	s.router.GET("/api/project/{projectCode}/tasks/{taskCode}", taskHandler.HandleTaskDetail)
-	s.router.PATCH("/api/project/{projectCode}/tasks/{taskCode}", taskHandler.HandleTaskUpdate)
-	s.router.PATCH("/api/project/{projectCode}/tasks/{taskCode}/status", taskHandler.HandleTaskPatchStatus)
+	// ProjectStatusHandler
+	projectStatusHandler := handler.NewProjectStatusHandler()
+	s.router.GET("/api/v1/project/{id}/statuses", projectStatusHandler.Get)
+	s.router.POST("/api/v1/project/{id}/statuses", projectStatusHandler.Post)
+	s.router.PATCH("/api/v1/project/{id}/statuses/{statusId}", projectStatusHandler.Patch)
+	s.router.DELETE("/api/v1/project/{id}/statuses/{statusId}", projectStatusHandler.Delete)
+
+	// ProjectTaskHandler
+	projectTaskHandler := handler.NewProjectTaskHandler()
+	s.router.GET("/api/v1/project/{id}/tasks", projectTaskHandler.List)
+	s.router.POST("/api/v1/project/{id}/tasks", projectTaskHandler.Create)
+
+	// ProjectBadgeHandler
+	projectBadgeHandler := handler.NewProjectBadgeHandler()
+	s.router.GET("/api/v1/project/{id}/badges", projectBadgeHandler.List)
+	s.router.POST("/api/v1/project/{id}/badges", projectBadgeHandler.Create)
+	s.router.DELETE("/api/v1/project/{id}/badges/{badgeId}", projectBadgeHandler.Delete)
 }

@@ -1,32 +1,28 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {Project} from '@client/entities/project';
 import {StatusColumn} from '@client/features/project/board-view-feature/board.model';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {TaskFormSmComponent} from '../task-form-sm';
+import {EditStatusFormComponent} from '@client/entities/status';
+import {Dialog} from '@angular/cdk/dialog';
 
 @Component({
     selector: 'fr-column-header',
-    template: `
-        <div class="mb-2 flex justify-between">
-            <div class="font-bold text-gray-500 dark:text-gray-300">{{ column.title }}</div>
-            <button (click)="toggleForm()" class="text-xl font-bold text-gray-500 dark:text-gray-300 cursor-pointer">+</button>
-        </div>
-        @if (newTaskForm) {
-            <fr-task-form-sm [project]="project" [column]="column" />
-        }
-    `,
     imports: [
         ReactiveFormsModule,
         FormsModule,
-        TaskFormSmComponent
-    ]
+    ],
+    template: `
+        <button (click)="openDialog()">menu</button>
+    `,
 })
 export class ColumnHeaderComponent {
     @Input() project: Project;
     @Input() column: StatusColumn;
-    newTaskForm: boolean = false
+    readonly dialog = inject(Dialog);
 
-    toggleForm(): void {
-        this.newTaskForm = !this.newTaskForm
+    openDialog(): void {
+        this.dialog.open(EditStatusFormComponent, {
+            data: {status: this.column.status},
+        });
     }
 }

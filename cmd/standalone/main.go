@@ -1,4 +1,4 @@
-// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+// Copyright © 2025 Lumna. All rights reserved.
 
 package main
 
@@ -12,8 +12,9 @@ import (
 
 	authApp "gitlab.com/shaninalex/flowreon/apps/auth"
 	projectApp "gitlab.com/shaninalex/flowreon/apps/project/api"
+	taskApp "gitlab.com/shaninalex/flowreon/apps/task/api"
 	userApp "gitlab.com/shaninalex/flowreon/apps/user/api"
-	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/internal/db"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
@@ -25,18 +26,19 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	database.ApplyMigrationsEmbed(sqlDB)
+	db.ApplyMigrationsEmbed(sqlDB)
 	static, _ := fs.Sub(webFS, "web/browser")
-
 	router := web.DefaultRouter(sqlDB)
-	router.GET("/", frontendHandler(static))
 
+	// Public controllers
+	router.GET("/", frontendHandler(static))
 	authApp.NewAuthController(router)
 
-	router.Use(web.TokenMiddleware)
+	// Private controllers
+	router.Use(web.NewTokenMiddleware().Wrap)
 	userApp.NewUserController(router)
 	projectApp.NewProjectController(router)
-	// other private apps.
+	taskApp.NewTaskController(router)
 
 	if err = router.Run(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		panic(fmt.Errorf("server error: %v\n", err))

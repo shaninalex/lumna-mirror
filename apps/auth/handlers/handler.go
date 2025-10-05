@@ -1,17 +1,17 @@
-// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+// Copyright © 2025 Lumna. All rights reserved.
 
 package handlers
 
 import (
-	"gitlab.com/shaninalex/flowreon/internal/web"
+	"gitlab.com/shaninalex/flowreon/internal/token"
 )
 
 func NewAuthHandler() *AuthHandler {
 	return &AuthHandler{
-		tokenService: web.NewTokenService(),
+		authService: token.NewAuthService(),
 	}
 }
 
 type AuthHandler struct {
-	tokenService *web.TokenService
+	authService token.ApiAuthService
 }

@@ -1,4 +1,4 @@
-// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+// Copyright © 2025 Lumna. All rights reserved.
 
 package web
 
@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 
 	"gitlab.com/shaninalex/flowreon/internal/apperrors"
 	"gitlab.com/shaninalex/flowreon/internal/base"
@@ -72,4 +73,13 @@ func BodyParser[T any](r *http.Request) (*T, error) {
 		return nil, err
 	}
 	return &data, nil
+}
+
+func UrlNumericParam(w http.ResponseWriter, r *http.Request, name string) uint64 {
+	id, err := strconv.ParseUint(r.PathValue(name), 10, 64)
+	if err != nil {
+		Error(w, http.StatusBadRequest, err)
+		return 0
+	}
+	return id
 }

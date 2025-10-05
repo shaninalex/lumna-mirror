@@ -1,4 +1,4 @@
-// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+// Copyright © 2025 Lumna. All rights reserved.
 
 package web
 
@@ -8,14 +8,20 @@ import (
 	"net/http"
 	"path"
 
-	"gitlab.com/shaninalex/flowreon/internal/database"
+	"gitlab.com/shaninalex/flowreon/internal/db"
+	"gitlab.com/shaninalex/flowreon/internal/utils"
 )
 
 type Middleware func(http.Handler) http.Handler
+type route struct {
+	method string
+	path   string
+}
 
 type Router struct {
 	mux         *http.ServeMux
 	middlewares []Middleware
+	routes      []route
 }
 
 func NewRouter() *Router {
@@ -52,10 +58,12 @@ func (r *Router) DELETE(path string, handler http.HandlerFunc) {
 	r.HandlerFunc("DELETE", path, handler)
 }
 
-func (r *Router) HandlerFunc(method, route string, handler http.HandlerFunc) {
+func (r *Router) HandlerFunc(method, url string, handler http.HandlerFunc) {
+	r.routes = append(r.routes, route{method: method, path: url})
+
 	for _, pattern := range []string{
-		method + " " + path.Join(route),
-		method + " " + path.Join(route, "{$}"),
+		method + " " + path.Join(url),
+		method + " " + path.Join(url, "{$}"),
 	} {
 		r.handleWithAllMiddlewares(r.mux, pattern, handler)
 	}
@@ -76,24 +84,28 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 }
 
 func (r *Router) Run() error {
+	r.printRoutes()
 	log.Println("server started... on port :8000")
 	return http.ListenAndServe(":8000", corsMiddleware(r))
 }
 
-// DefaultRouter - default router.
-func DefaultRouter(db *sql.DB) *Router {
-	r := NewRouter()
-	//r.Use(NewRecoveryMiddleware().Wrap)
-	r.Use(database.NewMiddleware(db).Wrap)
-	r.Use(NewLoggerMiddleware().Wrap)
-	r.Use(NewCommonMiddleware().Wrap)
-	r.GET("/_health", HandleHealth)
-	return r
+func (r *Router) printRoutes() {
+	for _, rt := range r.routes {
+		log.Printf("%s %s\n", rt.method, rt.path)
+	}
 }
 
-// AuthRouter - auth router.
-func AuthRouter(db *sql.DB) *Router {
-	router := DefaultRouter(db)
-	router.Use(TokenMiddleware)
-	return router
+// DefaultRouter - default router.
+func DefaultRouter(dbConnection *sql.DB) *Router {
+	r := NewRouter()
+	if env := utils.GetEnv("LUMNA_ENVIRONMENT", "development"); env != "development" {
+		r.Use(NewRecoveryMiddleware().Wrap)
+	}
+	r.Use(db.NewMiddleware(dbConnection).Wrap)
+	r.Use(NewLoggerMiddleware().Wrap)
+	r.Use(NewCommonMiddleware().Wrap)
+	r.Use(NewHeadersMiddleware().Wrap)
+	r.GET("/_health", HandleHealth)
+
+	return r
 }

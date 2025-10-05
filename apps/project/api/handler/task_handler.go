@@ -1,4 +1,4 @@
-// Copyright © 2025 Flowreon https://flowreon.shaninalex.com. All rights reserved.
+// Copyright © 2025 Lumna. All rights reserved.
 
 package handler
 
@@ -6,85 +6,54 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/flowreon/apps/project/adapter"
-	"gitlab.com/shaninalex/flowreon/apps/project/domain"
-	"gitlab.com/shaninalex/flowreon/apps/project/dto"
+	"gitlab.com/shaninalex/flowreon/domain"
 	"gitlab.com/shaninalex/flowreon/internal/web"
 )
 
-// TaskHandler - task handler.
-type TaskHandler struct {
-	manager domain.ProjectManager
+// ProjectTaskHandler - task handler.
+type ProjectTaskHandler struct {
+	taskManager domain.TaskManager
 }
 
-// NewTaskHandler - new task handler.
-func NewTaskHandler(manager domain.ProjectManager) *TaskHandler {
-	return &TaskHandler{
-		manager: manager,
+// NewProjectTaskHandler - new task handler.
+func NewProjectTaskHandler() *ProjectTaskHandler {
+	return &ProjectTaskHandler{
+		taskManager: domain.NewTaskService(),
 	}
 }
 
-// HandleTaskPatchStatus - handle task patch status.
-func (s *TaskHandler) HandleTaskPatchStatus(w http.ResponseWriter, r *http.Request) {
-	in, err := adapter.NewPatchTaskInput(r)
+// List - retrieve tasks for a project
+func (s *ProjectTaskHandler) List(w http.ResponseWriter, r *http.Request) {
+	projectID := web.UrlNumericParam(w, r, "id")
+	tasks, err := s.taskManager.TasksList(r.Context(), uint(projectID))
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	if err = s.manager.PatchTaskStatus(r.Context(), in.TaskCode, in.Data); err != nil {
-		web.Error(w, http.StatusBadRequest, err)
-		return
-	}
-	web.Success(w, nil, "Task saved")
+	web.Success(w, adapter.ToTaskListDto(tasks))
 }
 
-// HandleTaskDetail - handle task detail.
-func (s *TaskHandler) HandleTaskDetail(w http.ResponseWriter, r *http.Request) {
-	taskCode := r.PathValue("taskCode")
-	task, err := s.manager.TaskDetail(r.Context(), taskCode)
+// Create - create a new task in a project
+func (s *ProjectTaskHandler) Create(w http.ResponseWriter, r *http.Request) {
+	projectID := web.UrlNumericParam(w, r, "id")
+	input, err := web.BodyParser[adapter.ProjectInput](r)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	web.Success(w, adapter.NewTaskDto(task))
-}
+	ctx := r.Context()
+	userID := web.GetUserID(r)
 
-// HandleProjectTasksList - handle project tasks list.
-func (s *TaskHandler) HandleProjectTasksList(w http.ResponseWriter, r *http.Request) {
-	projectCode := r.PathValue("projectCode")
-
-	tasks, err := s.manager.TasksList(r.Context(), projectCode)
+	task := &domain.Task{
+		Title:     input.Title,
+		ProjectID: uint(projectID),
+		StatusID:  uint(input.StatusId),
+		UserID:    userID,
+	}
+	task, err = s.taskManager.TaskCreate(ctx, task)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	web.Success(w, adapter.NewTasksDto(tasks))
-}
-
-// HandleTaskUpdate - handle task update.
-func (s *TaskHandler) HandleTaskUpdate(w http.ResponseWriter, r *http.Request) {
-	data, err := adapter.NewUpdateTaskInput(r)
-	if err != nil {
-		web.Error(w, http.StatusBadRequest, err)
-		return
-	}
-	if err = s.manager.TaskUpdate(r.Context(), data.TaskCode, data.Data); err != nil {
-		web.Error(w, http.StatusBadRequest, err)
-		return
-	}
-	web.Success(w, nil, "Task saved")
-}
-
-// HandleTaskCreate - create task handler
-func (s *TaskHandler) HandleTaskCreate(w http.ResponseWriter, r *http.Request) {
-	data, err := web.BodyParser[dto.CreateTaskDto](r)
-	if err != nil {
-		web.Error(w, http.StatusBadRequest, err)
-		return
-	}
-	task, err := s.manager.TaskCreate(r.Context(), web.GetUserID(r), data)
-	if err != nil {
-		web.Error(w, http.StatusBadRequest, err)
-		return
-	}
-	web.Success(w, adapter.NewTaskDto(task), "Task created")
+	web.Success(w, adapter.ToTaskDto(task))
 }

@@ -10,18 +10,18 @@ export class UserService {
     http = inject(HttpClient);
 
     getUser(): Observable<UserModel> {
-        return this.http.get<APIResponse<UserModel>>(`${environment.API_ROOT}/api/user/me`, { withCredentials: true }).pipe(
+        return this.http.get<APIResponse<UserModel>>(`${environment.API_ROOT}/api/v1/user/me`, { withCredentials: true }).pipe(
             map(data => data.data),
         );
     }
 
     updateUserSettings(settings: Settings): Observable<UserModel> {
-        return this.http.post<APIResponse<UserModel>>(`${environment.API_ROOT}/api/user/settings`, settings, { withCredentials: true }).pipe(
+        return this.http.post<APIResponse<UserModel>>(`${environment.API_ROOT}/api/v1/user/settings`, settings, { withCredentials: true }).pipe(
             map(data => data.data),
         );
     }
 
     logout(): Observable<APIResponse<any>> {
-        return this.http.get<APIResponse<any>>(`${environment.API_ROOT}/api/user/logout`, { withCredentials: true })
+        return this.http.get<APIResponse<any>>(`${environment.API_ROOT}/api/v1/user/logout`, { withCredentials: true })
     }
 }

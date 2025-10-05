@@ -13,14 +13,18 @@ import {LoaderComponent} from '@client/shared/ui';
         AuthLayout,
         ReactiveFormsModule,
         RouterLink,
-        LoaderComponent
+        LoaderComponent,
     ],
     template: `
         <fr-auth-layout title="Register">
-            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mb-4">
-                <input type="email" formControlName="email" class="input block mb-4" placeholder="email"/>
-                <input type="password" formControlName="password" class="input block mb-4" placeholder="password"/>
-                <button class="btn btn-primary mb-4">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col mt-4 items-start">
+                <div class="mb-4">
+                    <input class="input" type="email" formControlName="email" placeholder="Email"/>
+                </div>
+                <div class="mb-4">
+                    <input class="input" type="password" formControlName="password" placeholder="Password"/>
+                </div>
+                <button class="btn mb-4" [disabled]="!form.valid">
                     @if (loading) {
                         <ui-loader />
                     } @else {
