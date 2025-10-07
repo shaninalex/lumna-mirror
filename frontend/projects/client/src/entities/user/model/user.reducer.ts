@@ -1,6 +1,6 @@
 import {createReducer, on} from '@ngrx/store';
 import {UserModel} from '@client/entities/user';
-import {SetUserAction} from '@client/entities/user/model/user.actions';
+import {UserSetAction} from '@client/entities/user/model/user.actions';
 
 export interface UserState {
     user: UserModel | null
@@ -14,5 +14,5 @@ const initialState: UserState = {
 
 export const userReducer = createReducer(
     initialState,
-    on(SetUserAction, (state, action) => ({...state, user: action.payload, loaded: true}))
+    on(UserSetAction, (state, action) => ({...state, user: action.payload, loaded: true}))
 )

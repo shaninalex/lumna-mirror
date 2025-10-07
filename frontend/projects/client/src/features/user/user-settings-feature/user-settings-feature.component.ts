@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {selectUser, Settings, SetUserAction, UpdateUserSettingsAction, UserModel} from '@client/entities/user';
+import {selectUser, Settings, UserSetAction, UserUpdateSettingsAction, UserModel} from '@client/entities/user';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {filter} from 'rxjs';
@@ -89,7 +89,7 @@ export class SettingsFormComponent implements OnInit {
     });
 
     constructor() {
-        this.actions$.pipe(ofType(SetUserAction)).subscribe(() => this.loading = false)
+        this.actions$.pipe(ofType(UserSetAction)).subscribe(() => this.loading = false)
     }
 
     ngOnInit() {
@@ -110,6 +110,6 @@ export class SettingsFormComponent implements OnInit {
     save() {
         this.loading = true
         const settings: Settings = this.form.value as Settings;
-        this.store.dispatch(UpdateUserSettingsAction({ payload: settings }))
+        this.store.dispatch(UserUpdateSettingsAction({ payload: settings }))
     }
 }

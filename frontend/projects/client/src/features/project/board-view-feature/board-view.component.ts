@@ -1,7 +1,7 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {
-    ChangeTaskStatusAction,
-    ChangeTaskStatusSuccessAction,
+    TaskChangeStatusAction,
+    TaskChangeStatusSuccessAction,
     selectTasksByProjectID,
     Task,
     TaskCardComponent
@@ -122,7 +122,7 @@ export class BoardViewComponent implements OnInit {
             newIndex = (prev.list_index + next.list_index) / 2;
         }
 
-        this.store.dispatch(ChangeTaskStatusAction({
+        this.store.dispatch(TaskChangeStatusAction({
             taskId: event.item.data.id,
             payload: {
                 from_status: parseInt(event.previousContainer.id),

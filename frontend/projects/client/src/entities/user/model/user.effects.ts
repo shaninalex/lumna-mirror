@@ -3,24 +3,24 @@ import {inject} from '@angular/core';
 import {catchError, EMPTY, exhaustMap, map, of} from 'rxjs';
 import {UserService} from '@client/entities/user';
 import {
-    GetUserAction,
-    SetUserAction,
-    UpdateUserSettingsAction
+    UserGetAction,
+    UserSetAction,
+    UserUpdateSettingsAction
 } from '@client/entities/user/model/user.actions';
 
-export const GetUserEffect = createEffect(
+export const UserGetEffect = createEffect(
     (
         actions$ = inject(Actions),
         service = inject(UserService),
     ) => {
         return actions$.pipe(
-            ofType(GetUserAction),
+            ofType(UserGetAction),
             exhaustMap(() =>
                 service.getUser().pipe(
-                    map(user => SetUserAction({ payload: user })),
+                    map(user => UserSetAction({ payload: user })),
                     catchError((err) => {
                         if (err.status === 401) {
-                            return of(SetUserAction({ payload: null }));
+                            return of(UserSetAction({ payload: null }));
                         }
                         return of({ type: "api_error", error: err });
                     })
@@ -31,15 +31,15 @@ export const GetUserEffect = createEffect(
     { functional: true, dispatch: true }
 );
 
-export const UpdateUserSettingsEffect = createEffect(
+export const UserUpdateSettingsEffect = createEffect(
     (
         actions$ = inject(Actions),
         service = inject(UserService),
     ) => {
         return actions$.pipe(
-            ofType(UpdateUserSettingsAction),
+            ofType(UserUpdateSettingsAction),
             exhaustMap((action) => service.updateUserSettings(action.payload).pipe(
-                map(result => SetUserAction({payload: result})),
+                map(result => UserSetAction({payload: result})),
                 catchError(() => EMPTY)
             ))
         )

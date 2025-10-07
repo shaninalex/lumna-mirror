@@ -2,7 +2,7 @@ import {Component, EventEmitter, inject, OnChanges, Output, SimpleChanges} from 
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {LoaderComponent} from '@client/shared/ui/loader';
 import {Actions, ofType} from '@ngrx/effects';
-import {CreateProjectAction, SetProjectAction} from '@client/entities/project';
+import {ProjectCreateAction, ProjectSetAction} from '@client/entities/project';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 
@@ -53,7 +53,7 @@ export class NewProjectFormComponent implements OnChanges {
     })
 
     constructor() {
-        this.actions$.pipe(ofType(SetProjectAction)).subscribe(() => {
+        this.actions$.pipe(ofType(ProjectSetAction)).subscribe(() => {
             this.loading = this.showForm = false
         })
     }
@@ -79,6 +79,6 @@ export class NewProjectFormComponent implements OnChanges {
     onSubmit(): void {
         this.loading = true;
         const project: Record<string, string> = { title: this.form.value['title'] }
-        this.store.dispatch(CreateProjectAction({payload: project}))
+        this.store.dispatch(ProjectCreateAction({payload: project}))
     }
 }
