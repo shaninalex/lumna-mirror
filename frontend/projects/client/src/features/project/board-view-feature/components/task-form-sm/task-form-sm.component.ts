@@ -1,7 +1,7 @@
 import {Component, inject, Input} from '@angular/core';
 import {LoaderComponent} from '@client/shared/ui/loader';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {CreateTaskAction, SetTaskAction} from '@client/entities/task';
+import {TaskCreateAction, TaskSetAction} from '@client/entities/task';
 import {Actions, ofType} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
@@ -62,14 +62,14 @@ export class TaskFormSmComponent {
     private store = inject(Store<AppState>);
 
     constructor() {
-        this.action$.pipe(ofType(SetTaskAction)).subscribe(() => {
+        this.action$.pipe(ofType(TaskSetAction)).subscribe(() => {
             this.loading = false
         })
     }
 
     submitForm(): void {
         this.loading = true
-        this.store.dispatch(CreateTaskAction({
+        this.store.dispatch(TaskCreateAction({
             projectId: this.project.id,
             payload: {
                 title: this.form.value['title'],

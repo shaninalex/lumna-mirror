@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {DeleteStatusAction, PatchStatusAction} from '@client/entities/status';
+import {StatusDeleteAction, StatusPatchAction} from '@client/entities/status';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AppState} from '@client/shared/store';
 import {Store} from '@ngrx/store';
@@ -57,7 +57,7 @@ export class EditStatusFormComponent implements OnInit {
     }
 
     onSubmit(): void {
-        this.store.dispatch(PatchStatusAction({
+        this.store.dispatch(StatusPatchAction({
             payload: {
                 title: this.form.value['title'],
                 complete: this.form.value['complete'],
@@ -69,7 +69,7 @@ export class EditStatusFormComponent implements OnInit {
     }
 
     onDelete(): void {
-        this.store.dispatch(DeleteStatusAction({
+        this.store.dispatch(StatusDeleteAction({
             projectId: this.data.status.project_id,
             statusId: this.data.status.id,
         }))

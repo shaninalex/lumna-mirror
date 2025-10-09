@@ -2,7 +2,7 @@ import {inject} from '@angular/core';
 import {CanMatchFn, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
-import {GetUserAction, selectUserState} from '@client/entities/user';
+import {UserGetAction, selectUserState} from '@client/entities/user';
 import {map, filter, take, tap} from 'rxjs';
 
 export const authGuard: CanMatchFn = () => {
@@ -12,7 +12,7 @@ export const authGuard: CanMatchFn = () => {
     return store.select(selectUserState).pipe(
         tap(state => {
             if (!state.loaded) {
-                store.dispatch(GetUserAction());
+                store.dispatch(UserGetAction());
             }
         }),
         filter(state => state.loaded),

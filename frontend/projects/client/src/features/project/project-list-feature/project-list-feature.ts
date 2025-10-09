@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {CreateProjectAction, Project, SetProjectAction} from '@client/entities/project';
+import {ProjectCreateAction, Project, ProjectSetAction} from '@client/entities/project';
 import {ProjectCardComponent} from '@client/entities/project/ui';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';

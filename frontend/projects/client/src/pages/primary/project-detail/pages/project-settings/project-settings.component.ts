@@ -1,9 +1,9 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Project} from '@client/entities/project';
+import {Project, ProjectPatchAction} from '@client/entities/project';
 import {AppState} from '@client/shared/store';
 import {Store} from '@ngrx/store';
-import {PatchStatusSortAction, selectProjectStatusList, Status} from '@client/entities/status';
+import {StatusPatchSortAction, selectProjectStatusList, Status} from '@client/entities/status';
 import {filter, map, take, tap} from 'rxjs';
 import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -80,9 +80,16 @@ export class ProjectSettingsPageComponent implements OnInit {
         for (let i = 0; i < this.statusList.length; i++) {
             order[i+1] = this.statusList[i].id
         }
-        this.store.dispatch(PatchStatusSortAction({ projectId: this.project.id, payload: order }))
+        this.store.dispatch(StatusPatchSortAction({ projectId: this.project.id, payload: order }))
     }
 
-    onSubmitTitleForm(): void {}
-
+    onSubmitTitleForm(): void {
+        if (!this.form.valid) return
+        this.store.dispatch(ProjectPatchAction({
+            projectId: this.project.id,
+            payload: {
+                title: this.form.value['title'],
+            }
+        }))
+    }
 }

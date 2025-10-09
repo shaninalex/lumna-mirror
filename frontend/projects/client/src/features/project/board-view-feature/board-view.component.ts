@@ -1,7 +1,7 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {
-    ChangeTaskStatusAction,
-    ChangeTaskStatusSuccessAction,
+    TaskChangeStatusAction,
+    TaskChangeStatusSuccessAction,
     selectTasksByProjectID,
     Task,
     TaskCardComponent
@@ -55,7 +55,7 @@ import {TaskFormSmComponent} from '@client/features/project';
                              [cdkDropListData]="column.tasks"
                              (cdkDropListDropped)="drop($event)">
                             @for (task of column.tasks; track task.id) {
-                                <fr-task-card cdkDrag [projectKey]="project.code"
+                                <fr-task-card cdkDrag [projectCode]="project.code"
                                               [task]="task"
                                               [cdkDragData]="task" />
                             }
@@ -122,7 +122,7 @@ export class BoardViewComponent implements OnInit {
             newIndex = (prev.list_index + next.list_index) / 2;
         }
 
-        this.store.dispatch(ChangeTaskStatusAction({
+        this.store.dispatch(TaskChangeStatusAction({
             taskId: event.item.data.id,
             payload: {
                 from_status: parseInt(event.previousContainer.id),

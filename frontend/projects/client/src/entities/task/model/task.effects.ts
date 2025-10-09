@@ -1,11 +1,11 @@
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
 import {
-    ChangeTaskStatusAction, ChangeTaskStatusSuccessAction,
-    CreateTaskAction,
-    GetTasksActions,
-    SetTaskAction,
-    SetTaskListActions
+    TaskChangeStatusAction, TaskChangeStatusSuccessAction,
+    TaskCreateAction,
+    TaskListGetActions,
+    TaskSetAction,
+    TaskListSetActions
 } from './task.actions';
 import {TaskService} from '../api/task.service';
 import {exhaustMap, of, switchMap} from 'rxjs';
@@ -17,10 +17,10 @@ export const TasksGetEffect = createEffect(
         actions$ = inject(Actions),
         api = inject(TaskService),
     ) => actions$.pipe(
-        ofType(GetTasksActions),
+        ofType(TaskListGetActions),
         exhaustMap((action) => {
                 return api.List(action.projectId).pipe(
-                    switchMap(data => of(SetTaskListActions({payload: data}))),
+                    switchMap(data => of(TaskListSetActions({payload: data}))),
                 )
             }
         )
@@ -33,10 +33,10 @@ export const TasksCreateEffect = createEffect(
         actions$ = inject(Actions),
         api = inject(TaskService),
     ) => actions$.pipe(
-        ofType(CreateTaskAction),
+        ofType(TaskCreateAction),
         exhaustMap((action) => {
                 return api.Create(action.projectId, action.payload).pipe(
-                    switchMap(data => of(SetTaskAction({payload: data}))),
+                    switchMap(data => of(TaskSetAction({payload: data}))),
                 )
             }
         )
@@ -49,10 +49,10 @@ export const TasksChangeStatusEffect = createEffect(
         actions$ = inject(Actions),
         api = inject(BoardViewApiService),
     ) => actions$.pipe(
-        ofType(ChangeTaskStatusAction),
+        ofType(TaskChangeStatusAction),
         exhaustMap((action) => {
                 return api.ChangeStatus(action.taskId, action.payload).pipe(
-                    switchMap(data => of(ChangeTaskStatusSuccessAction({payload: data}))),
+                    switchMap(data => of(TaskChangeStatusSuccessAction({payload: data}))),
                 )
             }
         )

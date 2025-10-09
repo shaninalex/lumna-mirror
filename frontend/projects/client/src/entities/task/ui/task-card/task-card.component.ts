@@ -12,7 +12,7 @@ import {RouterLink} from '@angular/router';
     template: `
         <div class="card">
             <div class="card-title mb-1">
-                <a [routerLink]="['/projects', projectKey, task.code]">
+                <a [routerLink]="['/projects', projectCode, task.code]">
                     {{ task.title }}
                     @if (task.completed) {
                         <i class="i-check-circle text-emerald-500 text-lg"></i>
@@ -35,5 +35,5 @@ import {RouterLink} from '@angular/router';
 })
 export class TaskCardComponent {
     @Input() task: Task;
-    @Input() projectKey: string;
+    @Input() projectCode: string;
 }

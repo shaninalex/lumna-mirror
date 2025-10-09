@@ -2,24 +2,24 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
 import {exhaustMap, of, switchMap} from 'rxjs';
 import {
-    CreateStatusAction, DeleteStatusAction, DeleteStatusSuccessAction,
-    GetStatusListActions, PatchStatusAction, PatchStatusSortAction,
-    PatchStatusSortSuccessAction, PatchStatusSuccessAction,
-    SetStatusAction,
-    SetStatusListActions,
+    StatusCreateAction, StatusDeleteAction, StatusDeleteSuccessAction,
+    StatusListGetActions, StatusPatchAction, StatusPatchSortAction,
+    StatusPatchSortSuccessAction, StatusPatchSuccessAction,
+    StatusSetAction,
+    StatusListSetActions,
     StatusService
 } from '@client/entities/status';
 
 
-export const statusGetEffect = createEffect(
+export const StatusGetEffect = createEffect(
     (
         actions$ = inject(Actions),
         api = inject(StatusService),
     ) => actions$.pipe(
-        ofType(GetStatusListActions),
+        ofType(StatusListGetActions),
         exhaustMap((action) => {
                 return api.List(action.projectId).pipe(
-                    switchMap(data => of(SetStatusListActions({payload: data}))),
+                    switchMap(data => of(StatusListSetActions({payload: data}))),
                 )
             }
         )
@@ -27,15 +27,15 @@ export const statusGetEffect = createEffect(
     {functional: true, dispatch: true}
 );
 
-export const statusCreateEffect = createEffect(
+export const StatusCreateEffect = createEffect(
     (
         actions$ = inject(Actions),
         api = inject(StatusService),
     ) => actions$.pipe(
-        ofType(CreateStatusAction),
+        ofType(StatusCreateAction),
         exhaustMap((action) => {
                 return api.Create(action.projectId, action.payload).pipe(
-                    switchMap(data => of(SetStatusAction({payload: data}))),
+                    switchMap(data => of(StatusSetAction({payload: data}))),
                 )
             }
         )
@@ -43,15 +43,15 @@ export const statusCreateEffect = createEffect(
     {functional: true, dispatch: true}
 );
 
-export const statusPatchEffect = createEffect(
+export const StatusPatchEffect = createEffect(
     (
         actions$ = inject(Actions),
         api = inject(StatusService),
     ) => actions$.pipe(
-        ofType(PatchStatusAction),
+        ofType(StatusPatchAction),
         exhaustMap((action) => {
                 return api.Patch(action.projectId, action.statusId, action.payload).pipe(
-                    switchMap(data => of(PatchStatusSuccessAction({payload: data}))),
+                    switchMap(data => of(StatusPatchSuccessAction({payload: data}))),
                 )
             }
         )
@@ -59,15 +59,15 @@ export const statusPatchEffect = createEffect(
     {functional: true, dispatch: true}
 );
 
-export const statusDeleteEffect = createEffect(
+export const StatusDeleteEffect = createEffect(
     (
         actions$ = inject(Actions),
         api = inject(StatusService),
     ) => actions$.pipe(
-        ofType(DeleteStatusAction),
+        ofType(StatusDeleteAction),
         exhaustMap((action) => {
                 return api.Delete(action.projectId, action.statusId).pipe(
-                    switchMap(() => of(DeleteStatusSuccessAction({projectId: action.projectId, statusId: action.statusId}))),
+                    switchMap(() => of(StatusDeleteSuccessAction({projectId: action.projectId, statusId: action.statusId}))),
                 )
             }
         )
@@ -75,15 +75,15 @@ export const statusDeleteEffect = createEffect(
     {functional: true, dispatch: true}
 )
 
-export const statusSortPatchEffect = createEffect(
+export const StatusSortPatchEffect = createEffect(
     (
         actions$ = inject(Actions),
         api = inject(StatusService),
     ) => actions$.pipe(
-        ofType(PatchStatusSortAction),
+        ofType(StatusPatchSortAction),
         exhaustMap((action) => {
                 return api.StatusSort(action.projectId, action.payload).pipe(
-                    switchMap(data => of(PatchStatusSortSuccessAction({payload: data}))),
+                    switchMap(data => of(StatusPatchSortSuccessAction({payload: data}))),
                 )
             }
         )

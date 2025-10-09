@@ -2,7 +2,7 @@ import {Component, inject, Input} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
-import {CreateStatusAction} from '@client/entities/status';
+import {StatusCreateAction} from '@client/entities/status';
 
 @Component({
     selector: 'fr-create-status-form',
@@ -46,7 +46,7 @@ export class CreateStatusFormComponent {
     })
 
     onSubmit(): void {
-        this.store.dispatch(CreateStatusAction({
+        this.store.dispatch(StatusCreateAction({
             payload: {
                 title: this.form.value['title'],
                 complete: this.form.value['complete'],
