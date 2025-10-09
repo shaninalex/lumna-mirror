@@ -27,7 +27,12 @@ export const TaskChangeStatusAction = createAction(
     props<{taskId: number, payload: ChangeStatusPayload}>(),
 )
 
-export const TaskChangeStatusSuccessAction = createAction(
-    "[task] change status",
-    props<{payload: Task}>(),
+export const TaskGetDetailsAction = createAction(
+    "[task] get details",
+    props<{ taskId: number }>(),
+)
+
+export const TaskUpdateAction = createAction(
+    "[task] update task",
+    props<{ payload: Task }>(),
 )

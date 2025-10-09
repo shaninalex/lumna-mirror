@@ -1,11 +1,11 @@
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
 import {
-    TaskChangeStatusAction, TaskChangeStatusSuccessAction,
+    TaskChangeStatusAction,
     TaskCreateAction,
     TaskListGetActions,
     TaskSetAction,
-    TaskListSetActions
+    TaskListSetActions, TaskUpdateAction
 } from './task.actions';
 import {TaskService} from '../api/task.service';
 import {exhaustMap, of, switchMap} from 'rxjs';
@@ -52,7 +52,7 @@ export const TasksChangeStatusEffect = createEffect(
         ofType(TaskChangeStatusAction),
         exhaustMap((action) => {
                 return api.ChangeStatus(action.taskId, action.payload).pipe(
-                    switchMap(data => of(TaskChangeStatusSuccessAction({payload: data}))),
+                    switchMap(data => of(TaskUpdateAction({payload: data}))),
                 )
             }
         )

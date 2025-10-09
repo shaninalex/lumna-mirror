@@ -1,7 +1,6 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {
     TaskChangeStatusAction,
-    TaskChangeStatusSuccessAction,
     selectTasksByProjectID,
     Task,
     TaskCardComponent

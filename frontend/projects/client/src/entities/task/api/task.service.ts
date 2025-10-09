@@ -6,6 +6,7 @@ import {CreateTaskInput, Task} from '@client/entities/task';
 
 const tasksUrl = {
     tasksRoot: (projectId: number) => `${env.API_ROOT}/api/v1/project/${projectId}/tasks`,
+    task: (taskId: number) => `${env.API_ROOT}/api/v1/task/${taskId}`
 }
 
 @Injectable({providedIn: "root"}) // TODO: does it has to be root?
@@ -18,6 +19,12 @@ export class TaskService extends CommonApiService {
 
     public Create(projectId: number, payload: CreateTaskInput): Observable<Task> {
         return this.post<Task>(tasksUrl.tasksRoot(projectId), payload).pipe(
+            map(data => data.data),
+        );
+    }
+
+    public Detail(taskId: number): Observable<Task> {
+        return this.get<Task>(tasksUrl.task(taskId)).pipe(
             map(data => data.data),
         );
     }
