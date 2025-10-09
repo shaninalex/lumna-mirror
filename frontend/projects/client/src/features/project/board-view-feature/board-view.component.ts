@@ -55,7 +55,7 @@ import {TaskFormSmComponent} from '@client/features/project';
                              [cdkDropListData]="column.tasks"
                              (cdkDropListDropped)="drop($event)">
                             @for (task of column.tasks; track task.id) {
-                                <fr-task-card cdkDrag [projectKey]="project.code"
+                                <fr-task-card cdkDrag [projectCode]="project.code"
                                               [task]="task"
                                               [cdkDragData]="task" />
                             }

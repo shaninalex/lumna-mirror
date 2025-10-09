@@ -9,3 +9,8 @@ export const selectTasksByProjectID = (projectID: number) =>
         selectAllTasks,
         (tasks) => tasks.filter(t => t.project_id === projectID)
     );
+export const selectTask = (taskCode: string) =>
+    createSelector(
+        selectAllTasks,
+        (tasks) => tasks.find(t => t.code === taskCode)
+    );
