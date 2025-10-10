@@ -44,7 +44,7 @@ func ToTaskDto(task *domain.Task) *TaskDto {
 	for i, badge := range task.Badges {
 		badges[i] = NewBadgeDto(badge)
 	}
-	return &TaskDto{
+	out := &TaskDto{
 		ID:        task.ID,
 		UserID:    task.UserID,
 		ProjectID: task.ProjectID,
@@ -57,4 +57,10 @@ func ToTaskDto(task *domain.Task) *TaskDto {
 		CreatedAt: task.CreatedAt,
 		UpdatedAt: task.UpdatedAt,
 	}
+
+	if task.Description != nil {
+		out.Description = *task.Description
+	}
+
+	return out
 }

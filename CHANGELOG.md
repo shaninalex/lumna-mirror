@@ -1,3 +1,16 @@
+## 0.16.0 (2025-10-10)
+
+### Feat
+
+- **ui**: light/dark theme
+- patch task detail description
+- task detail description
+- task detail page
+
+### Refactor
+
+- component sufixes
+
 ## 0.15.0 (2025-10-05)
 
 ### Feat

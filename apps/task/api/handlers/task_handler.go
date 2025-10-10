@@ -11,17 +11,18 @@ import (
 )
 
 type TaskHandler struct {
-	taskReader domain.TaskReader
-	taskWriter domain.TaskWriter
+	taskManager domain.TaskManager
 }
 
 func NewTaskHandler() *TaskHandler {
-	return &TaskHandler{}
+	return &TaskHandler{
+		taskManager: domain.NewTaskService(),
+	}
 }
 
 func (s *TaskHandler) Get(w http.ResponseWriter, r *http.Request) {
 	taskID := web.UrlNumericParam(w, r, "id")
-	task, err := s.taskReader.TaskDetail(r.Context(), uint(taskID))
+	task, err := s.taskManager.TaskDetail(r.Context(), uint(taskID))
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -37,7 +38,7 @@ func (s *TaskHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	task, err := s.taskReader.TaskDetail(ctx, uint(taskID))
+	task, err := s.taskManager.TaskDetail(ctx, uint(taskID))
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -48,7 +49,7 @@ func (s *TaskHandler) Patch(w http.ResponseWriter, r *http.Request) {
 	task.ListIndex = payload.ListIndex
 	task.StatusID = payload.StatusID
 
-	err = s.taskWriter.TaskUpdate(ctx, task)
+	err = s.taskManager.TaskUpdate(ctx, task)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -59,7 +60,7 @@ func (s *TaskHandler) Patch(w http.ResponseWriter, r *http.Request) {
 
 func (s *TaskHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	taskID := web.UrlNumericParam(w, r, "id")
-	if err := s.taskWriter.TaskDelete(r.Context(), uint(taskID)); err != nil {
+	if err := s.taskManager.TaskDelete(r.Context(), uint(taskID)); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}

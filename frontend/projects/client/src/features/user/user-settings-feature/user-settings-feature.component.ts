@@ -13,63 +13,63 @@ import {Actions, ofType} from '@ngrx/effects';
     imports: [ReactiveFormsModule, LoaderComponent],
     template: `
         @if (user) {
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 mb-4">
                 <div>Username:</div>
                 <div class="text-lg font-bold">{{ user.code }}</div>
             </div>
         }
 
-        <hr class="my-4 border-gray-300">
+        <div class="card">
+            <form [formGroup]="form" (ngSubmit)="save()">
+                <div class="mb-4">
+                    <label for="theme">Theme</label>
+                    <select id="theme" formControlName="theme" class="input">
+                        <option [value]="0">Light</option>
+                        <option [value]="1">Dark</option>
+                        <option [value]="2">Device</option>
+                    </select>
+                </div>
 
-        <form [formGroup]="form" (ngSubmit)="save()">
-            <div class="mb-4">
-                <label for="theme">Theme</label>
-                <select id="theme" formControlName="theme" class="input">
-                    <option [value]="0">Light</option>
-                    <option [value]="1">Dark</option>
-                    <option [value]="2">Device</option>
-                </select>
-            </div>
+                <div class="mb-4">
+                    <label for="language">Language</label>
+                    <select id="language" formControlName="language" class="input">
+                        <option [value]="0">English</option>
+                        <option [value]="1">Ukrainian</option>
+                        <option [value]="2">German</option>
+                    </select>
+                </div>
 
-            <div class="mb-4">
-                <label for="language">Language</label>
-                <select id="language" formControlName="language" class="input">
-                    <option [value]="0">English</option>
-                    <option [value]="1">Ukrainian</option>
-                    <option [value]="2">German</option>
-                </select>
-            </div>
+                <div class="mb-4">
+                    <label for="timezone">Timezone</label>
+                    <input id="timezone" type="text" formControlName="timezone" class="input"/>
+                </div>
 
-            <div class="mb-4">
-                <label for="timezone">Timezone</label>
-                <input id="timezone" type="text" formControlName="timezone" class="input"/>
-            </div>
+                <div class="mb-4">
+                    <label for="date_format">Date format</label>
+                    <input id="date_format" type="text" formControlName="date_format" class="input"/>
+                </div>
 
-            <div class="mb-4">
-                <label for="date_format">Date format</label>
-                <input id="date_format" type="text" formControlName="date_format" class="input"/>
-            </div>
+                <div class="mb-4">
+                    <label for="time_format">Time format</label>
+                    <input id="time_format" type="text" formControlName="time_format" class="input"/>
+                </div>
 
-            <div class="mb-4">
-                <label for="time_format">Time format</label>
-                <input id="time_format" type="text" formControlName="time_format" class="input"/>
-            </div>
+                <div class="mb-4">
+                    <label for="week_start_day">Week Start Day</label>
+                    <select id="week_start_day" formControlName="week_start_day" class="input">
+                        @for (d of weekDays; track $index) {
+                            <option [value]="$index">{{ d }}</option>
+                        }
+                    </select>
+                </div>
 
-            <div class="mb-4">
-                <label for="week_start_day">Week Start Day</label>
-                <select id="week_start_day" formControlName="week_start_day" class="input">
-                    @for (d of weekDays; track $index) {
-                        <option [value]="$index">{{ d }}</option>
-                    }
-                </select>
-            </div>
-
-            @if (loading) {
-                <ui-loader />
-            } @else {
-                <button class="btn btn-primary" type="submit">Save</button>
-            }
-        </form>
+                @if (loading) {
+                    <ui-loader/>
+                } @else {
+                    <button class="btn btn-primary" type="submit">Save</button>
+                }
+            </form>
+        </div>
     `
 })
 export class SettingsFormComponent implements OnInit {

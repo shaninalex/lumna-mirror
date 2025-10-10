@@ -38,7 +38,6 @@ import {Project} from '@client/entities/project';
         </div>
         <ng-template
             cdkConnectedOverlay
-            cdkConnectedOverlayBackdropClass="bg-slate-50/25"
             [cdkConnectedOverlayOrigin]="trigger"
             [cdkConnectedOverlayOpen]="isOpen"
             [cdkConnectedOverlayHasBackdrop]="true"

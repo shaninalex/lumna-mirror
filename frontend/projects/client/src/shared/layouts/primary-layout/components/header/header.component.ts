@@ -9,6 +9,7 @@ import {selectUser} from '@client/entities/user';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {UiService} from '@client/shared/ui/ui.service';
 import {BreadcrumbsComponent} from './breadcrumbs';
+import {ThemeSwitcherComponent} from '@client/shared/layouts/primary-layout/components/header/theme-switcher.component';
 
 @Component({
     selector: 'fr-header',
@@ -19,9 +20,10 @@ import {BreadcrumbsComponent} from './breadcrumbs';
         OverlayModule,
         RouterLinkActive,
         BreadcrumbsComponent,
+        ThemeSwitcherComponent,
     ],
     template: `
-        <div class="py-2 px-4 flex items-center justify-between border-b border-gray-300">
+        <div class="py-2 px-4 flex items-center justify-between border-b border-gray-300 dark:bg-gray-800 dark:border-gray-600">
             <div class="flex items-center gap-4">
                 <button (click)="toggleSidebar()" class="cursor-pointer">
                     @if (closeSidebar) {
@@ -33,6 +35,7 @@ import {BreadcrumbsComponent} from './breadcrumbs';
                 <fr-breadcrumbs />
             </div>
             <div class="flex items-center gap-2 ms-auto">
+                <fr-theme-switcher />
                 @if (email$ | async; as email) {
                     <div tabindex="0" role="button" class="flex items-center gap-2 cursor-pointer" (click)="isOpen = !isOpen"
                          cdkOverlayOrigin #trigger="cdkOverlayOrigin">
@@ -41,7 +44,6 @@ import {BreadcrumbsComponent} from './breadcrumbs';
                     </div>
                     <ng-template
                         cdkConnectedOverlay
-                        cdkConnectedOverlayBackdropClass="bg-slate-50/25"
                         [cdkConnectedOverlayOrigin]="trigger"
                         [cdkConnectedOverlayOpen]="isOpen"
                         [cdkConnectedOverlayHasBackdrop]="true"
