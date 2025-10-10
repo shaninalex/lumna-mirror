@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {map, Observable} from "rxjs";
 import {environment as env} from '@client/environments/environment.development'
 import {CommonApiService} from '@client/shared/common';
-import {CreateTaskInput, Task} from '@client/entities/task';
+import {CreateTaskInput, Task, TaskDetailInput} from '@client/entities/task';
 
 const tasksUrl = {
     tasksRoot: (projectId: number) => `${env.API_ROOT}/api/v1/project/${projectId}/tasks`,
@@ -28,4 +28,11 @@ export class TaskService extends CommonApiService {
             map(data => data.data),
         );
     }
+
+    public Patch(taskId: number, payload: TaskDetailInput): Observable<Task> {
+        return this.patch<Task>(tasksUrl.task(taskId), payload).pipe(
+            map(data => data.data),
+        );
+    }
+
 }

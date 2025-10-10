@@ -1,5 +1,5 @@
 import {createAction, props} from '@ngrx/store';
-import {CreateTaskInput, Task} from './task.model';
+import {CreateTaskInput, Task, TaskDetailInput} from './task.model';
 import {ChangeStatusPayload} from '@client/features/project/board-view-feature/api';
 
 export const TaskListGetActions = createAction(
@@ -36,3 +36,9 @@ export const TaskUpdateAction = createAction(
     "[task] update task",
     props<{ payload: Task }>(),
 )
+
+export const TaskPatchAction = createAction(
+    "[task] patch task",
+    props<{ taskId: number, payload: TaskDetailInput }>(),
+)
+

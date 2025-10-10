@@ -5,7 +5,7 @@ import {
     TaskCreateAction,
     TaskListGetActions,
     TaskSetAction,
-    TaskListSetActions, TaskUpdateAction
+    TaskListSetActions, TaskUpdateAction, TaskPatchAction
 } from './task.actions';
 import {TaskService} from '../api/task.service';
 import {exhaustMap, of, switchMap} from 'rxjs';
@@ -59,3 +59,20 @@ export const TasksChangeStatusEffect = createEffect(
     ),
     {functional: true, dispatch: true}
 );
+
+export const TaskPatchEffect = createEffect(
+    (
+        actions$ = inject(Actions),
+        api = inject(TaskService),
+    ) => actions$.pipe(
+        ofType(TaskPatchAction),
+        exhaustMap((action) => {
+                return api.Patch(action.taskId, action.payload).pipe(
+                    switchMap(data => of(TaskUpdateAction({payload: data}))),
+                )
+            }
+        )
+    ),
+    {functional: true, dispatch: true}
+);
+
