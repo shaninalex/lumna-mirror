@@ -1,18 +1,18 @@
 .cdk-drag-preview,
 .status-sort-item {
     padding: 0.5rem 1rem;
-    border: solid 1px #ccc;
+    //border: solid 1px #ccc;
     border-radius: 0.5rem;
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
     cursor: move;
-    background: white;
+    //background: white;
     font-size: 14px;
     font-family: sans-serif;
 }
 
 .status-sort-item.accent {
-    background: oklch(95% .052 163.051) // --color-emerald-100
+    //background: oklch(95% .052 163.051) // --color-emerald-100
 }
 
 .cdk-drag-placeholder {

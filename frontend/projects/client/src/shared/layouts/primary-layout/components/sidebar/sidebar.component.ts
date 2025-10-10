@@ -13,7 +13,7 @@ import {Observable} from 'rxjs';
         NgClass,
     ],
     template: `
-        <div class="h-full flex flex-col space-between bg-base-100 border-e border-gray-300">
+        <div class="h-full flex flex-col space-between bg-base-100 border-e border-gray-300 dark:bg-gray-800 dark:border-gray-600">
             <a [routerLink]="['/']" class="flex items-center gap-2 p-4">
                 @if (!extendSidebar) {
                     <img src="img/logo-h.svg" class="w-full" alt="Lumna"/>

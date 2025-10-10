@@ -26,7 +26,7 @@ import {RouterLink} from '@angular/router';
                         <div class="text-xs text-gray-500 dark:text-gray-300">{{ task.code }}</div>
                     </div>
                     <div class="ms-auto">
-                        <img src="/img/1.png" class="rounded-full w-6">
+                        <img src="/img/1.png" class="rounded-full w-6" title="Username">
                     </div>
                 </div>
             </div>
