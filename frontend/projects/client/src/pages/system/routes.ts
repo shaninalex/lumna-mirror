@@ -1,17 +1,12 @@
 import { Routes } from '@angular/router';
-import {SessionExpiredComponent} from './session-expired/session-expired.component';
-import {Page403} from '@client/pages/system/page-403/page-403';
-import {Page404} from '@client/pages/system/page-404/page-404';
-import {NewOrgComponent} from '@client/pages/system/org';
+import {SessionExpiredPageComponent} from '@client/pages/system/session-expired-page';
+import {Page403} from '@client/pages/system/page-403-page';
+import {Page404} from '@client/pages/system/page-404-page';
 
 export const systemRoutes: Routes = [
     {
         path: "session-expired",
-        component: SessionExpiredComponent,
-    },
-    {
-        path: "set-organization",
-        component: NewOrgComponent,
+        component: SessionExpiredPageComponent,
     },
     {
         path: "403",

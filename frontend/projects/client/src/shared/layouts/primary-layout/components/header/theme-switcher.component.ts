@@ -25,7 +25,6 @@ import {NgClass} from '@angular/common';
             (backdropClick)="isOpen = false"
         >
             <div class="dropdown">
-<!--                <button type="button" class="block cursor-pointer" (click)="setTheme('device')">device</button>-->
                 <button type="button" class="block cursor-pointer" (click)="setTheme('light')">light</button>
                 <button type="button" class="block cursor-pointer" (click)="setTheme('dark')">dark</button>
             </div>

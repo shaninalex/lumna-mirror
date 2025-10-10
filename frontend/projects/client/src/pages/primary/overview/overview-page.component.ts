@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 @Component({
     selector: 'fr-overview',
     imports: [],
-    templateUrl: './overview.html',
+    templateUrl: './overview-page.component.html',
 })
-export class Overview {
+export class OverviewPage {
 }

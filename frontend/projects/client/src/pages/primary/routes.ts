@@ -1,11 +1,11 @@
 import {Routes} from '@angular/router';
 import {PrimaryRoot} from './primary-root';
-import {Overview} from './overview/overview';
+import {OverviewPage} from './overview';
 import {overviewResolver} from './overview/overview.resolver';
-import {ProjectsListPageComponent} from './projects-list/projects-list-page.component'
-import {projectListResolver} from './projects-list/projects-list.resolver';
-import {projectDetailRoutes} from '@client/pages/primary/project-detail';
-import {ProjectsRootComponent} from '@client/pages/primary/projects-root';
+import {ProjectsListPageComponent} from '@client/pages/primary/projects-list-page/projects-list-page.component'
+import {projectListResolver} from '@client/pages/primary/projects-list-page/projects-list.resolver';
+import {projectDetailRoutes} from '@client/pages/primary/project-detail-page';
+import {ProjectsRootPageComponent} from '@client/pages/primary/projects-root-page';
 import {SettingsPageComponent} from '@client/pages/primary/settings-page';
 import {authGuard} from './auth.guard';
 
@@ -17,13 +17,13 @@ export const mainRoutes: Routes = [
         children: [
             {
                 path: "",
-                component: Overview,
+                component: OverviewPage,
                 resolve: {overview: overviewResolver},
                 data: {breadcrumb: "Home"},
             },
             {
                 path: "projects",
-                component: ProjectsRootComponent,
+                component: ProjectsRootPageComponent,
                 resolve: {projects: projectListResolver},
                 data: {breadcrumb: "Projects"},
                 children: [

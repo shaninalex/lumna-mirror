@@ -1,6 +1,6 @@
 import {Routes} from '@angular/router';
-import {LoginPageComponent} from '@client/pages/auth/login';
-import {RegisterPageComponent} from '@client/pages/auth/register';
+import {LoginPageComponent} from '@client/pages/auth/login-page';
+import {RegisterPageComponent} from '@client/pages/auth/register-page';
 import {authPageGuard} from '@client/pages/auth/auth-page.guard';
 
 

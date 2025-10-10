@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {RouterLink} from '@angular/router';
 
 @Component({
-    selector: 'fr-session-expired.component',
+    selector: 'fr-session-expired-page',
     imports: [
         RouterLink
     ],
@@ -11,6 +11,6 @@ import {RouterLink} from '@angular/router';
         <a [routerLink]="['auth', 'login']">login</a>
     `,
 })
-export class SessionExpiredComponent {
+export class SessionExpiredPageComponent {
 
 }

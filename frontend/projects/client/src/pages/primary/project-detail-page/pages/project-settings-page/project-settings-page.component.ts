@@ -18,7 +18,7 @@ import {NgClass} from '@angular/common';
         ReactiveFormsModule,
         NgClass,
     ],
-    styleUrl: './project-settings.component.scss',
+    styleUrl: './project-settings-page.component.scss',
     template: `
         <div class="card mb-4">
             <div class="card-title">Project name:</div>

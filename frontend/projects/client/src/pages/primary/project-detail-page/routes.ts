@@ -2,10 +2,10 @@ import {Route} from '@angular/router';
 import {
     BoardViewPageComponent,
     ProjectSettingsPageComponent, TaskDetailPageComponent
-} from '@client/pages/primary/project-detail/pages';
-import {ProjectDetailPageComponent} from '@client/pages/primary/project-detail/project-detail-page.component';
+} from '@client/pages/primary/project-detail-page/pages';
+import {ProjectDetailPageComponent} from '@client/pages/primary/project-detail-page/project-detail-page.component';
 import {projectResolver} from './project.resolver';
-import {taskResolver} from '@client/pages/primary/project-detail/task.resolver';
+import {taskResolver} from '@client/pages/primary/project-detail-page/task.resolver';
 
 export const projectDetailRoutes: Route = {
     path: ":projectKey",
