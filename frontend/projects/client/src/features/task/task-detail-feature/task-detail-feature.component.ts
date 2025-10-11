@@ -15,9 +15,15 @@ import {MoveTaskComponent} from './move-task';
         MoveTaskComponent
     ],
     template: `
+        <div class="flex justify-between mb-4">
+            <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
+            <button (click)="onDelete()" class="btn btn-danger" type="button">Delete</button>
+        </div>
+
         <div class="mb-4">
             <lu-move-task [task]="task"/>
         </div>
+
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             Title
             <div class="mb-4 card-title">
@@ -28,11 +34,6 @@ import {MoveTaskComponent} from './move-task';
             <div class="mb-4">
                 <div class="font-bold text-sm">Description</div>
                 <textarea rows="8" class="input" formControlName="description"></textarea>
-            </div>
-
-            <div class="flex justify-between">
-                <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
-                <button (click)="onDelete()" class="btn btn-danger" type="button">Delete</button>
             </div>
         </form>
     `

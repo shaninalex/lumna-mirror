@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {HeaderComponent, SidebarComponent} from './components';
+import {HeaderComponent, SidebarComponent, ToastManagerComponent} from './components';
 import {AsyncPipe, NgClass} from '@angular/common';
 import {Observable} from 'rxjs';
 import {UiService} from '@client/shared/ui/ui.service';
@@ -10,7 +10,8 @@ import {UiService} from '@client/shared/ui/ui.service';
         SidebarComponent,
         HeaderComponent,
         NgClass,
-        AsyncPipe
+        AsyncPipe,
+        ToastManagerComponent
     ],
     styleUrl: './primary-layout.scss',
     template: `
@@ -22,6 +23,7 @@ import {UiService} from '@client/shared/ui/ui.service';
                 <fr-header/>
                 <div class="flex-grow p-4 overflow-y-auto bg-slate-50 dark:bg-gray-700">
                     <ng-content></ng-content>
+                    <lu-toast-manager />
                 </div>
             </div>
         </div>
