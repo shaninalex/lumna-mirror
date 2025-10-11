@@ -1,7 +1,7 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
-import {Task, TaskDetailInput, TaskPatchAction} from '@client/entities/task';
+import {Task, TaskDeleteAction, TaskDetailInput, TaskPatchAction} from '@client/entities/task';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {DatePipe} from '@angular/common';
 import {MoveTaskComponent} from './move-task';
@@ -16,12 +16,12 @@ import {MoveTaskComponent} from './move-task';
     ],
     template: `
         <div class="mb-4">
-            <lu-move-task [task]="task" />
+            <lu-move-task [task]="task"/>
         </div>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             Title
             <div class="mb-4 card-title">
-                <input class="input w-full" formControlName="title" />
+                <input class="input w-full" formControlName="title"/>
                 <div class="text-xs">Created: {{ task.created_at | date }}</div>
             </div>
 
@@ -30,8 +30,9 @@ import {MoveTaskComponent} from './move-task';
                 <textarea rows="8" class="input" formControlName="description"></textarea>
             </div>
 
-            <div class="mb-4">
+            <div class="flex justify-between">
                 <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
+                <button (click)="onDelete()" class="btn btn-danger" type="button">Delete</button>
             </div>
         </form>
     `
@@ -60,6 +61,10 @@ export class TaskDetailFeatureComponent implements OnInit {
             list_index: this.task.list_index,
             status_id: this.task.status_id,
         }
-        this.store.dispatch(TaskPatchAction({taskId: this.task.id, payload }))
+        this.store.dispatch(TaskPatchAction({taskId: this.task.id, payload}))
+    }
+
+    onDelete(): void {
+        this.store.dispatch(TaskDeleteAction({taskId: this.task.id}))
     }
 }

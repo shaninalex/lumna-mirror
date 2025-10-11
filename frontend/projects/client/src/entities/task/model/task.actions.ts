@@ -42,3 +42,12 @@ export const TaskPatchAction = createAction(
     props<{ taskId: number, payload: TaskDetailInput }>(),
 )
 
+export const TaskDeleteAction = createAction(
+    "[task] delete task",
+    props<{ taskId: number }>(),
+)
+
+export const TaskDeleteSuccessAction = createAction(
+    "[task] delete task success",
+    props<{ taskId: number }>(),
+)

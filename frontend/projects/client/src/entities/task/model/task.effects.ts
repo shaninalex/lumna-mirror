@@ -5,7 +5,7 @@ import {
     TaskCreateAction,
     TaskListGetActions,
     TaskSetAction,
-    TaskListSetActions, TaskUpdateAction, TaskPatchAction
+    TaskListSetActions, TaskUpdateAction, TaskPatchAction, TaskDeleteAction, TaskDeleteSuccessAction
 } from './task.actions';
 import {TaskService} from '../api/task.service';
 import {exhaustMap, of, switchMap} from 'rxjs';
@@ -76,3 +76,18 @@ export const TaskPatchEffect = createEffect(
     {functional: true, dispatch: true}
 );
 
+export const TaskDeleteEffect = createEffect(
+    (
+        actions$ = inject(Actions),
+        api = inject(TaskService),
+    ) => actions$.pipe(
+        ofType(TaskDeleteAction),
+        exhaustMap((action) => {
+                return api.Delete(action.taskId).pipe(
+                    switchMap(() => of(TaskDeleteSuccessAction({taskId: action.taskId}))),
+                )
+            }
+        )
+    ),
+    {functional: true, dispatch: true}
+);

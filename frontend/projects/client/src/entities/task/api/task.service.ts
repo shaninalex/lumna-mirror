@@ -35,4 +35,9 @@ export class TaskService extends CommonApiService {
         );
     }
 
+    public Delete(taskId: number): Observable<null> {
+        return this.delete<null>(tasksUrl.task(taskId)).pipe(
+            map(data => data.data),
+        );
+    }
 }

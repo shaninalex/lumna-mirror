@@ -23,7 +23,6 @@ import {RouterLink} from '@angular/router';
                 <div class="flex items-center gap-2">
                     <div class="text-sm">
                         <div class="text-xs">{{ task.created_at | date:"EEE, MMM d, HH:mm:ss" }}</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-300">{{ task.code }}</div>
                     </div>
                     <div class="ms-auto">
                         <img src="/img/1.png" class="rounded-full w-6" title="Username">
