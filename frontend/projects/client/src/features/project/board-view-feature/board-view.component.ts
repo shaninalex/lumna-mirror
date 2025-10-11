@@ -23,6 +23,7 @@ import {CreateStatusFormComponent, selectProjectStatusList} from '@client/entiti
 import {combineLatest, map, Observable} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import {TaskFormSmComponent} from '@client/features/project';
+import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 
 @Component({
     selector: "lu-board-view-feature",
@@ -35,6 +36,7 @@ import {TaskFormSmComponent} from '@client/features/project';
         AsyncPipe,
         CreateStatusFormComponent,
         TaskFormSmComponent,
+        RouterOutlet,
     ],
     providers: [BoardViewApiService],
     styleUrl: './board-view.component.scss',
@@ -56,7 +58,9 @@ import {TaskFormSmComponent} from '@client/features/project';
                             @for (task of column.tasks; track task.id) {
                                 <lu-task-card cdkDrag [projectCode]="project.code"
                                               [task]="task"
-                                              [cdkDragData]="task" />
+                                              [cdkDragData]="task"
+                                              (openTaskDetail)="handleOpenTaskModal($event)"
+                                />
                             }
                         </div>
 
@@ -66,11 +70,15 @@ import {TaskFormSmComponent} from '@client/features/project';
                 <lu-create-status-form [projectId]="project.id" />
             </div>
         }
+        <router-outlet />
     `
 })
 export class BoardViewComponent implements OnInit {
     @Input() project: Project;
+
     private store = inject(Store<AppState>);
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
 
     columns$: Observable<StatusColumn[]>;
 
@@ -130,5 +138,10 @@ export class BoardViewComponent implements OnInit {
                 to_idx: newIndex,
             }
         }));
+    }
+
+    handleOpenTaskModal(taskCode: string): void {
+        console.log(taskCode)
+        this.router.navigate([taskCode], { relativeTo: this.route });
     }
 }

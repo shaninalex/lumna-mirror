@@ -7,6 +7,7 @@ import {DatePipe} from '@angular/common';
 import {MoveTaskComponent} from './move-task';
 import { NgxEditorComponent, NgxEditorMenuComponent, Editor } from 'ngx-editor';
 import {UiService} from '@client/shared/ui/ui.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: "lu-task-detail-feature",
@@ -18,34 +19,43 @@ import {UiService} from '@client/shared/ui/ui.service';
         NgxEditorComponent,
         NgxEditorMenuComponent,
     ],
+    styleUrl: 'task-detail-feature.component.scss',
     template: `
-        <div class="mb-4">
-            <lu-move-task [task]="task"/>
-        </div>
-
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <div class="flex justify-between mb-4">
-                <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
-                <button (click)="onDelete()" class="btn btn-danger" type="button">Delete</button>
-            </div>
-
-            <div class="mb-4 card-title">
-                <input class="input w-full" formControlName="title"/>
-                <div class="text-xs">Created: {{ task.created_at | date }}</div>
-            </div>
+        <div class="modal-backdrop" (click)="close()"></div>
+        <div class="modal-content">
+            <button (click)="close()" class="cursor-pointer"><i class="i-close-circle"></i></button>
 
             <div class="mb-4">
-                <div class="font-bold text-sm">Description</div>
-                <div class="NgxEditor__Wrapper">
-                    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
-                    <ngx-editor [editor]="editor" formControlName="description"></ngx-editor>
-                </div>
+                <lu-move-task [task]="task"/>
             </div>
-        </form>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="flex justify-between mb-4">
+                    <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
+                    <button (click)="onDelete()" class="btn btn-danger" type="button">Delete</button>
+                </div>
+
+                <div class="mb-4 card-title">
+                    <input class="input w-full" formControlName="title"/>
+                    <div class="text-xs">Created: {{ task.created_at | date }}</div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="font-bold text-sm">Description</div>
+                    <div class="NgxEditor__Wrapper">
+                        <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                        <ngx-editor [editor]="editor" formControlName="description"></ngx-editor>
+                    </div>
+                </div>
+            </form>
+        </div>
     `
 })
 export class TaskDetailFeatureComponent implements OnInit, OnDestroy {
     @Input() task: Task
+
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
+
     private store = inject(Store<AppState>);
     private ui: UiService = inject(UiService);
 
@@ -75,13 +85,19 @@ export class TaskDetailFeatureComponent implements OnInit, OnDestroy {
             status_id: this.task.status_id,
         }
         this.store.dispatch(TaskPatchAction({taskId: this.task.id, payload}))
+        this.close() // NOTE: will be better to wait success result of operations
     }
 
     onDelete(): void {
         this.store.dispatch(TaskDeleteAction({taskId: this.task.id}))
+        this.close()
     }
 
     ngOnDestroy(): void {
         this.editor.destroy();
+    }
+
+    close() {
+        this.router.navigate(['../'], { relativeTo: this.route });
     }
 }

@@ -15,11 +15,9 @@ import {TaskDetailFeatureComponent} from '@client/features/task';
         TaskDetailFeatureComponent
     ],
     template: `
-        <div class="card">
-            @if (task$ | async; as task) {
-                <lu-task-detail-feature [task]="task" />
-            }
-        </div>
+        @if (task$ | async; as task) {
+            <lu-task-detail-feature [task]="task"/>
+        }
     `
 })
 export class TaskDetailPageComponent {

@@ -21,21 +21,22 @@ export const projectDetailRoutes: Route = {
             path: "",
             component: BoardViewPageComponent,
             data: { breadcrumb: 'Board' },
+            children: [
+                {
+                    path: ":taskCode",
+                    component: TaskDetailPageComponent,
+                    resolve: {task: taskResolver},
+                    data: {
+                        breadcrumb: (data: any, params: any) => {
+                            return data.task?.title ?? params['taskCode'] ?? 'Task'
+                        }
+                    },
+                },]
         },
         {
             path: "settings",
             component: ProjectSettingsPageComponent,
             data: { breadcrumb: "Settings"},
-        },
-        {
-            path: ":taskCode",
-            component: TaskDetailPageComponent,
-            resolve: {task: taskResolver},
-            data: {
-                breadcrumb: (data: any, params: any) => {
-                    return data.task?.title ?? params['taskCode'] ?? 'Task'
-                }
-            },
         },
     ]
 }

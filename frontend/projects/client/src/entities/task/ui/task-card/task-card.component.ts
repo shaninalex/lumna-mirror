@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Task} from '@client/entities/task';
 import {DatePipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
@@ -7,17 +7,16 @@ import {RouterLink} from '@angular/router';
     selector: "lu-task-card",
     imports: [
         DatePipe,
-        RouterLink,
     ],
     template: `
         <div class="card">
             <div class="card-title mb-1">
-                <a [routerLink]="['/projects', projectCode, task.code]">
+                <button (click)="openTaskDetail.emit(task.code)" class="cursor-pointer">
                     {{ task.title }}
                     @if (task.completed) {
                         <i class="i-check-circle text-emerald-500 text-lg"></i>
                     }
-                </a>
+                </button>
             </div>
             <div>
                 <div class="flex items-center gap-2">
@@ -35,4 +34,5 @@ import {RouterLink} from '@angular/router';
 export class TaskCardComponent {
     @Input() task: Task;
     @Input() projectCode: string;
+    @Output() openTaskDetail: EventEmitter<string> = new EventEmitter()
 }
