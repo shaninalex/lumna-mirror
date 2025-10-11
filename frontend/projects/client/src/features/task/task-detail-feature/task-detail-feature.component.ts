@@ -19,12 +19,10 @@ import {ActivatedRoute, Router} from '@angular/router';
         NgxEditorComponent,
         NgxEditorMenuComponent,
     ],
-    styleUrl: 'task-detail-feature.component.scss',
     template: `
-        <div class="modal-backdrop" (click)="close()"></div>
-        <div class="modal-content">
+        <div class="fixed cursor-pointer inset-0 bg-black/20" (click)="close()"></div>
+        <div class="fixed -translate-x-2/4 -translate-y-2/4 z-10 left-2/4 top-2/4 card">
             <button (click)="close()" class="cursor-pointer"><i class="i-close-circle"></i></button>
-
             <div class="mb-4">
                 <lu-move-task [task]="task"/>
             </div>
