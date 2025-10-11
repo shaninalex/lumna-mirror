@@ -19,6 +19,10 @@
     @apply rounded-md px-3 py-1 border cursor-pointer;
 }
 
+.btn:disabled {
+    @apply opacity-50 pointer-events-none;
+}
+
 .btn-primary {
     @apply bg-emerald-300 border-emerald-400 dark:bg-emerald-700 dark:border-emerald-600;
 }

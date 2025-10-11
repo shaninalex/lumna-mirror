@@ -58,7 +58,7 @@ import {Project} from '@client/entities/project';
         <router-outlet/>
     `
 })
-export class ProjectDetailPageComponent implements OnInit {
+export class ProjectDetailWrapperComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
     project: Project

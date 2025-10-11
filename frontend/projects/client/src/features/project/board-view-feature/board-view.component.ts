@@ -36,7 +36,6 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
         AsyncPipe,
         CreateStatusFormComponent,
         TaskFormSmComponent,
-        RouterOutlet,
     ],
     providers: [BoardViewApiService],
     styleUrl: './board-view.component.scss',
@@ -70,7 +69,6 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
                 <lu-create-status-form [projectId]="project.id" />
             </div>
         }
-        <router-outlet />
     `
 })
 export class BoardViewComponent implements OnInit {
@@ -78,7 +76,6 @@ export class BoardViewComponent implements OnInit {
 
     private store = inject(Store<AppState>);
     private router = inject(Router);
-    private route = inject(ActivatedRoute);
 
     columns$: Observable<StatusColumn[]>;
 
@@ -141,7 +138,6 @@ export class BoardViewComponent implements OnInit {
     }
 
     handleOpenTaskModal(taskCode: string): void {
-        console.log(taskCode)
-        this.router.navigate([taskCode], { relativeTo: this.route });
+        this.router.navigate(['/projects', this.project.code, 'board', taskCode]);
     }
 }

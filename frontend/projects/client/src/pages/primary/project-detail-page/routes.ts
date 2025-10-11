@@ -3,13 +3,15 @@ import {
     BoardViewPageComponent,
     ProjectSettingsPageComponent, TaskDetailPageComponent
 } from '@client/pages/primary/project-detail-page/pages';
-import {ProjectDetailPageComponent} from '@client/pages/primary/project-detail-page/project-detail-page.component';
+import {ProjectDetailWrapperComponent} from '@client/pages/primary/project-detail-page/project-detail-wrapper.component';
 import {projectResolver} from './project.resolver';
 import {taskResolver} from '@client/pages/primary/project-detail-page/task.resolver';
+import {ProjectOverviewComponent} from './project-overview.component';
+import {ViewModeWrapperComponent} from '@client/pages/primary/project-detail-page/view-mode-wrapper.component';
 
 export const projectDetailRoutes: Route = {
     path: ":projectKey",
-    component: ProjectDetailPageComponent,
+    component: ProjectDetailWrapperComponent,
     resolve: {project: projectResolver},
     data: {
         breadcrumb: (data: any, params: any) => {
@@ -19,8 +21,18 @@ export const projectDetailRoutes: Route = {
     children: [
         {
             path: "",
-            component: BoardViewPageComponent,
-            data: { breadcrumb: 'Board' },
+            component: ProjectOverviewComponent,
+            data: { breadcrumb: 'Overview' },
+        },
+        {
+            path: "settings",
+            component: ProjectSettingsPageComponent,
+            data: { breadcrumb: "Settings"},
+        },
+        {
+            path: ":viewMode",
+            component: ViewModeWrapperComponent,
+            data: { breadcrumb: (data: any, params: any) => params['viewMode'] },
             children: [
                 {
                     path: ":taskCode",
@@ -31,12 +43,8 @@ export const projectDetailRoutes: Route = {
                             return data.task?.title ?? params['taskCode'] ?? 'Task'
                         }
                     },
-                },]
-        },
-        {
-            path: "settings",
-            component: ProjectSettingsPageComponent,
-            data: { breadcrumb: "Settings"},
+                },
+            ]
         },
     ]
 }
