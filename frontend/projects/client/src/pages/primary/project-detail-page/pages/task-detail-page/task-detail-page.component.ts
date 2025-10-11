@@ -7,7 +7,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TaskDetailFeatureComponent} from '@client/features/task';
 
 @Component({
-    selector: "fr-task-detail-modal",
+    selector: "lu-task-detail-modal",
     imports: [
         AsyncPipe,
         FormsModule,
@@ -17,7 +17,7 @@ import {TaskDetailFeatureComponent} from '@client/features/task';
     template: `
         <div class="card">
             @if (task$ | async; as task) {
-                <fr-task-detail-feature [task]="task" />
+                <lu-task-detail-feature [task]="task" />
             }
         </div>
     `

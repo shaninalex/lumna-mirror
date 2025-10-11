@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {version} from '@root/package.json';
 
 @Component({
-    selector: 'fr-auth-layout',
+    selector: 'lu-auth-layout',
     imports: [],
     template: `
         <div class="flex items-center justify-center h-screen bg-slate-50">

@@ -6,7 +6,7 @@ import {UiService} from '@client/shared/ui/ui.service';
 import {Observable} from 'rxjs';
 
 @Component({
-    selector: 'fr-sidebar',
+    selector: 'lu-sidebar',
     imports: [
         RouterLink,
         RouterLinkActive,

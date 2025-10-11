@@ -3,15 +3,15 @@ import {PrimaryLayout} from '@client/shared/layouts';
 import {RouterOutlet} from '@angular/router';
 
 @Component({
-    selector: 'fr-root',
+    selector: 'lu-root',
     imports: [
         PrimaryLayout,
         RouterOutlet,
     ],
     template: `
-        <fr-primary-layout>
+        <lu-primary-layout>
             <router-outlet/>
-        </fr-primary-layout>
+        </lu-primary-layout>
     `
 })
 export class PrimaryRoot {}

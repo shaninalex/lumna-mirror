@@ -9,7 +9,7 @@ import {DialogRef, DIALOG_DATA} from '@angular/cdk/dialog';
 
 
 @Component({
-    selector: 'fr-edit-status-form',
+    selector: 'lu-edit-status-form',
     imports: [
         ReactiveFormsModule,
     ],

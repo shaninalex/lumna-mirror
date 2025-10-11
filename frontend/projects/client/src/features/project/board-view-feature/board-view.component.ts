@@ -25,7 +25,7 @@ import {AsyncPipe} from '@angular/common';
 import {TaskFormSmComponent} from '@client/features/project';
 
 @Component({
-    selector: "fr-board-view-feature",
+    selector: "lu-board-view-feature",
     imports: [
         CdkDropList,
         CdkDrag,
@@ -45,7 +45,7 @@ import {TaskFormSmComponent} from '@client/features/project';
                     <div class="card board-column">
                         <div class="flex justify-between mb-4">
                             <div class="text-slate-600 card-title">{{ column.title }}</div>
-                            <fr-column-header [project]="project" [column]="column"/>
+                            <lu-column-header [project]="project" [column]="column"/>
                         </div>
 
                         <div class="flex flex-col gap-2 min-h-2 my-4"
@@ -54,16 +54,16 @@ import {TaskFormSmComponent} from '@client/features/project';
                              [cdkDropListData]="column.tasks"
                              (cdkDropListDropped)="drop($event)">
                             @for (task of column.tasks; track task.id) {
-                                <fr-task-card cdkDrag [projectCode]="project.code"
+                                <lu-task-card cdkDrag [projectCode]="project.code"
                                               [task]="task"
                                               [cdkDragData]="task" />
                             }
                         </div>
 
-                        <fr-task-form-sm [project]="project" [column]="column" />
+                        <lu-task-form-sm [project]="project" [column]="column" />
                     </div>
                 }
-                <fr-create-status-form [projectId]="project.id" />
+                <lu-create-status-form [projectId]="project.id" />
             </div>
         }
     `

@@ -4,12 +4,12 @@ import {ActivatedRoute} from '@angular/router';
 import {Project} from '@client/entities/project';
 
 @Component({
-    selector: 'fr-board-view-page',
+    selector: 'lu-board-view-page',
     imports: [
         BoardViewComponent,
     ],
     template: `
-        <fr-board-view-feature [project]="project"/>
+        <lu-board-view-feature [project]="project"/>
     `
 })
 export class BoardViewPageComponent implements OnInit {

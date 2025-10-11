@@ -8,7 +8,7 @@ import {APIResponse} from '@client/shared/models';
 import {LoaderComponent} from '@client/shared/ui';
 
 @Component({
-    selector: "fr-login-page",
+    selector: "lu-login-page",
     imports: [
         AuthLayout,
         ReactiveFormsModule,
@@ -16,7 +16,7 @@ import {LoaderComponent} from '@client/shared/ui';
         LoaderComponent,
     ],
     template: `
-        <fr-auth-layout title="Register">
+        <lu-auth-layout title="Register">
             <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col mt-4 items-start">
                 <div class="mb-4">
                     <input class="input" type="email" formControlName="email" placeholder="Email"/>
@@ -39,7 +39,7 @@ import {LoaderComponent} from '@client/shared/ui';
             </form>
             <hr class="mb-4">
             <a [routerLink]="['/auth/login']" class="text-sm">Login</a>
-        </fr-auth-layout>
+        </lu-auth-layout>
     `
 })
 export class RegisterPageComponent {

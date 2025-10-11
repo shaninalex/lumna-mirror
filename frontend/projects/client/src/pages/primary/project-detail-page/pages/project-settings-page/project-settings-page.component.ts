@@ -11,7 +11,7 @@ import {NgClass} from '@angular/common';
 
 
 @Component({
-    selector: 'fr-project-settings-page',
+    selector: 'lu-project-settings-page',
     imports: [
         CdkDropList,
         CdkDrag,

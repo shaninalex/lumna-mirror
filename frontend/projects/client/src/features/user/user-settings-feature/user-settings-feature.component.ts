@@ -8,7 +8,7 @@ import {LoaderComponent} from '@client/shared/ui/loader';
 import {Actions, ofType} from '@ngrx/effects';
 
 @Component({
-    selector: 'fr-settings-form-feature',
+    selector: 'lu-settings-form-feature',
     standalone: true,
     imports: [ReactiveFormsModule, LoaderComponent],
     template: `

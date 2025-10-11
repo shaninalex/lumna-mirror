@@ -7,7 +7,7 @@ import {DatePipe} from '@angular/common';
 import {MoveTaskComponent} from './move-task';
 
 @Component({
-    selector: "fr-task-detail-feature",
+    selector: "lu-task-detail-feature",
     imports: [
         DatePipe,
         FormsModule,

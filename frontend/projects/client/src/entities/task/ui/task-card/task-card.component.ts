@@ -4,7 +4,7 @@ import {DatePipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
 
 @Component({
-    selector: "fr-task-card",
+    selector: "lu-task-card",
     imports: [
         DatePipe,
         RouterLink,

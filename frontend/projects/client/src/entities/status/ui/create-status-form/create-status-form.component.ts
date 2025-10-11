@@ -5,7 +5,7 @@ import {AppState} from '@client/shared/store';
 import {StatusCreateAction} from '@client/entities/status';
 
 @Component({
-    selector: 'fr-create-status-form',
+    selector: 'lu-create-status-form',
     imports: [
         ReactiveFormsModule,
     ],

@@ -6,7 +6,7 @@ import {EditStatusFormComponent} from '@client/entities/status';
 import {Dialog} from '@angular/cdk/dialog';
 
 @Component({
-    selector: 'fr-column-header',
+    selector: 'lu-column-header',
     imports: [
         ReactiveFormsModule,
         FormsModule,

@@ -9,7 +9,7 @@ import {Project} from '@client/entities/project';
 import {StatusColumn} from '@client/features/project/board-view-feature/board.model';
 
 @Component({
-    selector: 'fr-task-form-sm',
+    selector: 'lu-task-form-sm',
     imports: [
         LoaderComponent,
         ReactiveFormsModule,

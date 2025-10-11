@@ -8,7 +8,7 @@ interface Breadcrumb {
 }
 
 @Component({
-    selector: "fr-breadcrumbs",
+    selector: "lu-breadcrumbs",
     imports: [
         RouterLink
     ],

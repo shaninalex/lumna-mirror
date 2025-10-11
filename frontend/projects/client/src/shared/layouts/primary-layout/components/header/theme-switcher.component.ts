@@ -3,7 +3,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {NgClass} from '@angular/common';
 
 @Component({
-    selector: 'fr-theme-switcher',
+    selector: 'lu-theme-switcher',
     imports: [
         OverlayModule,
         NgClass,
