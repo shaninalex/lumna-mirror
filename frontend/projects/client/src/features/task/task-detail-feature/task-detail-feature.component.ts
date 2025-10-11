@@ -1,10 +1,12 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 import {Task, TaskDeleteAction, TaskDetailInput, TaskPatchAction} from '@client/entities/task';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {DatePipe} from '@angular/common';
 import {MoveTaskComponent} from './move-task';
+import { NgxEditorComponent, NgxEditorMenuComponent, Editor } from 'ngx-editor';
+import {UiService} from '@client/shared/ui/ui.service';
 
 @Component({
     selector: "lu-task-detail-feature",
@@ -12,20 +14,21 @@ import {MoveTaskComponent} from './move-task';
         DatePipe,
         FormsModule,
         ReactiveFormsModule,
-        MoveTaskComponent
+        MoveTaskComponent,
+        NgxEditorComponent,
+        NgxEditorMenuComponent,
     ],
     template: `
-        <div class="flex justify-between mb-4">
-            <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
-            <button (click)="onDelete()" class="btn btn-danger" type="button">Delete</button>
-        </div>
-
         <div class="mb-4">
             <lu-move-task [task]="task"/>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            Title
+            <div class="flex justify-between mb-4">
+                <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
+                <button (click)="onDelete()" class="btn btn-danger" type="button">Delete</button>
+            </div>
+
             <div class="mb-4 card-title">
                 <input class="input w-full" formControlName="title"/>
                 <div class="text-xs">Created: {{ task.created_at | date }}</div>
@@ -33,14 +36,21 @@ import {MoveTaskComponent} from './move-task';
 
             <div class="mb-4">
                 <div class="font-bold text-sm">Description</div>
-                <textarea rows="8" class="input" formControlName="description"></textarea>
+                <div class="NgxEditor__Wrapper">
+                    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                    <ngx-editor [editor]="editor" formControlName="description"></ngx-editor>
+                </div>
             </div>
         </form>
     `
 })
-export class TaskDetailFeatureComponent implements OnInit {
+export class TaskDetailFeatureComponent implements OnInit, OnDestroy {
     @Input() task: Task
-    private store = inject(Store<AppState>)
+    private store = inject(Store<AppState>);
+    private ui: UiService = inject(UiService);
+
+    theme: string;
+    editor: Editor;
 
     form: FormGroup = new FormGroup({
         title: new FormControl('', Validators.required),
@@ -48,6 +58,8 @@ export class TaskDetailFeatureComponent implements OnInit {
     })
 
     ngOnInit() {
+        this.theme = this.ui.theme.appTheme()
+        this.editor = new Editor();
         this.form.setValue({
             title: this.task.title,
             description: this.task.description,
@@ -67,5 +79,9 @@ export class TaskDetailFeatureComponent implements OnInit {
 
     onDelete(): void {
         this.store.dispatch(TaskDeleteAction({taskId: this.task.id}))
+    }
+
+    ngOnDestroy(): void {
+        this.editor.destroy();
     }
 }
