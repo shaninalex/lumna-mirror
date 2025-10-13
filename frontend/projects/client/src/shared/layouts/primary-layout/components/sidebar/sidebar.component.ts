@@ -80,6 +80,6 @@ export class SidebarComponent implements OnInit {
     ]
 
     ngOnInit() {
-        this.uiService.extendSidebar().subscribe(data => this.extendSidebar = data)
+        this.uiService.sidebar.state$().subscribe(data => this.extendSidebar = data)
     }
 }

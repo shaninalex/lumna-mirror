@@ -21,30 +21,32 @@ import {ActivatedRoute, Router} from '@angular/router';
     ],
     template: `
         <div class="fixed cursor-pointer inset-0 bg-black/20" (click)="close()"></div>
-        <div class="fixed -translate-x-2/4 -translate-y-2/4 z-10 left-2/4 top-2/4 w-2xl card">
-            <button (click)="close()" class="cursor-pointer"><i class="i-close-circle"></i></button>
-            <div class="mb-4">
-                <lu-move-task [task]="task"/>
-            </div>
-            <form [formGroup]="form" (ngSubmit)="onSubmit()">
-                <div class="flex justify-between mb-4">
-                    <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
-                    <button (click)="onDelete()" class="btn btn-danger" type="button">Delete</button>
-                </div>
-
-                <div class="mb-4 card-title">
-                    <input class="input w-full" formControlName="title"/>
-                    <div class="text-xs">Created: {{ task.created_at | date }}</div>
-                </div>
-
+        <div class="fixed -translate-x-2/4 top-0 z-10 left-2/4 w-3xl h-screen py-4 overflow-auto">
+            <div class="card">
+                <button (click)="close()" class="cursor-pointer"><i class="i-close-circle"></i></button>
                 <div class="mb-4">
-                    <div class="font-bold text-sm">Description</div>
-                    <div class="NgxEditor__Wrapper">
-                        <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
-                        <ngx-editor [editor]="editor" formControlName="description"></ngx-editor>
-                    </div>
+                    <lu-move-task [task]="task"/>
                 </div>
-            </form>
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="flex justify-between mb-4">
+                        <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
+                        <button (click)="onDelete()" class="btn btn-danger" type="button">Delete</button>
+                    </div>
+
+                    <div class="mb-4 card-title">
+                        <input class="input w-full" formControlName="title"/>
+                        <div class="text-xs">Created: {{ task.created_at | date }}</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="font-bold text-sm">Description</div>
+                        <div class="NgxEditor__Wrapper">
+                            <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                            <ngx-editor [editor]="editor" formControlName="description"></ngx-editor>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     `
 })

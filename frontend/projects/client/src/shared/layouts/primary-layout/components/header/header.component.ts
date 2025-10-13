@@ -78,7 +78,7 @@ export class HeaderComponent implements OnInit {
 
     toggleSidebar() {
         this.closeSidebar = !this.closeSidebar;
-        this.uiService.setExtendSidebar(this.closeSidebar)
+        this.uiService.sidebar.setState(this.closeSidebar)
     }
 
     ngOnInit() {

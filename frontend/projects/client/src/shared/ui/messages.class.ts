@@ -1,16 +1,17 @@
-import {BehaviorSubject, Observable} from 'rxjs';
 import {ToastMessage} from '@client/shared/models';
 import { v4 as uuidV4} from 'uuid'
+import {BehaviorSubject, Observable} from 'rxjs';
+
 
 export class MessagesClass {
-    private _messages$: BehaviorSubject<ToastMessage[]> = new BehaviorSubject([] as ToastMessage[]);
+    private _messages$: BehaviorSubject<ToastMessage[]> = new BehaviorSubject<ToastMessage[]>([]);
 
-    public messages$(): Observable<ToastMessage[]> {
+    public list(): Observable<ToastMessage[]> {
         return this._messages$.asObservable()
     }
 
-    public addMessage(msg: string): void {
-        const messages = this._messages$.value
+    public add(msg: string): void {
+        const messages = [...this._messages$.value]
         messages.push({
             id: uuidV4(),
             message: msg,
@@ -18,7 +19,7 @@ export class MessagesClass {
         this._messages$.next(messages)
     }
 
-    public removeMessage(id: string): void {
+    public remove(id: string): void {
         let messages = [...this._messages$.value]
         this._messages$.next(messages.filter(m => m.id !== id))
     }

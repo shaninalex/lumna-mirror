@@ -27,7 +27,7 @@ export class GlobalInterceptor {
                     const resp: HttpResponse<apiResponseMessage> = event
                     if (resp.body?.messages) {
                         for (let i = 0; i < resp.body.messages.length; i++) {
-                            this.ui.addMessage(resp.body.messages[i])
+                            this.ui.messages.add(resp.body.messages[i])
                         }
                     }
                 }

@@ -31,5 +31,5 @@ import {UiService} from '@client/shared/ui/ui.service';
 })
 export class PrimaryLayout {
     private uiService = inject(UiService);
-    closeSidebar$: Observable<boolean> = this.uiService.extendSidebar();
+    closeSidebar$: Observable<boolean> = this.uiService.sidebar.state$();
 }
