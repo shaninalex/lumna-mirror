@@ -1,3 +1,23 @@
+## 0.17.0 (2025-10-20)
+
+### Feat
+
+- **ui**: changed task detail page to board modal
+- **ui**: ngx-editor
+- **ui**: response toast manager
+- delete task button
+- move task dropdown component
+
+### Fix
+
+- **ui**: drag&drop on new items
+- add view mode for project
+
+### Refactor
+
+- component prefixes
+- move task detail logic to it's feature component
+
 ## 0.16.0 (2025-10-10)
 
 ### Feat
