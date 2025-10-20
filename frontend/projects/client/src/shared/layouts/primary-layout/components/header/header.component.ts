@@ -12,7 +12,7 @@ import {BreadcrumbsComponent} from './breadcrumbs';
 import {ThemeSwitcherComponent} from '@client/shared/layouts/primary-layout/components/header/theme-switcher.component';
 
 @Component({
-    selector: 'fr-header',
+    selector: 'lu-header',
     imports: [
         AsyncPipe,
         RouterLink,
@@ -32,10 +32,10 @@ import {ThemeSwitcherComponent} from '@client/shared/layouts/primary-layout/comp
                         <i class="i-arrow-left"></i>
                     }
                 </button>
-                <fr-breadcrumbs />
+                <lu-breadcrumbs />
             </div>
             <div class="flex items-center gap-2 ms-auto">
-                <fr-theme-switcher />
+                <lu-theme-switcher />
                 @if (email$ | async; as email) {
                     <div tabindex="0" role="button" class="flex items-center gap-2 cursor-pointer" (click)="isOpen = !isOpen"
                          cdkOverlayOrigin #trigger="cdkOverlayOrigin">
@@ -78,7 +78,7 @@ export class HeaderComponent implements OnInit {
 
     toggleSidebar() {
         this.closeSidebar = !this.closeSidebar;
-        this.uiService.setExtendSidebar(this.closeSidebar)
+        this.uiService.sidebar.setState(this.closeSidebar)
     }
 
     ngOnInit() {

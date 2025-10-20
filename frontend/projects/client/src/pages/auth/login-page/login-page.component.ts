@@ -9,7 +9,7 @@ import {LoaderComponent} from '@client/shared/ui';
 import {FormsModule} from '@angular/forms';
 
 @Component({
-    selector: "fr-login-page",
+    selector: "lu-login-page",
     imports: [
         AuthLayout,
         ReactiveFormsModule,
@@ -18,7 +18,7 @@ import {FormsModule} from '@angular/forms';
         FormsModule,
     ],
     template: `
-        <fr-auth-layout title="Login">
+        <lu-auth-layout title="Login">
             <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col mt-4 items-start">
                 <div class="mb-4">
                     <input class="input" type="email" formControlName="email" placeholder="Email"/>
@@ -41,7 +41,7 @@ import {FormsModule} from '@angular/forms';
             </form>
             <hr class="mb-4">
             <a [routerLink]="['/auth/register']" class="text-sm">Register</a>
-        </fr-auth-layout>
+        </lu-auth-layout>
     `
 })
 export class LoginPageComponent {

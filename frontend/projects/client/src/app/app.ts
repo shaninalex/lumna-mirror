@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 
 @Component({
-    selector: 'fr-root',
+    selector: 'lu-root',
     imports: [
         RouterOutlet,
     ],

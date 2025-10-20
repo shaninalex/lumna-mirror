@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-    selector: 'fr-overview',
+    selector: 'lu-overview',
     imports: [],
     templateUrl: './overview-page.component.html',
 })

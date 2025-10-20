@@ -7,7 +7,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@client/shared/store';
 
 @Component({
-    selector: "fr-new-project-form",
+    selector: "lu-new-project-form",
     imports: [
         ReactiveFormsModule,
         LoaderComponent,

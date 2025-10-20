@@ -23,9 +23,10 @@ import {CreateStatusFormComponent, selectProjectStatusList} from '@client/entiti
 import {combineLatest, map, Observable} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import {TaskFormSmComponent} from '@client/features/project';
+import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 
 @Component({
-    selector: "fr-board-view-feature",
+    selector: "lu-board-view-feature",
     imports: [
         CdkDropList,
         CdkDrag,
@@ -45,8 +46,9 @@ import {TaskFormSmComponent} from '@client/features/project';
                     <div class="card board-column">
                         <div class="flex justify-between mb-4">
                             <div class="text-slate-600 card-title">{{ column.title }}</div>
-                            <fr-column-header [project]="project" [column]="column"/>
+                            <lu-column-header [project]="project" [column]="column"/>
                         </div>
+                        <lu-task-form-sm [project]="project" [column]="column" />
 
                         <div class="flex flex-col gap-2 min-h-2 my-4"
                              cdkDropList
@@ -54,23 +56,26 @@ import {TaskFormSmComponent} from '@client/features/project';
                              [cdkDropListData]="column.tasks"
                              (cdkDropListDropped)="drop($event)">
                             @for (task of column.tasks; track task.id) {
-                                <fr-task-card cdkDrag [projectCode]="project.code"
+                                <lu-task-card cdkDrag [projectCode]="project.code"
                                               [task]="task"
-                                              [cdkDragData]="task" />
+                                              [cdkDragData]="task"
+                                              (openTaskDetail)="handleOpenTaskModal($event)"
+                                />
                             }
                         </div>
 
-                        <fr-task-form-sm [project]="project" [column]="column" />
                     </div>
                 }
-                <fr-create-status-form [projectId]="project.id" />
+                <lu-create-status-form [projectId]="project.id" />
             </div>
         }
     `
 })
 export class BoardViewComponent implements OnInit {
     @Input() project: Project;
+
     private store = inject(Store<AppState>);
+    private router = inject(Router);
 
     columns$: Observable<StatusColumn[]>;
 
@@ -112,13 +117,13 @@ export class BoardViewComponent implements OnInit {
         let newIndex: number;
 
         if (!prev && !next) {
-            newIndex = 10000;
+            newIndex = 10000; // single item in column
         } else if (!prev) {
-            newIndex = next.list_index / 2;
+            newIndex = next.list_index / 2; // if no previous, it's a first item.
         } else if (!next) {
-            newIndex = prev.list_index + 10000;
+            newIndex = prev.list_index + 10000; // no next item, it's a last item
         } else {
-            newIndex = (prev.list_index + next.list_index) / 2;
+            newIndex = (prev.list_index + next.list_index) / 2; // in the middle of between two items
         }
 
         this.store.dispatch(TaskChangeStatusAction({
@@ -130,5 +135,9 @@ export class BoardViewComponent implements OnInit {
                 to_idx: newIndex,
             }
         }));
+    }
+
+    handleOpenTaskModal(taskCode: string): void {
+        this.router.navigate(['/projects', this.project.code, 'board', taskCode]);
     }
 }

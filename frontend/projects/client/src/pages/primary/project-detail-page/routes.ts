@@ -3,13 +3,15 @@ import {
     BoardViewPageComponent,
     ProjectSettingsPageComponent, TaskDetailPageComponent
 } from '@client/pages/primary/project-detail-page/pages';
-import {ProjectDetailPageComponent} from '@client/pages/primary/project-detail-page/project-detail-page.component';
+import {ProjectDetailWrapperComponent} from '@client/pages/primary/project-detail-page/project-detail-wrapper.component';
 import {projectResolver} from './project.resolver';
 import {taskResolver} from '@client/pages/primary/project-detail-page/task.resolver';
+import {ProjectOverviewComponent} from './project-overview.component';
+import {ViewModeWrapperComponent} from '@client/pages/primary/project-detail-page/view-mode-wrapper.component';
 
 export const projectDetailRoutes: Route = {
     path: ":projectKey",
-    component: ProjectDetailPageComponent,
+    component: ProjectDetailWrapperComponent,
     resolve: {project: projectResolver},
     data: {
         breadcrumb: (data: any, params: any) => {
@@ -19,8 +21,8 @@ export const projectDetailRoutes: Route = {
     children: [
         {
             path: "",
-            component: BoardViewPageComponent,
-            data: { breadcrumb: 'Board' },
+            component: ProjectOverviewComponent,
+            data: { breadcrumb: 'Overview' },
         },
         {
             path: "settings",
@@ -28,14 +30,21 @@ export const projectDetailRoutes: Route = {
             data: { breadcrumb: "Settings"},
         },
         {
-            path: ":taskCode",
-            component: TaskDetailPageComponent,
-            resolve: {task: taskResolver},
-            data: {
-                breadcrumb: (data: any, params: any) => {
-                    return data.task?.title ?? params['taskCode'] ?? 'Task'
-                }
-            },
+            path: ":viewMode",
+            component: ViewModeWrapperComponent,
+            data: { breadcrumb: (data: any, params: any) => params['viewMode'] },
+            children: [
+                {
+                    path: ":taskCode",
+                    component: TaskDetailPageComponent,
+                    resolve: {task: taskResolver},
+                    data: {
+                        breadcrumb: (data: any, params: any) => {
+                            return data.task?.title ?? params['taskCode'] ?? 'Task'
+                        }
+                    },
+                },
+            ]
         },
     ]
 }

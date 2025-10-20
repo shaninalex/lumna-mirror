@@ -1,15 +1,17 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {BoardViewComponent} from '@client/features/project';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, RouterOutlet} from '@angular/router';
 import {Project} from '@client/entities/project';
 
 @Component({
-    selector: 'fr-board-view-page',
+    selector: 'lu-board-view-page',
     imports: [
         BoardViewComponent,
+        RouterOutlet,
     ],
     template: `
-        <fr-board-view-feature [project]="project"/>
+        <lu-board-view-feature [project]="project"/>
+        <router-outlet />
     `
 })
 export class BoardViewPageComponent implements OnInit {

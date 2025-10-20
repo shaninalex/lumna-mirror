@@ -1,8 +1,16 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpHandler, HttpRequest} from '@angular/common/http';
-import {BehaviorSubject, catchError, EMPTY, filter, switchMap, take, throwError} from 'rxjs';
+import {HttpErrorResponse, HttpEventType, HttpHandler, HttpRequest, HttpResponse} from '@angular/common/http';
+import {BehaviorSubject, catchError, EMPTY, filter, switchMap, take, tap, throwError} from 'rxjs';
 import {Router} from '@angular/router';
 import {AuthService} from '@client/entities/auth';
+import {UiService} from '@client/shared/ui/ui.service';
+
+
+
+
+interface apiResponseMessage {
+    messages: string[]
+}
 
 @Injectable({providedIn: 'root'})
 export class GlobalInterceptor {
@@ -10,9 +18,20 @@ export class GlobalInterceptor {
     private authService = inject(AuthService);
     private isRefreshing = false;
     private refreshSubject = new BehaviorSubject<boolean>(true);
+    private ui = inject(UiService);
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
         return next.handle(req).pipe(
+            tap(event => {
+                if (event.type === HttpEventType.Response) {
+                    const resp: HttpResponse<apiResponseMessage> = event
+                    if (resp.body?.messages) {
+                        for (let i = 0; i < resp.body.messages.length; i++) {
+                            this.ui.messages.add(resp.body.messages[i])
+                        }
+                    }
+                }
+            }),
             catchError((err: HttpErrorResponse) => {
                 if (err.status === 401) {
                     return this.handle401(req, next);

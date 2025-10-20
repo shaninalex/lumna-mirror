@@ -1,7 +1,7 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {createReducer, on} from '@ngrx/store';
 import {Task} from './task.model'
-import {TaskSetAction, TaskListSetActions, TaskUpdateAction} from './task.actions';
+import {TaskSetAction, TaskListSetActions, TaskUpdateAction, TaskDeleteSuccessAction} from './task.actions';
 
 export interface TasksState extends EntityState<Task> {}
 export const tasksAdapter: EntityAdapter<Task> = createEntityAdapter<Task>();
@@ -12,5 +12,6 @@ export const tasksReducer = createReducer(
     on(TaskUpdateAction, (state, action) => tasksAdapter.updateOne({
         id: action.payload.id,
         changes: action.payload,
-    }, state))
+    }, state)),
+    on(TaskDeleteSuccessAction, (state, action) => tasksAdapter.removeOne(action.taskId, state)),
 )

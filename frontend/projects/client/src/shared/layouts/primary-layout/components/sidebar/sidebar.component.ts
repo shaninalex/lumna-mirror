@@ -6,7 +6,7 @@ import {UiService} from '@client/shared/ui/ui.service';
 import {Observable} from 'rxjs';
 
 @Component({
-    selector: 'fr-sidebar',
+    selector: 'lu-sidebar',
     imports: [
         RouterLink,
         RouterLinkActive,
@@ -80,6 +80,6 @@ export class SidebarComponent implements OnInit {
     ]
 
     ngOnInit() {
-        this.uiService.extendSidebar().subscribe(data => this.extendSidebar = data)
+        this.uiService.sidebar.state$().subscribe(data => this.extendSidebar = data)
     }
 }
