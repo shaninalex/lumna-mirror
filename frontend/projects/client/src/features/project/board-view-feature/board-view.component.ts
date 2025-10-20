@@ -48,6 +48,7 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
                             <div class="text-slate-600 card-title">{{ column.title }}</div>
                             <lu-column-header [project]="project" [column]="column"/>
                         </div>
+                        <lu-task-form-sm [project]="project" [column]="column" />
 
                         <div class="flex flex-col gap-2 min-h-2 my-4"
                              cdkDropList
@@ -63,7 +64,6 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
                             }
                         </div>
 
-                        <lu-task-form-sm [project]="project" [column]="column" />
                     </div>
                 }
                 <lu-create-status-form [projectId]="project.id" />
@@ -117,13 +117,13 @@ export class BoardViewComponent implements OnInit {
         let newIndex: number;
 
         if (!prev && !next) {
-            newIndex = 10000;
+            newIndex = 10000; // single item in column
         } else if (!prev) {
-            newIndex = next.list_index / 2;
+            newIndex = next.list_index / 2; // if no previous, it's a first item.
         } else if (!next) {
-            newIndex = prev.list_index + 10000;
+            newIndex = prev.list_index + 10000; // no next item, it's a last item
         } else {
-            newIndex = (prev.list_index + next.list_index) / 2;
+            newIndex = (prev.list_index + next.list_index) / 2; // in the middle of between two items
         }
 
         this.store.dispatch(TaskChangeStatusAction({

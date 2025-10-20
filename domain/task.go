@@ -158,5 +158,6 @@ func (t TaskService) TaskCreate(ctx context.Context, data *Task) (*Task, error) 
 	data.CreatedAt = now
 	data.UpdatedAt = now
 	data.Code = task.Code
+	data.ListIndex = task.ListIndex
 	return data, nil
 }
