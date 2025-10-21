@@ -1,0 +1,13 @@
+# database connection path
+# if it's SQLite3 file - use absolute system path
+database_path: "/home/alex/go/src/github.com/shaninalex/lumna/lumna.db?cache=shared&mode=rwc"
+
+
+# for jwt signing and verification
+secret_key: "a-string-secret-at-least-256-bits-long"
+
+# Application working mode:
+# development - many things logging in stdout, things can work in mock or local way
+# production - more silent way
+# testing - most of the things working in mocking way
+mode: development
