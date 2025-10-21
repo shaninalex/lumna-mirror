@@ -10,7 +10,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
-	"github.com/shaninalex/lumna/internal/utils"
+	"github.com/shaninalex/lumna/internal/base"
 )
 
 // AccessTokenResult contains the signed token and metadata
@@ -36,8 +36,7 @@ type AccessTokenJWTService struct {
 }
 
 func NewDefaultAccessTokenService() AccessTokenService {
-	key := utils.GetEnv("LUMNA_SECRET_KEY", "a-string-secret-at-least-256-bits-long")
-	return NewAccessTokenJWTService(key, Issuer)
+	return NewAccessTokenJWTService(base.GetConfig().String("secret_key"), Issuer)
 }
 
 func NewAccessTokenJWTService(signingKey string, issuer string) *AccessTokenJWTService {
@@ -123,8 +122,7 @@ type RefreshTokenJWTService struct {
 }
 
 func NewDefaultRefreshTokenService() RefreshTokenService {
-	key := utils.GetEnv("LUMNA_SECRET_KEY", "a-string-secret-at-least-256-bits-long")
-	return NewRefreshTokenJWTService(key, Issuer)
+	return NewRefreshTokenJWTService(base.GetConfig().String("secret_key"), Issuer)
 }
 
 func NewRefreshTokenJWTService(signingKey string, issuer string) *RefreshTokenJWTService {
