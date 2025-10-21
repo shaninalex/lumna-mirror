@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"path"
 
+	"github.com/shaninalex/lumna/internal/base"
 	"github.com/shaninalex/lumna/internal/db"
-	"github.com/shaninalex/lumna/internal/utils"
 )
 
 type Middleware func(http.Handler) http.Handler
@@ -84,21 +84,23 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 }
 
 func (r *Router) Run() error {
-	r.printRoutes()
+	//if base.IsDebug() {
+	//	r.printRoutes()
+	//}
 	log.Println("server started... on port :8000")
 	return http.ListenAndServe(":8000", corsMiddleware(r))
 }
 
-func (r *Router) printRoutes() {
-	for _, rt := range r.routes {
-		log.Printf("%s %s\n", rt.method, rt.path)
-	}
-}
+//func (r *Router) printRoutes() {
+//	for _, rt := range r.routes {
+//		log.Printf("%s %s\n", rt.method, rt.path)
+//	}
+//}
 
 // DefaultRouter - default router.
 func DefaultRouter(dbConnection *sql.DB) *Router {
 	r := NewRouter()
-	if env := utils.GetEnv("LUMNA_ENVIRONMENT", "development"); env != "development" {
+	if base.IsDebug() {
 		r.Use(NewRecoveryMiddleware().Wrap)
 	}
 	r.Use(db.NewMiddleware(dbConnection).Wrap)

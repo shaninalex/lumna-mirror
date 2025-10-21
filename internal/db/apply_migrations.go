@@ -15,6 +15,8 @@ import (
 var migrationsFS embed.FS
 
 func ApplyMigrationsEmbed(db *sql.DB) {
+	fmt.Print("Apply migrations ... ")
+
 	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
 	if err != nil {
 		panic(err)
@@ -34,5 +36,5 @@ func ApplyMigrationsEmbed(db *sql.DB) {
 		panic(err)
 	}
 
-	fmt.Println("Embedded migrations applied successfully")
+	fmt.Print("ok\n")
 }
