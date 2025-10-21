@@ -22,3 +22,7 @@ Register webhooks and send request.
 ### Emails and custom email templates
 
 ### Multiple boards per project
+
+### cli mode
+
+full cli mode without any web related things - sockets and http routers. Should looks like LazyGit
