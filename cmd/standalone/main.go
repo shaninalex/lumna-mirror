@@ -14,7 +14,9 @@ import (
 	projectApp "github.com/shaninalex/lumna/apps/project/api"
 	taskApp "github.com/shaninalex/lumna/apps/task/api"
 	userApp "github.com/shaninalex/lumna/apps/user/api"
+	"github.com/shaninalex/lumna/internal/base"
 	"github.com/shaninalex/lumna/internal/db"
+	"github.com/shaninalex/lumna/internal/dir"
 	"github.com/shaninalex/lumna/internal/web"
 )
 
@@ -22,7 +24,13 @@ import (
 var webFS embed.FS
 
 func main() {
-	sqlDB, err := sql.Open("sqlite3", "file:lumna.db?cache=shared&mode=rwc")
+	if err := dir.MakeProjectDirectories(); err != nil {
+		panic(err)
+	}
+
+	config := base.GetConfig()
+
+	sqlDB, err := sql.Open("sqlite3", config.String("database_path"))
 	if err != nil {
 		panic(err)
 	}
