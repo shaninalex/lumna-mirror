@@ -84,18 +84,18 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 }
 
 func (r *Router) Run() error {
-	if base.IsDebug() {
-		r.printRoutes()
-	}
+	//if base.IsDebug() {
+	//	r.printRoutes()
+	//}
 	log.Println("server started... on port :8000")
 	return http.ListenAndServe(":8000", corsMiddleware(r))
 }
 
-func (r *Router) printRoutes() {
-	for _, rt := range r.routes {
-		log.Printf("%s %s\n", rt.method, rt.path)
-	}
-}
+//func (r *Router) printRoutes() {
+//	for _, rt := range r.routes {
+//		log.Printf("%s %s\n", rt.method, rt.path)
+//	}
+//}
 
 // DefaultRouter - default router.
 func DefaultRouter(dbConnection *sql.DB) *Router {
