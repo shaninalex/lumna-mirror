@@ -1,0 +1,59 @@
+@use "tailwindcss";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+
+.card {
+    @apply p-4 border rounded-md border-slate-200 bg-white dark:bg-gray-800 dark:border-gray-700;
+}
+
+.card-title {
+    @apply font-bold;
+}
+
+.input {
+    @apply w-full border border-slate-300 rounded-md px-3 py-1 focus:outline-slate-300;
+}
+
+.btn {
+    @apply rounded-md px-3 py-1 border cursor-pointer;
+}
+
+.btn:disabled {
+    @apply opacity-50 pointer-events-none;
+}
+
+.btn-primary {
+    @apply bg-emerald-300 border-emerald-400 dark:bg-emerald-700 dark:border-emerald-600;
+}
+
+.btn-secondary {
+    @apply bg-slate-100 border-slate-200 dark:bg-gray-700 dark:border-gray-600;
+}
+
+.btn-danger {
+    @apply bg-rose-300 border-rose-400 dark:bg-rose-700 dark:border-rose-600;
+}
+
+.btn-icon {
+    @apply flex items-center justify-center gap-2;
+}
+
+.dropdown {
+    @apply p-4 bg-white border rounded-md border-slate-300 dark:bg-gray-700 dark:border-gray-600;
+}
+
+.active-link {
+    @apply pointer-events-none text-slate-700
+}
+
+
+html[data-theme="dark"] {
+    --editor-dark-bg: var(--color-slate-800);
+
+    --ngx-editor-popup-bg-color: var(--editor-dark-bg);
+    --ngx-editor-menubar-bg-color: var(--editor-dark-bg);
+    --ngx-editor-background-color: var(--editor-dark-bg);
+    --ngx-editor-menu-item-hover-bg-color: var(--color-slate-600);
+    --ngx-editor-text-color: var(--color-white);
+}
