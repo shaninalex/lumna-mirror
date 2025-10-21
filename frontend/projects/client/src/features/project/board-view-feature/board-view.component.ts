@@ -48,9 +48,10 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
                             <div class="text-slate-600 card-title">{{ column.title }}</div>
                             <lu-column-header [project]="project" [column]="column"/>
                         </div>
+
                         <lu-task-form-sm [project]="project" [column]="column" />
 
-                        <div class="flex flex-col gap-2 min-h-2 my-4"
+                        <div class="flex flex-col gap-2 min-h-2 mt-4"
                              cdkDropList
                              [id]="column.id"
                              [cdkDropListData]="column.tasks"
