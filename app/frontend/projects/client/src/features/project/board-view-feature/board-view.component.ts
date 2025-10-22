@@ -44,11 +44,7 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
             <div cdkDropListGroup class="flex justify-start items-start no-wrap gap-4 w-full">
                 @for (column of columns; track $index) {
                     <div class="card board-column">
-                        <div class="flex justify-between mb-4">
-                            <div class="text-slate-600 card-title">{{ column.title }}</div>
-                            <lu-column-header [project]="project" [column]="column"/>
-                        </div>
-
+                        <lu-column-header [project]="project" [column]="column"/>
                         <lu-task-form-sm [project]="project" [column]="column" />
 
                         <div class="flex flex-col gap-2 min-h-2 mt-4"
