@@ -19,7 +19,7 @@
 }
 
 .btn {
-    @apply rounded-md px-3 py-1 cursor-pointer;
+    @apply rounded-md px-3 py-1 cursor-pointer whitespace-nowrap;
 }
 
 .btn:disabled {
@@ -51,16 +51,29 @@
 }
 
 .hover-space {
-    @apply rounded-md p-1 cursor-pointer hover:bg-slate-100 dark:hover:bg-gray-700;
+    @apply rounded-md p-1 cursor-pointer hover:bg-gray-100/50 dark:hover:bg-gray-100/10;
 }
 
+:root {
+    --scrollbar-color: var(--color-slate-300)
+}
 
 html[data-theme="dark"] {
-    --editor-dark-bg: var(--color-slate-800);
 
+    // Text editor
+    --editor-dark-bg: var(--color-slate-800);
     --ngx-editor-popup-bg-color: var(--editor-dark-bg);
     --ngx-editor-menubar-bg-color: var(--editor-dark-bg);
     --ngx-editor-background-color: var(--editor-dark-bg);
     --ngx-editor-menu-item-hover-bg-color: var(--color-slate-600);
     --ngx-editor-text-color: var(--color-white);
+
+    // scrollbar
+    --scrollbar-color: var(--color-slate-500)
+}
+
+
+* {
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--scrollbar-color) transparent;
 }

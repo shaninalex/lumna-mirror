@@ -40,9 +40,10 @@ export class ThemeSwitcherComponent {
     private ui: UiService = inject(UiService);
 
     isOpen = false;
-    theme$: Observable<tTheme> = this.ui.theme.get()
+    theme$: Observable<tTheme> = this.ui.theme.get();
 
     setTheme(v: tTheme) {
         this.ui.theme.set(v)
+        this.isOpen = false;
     }
 }

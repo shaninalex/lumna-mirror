@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, inject, Input, OnInit, Renderer2} from '@angular/core';
 import {
     TaskChangeStatusAction,
     selectTasksByProjectID,
@@ -41,12 +41,12 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
     styleUrl: './board-view.component.scss',
     template: `
         @if (columns$ | async; as columns) {
-            <div cdkDropListGroup class="flex justify-start items-start no-wrap gap-4 w-full">
+            <div cdkDropListGroup class="flex justify-start items-start no-wrap gap-4 w-full h-full">
                 @for (column of columns; track $index) {
                     <div class="card board-column">
                         <lu-column-header [project]="project" [column]="column"/>
 
-                        <div class="flex flex-col gap-2 min-h-2 my-4"
+                        <div class="flex flex-col gap-2 min-h-2 my-4 h-full overflow-y-auto overflow-x-hidden"
                              cdkDropList
                              [id]="column.id"
                              [cdkDropListData]="column.tasks"
@@ -70,13 +70,16 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 })
 export class BoardViewComponent implements OnInit {
     @Input() project: Project;
-
+    private el: ElementRef = inject(ElementRef);
+    private renderer: Renderer2 = inject(Renderer2);
     private store = inject(Store<AppState>);
     private router = inject(Router);
 
     columns$: Observable<StatusColumn[]>;
 
     ngOnInit(): void {
+        setTimeout(() => this.updateHeight(), 100);
+
         const status$ = this.store.select(selectProjectStatusList(this.project.id));
         const tasks$ = this.store.select(selectTasksByProjectID(this.project.id));
 
@@ -136,5 +139,16 @@ export class BoardViewComponent implements OnInit {
 
     handleOpenTaskModal(taskCode: string): void {
         this.router.navigate(['/projects', this.project.code, 'board', taskCode]);
+    }
+
+    @HostListener('window:resize')
+    onResize() {
+        this.updateHeight();
+    }
+
+    private updateHeight() {
+        const elementTop = this.el.nativeElement.getBoundingClientRect().top;
+        const availableHeight = window.innerHeight - elementTop;
+        this.renderer.setStyle(this.el.nativeElement, 'height', `${availableHeight-16}px`);
     }
 }
