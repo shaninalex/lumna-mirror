@@ -2,9 +2,12 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-
 .card {
-    @apply p-4 border rounded-xl border-slate-200 shadow bg-white shadow dark:bg-gray-800 dark:border-gray-700;
+    @apply p-4 border rounded-xl border-slate-200 shadow-xs bg-white shadow dark:bg-gray-800 dark:border-gray-700;
+}
+
+.card-accent {
+    @apply bg-lime-600 text-white
 }
 
 .card-title {
@@ -16,7 +19,7 @@
 }
 
 .btn {
-    @apply rounded-md px-3 py-1 border cursor-pointer;
+    @apply rounded-md px-3 py-1 cursor-pointer;
 }
 
 .btn:disabled {
@@ -24,15 +27,15 @@
 }
 
 .btn-primary {
-    @apply bg-emerald-300 border-emerald-400 dark:bg-emerald-700 dark:border-emerald-600;
+    @apply bg-lime-300 dark:bg-lime-700;
 }
 
 .btn-secondary {
-    @apply bg-slate-100 border-slate-200 dark:bg-gray-700 dark:border-gray-600;
+    @apply bg-slate-100 dark:bg-gray-700;
 }
 
 .btn-danger {
-    @apply bg-rose-300 border-rose-400 dark:bg-rose-700 dark:border-rose-600;
+    @apply bg-rose-300 dark:bg-rose-700;
 }
 
 .btn-icon {

@@ -14,7 +14,7 @@ import {RouterLink} from '@angular/router';
                 <button (click)="openTaskDetail.emit(task.code)" class="cursor-pointer">
                     {{ task.title }}
                     @if (task.completed) {
-                        <i class="i-check-circle text-emerald-500 text-lg"></i>
+                        <i class="i-check-circle text-lime-500 text-lg"></i>
                     }
                 </button>
             </div>
