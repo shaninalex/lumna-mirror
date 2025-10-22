@@ -46,7 +46,7 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
                     <div class="card board-column">
                         <lu-column-header [project]="project" [column]="column"/>
 
-                        <div class="flex flex-col gap-2 min-h-2 my-4 h-full overflow-y-auto overflow-x-hidden"
+                        <div class="flex flex-col gap-2 min-h-2 my-4 h-full pb-3 px-1 overflow-y-auto overflow-x-hidden"
                              cdkDropList
                              [id]="column.id"
                              [cdkDropListData]="column.tasks"

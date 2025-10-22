@@ -2,8 +2,16 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+:root {
+    --scrollbar-color: var(--color-slate-300);
+    --card-shadow-color: rgba(0, 0, 0, 0.1);
+    --card-border-color: rgba(0, 0, 0, 0.03);
+}
+
 .card {
-    @apply p-4 border rounded-xl border-slate-200 shadow-xs bg-white shadow dark:bg-gray-800 dark:border-gray-700;
+    @apply p-4 rounded-xl bg-white dark:bg-gray-800;
+    box-shadow: 0 2px 2px 0 var(--card-shadow-color);
+    border: 1px solid var(--card-border-color);
 }
 
 .card-accent {
@@ -54,10 +62,6 @@
     @apply rounded-md p-1 cursor-pointer hover:bg-gray-100/50 dark:hover:bg-gray-100/10;
 }
 
-:root {
-    --scrollbar-color: var(--color-slate-300)
-}
-
 html[data-theme="dark"] {
 
     // Text editor
@@ -69,7 +73,11 @@ html[data-theme="dark"] {
     --ngx-editor-text-color: var(--color-white);
 
     // scrollbar
-    --scrollbar-color: var(--color-slate-500)
+    --scrollbar-color: var(--color-slate-500);
+
+    // card
+    --card-shadow-color: rgb(7 8 10 / 20%);
+    --card-border-color: rgb(7 8 10 / 20%);
 }
 
 
