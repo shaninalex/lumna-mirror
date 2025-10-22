@@ -13,7 +13,6 @@ import {AppState} from '@client/shared/store';
         FormsModule,
     ],
     template: `
-        {{ text }}
         @if (!formsOpen) {
             <div class="text-slate-600 card-title mb-4 cursor-pointer" (click)="formsOpen = true">{{ column.title }}</div>
         } @else {
@@ -26,7 +25,6 @@ import {AppState} from '@client/shared/store';
 export class ColumnHeaderComponent implements OnInit {
     @Input() project: Project;
     @Input() column: StatusColumn;
-    public text: String;
     private store = inject(Store<AppState>);
 
     eRef = inject(ElementRef)
