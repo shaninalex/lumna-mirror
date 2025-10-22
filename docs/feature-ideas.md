@@ -22,3 +22,5 @@ Register webhooks and send request.
 ### Emails and custom email templates
 
 ### Multiple boards per project
+
+### add background image like in trello (?) 

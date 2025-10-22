@@ -45,9 +45,8 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
                 @for (column of columns; track $index) {
                     <div class="card board-column">
                         <lu-column-header [project]="project" [column]="column"/>
-                        <lu-task-form-sm [project]="project" [column]="column" />
 
-                        <div class="flex flex-col gap-2 min-h-2 mt-4"
+                        <div class="flex flex-col gap-2 min-h-2 my-4"
                              cdkDropList
                              [id]="column.id"
                              [cdkDropListData]="column.tasks"
@@ -61,6 +60,7 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
                             }
                         </div>
 
+                        <lu-task-form-sm [project]="project" [column]="column" />
                     </div>
                 }
                 <lu-create-status-form [projectId]="project.id" />
