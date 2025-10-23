@@ -14,7 +14,7 @@ import {AppState} from '@client/shared/store';
     ],
     template: `
         @if (!formsOpen) {
-            <div class="text-slate-600 card-title cursor-pointer" (click)="formsOpen = true">{{ column.title }}</div>
+            <div class="text-gray-600 card-title cursor-pointer" (click)="formsOpen = true">{{ column.title }}</div>
         } @else {
             <form [formGroup]="form" class="my-1">
                 <input class="input" formControlName="title"/>

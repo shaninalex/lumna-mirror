@@ -28,7 +28,7 @@ import { StatusCreateAction } from '@client/entities/status';
                 </form>
             </div>
         } @else {
-            <button class="btn btn-icon btn-secondary text-slate-600" type="button" (click)="showForm = true">
+            <button class="btn btn-icon btn-secondary text-gray-600" type="button" (click)="showForm = true">
                 <i class="i-plus-circle text-lg"></i>
                 New column
             </button>

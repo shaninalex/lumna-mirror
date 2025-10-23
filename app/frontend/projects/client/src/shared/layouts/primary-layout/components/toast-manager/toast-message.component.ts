@@ -4,7 +4,7 @@ import {ToastMessage} from '@client/shared/models';
 @Component({
     selector: "lu-toast-message",
     template: `
-        <div class="rounded p-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-sm">
+        <div class="rounded p-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-sm">
             {{ toast.message }}
             <button (click)="onClose.emit(this.toast.id)" class="cursor-pointer"><i class="i-close-circle"></i></button>
         </div>
