@@ -11,11 +11,11 @@ import (
 const (
 	// ConfigDirectory - config directory
 	// Directory for config yaml file, may be some credentials files or certs
-	ConfigDirectory = "/.config/lumna"
+	ConfigDirectory = ".config/lumna"
 
 	// PersistenceDirectory - persistence directory
 	// This is a directory for database and uploading file
-	PersistenceDirectory = "/.local/share/lumna"
+	PersistenceDirectory = ".local/share/lumna"
 
 	// defaultPermissions - default permissions read/write
 	defaultPermissions = 0700
