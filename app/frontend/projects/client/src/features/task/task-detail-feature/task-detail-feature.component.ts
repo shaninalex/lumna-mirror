@@ -4,10 +4,12 @@ import { AppState } from '@client/shared/store';
 import { Task, TaskDeleteAction, TaskDetailInput, TaskPatchAction } from '@client/entities/task';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { MoveTaskComponent } from './move-task';
+import { TaskStatusDropdownComponent } from './task-status-dropdown';
 import { NgxEditorComponent, NgxEditorMenuComponent, Editor } from 'ngx-editor';
 import { UiService } from '@client/shared/ui/ui.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import {CdkMenuModule} from '@angular/cdk/menu';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 @Component({
     selector: "lu-task-detail-feature",
@@ -15,43 +17,65 @@ import { ActivatedRoute, Router } from '@angular/router';
         DatePipe,
         FormsModule,
         ReactiveFormsModule,
-        MoveTaskComponent,
+        TaskStatusDropdownComponent,
         NgxEditorComponent,
         NgxEditorMenuComponent,
+        CdkMenuModule,
+        OverlayModule
     ],
     styleUrl: './task-detail-feature.component.scss',
     template: `
         <div class="fixed cursor-pointer inset-0 bg-black/20" (click)="close()"></div>
         <div class="task-detail-feature">
             <div class="card">
-                <form [formGroup]="form" (ngSubmit)="onSubmit()">
-                    <div class="flex items-start gap-2">
-                        <div class="mb-4 card-title flex-grow">
-                            <input class="input w-full" formControlName="title"/>
-                            <div class="text-xs text-gray-400">Created: {{ task.created_at | date }}</div>
-                        </div>
-
-                        <button (click)="close()" class="cursor-pointer"><i class="i-close-circle"></i></button>
+                <div class="flex items-center space-between p-4 border-b border-gray-300">
+                    <lu-task-status-dropdown [task]="task"/>
+                    <span class="flex-grow"></span>
+                    <div class="flex items-center gap-2">
+                        <button class="cursor-pointer"
+                                cdkOverlayOrigin
+                                #trigger="cdkOverlayOrigin"
+                                (click)="isOpen = !isOpen">
+                            <i class="i-dots-menu"></i>
+                        </button>
+                        <ng-template
+                            cdkConnectedOverlay
+                            [cdkConnectedOverlayOrigin]="trigger"
+                            [cdkConnectedOverlayOpen]="isOpen"
+                            [cdkConnectedOverlayHasBackdrop]="true"
+                            (backdropClick)="isOpen = false"
+                        >
+                            <div class="card">
+                                <button (click)="onDelete()" class="text-red-500 cursor-pointer" type="button">Delete</button>
+                            </div>
+                        </ng-template>
+                        <button (click)="close()" class="cursor-pointer text-2xl"><i class="i-close-circle"></i>
+                        </button>
                     </div>
+                </div>
 
-                    <div class="mb-4">
-                        <div class="font-bold text-sm">Description</div>
-                        <div class="NgxEditor__Wrapper">
-                            <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
-                            <ngx-editor [editor]="editor" formControlName="description"></ngx-editor>
-                        </div>
+                <div class="grid grid-cols-3">
+                    <div class="col-span-2 p-4">
+                        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                            <div class="mb-4 card-title flex-grow">
+                                <input class="input w-full" formControlName="title"/>
+                            </div>
+                            <div class="mb-4">
+                                <div class="font-bold text-sm">Description</div>
+                                <div class="NgxEditor__Wrapper">
+                                    <ngx-editor-menu [editor]="editor"></ngx-editor-menu>
+                                    <ngx-editor [editor]="editor" formControlName="description"></ngx-editor>
+                                </div>
+                            </div>
+                            <div class="flex justify-between mb-4">
+                                <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
                     </div>
-
-                    <div class="flex justify-between mb-4">
-                        <button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
-                        <button (click)="onDelete()" class="btn btn-danger" type="button">Delete</button>
+                    <div class="bg-gray-100 p-4 rounded-br-xl">
+                        <div class="text-xs text-gray-500">Created: {{ task.created_at | date }}</div>
+                        <div class="font-bold text-lg text-gray-600">Activity:</div>
                     </div>
-               </form>
-
-                <hr class="my-4">
-
-                <div class="mb-4">
-                    <lu-move-task [task]="task"/>
                 </div>
             </div>
         </div>`
@@ -67,7 +91,7 @@ export class TaskDetailFeatureComponent implements OnInit, OnDestroy {
 
     theme: string;
     editor: Editor;
-
+    isOpen = false;
     form: FormGroup = new FormGroup({
         title: new FormControl('', Validators.required),
         description: new FormControl('', Validators.required),
