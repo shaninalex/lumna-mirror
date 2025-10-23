@@ -19,8 +19,10 @@ import { ActivatedRoute, Router } from '@angular/router';
         NgxEditorComponent,
         NgxEditorMenuComponent,
     ],
-    template: `<div class="fixed cursor-pointer inset-0 bg-black/20" (click)="close()"></div>
-        <div class="fixed -trangray-x-2/4 top-0 z-10 left-2/4 w-3xl h-screen py-4 overflow-auto">
+    styleUrl: './task-detail-feature.component.scss',
+    template: `
+        <div class="fixed cursor-pointer inset-0 bg-black/20" (click)="close()"></div>
+        <div class="task-detail-feature">
             <div class="card">
                 <form [formGroup]="form" (ngSubmit)="onSubmit()">
                     <div class="flex items-start gap-2">
