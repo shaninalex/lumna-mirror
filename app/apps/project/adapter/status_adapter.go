@@ -10,7 +10,6 @@ import (
 type TaskStatusDto struct {
 	ID        uint                     `json:"id"`
 	Title     string                   `json:"title"`
-	Complete  bool                     `json:"complete"`
 	ProjectId uint                     `json:"project_id"`
 	Index     uint                     `json:"index"`
 	Config    *domain.TaskStatusConfig `json:"config"`
@@ -21,7 +20,6 @@ func NewTaskStatusDto(i *domain.Status) *TaskStatusDto {
 	return &TaskStatusDto{
 		ID:        i.ID,
 		Title:     i.Title,
-		Complete:  i.Completed,
 		Index:     i.ListIndex,
 		ProjectId: i.ProjectId,
 		Config:    i.GetConfig(),
@@ -38,6 +36,5 @@ func ToTaskStatusesDto(statuses []*domain.Status) []*TaskStatusDto {
 }
 
 type TaskStatusInput struct {
-	Title    string `json:"title"`
-	Complete bool   `json:"complete"`
+	Title string `json:"title"`
 }

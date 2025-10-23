@@ -16,11 +16,6 @@ import { StatusCreateAction } from '@client/entities/status';
                     <div class="w-full mb-4">
                         <input class="input" type="text" placeholder="Column title" formControlName="title"/>
                     </div>
-                    <div class="mb-4">
-                        <input id="status-completed" class="me-2" type="checkbox" formControlName="complete"/>
-                        <label for="status-completed">Completed</label>
-                        <p class="text-sm">Tasks in that column will be marked as completed</p>
-                    </div>
                     <div class="flex gap-2">
                         <button class="btn btn-primary" type="submit" [disabled]="!form.valid">Save</button>
                         <button class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>
@@ -42,14 +37,12 @@ export class CreateStatusFormComponent {
 
     form: FormGroup = new FormGroup({
         title: new FormControl("", Validators.required),
-        complete: new FormControl(false, Validators.required),
     })
 
     onSubmit(): void {
         this.store.dispatch(StatusCreateAction({
             payload: {
                 title: this.form.value['title'],
-                complete: this.form.value['complete'],
             },
             projectId: this.projectId,
         }))
