@@ -7,7 +7,6 @@ type TaskStatus struct {
 	ID        uint    `db:"id"`
 	ProjectID uint    `db:"project_id"`
 	Title     string  `db:"title"`
-	Completed bool    `db:"complete"`
 	ListIndex uint    `db:"list_index"`
 	Config    *string `db:"config"`
 }

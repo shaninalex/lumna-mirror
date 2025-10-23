@@ -50,7 +50,6 @@ export class ColumnHeaderComponent implements OnInit {
         this.store.dispatch(StatusPatchAction({
             payload: {
                 title: this.form.value['title'],
-                complete: this.form.value['complete'],
             },
             projectId: this.column.status.project_id,
             statusId: this.column.status.id,
