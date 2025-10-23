@@ -18,7 +18,9 @@ import { StatusCreateAction } from '@client/entities/status';
                     </div>
                     <div class="flex gap-2">
                         <button class="btn btn-primary" type="submit" [disabled]="!form.valid">Save</button>
-                        <button class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>
+                        <button class="text-2xl cursor-pointer" type="button" (click)="cancel()">
+                            <i class="i-close-circle"></i>
+                        </button>
                     </div>
                 </form>
             </div>

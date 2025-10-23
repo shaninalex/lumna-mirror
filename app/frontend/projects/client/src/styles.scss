@@ -59,7 +59,11 @@
 }
 
 .hover-space {
-    @apply rounded-md p-1 cursor-pointer hover:bg-gray-100/50 dark:hover:bg-gray-100/10;
+    @apply rounded-md cursor-pointer hover:bg-gray-100/50 dark:hover:bg-gray-100/10;
+}
+
+.hover-space:not(.card) {
+    @apply  p-1;
 }
 
 html[data-theme="dark"] {
