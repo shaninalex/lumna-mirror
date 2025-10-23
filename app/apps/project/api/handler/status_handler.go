@@ -41,7 +41,7 @@ func (s *ProjectStatusHandler) Post(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	status, err := s.statusService.Create(r.Context(), uint(projectID), payload.Title, payload.Complete)
+	status, err := s.statusService.Create(r.Context(), uint(projectID), payload.Title)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -64,7 +64,6 @@ func (s *ProjectStatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	status.Title = payload.Title
-	status.Completed = payload.Complete
 	status, err = s.statusService.Patch(ctx, status)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)

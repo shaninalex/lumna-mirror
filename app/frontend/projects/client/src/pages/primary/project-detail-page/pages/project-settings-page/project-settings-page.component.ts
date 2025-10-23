@@ -7,8 +7,6 @@ import {StatusPatchSortAction, selectProjectStatusList, Status} from '@client/en
 import {filter, map, take, tap} from 'rxjs';
 import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NgClass} from '@angular/common';
-
 
 @Component({
     selector: 'lu-project-settings-page',
@@ -16,7 +14,6 @@ import {NgClass} from '@angular/common';
         CdkDropList,
         CdkDrag,
         ReactiveFormsModule,
-        NgClass,
     ],
     styleUrl: './project-settings-page.component.scss',
     template: `
@@ -36,7 +33,7 @@ import {NgClass} from '@angular/common';
             <div class="card-title">Status order:</div>
             <div cdkDropList class="status-sort-list mb-4" (cdkDropListDropped)="drop($event)">
                 @for (status of statusList; track status.id) {
-                    <div cdkDrag class="status-sort-item" [ngClass]="{'accent': status.complete}">
+                    <div cdkDrag class="status-sort-item">
                         {{ status.title }}
                     </div>
                 }

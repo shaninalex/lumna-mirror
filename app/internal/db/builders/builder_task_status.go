@@ -36,12 +36,6 @@ func (b *TaskStatusBuilder) Title(title string) *TaskStatusBuilder {
 	return b
 }
 
-// Complete - complete.
-func (b *TaskStatusBuilder) Complete(complete bool) *TaskStatusBuilder {
-	b.issueStatus.Completed = complete
-	return b
-}
-
 // Index - index.
 func (b *TaskStatusBuilder) Index(index uint) *TaskStatusBuilder {
 	b.issueStatus.ListIndex = index
