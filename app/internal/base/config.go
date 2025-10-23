@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path"
 	"time"
 
 	"github.com/shaninalex/lumna/app/internal/dir"
@@ -45,12 +46,22 @@ func (s *Config) init() {
 	s.startTime = time.Now()
 	s.v = viper.New()
 
-	configPath := dir.ConfigDirectory
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	configPath := path.Join(home, dir.ConfigDirectory)
 	if _, err := os.Stat(configPath); errors.Is(err, os.ErrNotExist) {
 		configPath = os.Getenv("LUMNA_CONFIG_PATH")
 	}
-	if _, err := os.Stat(configPath); errors.Is(err, os.ErrNotExist) {
-		panic(err)
+
+	if configPath == "" {
+		panic("no config path found (missing standard directory and LUMNA_CONFIG_PATH)")
+	}
+
+	if _, err := os.Stat(configPath); err != nil {
+		panic(fmt.Errorf("config path invalid: %w", err))
 	}
 
 	s.ReadConfig(configPath)
