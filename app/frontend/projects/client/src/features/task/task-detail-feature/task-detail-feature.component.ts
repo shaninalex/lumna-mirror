@@ -20,13 +20,13 @@ import { ActivatedRoute, Router } from '@angular/router';
         NgxEditorMenuComponent,
     ],
     template: `<div class="fixed cursor-pointer inset-0 bg-black/20" (click)="close()"></div>
-        <div class="fixed -translate-x-2/4 top-0 z-10 left-2/4 w-3xl h-screen py-4 overflow-auto">
+        <div class="fixed -trangray-x-2/4 top-0 z-10 left-2/4 w-3xl h-screen py-4 overflow-auto">
             <div class="card">
                 <form [formGroup]="form" (ngSubmit)="onSubmit()">
                     <div class="flex items-start gap-2">
                         <div class="mb-4 card-title flex-grow">
                             <input class="input w-full" formControlName="title"/>
-                            <div class="text-xs text-slate-400">Created: {{ task.created_at | date }}</div>
+                            <div class="text-xs text-gray-400">Created: {{ task.created_at | date }}</div>
                         </div>
 
                         <button (click)="close()" class="cursor-pointer"><i class="i-close-circle"></i></button>

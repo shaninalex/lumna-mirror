@@ -5,7 +5,7 @@ import {version} from '@root/package.json';
     selector: 'lu-auth-layout',
     imports: [],
     template: `
-        <div class="flex items-center justify-center h-screen bg-slate-50 dark:bg-gray-700">
+        <div class="flex items-center justify-center h-screen bg-gray-50 dark:bg-gray-700">
             <div>
                 <img src="img/logo.svg" class="mb-8 w-48 mx-auto"/>
                 <div class="card">
