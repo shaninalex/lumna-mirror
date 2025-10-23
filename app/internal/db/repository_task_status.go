@@ -10,10 +10,10 @@ import (
 
 // TaskStatusByID get task status by id
 func TaskStatusByID(ctx context.Context, db *sql.DB, id uint) (*TaskStatus, error) {
-	q := `select id, project_id, title, completed, list_index, config from statuses where id = ?`
+	q := `select id, project_id, title, list_index, config from statuses where id = ?`
 	row := db.QueryRowContext(ctx, q, id)
 	s := &TaskStatus{}
-	if err := row.Scan(&s.ID, &s.ProjectID, &s.Title, &s.Completed, &s.ListIndex, &s.Config); err != nil {
+	if err := row.Scan(&s.ID, &s.ProjectID, &s.Title, &s.ListIndex, &s.Config); err != nil {
 		return nil, err
 	}
 	return s, nil
@@ -22,7 +22,7 @@ func TaskStatusByID(ctx context.Context, db *sql.DB, id uint) (*TaskStatus, erro
 // TaskStatusListByProject get task status list by project code
 func TaskStatusListByProject(ctx context.Context, db *sql.DB, id uint) ([]*TaskStatus, error) {
 	q := `
-	select s.id, s.project_id, s.title, s.completed, s.list_index, s.config 
+	select s.id, s.project_id, s.title, s.list_index, s.config 
 	from statuses s
 	join projects p on p.id = s.project_id                                              
 	where p.id = ?
@@ -35,7 +35,7 @@ func TaskStatusListByProject(ctx context.Context, db *sql.DB, id uint) ([]*TaskS
 	statuses := []*TaskStatus{}
 	for rows.Next() {
 		s := &TaskStatus{}
-		if err = rows.Scan(&s.ID, &s.ProjectID, &s.Title, &s.Completed, &s.ListIndex, &s.Config); err != nil {
+		if err = rows.Scan(&s.ID, &s.ProjectID, &s.Title, &s.ListIndex, &s.Config); err != nil {
 			return nil, err
 		}
 		statuses = append(statuses, s)
@@ -45,10 +45,10 @@ func TaskStatusListByProject(ctx context.Context, db *sql.DB, id uint) ([]*TaskS
 
 func TaskStatusCreate(ctx context.Context, db *sql.DB, status *TaskStatus) (*TaskStatus, error) {
 	q := `
-	insert into statuses (project_id, title, list_index, completed)
-	values (?, ?, ?, ?)
+	insert into statuses (project_id, title, list_index)
+	values (?, ?, ?)
 	`
-	result, err := db.ExecContext(ctx, q, status.ProjectID, status.Title, status.ListIndex, status.Completed)
+	result, err := db.ExecContext(ctx, q, status.ProjectID, status.Title, status.ListIndex)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,6 @@ func TaskStatusUpdate(ctx context.Context, db *sql.DB, status *TaskStatus) error
 		SET 
 			project_id = ?,
 			title = ?,
-			completed = ?,
 			list_index = ?,
 			config = ?
 		WHERE id = ?
@@ -89,7 +88,6 @@ func TaskStatusUpdate(ctx context.Context, db *sql.DB, status *TaskStatus) error
 	_, err := db.ExecContext(ctx, query,
 		status.ProjectID,
 		status.Title,
-		status.Completed,
 		status.ListIndex,
 		status.Config,
 		status.ID,
