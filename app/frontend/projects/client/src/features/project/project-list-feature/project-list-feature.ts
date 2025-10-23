@@ -21,7 +21,7 @@ import { NewProjectFormComponent } from '@client/features/project/project-list-f
         </div>
 
         @if (projects$ | async; as projects) {
-            <div class="flex flex-col gap-2 overflow-auto">
+            <div class="flex flex-col gap-2">
                 @if (!projects?.length) {
                     there are no projects yet
                 }

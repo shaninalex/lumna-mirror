@@ -8,13 +8,12 @@ import {AsyncPipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 @Component({
-    selector: "lu-move-task",
+    selector: "lu-task-status-dropdown",
     imports: [
         AsyncPipe,
         FormsModule
     ],
     template: `
-        Move task:
         @if (statuses$ | async; as statuses) {
             <select [(ngModel)]="status_id" name="statuses" id="statuses" class="input" (change)="onChangeStatus()">
                 @for (status of statuses; track status.id) {
@@ -26,7 +25,7 @@ import {FormsModule} from '@angular/forms';
         }
     `
 })
-export class MoveTaskComponent implements OnInit {
+export class TaskStatusDropdownComponent implements OnInit {
     @Input() task: Task;
     private store = inject(Store<AppState>)
     statuses$: Observable<Status[]>
