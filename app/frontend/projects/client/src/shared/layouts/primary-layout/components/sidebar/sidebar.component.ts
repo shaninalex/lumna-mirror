@@ -21,7 +21,7 @@ import {Observable} from 'rxjs';
                     <img src="img/logo-icon.svg" class="w-full" alt="Lumna"/>
                 }
             </a>
-            <div class="p-4 flex flex-col flex-grow"
+            <div class="p-2 flex flex-col flex-grow"
                 [ngClass]="{'text-center': extendSidebar}">
                 <div class="flex flex-col gap-2">
                     @for (nav of menu; track $index) {

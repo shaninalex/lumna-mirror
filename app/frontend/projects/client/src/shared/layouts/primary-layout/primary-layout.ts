@@ -21,7 +21,7 @@ import {UiService} from '@client/shared/ui/ui.service';
             </div>
             <div class="flex flex-col flex-grow layout-content">
                 <lu-header/>
-                <div class="flex-grow p-4 overflow-y-auto bg-slate-50 dark:bg-gray-700">
+                <div class="flex-grow p-4 overflow-y-auto bg-gray-50 dark:bg-gray-700">
                     <ng-content></ng-content>
                     <lu-toast-manager />
                 </div>

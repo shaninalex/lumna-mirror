@@ -1,13 +1,13 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {version} from '@root/package.json';
 
 @Component({
     selector: 'lu-auth-layout',
     imports: [],
     template: `
-        <div class="flex items-center justify-center h-screen bg-slate-50">
+        <div class="flex items-center justify-center h-screen bg-slate-50 dark:bg-gray-700">
             <div>
-                <img src="img/logo.svg" alt="Lumna" class="mb-8 w-48 mx-auto"/>
+                <img src="img/logo.svg" class="mb-8 w-48 mx-auto"/>
                 <div class="card">
                     <div class="card-title">{{ title }}</div>
                     <ng-content></ng-content>
@@ -17,7 +17,14 @@ import {version} from '@root/package.json';
         </div>
     `
 })
-export class AuthLayout {
+export class AuthLayout implements OnInit {
     @Input() title: string = "";
     version: string = version;
+
+    ngOnInit() {
+        const html = document.documentElement;
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const _v = isDark ? 'dark' : 'light'
+        html.setAttribute('data-theme', _v);
+    }
 }

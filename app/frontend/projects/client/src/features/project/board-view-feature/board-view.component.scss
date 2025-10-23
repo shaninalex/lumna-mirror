@@ -13,4 +13,12 @@
 .board-column {
     width: 20rem;
     flex-shrink: 0;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+:host {
+    overflow-y: hidden;
+    display: block;
 }

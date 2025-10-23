@@ -1,4 +1,4 @@
-import {Component, inject, Input} from '@angular/core';
+import {Component, ElementRef, HostListener, inject, Input, OnInit} from '@angular/core';
 import {LoaderComponent} from '@client/shared/ui/loader';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {TaskCreateAction, TaskSetAction} from '@client/entities/task';
@@ -16,8 +16,8 @@ import {StatusColumn} from '@client/features/project/board-view-feature/board.mo
     ],
     template: `
         @if (showForm) {
-            <form [formGroup]="form" (ngSubmit)="submitForm()" class="mb-4 flex gap-2">
-                <div class="flex-grow">
+            <form [formGroup]="form" (ngSubmit)="submitForm()">
+                <div class="mb-2">
                     <input class="input" autofocus placeholder="Task title" type="text" formControlName="title">
                     @if (form.controls['title'].dirty && form.controls['title'].errors) {
                         @if (form.controls['title'].errors['required']) {
@@ -29,29 +29,33 @@ import {StatusColumn} from '@client/features/project/board-view-feature/board.mo
                     }
                 </div>
 
-                <div class="flex gap-2">
+                <div class="flex gap-2 items-center">
                     @if (loading) {
                         <ui-loader/>
                     } @else {
                         <button class="btn btn-primary btn-icon" type="submit" [disabled]="loading || !form.valid">
-                            <i class="i-plus-circle text-lg"></i>
+                            <i class="i-plus-circle text-xl"></i>
                         </button>
                     }
-                    <button class="btn btn-secondary btn-icon" type="button" (click)="cancel()">
-                        <i class="i-close-circle text-lg"></i>
+                    <button type="button" (click)="cancel()">
+                        <i class="i-close-circle text-xl"></i>
                     </button>
                 </div>
             </form>
         } @else {
-            <button class="btn btn-secondary" (click)="showForm = true">
-                Create task
+            <button (click)="showForm = true" class="flex gap-2 items-center hover-space w-full">
+                <i class="i-plus-circle text-xl"></i>
+                Add a card
             </button>
         }
     `
 })
-export class TaskFormSmComponent {
+export class TaskFormSmComponent implements OnInit {
     @Input() project: Project;
     @Input() column: StatusColumn;
+
+    eRef = inject(ElementRef)
+
     showForm: boolean = false;
     loading: boolean = false;
     form: FormGroup = new FormGroup({
@@ -61,10 +65,17 @@ export class TaskFormSmComponent {
     private action$ = inject(Actions);
     private store = inject(Store<AppState>);
 
-    constructor() {
+    ngOnInit() {
         this.action$.pipe(ofType(TaskSetAction)).subscribe(() => {
             this.loading = false
         })
+    }
+
+    @HostListener('document:click', ['$event'])
+    clickout(event: { target: any; }) {
+        if (!this.eRef.nativeElement.contains(event.target) && this.showForm ) {
+            this.showForm = false
+        }
     }
 
     submitForm(): void {
