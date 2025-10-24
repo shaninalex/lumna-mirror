@@ -1,0 +1,19 @@
+@use "tailwindcss";
+
+.cdk-drag-preview,
+.status-sort-item {
+    @apply p-2 border rounded-md my-2 border-gray-300 cursor-grab;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.25;
+}
+
+.cdk-drag-animating {
+    transition: transform 50ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.status-sort-list.cdk-drop-list-dragging .status-sort-item:not(.cdk-drag-placeholder) {
+    transition: transform 50ms cubic-bezier(0, 0, 0.2, 1);
+}
+
