@@ -1,8 +1,4 @@
-import {CanActivateFn, Router} from '@angular/router';
-import {inject} from '@angular/core';
-import {AppState} from '@client/shared/store';
-import {Store} from '@ngrx/store';
-import {selectUser} from '@client/entities/user';
+import { CanActivateFn } from '@angular/router'
 
 export const authPageGuard: CanActivateFn = () => {
     // const store = inject(Store<AppState>);
@@ -10,4 +6,4 @@ export const authPageGuard: CanActivateFn = () => {
     //
     // return router.parseUrl('/');
     return true
-};
+}

@@ -1,1 +1,1 @@
-export * from './task-form-sm.component'
+export * from "./task-form-sm.component"

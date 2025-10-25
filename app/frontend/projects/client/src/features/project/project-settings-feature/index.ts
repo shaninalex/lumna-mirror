@@ -1,1 +1,1 @@
-export * from './project-settings-feature.component'
+export * from "./project-settings-feature.component"

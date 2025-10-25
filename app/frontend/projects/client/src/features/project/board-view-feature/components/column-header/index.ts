@@ -1,1 +1,1 @@
-export * from './column-header.component'
+export * from "./column-header.component"

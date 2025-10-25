@@ -1,2 +1,2 @@
-export * from './overview-page.component'
-export * from './overview.resolver'
+export * from "./overview-page.component"
+export * from "./overview.resolver"
