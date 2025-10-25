@@ -3,7 +3,7 @@ name: "Test"
 on:
   push:
     branches:
-      - 10-tests-in-github-actions_tmp
+      - dev
 
 jobs:
   test:
