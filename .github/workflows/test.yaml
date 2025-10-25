@@ -1,0 +1,30 @@
+name: "Test"
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: setup Go
+        id: build
+        uses: actions/setup-go@v3
+        with:
+          go-version: '^1.25.0'
+
+      - name: tidy
+        run: go mod tidy
+
+      - name: tests
+        run: go test ./... -v
+#          go build -o bin/lumna ./app/cmd/standalone/
