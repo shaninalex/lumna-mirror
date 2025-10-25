@@ -1,3 +1,29 @@
+## 0.18.0 (2025-10-25)
+
+### Feat
+
+- **ci**: config tests github action workflow #10
+- **ci**: config tests github action workflow #10
+- on start pipeline #12
+- **ui**: move delete column button into the settings page #23
+- **config**: viper, switch to config file instead of env #15
+- create working directories #5
+- create working directories #5
+
+### Fix
+
+- **ui**: project settings feature styles size
+- **ui**: task-detail layout
+- remove status completed field #22
+- **ui**: task-detail width
+- **ui**: hovers on btn's #26
+- init config directory #27
+- **ui**: card styles
+- **ui**: board view columns and scrollbar
+- **ui**: colors and overview
+- **ui**: create card form
+- **routes**: print routes only in dev mode #6
+
 ## 0.17.0 (2025-10-20)
 
 ### Feat

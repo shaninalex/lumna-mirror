@@ -1,1 +1,1 @@
-export * from './session-expired-page.component'
+export * from "./session-expired-page.component"

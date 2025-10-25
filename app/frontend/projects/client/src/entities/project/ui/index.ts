@@ -1,1 +1,1 @@
-export * from './project-card/project-card.component'
+export * from "./project-card/project-card.component"

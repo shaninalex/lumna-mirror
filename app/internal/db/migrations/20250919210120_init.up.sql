@@ -48,7 +48,6 @@ CREATE TABLE statuses
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     project_id INTEGER NOT NULL,
     title      VARCHAR NOT NULL,
-    completed  BOOLEAN DEFAULT false,
     list_index INT     default 0,
     config     VARCHAR,
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE

@@ -14,8 +14,8 @@ import {UiService} from '@client/shared/ui/ui.service';
     ],
     template: `
         @if (theme$ | async; as theme) {
-            <button tabindex="0" role="button"
-                    (click)="isOpen = !isOpen"
+            <button tabindex="0" role="button" (click)="isOpen = !isOpen"
+                    class="hover-space"
                     cdkOverlayOrigin #trigger="cdkOverlayOrigin">
                 <i class="i-sun" [ngClass]="{
                     'i-sun': theme === 'dark',
@@ -41,9 +41,10 @@ export class ThemeSwitcherComponent {
     private ui: UiService = inject(UiService);
 
     isOpen = false;
-    theme$: Observable<tTheme> = this.ui.theme.get()
+    theme$: Observable<tTheme> = this.ui.theme.get();
 
     setTheme(v: tTheme) {
         this.ui.theme.set(v)
+        this.isOpen = false;
     }
 }

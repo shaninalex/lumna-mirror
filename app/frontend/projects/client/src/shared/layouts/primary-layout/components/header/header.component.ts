@@ -23,7 +23,7 @@ import {ThemeSwitcherComponent} from '@client/shared/layouts/primary-layout/comp
         ThemeSwitcherComponent,
     ],
     template: `
-        <div class="py-2 px-4 flex items-center justify-between border-b border-gray-300 dark:bg-gray-800 dark:border-gray-600">
+        <div class="h-[50px] py-2 px-4 flex items-center justify-between border-b border-gray-300 dark:bg-gray-800 dark:border-gray-600">
             <div class="flex items-center gap-4">
                 <button (click)="toggleSidebar()" class="cursor-pointer">
                     @if (closeSidebar) {

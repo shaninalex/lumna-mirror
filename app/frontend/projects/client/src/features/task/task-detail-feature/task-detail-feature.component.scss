@@ -1,0 +1,12 @@
+.task-detail-feature {
+    position: fixed;
+    top: 2rem;
+    width: 1080px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-height: 100vh;
+
+    .card {
+        padding: 0;
+    }
+}

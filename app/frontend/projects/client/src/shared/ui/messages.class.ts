@@ -1,10 +1,9 @@
-import {ToastMessage} from '@client/shared/models';
-import { v4 as uuidV4} from 'uuid'
-import {BehaviorSubject, Observable} from 'rxjs';
-
+import { ToastMessage } from '@client/shared/models'
+import { v4 as uuidV4 } from 'uuid'
+import { BehaviorSubject, Observable } from 'rxjs'
 
 export class MessagesClass {
-    private _messages$: BehaviorSubject<ToastMessage[]> = new BehaviorSubject<ToastMessage[]>([]);
+    private _messages$: BehaviorSubject<ToastMessage[]> = new BehaviorSubject<ToastMessage[]>([])
 
     public list(): Observable<ToastMessage[]> {
         return this._messages$.asObservable()

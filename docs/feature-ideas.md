@@ -23,6 +23,16 @@ Register webhooks and send request.
 
 ### Multiple boards per project
 
+Technically it's working now but UI is not support that feature for now
+
+### add background image like in trello (?)
+
+Background image, color or gradient
+
+### timer, pomodoro timer working mode
+
+In that mode - timer will stop and start via pomodoro timer logic and send browser notifications about it's current status
+
 ### cli mode
 
 full cli mode without any web related things - sockets and http routers. Should looks like LazyGit

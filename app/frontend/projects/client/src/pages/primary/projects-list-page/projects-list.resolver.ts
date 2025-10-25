@@ -1,13 +1,13 @@
-import {ResolveFn} from '@angular/router';
-import {inject} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState} from '@client/shared/store';
-import {selectProjects} from '@client/entities/project/model/project.selectors';
-import {Project, ProjectListSetAction} from '@client/entities/project';
-import {of, switchMap, take, tap} from 'rxjs';
-import {ProjectService} from '@client/entities/project/api/project.service';
+import { ResolveFn } from '@angular/router'
+import { inject } from '@angular/core'
+import { Store } from '@ngrx/store'
+import { AppState } from '@client/shared/store'
+import { selectProjects } from '@client/entities/project/model/project.selectors'
+import { Project, ProjectListSetAction } from '@client/entities/project'
+import { of, switchMap, take, tap } from 'rxjs'
+import { ProjectService } from '@client/entities/project/api/project.service'
 
-export const projectListResolver: ResolveFn<Array<Project> | undefined> = (route) => {
+export const projectListResolver: ResolveFn<Array<Project> | undefined> = route => {
     const store: Store<AppState> = inject(Store<AppState>)
     const api = inject(ProjectService)
 
@@ -15,11 +15,9 @@ export const projectListResolver: ResolveFn<Array<Project> | undefined> = (route
         take(1),
         switchMap(projects => {
             if (!projects.length) {
-                return api.List().pipe(
-                    tap(projects => store.dispatch(ProjectListSetAction({payload: projects})))
-                );
+                return api.List().pipe(tap(projects => store.dispatch(ProjectListSetAction({ payload: projects }))))
             }
-            return of(projects);
+            return of(projects)
         })
-    );
-};
+    )
+}

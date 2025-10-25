@@ -13,11 +13,11 @@ interface Breadcrumb {
         RouterLink
     ],
     template: `
-        <nav class="text-sm text-slate-600">
+        <nav class="text-sm text-gray-600">
             @for (bc of breadcrumbs; track $index) {
                 @if (!$last) {
                     <a [routerLink]="bc.url" class="hover:underline">{{ bc.label }}</a>
-                    <span class="mx-1 text-slate-400">/</span>
+                    <span class="mx-1 text-gray-400">/</span>
                 } @else {
                     <span aria-current="page">{{ bc.label }}</span>
                 }

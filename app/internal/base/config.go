@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/shaninalex/lumna/app/internal/dir"
@@ -45,12 +46,31 @@ func (s *Config) init() {
 	s.startTime = time.Now()
 	s.v = viper.New()
 
-	configPath := dir.ConfigDirectory
-	if _, err := os.Stat(configPath); errors.Is(err, os.ErrNotExist) {
-		configPath = os.Getenv("LUMNA_CONFIG_PATH")
+	if env := os.Getenv("LUMNA_CONFIG_PATH"); env != "" {
+		if fi, err := os.Stat(env); err == nil && fi.IsDir() {
+			s.ReadConfig(env)
+			return
+		} else if err != nil {
+			panic(fmt.Errorf("LUMNA_CONFIG_PATH invalid: %w", err))
+		} else {
+			panic(fmt.Errorf("LUMNA_CONFIG_PATH is not a directory: %s", env))
+		}
 	}
-	if _, err := os.Stat(configPath); errors.Is(err, os.ErrNotExist) {
+
+	// Use standard $HOME/.config/lumna path if env was not set.
+	home, err := os.UserHomeDir()
+	if err != nil {
 		panic(err)
+	}
+
+	configPath := filepath.Join(home, dir.ConfigDirectory)
+	if fi, err := os.Stat(configPath); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			panic(fmt.Errorf("standard config directory does not exist: %s", configPath))
+		}
+		panic(fmt.Errorf("cannot stat standard config directory %s: %w", configPath, err))
+	} else if !fi.IsDir() {
+		panic(fmt.Errorf("standard config path is not a directory: %s", configPath))
 	}
 
 	s.ReadConfig(configPath)

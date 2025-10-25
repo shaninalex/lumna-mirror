@@ -1,1 +1,1 @@
-export * from './page-404'
+export * from "./page-404"

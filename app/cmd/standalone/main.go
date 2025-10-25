@@ -18,6 +18,7 @@ import (
 	"github.com/shaninalex/lumna/app/internal/db"
 	"github.com/shaninalex/lumna/app/internal/dir"
 	"github.com/shaninalex/lumna/app/internal/web"
+	"github.com/shaninalex/lumna/app/startup"
 )
 
 //go:embed all:web/browser
@@ -36,6 +37,14 @@ func main() {
 	}
 	db.ApplyMigrationsEmbed(sqlDB)
 	static, _ := fs.Sub(webFS, "web/browser")
+
+	if startup.IsNew(sqlDB) {
+		initializer := startup.NewStartup(sqlDB)
+		if err = initializer.Run(); err != nil {
+			panic(err)
+		}
+	}
+
 	router := web.DefaultRouter(sqlDB)
 
 	// Public controllers

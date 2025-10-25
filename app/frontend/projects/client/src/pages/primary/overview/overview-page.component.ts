@@ -1,9 +1,8 @@
-import {Component} from '@angular/core';
+import { Component } from "@angular/core"
 
 @Component({
-    selector: 'lu-overview',
-    imports: [],
-    templateUrl: './overview-page.component.html',
+	selector: "lu-overview",
+	imports: [],
+	templateUrl: "./overview-page.component.html",
 })
-export class OverviewPage {
-}
+export class OverviewPage {}

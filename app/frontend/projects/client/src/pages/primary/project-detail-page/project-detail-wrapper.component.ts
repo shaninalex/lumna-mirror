@@ -1,38 +1,21 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    NavigationStart,
-    Router,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet
-} from '@angular/router';
-import {filter} from 'rxjs';
-import {CdkMenuModule} from '@angular/cdk/menu';
-import {OverlayModule} from '@angular/cdk/overlay';
-import {Project} from '@client/entities/project';
+import { Component, inject, OnInit } from '@angular/core'
+import { ActivatedRoute, NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router'
+import { filter } from 'rxjs'
+import { CdkMenuModule } from '@angular/cdk/menu'
+import { OverlayModule } from '@angular/cdk/overlay'
+import { Project } from '@client/entities/project'
 
 @Component({
-    selector: "lu-project-detail-page",
-    imports: [
-        CdkMenuModule,
-        OverlayModule,
-        RouterLink,
-        RouterOutlet,
-        RouterLinkActive,
-    ],
+    selector: 'lu-project-detail-page',
+    imports: [CdkMenuModule, OverlayModule, RouterLink, RouterOutlet, RouterLinkActive],
     template: `
-        <div class="flex items-center gap-4 mb-4">
-            <a class="hover:underline gap-2 flex items-center" [routerLink]="['/', 'projects', project.code]">
-                <img src="/img/project.svg" class="w-6 rounded"/>
-                <h3 class="font-bold text-xl">{{ project.title }}</h3>
+        <div class="mb-4 flex items-center gap-4">
+            <a class="flex items-center gap-2 hover:underline" [routerLink]="['/', 'projects', project.code]">
+                <img src="/img/project.svg" class="w-6 rounded" />
+                <h3 class="text-xl font-bold">{{ project.title }}</h3>
             </a>
 
-            <button class="cursor-pointer"
-                    cdkOverlayOrigin
-                    #trigger="cdkOverlayOrigin"
-                    (click)="isOpen = !isOpen">
+            <button class="cursor-pointer" cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="isOpen = !isOpen">
                 <i class="i-dots-menu"></i>
             </button>
         </div>
@@ -45,9 +28,10 @@ import {Project} from '@client/entities/project';
         >
             <ul class="dropdown">
                 <li>
-                    <a class="hover:underline"
-                       [routerLink]="['/', 'projects', project.code, 'settings']"
-                       [routerLinkActive]="'active-link'"
+                    <a
+                        class="hover:underline"
+                        [routerLink]="['/', 'projects', project.code, 'settings']"
+                        [routerLinkActive]="'active-link'"
                     >
                         <i class="i-settings"></i> Project Settings
                     </a>
@@ -55,22 +39,20 @@ import {Project} from '@client/entities/project';
             </ul>
         </ng-template>
 
-        <router-outlet/>
-    `
+        <router-outlet />
+    `,
 })
 export class ProjectDetailWrapperComponent implements OnInit {
-    private route = inject(ActivatedRoute);
-    private router = inject(Router);
+    private route = inject(ActivatedRoute)
+    private router = inject(Router)
     project: Project
-    isOpen = false;
+    isOpen = false
 
     ngOnInit() {
         this.route.data.subscribe(data => {
             this.project = data['project']
         })
 
-        this.router.events
-            .pipe(filter(e => e instanceof NavigationStart))
-            .subscribe(() => this.isOpen = false);
+        this.router.events.pipe(filter(e => e instanceof NavigationStart)).subscribe(() => (this.isOpen = false))
     }
 }

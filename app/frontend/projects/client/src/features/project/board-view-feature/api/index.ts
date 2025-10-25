@@ -1,1 +1,1 @@
-export * from './board-view-api.service'
+export * from "./board-view-api.service"

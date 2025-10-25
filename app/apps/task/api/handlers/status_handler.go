@@ -35,15 +35,8 @@ func (s *StatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	status, err := s.statusManager.Get(ctx, payload.ToStatusID)
-	if err != nil {
-		web.Error(w, http.StatusBadRequest, err)
-		return
-	}
-
 	task.StatusID = payload.ToStatusID
 	task.ListIndex = payload.ToIdx
-	task.Completed = status.Completed
 	err = s.taskManager.TaskUpdate(ctx, task)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)

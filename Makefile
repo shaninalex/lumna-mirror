@@ -19,4 +19,4 @@ build:
 	cd app/frontend && \
 	yarn build && \
 	cd ../../ && \
-	go build -o bin/standalone ./app/cmd/standalone/
+	go build -o bin/lumna ./app/cmd/standalone/
