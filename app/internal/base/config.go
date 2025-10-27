@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"time"
 
@@ -43,11 +44,19 @@ type Config struct {
 }
 
 func (s *Config) init() {
+	if err := dir.MakeProjectDirectories(); err != nil {
+		panic(err)
+	}
+
 	s.startTime = time.Now()
 	s.v = viper.New()
 
 	if env := os.Getenv("LUMNA_CONFIG_PATH"); env != "" {
 		if fi, err := os.Stat(env); err == nil && fi.IsDir() {
+			// if config file does not exists
+			if _, err := os.Stat(path.Join(env, "config.yaml")); err != nil {
+				CreateDefaultConfig(path.Join(env, "config.yaml"))
+			}
 			s.ReadConfig(env)
 			return
 		} else if err != nil {
@@ -71,6 +80,11 @@ func (s *Config) init() {
 		panic(fmt.Errorf("cannot stat standard config directory %s: %w", configPath, err))
 	} else if !fi.IsDir() {
 		panic(fmt.Errorf("standard config path is not a directory: %s", configPath))
+	}
+
+	// if config file does not exists
+	if _, err := os.Stat(path.Join(configPath, "config.yaml")); err != nil {
+		CreateDefaultConfig(path.Join(configPath, "config.yaml"))
 	}
 
 	s.ReadConfig(configPath)

@@ -23,8 +23,11 @@ build:
 
 
 clear_local:
-	echo "remove local app configuration" && \
 	rm -rf ~/.local/share/lumna/ && \
 	rm -rf ~/.local/state/lumna/ && \
 	rm ~/.local/bin/lumna && \
 	rm -rf ~/.config/lumna
+
+run:
+	LUMNA_CONFIG_PATH=$$HOME/go/src/github.com/shaninalex/lumna/config/ go run ./app/cmd/standalone/
+

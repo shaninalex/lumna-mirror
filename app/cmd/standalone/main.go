@@ -16,7 +16,6 @@ import (
 	userApp "github.com/shaninalex/lumna/app/apps/user/api"
 	"github.com/shaninalex/lumna/app/internal/base"
 	"github.com/shaninalex/lumna/app/internal/db"
-	"github.com/shaninalex/lumna/app/internal/dir"
 	"github.com/shaninalex/lumna/app/internal/web"
 	"github.com/shaninalex/lumna/app/startup"
 )
@@ -25,10 +24,6 @@ import (
 var webFS embed.FS
 
 func main() {
-	if err := dir.MakeProjectDirectories(); err != nil {
-		panic(err)
-	}
-
 	config := base.GetConfig()
 
 	sqlDB, err := sql.Open("sqlite3", config.String("database_path"))

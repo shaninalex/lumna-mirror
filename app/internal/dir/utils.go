@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 const (
@@ -42,4 +43,11 @@ func MakeProjectDirectories() error {
 	}
 	fmt.Print("ok\n")
 	return nil
+}
+
+func DefaultDatabasePath() string {
+	if runtime.GOOS == "windows" {
+		return ""
+	}
+	return ".local/state/lumna/lumna.db"
 }
