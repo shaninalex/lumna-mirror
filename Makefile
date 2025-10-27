@@ -20,3 +20,11 @@ build:
 	yarn build && \
 	cd ../../ && \
 	go build -o bin/lumna ./app/cmd/standalone/
+
+
+clear_local:
+	echo "remove local app configuration" && \
+	rm -rf ~/.local/share/lumna/ && \
+	rm -rf ~/.local/state/lumna/ && \
+	rm ~/.local/bin/lumna && \
+	rm -rf ~/.config/lumna
