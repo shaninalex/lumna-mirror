@@ -40,7 +40,7 @@ func UserSave(ctx context.Context, db *sql.DB, user *User) (*User, error) {
 	}
 	user.SetSettings(&DefaultUserSettings)
 	user.Active = false
-	user.State = UserStatePending
+	user.State = "pending"
 	user.Code = utils.GenerateEntityCode("user")
 	query := `
 	INSERT INTO users (email, settings, code, password_hash)
