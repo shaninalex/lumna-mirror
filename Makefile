@@ -39,3 +39,7 @@ clear_port:
 	else \
 		echo "No process is listening on port 8000."; \
 	fi
+
+test:
+	PKGS=$$(go list ./... | grep -v 'app/cmd'); \
+	go test -tags noembed $$PKGS -v

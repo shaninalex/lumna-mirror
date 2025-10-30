@@ -25,5 +25,8 @@ jobs:
       - name: tidy
         run: go mod tidy
 
+      - name: Show packages
+        run: go list ./... | grep -v '/cmd/standalone'
+
       - name: tests
-        run: go test -tags noembed $(go list ./... | grep -v '/cmd/standalone') -v
+        run: make test
