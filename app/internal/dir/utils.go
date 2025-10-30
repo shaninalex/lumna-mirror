@@ -22,32 +22,33 @@ const (
 	defaultPermissions = 0700
 )
 
-// CreateDirectory - creates directory in user home folder
-func CreateDirectory(path string) error {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return err
+// DefaultDatabasePath default path of the database if env or config not provided
+func DefaultDatabasePath() string {
+	if runtime.GOOS == "windows" {
+		return ""
 	}
-	return os.MkdirAll(filepath.Join(home, path), defaultPermissions)
+	return ".local/state/lumna/lumna.db"
 }
 
 // MakeProjectDirectories - creates directories used by project in user home folder
 func MakeProjectDirectories() error {
 	fmt.Print("Working directories ... ")
-	if err := CreateDirectory(ConfigDirectory); err != nil {
+	if err := createDirectory(ConfigDirectory); err != nil {
 		return err
 	}
 
-	if err := CreateDirectory(PersistenceDirectory); err != nil {
+	if err := createDirectory(PersistenceDirectory); err != nil {
 		return err
 	}
 	fmt.Print("ok\n")
 	return nil
 }
 
-func DefaultDatabasePath() string {
-	if runtime.GOOS == "windows" {
-		return ""
+// createDirectory - creates directory in user home folder
+func createDirectory(path string) error {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
 	}
-	return ".local/state/lumna/lumna.db"
+	return os.MkdirAll(filepath.Join(home, path), defaultPermissions)
 }

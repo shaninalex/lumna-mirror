@@ -8,23 +8,14 @@ import (
 	"time"
 )
 
-type UserState string
-
-const (
-	UserStatePending UserState = "pending"
-	UserStateActive  UserState = "active"
-	UserStateDeleted UserState = "deleted"
-	UserStateBanned  UserState = "banned"
-)
-
 // User - user.
 type User struct {
-	ID       uint      `db:"id"`
-	Email    string    `db:"email"`
-	Settings string    `db:"settings"`
-	Active   bool      `db:"active"`
-	State    UserState `db:"state"`
-	Code     string    `db:"code"`
+	ID       uint   `db:"id"`
+	Email    string `db:"email"`
+	Settings string `db:"settings"`
+	Active   bool   `db:"active"`
+	State    string `db:"state"`
+	Code     string `db:"code"`
 
 	PasswordHash string `db:"password_hash" json:"-"`
 
