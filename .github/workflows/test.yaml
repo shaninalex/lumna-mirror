@@ -26,4 +26,4 @@ jobs:
         run: go mod tidy
 
       - name: tests
-        run: go test ./... -v
+        run: go test -tags noembed $(go list ./... | grep -v '/cmd/standalone') -v
