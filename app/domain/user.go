@@ -41,9 +41,11 @@ type UserManager interface {
 	GetUserByEmail(ctx context.Context, email string) (*db.User, error)
 	UpdateUserSettings(ctx context.Context, userID uint, settings *db.UserSettings) error
 	SetPassword(ctx context.Context, userId uint, rawPwd string) error
-	CheckPassword(ctx context.Context, userId uint, password string) (bool, error)
-	CreateUser(ctx context.Context, email string) *User
+	CheckPassword(ctx context.Context, userId uint, rawPassword string) error
+	CreateUser(ctx context.Context, email string, rawPassword string) (*User, error)
 }
+
+var _ UserManager = &UserService{}
 
 type UserService struct{}
 
