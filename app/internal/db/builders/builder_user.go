@@ -21,7 +21,7 @@ func NewUserBuilder() *UserBuilder {
 }
 
 // ID - id.
-func (b *UserBuilder) ID(iD uint) *UserBuilder {
+func (b *UserBuilder) ID(iD int64) *UserBuilder {
 	b.user.ID = iD
 	return b
 }

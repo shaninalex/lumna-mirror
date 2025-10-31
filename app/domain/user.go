@@ -17,7 +17,7 @@ type (
 
 	// User user model
 	User struct {
-		ID       uint
+		ID       int64
 		Email    string
 		Settings string
 		Active   bool
@@ -37,11 +37,11 @@ const (
 )
 
 type UserManager interface {
-	GetUser(ctx context.Context, userID uint) (*db.User, error)
+	GetUser(ctx context.Context, userID int64) (*db.User, error)
 	GetUserByEmail(ctx context.Context, email string) (*db.User, error)
-	UpdateUserSettings(ctx context.Context, userID uint, settings *db.UserSettings) error
-	SetPassword(ctx context.Context, userId uint, rawPwd string) error
-	CheckPassword(ctx context.Context, userId uint, rawPassword string) error
+	UpdateUserSettings(ctx context.Context, userID int64, settings *db.UserSettings) error
+	SetPassword(ctx context.Context, userId int64, rawPwd string) error
+	CheckPassword(ctx context.Context, userId int64, rawPassword string) error
 	CreateUser(ctx context.Context, email string, rawPassword string) (*User, error)
 }
 
@@ -54,7 +54,7 @@ func NewUserService() *UserService {
 }
 
 // GetUser get user
-func (s UserService) GetUser(ctx context.Context, userId uint) (*db.User, error) {
+func (s UserService) GetUser(ctx context.Context, userId int64) (*db.User, error) {
 	user, err := db.UserGetByField(ctx, db.GetDb(ctx), "id", userId)
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (s UserService) GetUserByEmail(ctx context.Context, email string) (*db.User
 }
 
 // UpdateUserSettings update user settings
-func (s UserService) UpdateUserSettings(ctx context.Context, userId uint, settings *db.UserSettings) error {
+func (s UserService) UpdateUserSettings(ctx context.Context, userId int64, settings *db.UserSettings) error {
 	connection := db.GetDb(ctx)
 	user, err := db.UserGetByField(ctx, connection, "id", userId)
 	if err != nil {
@@ -87,12 +87,12 @@ func (s UserService) UpdateUserSettings(ctx context.Context, userId uint, settin
 }
 
 // SetPassword set password
-func (s UserService) SetPassword(ctx context.Context, userId uint, rawPwd string) error {
+func (s UserService) SetPassword(ctx context.Context, userId int64, rawPwd string) error {
 	panic("not implemented")
 }
 
 // CheckPassword check password
-func (s UserService) CheckPassword(ctx context.Context, userId uint, password string) error {
+func (s UserService) CheckPassword(ctx context.Context, userId int64, password string) error {
 	user, err := db.UserGetByField(ctx, db.GetDb(ctx), "id", userId)
 	if err != nil {
 		return err

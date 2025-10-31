@@ -4,15 +4,15 @@ package db
 
 // TaskStatus - task status.
 type TaskStatus struct {
-	ID        uint    `db:"id"`
-	ProjectID uint    `db:"project_id"`
+	ID        int64   `db:"id"`
+	ProjectID int64   `db:"project_id"`
 	Title     string  `db:"title"`
-	ListIndex uint    `db:"list_index"`
+	ListIndex int64   `db:"list_index"`
 	Config    *string `db:"config"`
 }
 
 // GetID - returns the id.
-func (s *TaskStatus) GetID() uint { return s.ID }
+func (s *TaskStatus) GetID() int64 { return s.ID }
 
 // SetID - sets the id.
-func (s *TaskStatus) SetID(id uint) { s.ID = id }
+func (s *TaskStatus) SetID(id int64) { s.ID = id }

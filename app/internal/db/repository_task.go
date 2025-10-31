@@ -8,7 +8,7 @@ import (
 )
 
 // TaskList task list
-func TaskList(ctx context.Context, db *sql.DB, projectID uint) ([]*Task, error) {
+func TaskList(ctx context.Context, db *sql.DB, projectID int64) ([]*Task, error) {
 	query := `select t.id, t.user_id, t.project_id, t.status_id, t.title, t.code, t.completed, t.description, t.list_index, t.created_at, t.updated_at
 		from tasks t
 		join projects p on p.id = t.project_id
@@ -35,7 +35,7 @@ func TaskList(ctx context.Context, db *sql.DB, projectID uint) ([]*Task, error) 
 }
 
 // TaskUpdate update task
-func TaskUpdate(ctx context.Context, db *sql.DB, id uint, task *Task) error {
+func TaskUpdate(ctx context.Context, db *sql.DB, id int64, task *Task) error {
 	query := `
 		UPDATE tasks
 		SET 
@@ -61,7 +61,7 @@ func TaskUpdate(ctx context.Context, db *sql.DB, id uint, task *Task) error {
 }
 
 // TaskGet get task
-func TaskGet(ctx context.Context, db *sql.DB, id uint) (*Task, error) {
+func TaskGet(ctx context.Context, db *sql.DB, id int64) (*Task, error) {
 	query := `select t.id, t.user_id, t.project_id, t.status_id, t.title, t.code, t.completed, t.description, t.list_index, t.created_at, t.updated_at
 		from tasks t
 		where t.id = ?
@@ -88,19 +88,19 @@ func TaskSave(ctx context.Context, db *sql.DB, t *Task) error {
 	if err != nil {
 		return err
 	}
-	t.ID = uint(id)
+	t.ID = id
 	return nil
 }
 
 // TaskDelete - delete task by id
-func TaskDelete(ctx context.Context, db *sql.DB, id uint) error {
+func TaskDelete(ctx context.Context, db *sql.DB, id int64) error {
 	query := `delete from tasks where id = ?;`
 	_, err := db.ExecContext(ctx, query, id)
 	return err
 }
 
 // TaskGetIndex - get task index
-func TaskGetIndex(ctx context.Context, db *sql.DB, statusId uint) float64 {
+func TaskGetIndex(ctx context.Context, db *sql.DB, statusId int64) float64 {
 	var idx float64
 	query := `
 		select list_index from tasks where status_id = ? order by list_index asc limit 1

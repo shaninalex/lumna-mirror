@@ -25,7 +25,7 @@ func NewProjectStatusHandler() *ProjectStatusHandler {
 // Get - Retrieve statuses for a project
 func (s *ProjectStatusHandler) Get(w http.ResponseWriter, r *http.Request) {
 	projectID := web.UrlNumericParam(w, r, "id")
-	statuses, err := s.statusService.ProjectStatuses(r.Context(), uint(projectID))
+	statuses, err := s.statusService.ProjectStatuses(r.Context(), projectID)
 	if err != nil {
 		web.Error(w, http.StatusNotFound, err)
 		return
@@ -41,7 +41,7 @@ func (s *ProjectStatusHandler) Post(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	status, err := s.statusService.Create(r.Context(), uint(projectID), payload.Title)
+	status, err := s.statusService.Create(r.Context(), projectID, payload.Title)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -58,7 +58,7 @@ func (s *ProjectStatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ctx := r.Context()
-	status, err := s.statusService.Get(ctx, uint(statusID))
+	status, err := s.statusService.Get(ctx, statusID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -75,7 +75,7 @@ func (s *ProjectStatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
 // Delete - Delete status for the project
 func (s *ProjectStatusHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	statusID := web.UrlNumericParam(w, r, "statusId")
-	err := s.statusService.Delete(r.Context(), uint(statusID))
+	err := s.statusService.Delete(r.Context(), statusID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -95,7 +95,7 @@ func (s *ProjectStatusHandler) PatchSort(w http.ResponseWriter, r *http.Request)
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	statuses, err := s.statusService.ProjectStatuses(r.Context(), uint(projectID))
+	statuses, err := s.statusService.ProjectStatuses(r.Context(), projectID)
 	if err != nil {
 		web.Error(w, http.StatusNotFound, err)
 		return

@@ -12,10 +12,10 @@ import (
 )
 
 type Task struct {
-	ID          uint
-	UserID      uint
-	ProjectID   uint
-	StatusID    uint
+	ID          int64
+	UserID      int64
+	ProjectID   int64
+	StatusID    int64
 	Title       string
 	Completed   bool
 	Description *string
@@ -28,15 +28,15 @@ type Task struct {
 
 // TaskReader - task reader.
 type TaskReader interface {
-	TasksList(ctx context.Context, projectID uint) ([]*Task, error)
-	TaskDetail(ctx context.Context, taskID uint) (*Task, error)
+	TasksList(ctx context.Context, projectID int64) ([]*Task, error)
+	TaskDetail(ctx context.Context, taskID int64) (*Task, error)
 }
 
 // TaskWriter - task writer.
 type TaskWriter interface {
 	TaskUpdate(ctx context.Context, data *Task) error
 	TaskCreate(ctx context.Context, data *Task) (*Task, error)
-	TaskDelete(ctx context.Context, taskID uint) error
+	TaskDelete(ctx context.Context, taskID int64) error
 }
 
 type TaskManager interface {
@@ -50,11 +50,11 @@ func NewTaskService() *TaskService {
 
 type TaskService struct{}
 
-func (t TaskService) TaskDelete(ctx context.Context, taskID uint) error {
+func (t TaskService) TaskDelete(ctx context.Context, taskID int64) error {
 	return db.TaskDelete(ctx, db.GetDb(ctx), taskID)
 }
 
-func (t TaskService) TasksList(ctx context.Context, projectID uint) ([]*Task, error) {
+func (t TaskService) TasksList(ctx context.Context, projectID int64) ([]*Task, error) {
 	dbTasks, err := db.TaskList(ctx, db.GetDb(ctx), projectID)
 	if err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func (t TaskService) TasksList(ctx context.Context, projectID uint) ([]*Task, er
 	return tasks, nil
 }
 
-func (t TaskService) TaskDetail(ctx context.Context, taskID uint) (*Task, error) {
+func (t TaskService) TaskDetail(ctx context.Context, taskID int64) (*Task, error) {
 	task, err := db.TaskGet(ctx, db.GetDb(ctx), taskID)
 	if err != nil {
 		return nil, err

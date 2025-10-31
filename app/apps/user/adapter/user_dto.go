@@ -8,7 +8,7 @@ import (
 )
 
 type UserDto struct {
-	ID       uint             `json:"id"`
+	ID       int64            `json:"id"`
 	Code     string           `json:"code"`
 	Email    string           `json:"email"`
 	Active   bool             `json:"active"`

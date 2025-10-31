@@ -11,7 +11,7 @@ import (
 )
 
 type Project struct {
-	ID        uint
+	ID        int64
 	Title     string
 	Code      string
 	CreatedAt time.Time
@@ -31,14 +31,14 @@ func MakeProject(project *db.Project) *Project {
 // ProjectReader - project reader.
 type ProjectReader interface {
 	List(ctx context.Context) ([]*Project, error)
-	GetProject(ctx context.Context, id uint) (*Project, error)
+	GetProject(ctx context.Context, id int64) (*Project, error)
 }
 
 // ProjectWriter - project writer
 type ProjectWriter interface {
 	CreateProject(ctx context.Context, project *Project) (*Project, error)
 	UpdateProject(ctx context.Context, project *Project) (*Project, error)
-	DeleteProject(ctx context.Context, id uint) error
+	DeleteProject(ctx context.Context, id int64) error
 }
 
 type ProjectManager interface {
@@ -67,7 +67,7 @@ func (p ProjectService) List(ctx context.Context) ([]*Project, error) {
 	return output, nil
 }
 
-func (p ProjectService) GetProject(ctx context.Context, id uint) (*Project, error) {
+func (p ProjectService) GetProject(ctx context.Context, id int64) (*Project, error) {
 	connection := db.GetDb(ctx)
 	project, err := db.ProjectGetByID(ctx, connection, id)
 	if err != nil {
@@ -105,6 +105,6 @@ func (p ProjectService) UpdateProject(ctx context.Context, project *Project) (*P
 	return project, nil
 }
 
-func (p ProjectService) DeleteProject(ctx context.Context, id uint) error {
+func (p ProjectService) DeleteProject(ctx context.Context, id int64) error {
 	return db.ProjectDelete(ctx, db.GetDb(ctx), id)
 }

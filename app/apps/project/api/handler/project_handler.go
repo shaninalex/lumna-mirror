@@ -51,7 +51,7 @@ func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
 // Get - retrieve a specific project
 func (s *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
 	projectID := web.UrlNumericParam(w, r, "id")
-	project, err := s.projectService.GetProject(r.Context(), uint(projectID))
+	project, err := s.projectService.GetProject(r.Context(), projectID)
 	if err != nil {
 		web.Error(w, http.StatusNotFound, err)
 		return
@@ -62,7 +62,7 @@ func (s *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
 // Delete - delete Project
 func (s *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	projectID := web.UrlNumericParam(w, r, "id")
-	if err := s.projectService.DeleteProject(r.Context(), uint(projectID)); err != nil {
+	if err := s.projectService.DeleteProject(r.Context(), projectID); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
@@ -78,7 +78,7 @@ func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	project, err := s.projectService.UpdateProject(r.Context(), &domain.Project{
-		ID:    uint(projectID),
+		ID:    projectID,
 		Title: input.Title,
 	})
 	if err != nil {

@@ -10,10 +10,10 @@ import (
 )
 
 type Status struct {
-	ID        uint
+	ID        int64
 	Title     string
-	ListIndex uint
-	ProjectId uint
+	ListIndex int64
+	ProjectId int64
 	Config    *string
 }
 
@@ -53,14 +53,14 @@ func NewTaskStatusConfig() *TaskStatusConfig {
 }
 
 type StatusReader interface {
-	Get(ctx context.Context, id uint) (*Status, error)
-	ProjectStatuses(ctx context.Context, projectId uint) ([]*Status, error)
+	Get(ctx context.Context, id int64) (*Status, error)
+	ProjectStatuses(ctx context.Context, projectId int64) ([]*Status, error)
 }
 
 type StatusWriter interface {
-	Create(ctx context.Context, projectId uint, title string) (*Status, error)
+	Create(ctx context.Context, projectId int64, title string) (*Status, error)
 	Patch(ctx context.Context, data *Status) (*Status, error)
-	Delete(ctx context.Context, statusId uint) error
+	Delete(ctx context.Context, statusId int64) error
 	SortProjectStatus(ctx context.Context, data map[int64]int64) error
 }
 
@@ -74,11 +74,11 @@ type StatusService struct {
 
 func (s StatusService) SortProjectStatus(ctx context.Context, data map[int64]int64) error {
 	for idx, statusId := range data {
-		status, err := db.TaskStatusByID(ctx, db.GetDb(ctx), uint(statusId))
+		status, err := db.TaskStatusByID(ctx, db.GetDb(ctx), statusId)
 		if err != nil {
 			return err
 		}
-		status.ListIndex = uint(idx)
+		status.ListIndex = idx
 		if err = db.TaskStatusUpdate(ctx, db.GetDb(ctx), status); err != nil {
 			return err
 		}
@@ -86,7 +86,7 @@ func (s StatusService) SortProjectStatus(ctx context.Context, data map[int64]int
 	return nil
 }
 
-func (s StatusService) Get(ctx context.Context, id uint) (*Status, error) {
+func (s StatusService) Get(ctx context.Context, id int64) (*Status, error) {
 	status, err := db.TaskStatusByID(ctx, db.GetDb(ctx), id)
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (s StatusService) Get(ctx context.Context, id uint) (*Status, error) {
 	}, nil
 }
 
-func (s StatusService) ProjectStatuses(ctx context.Context, projectId uint) ([]*Status, error) {
+func (s StatusService) ProjectStatuses(ctx context.Context, projectId int64) ([]*Status, error) {
 	dbStatuses, err := db.TaskStatusListByProject(ctx, db.GetDb(ctx), projectId)
 	if err != nil {
 		return nil, err
@@ -118,7 +118,7 @@ func (s StatusService) ProjectStatuses(ctx context.Context, projectId uint) ([]*
 	return statuses, nil
 }
 
-func (s StatusService) Create(ctx context.Context, projectId uint, title string) (*Status, error) {
+func (s StatusService) Create(ctx context.Context, projectId int64, title string) (*Status, error) {
 	dbStatus := &db.TaskStatus{
 		ProjectID: projectId,
 		Title:     title,
@@ -149,7 +149,7 @@ func (s StatusService) Patch(ctx context.Context, data *Status) (*Status, error)
 	return data, nil
 }
 
-func (s StatusService) Delete(ctx context.Context, statusId uint) error {
+func (s StatusService) Delete(ctx context.Context, statusId int64) error {
 	return db.TaskStatusDelete(ctx, db.GetDb(ctx), statusId)
 }
 

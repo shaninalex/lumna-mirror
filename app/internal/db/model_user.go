@@ -10,7 +10,7 @@ import (
 
 // User - user.
 type User struct {
-	ID       uint   `db:"id"`
+	ID       int64  `db:"id"`
 	Email    string `db:"email"`
 	Settings string `db:"settings"`
 	Active   bool   `db:"active"`
@@ -24,10 +24,10 @@ type User struct {
 }
 
 // GetID - returns the id.
-func (s *User) GetID() uint { return s.ID }
+func (s *User) GetID() int64 { return s.ID }
 
 // SetID - sets the id.
-func (s *User) SetID(id uint) { s.ID = id }
+func (s *User) SetID(id int64) { s.ID = id }
 
 // IsActive - checks if it is active.
 func (s *User) IsActive() bool { return s.Active }
@@ -68,7 +68,7 @@ type UserSettings struct {
 	Timezone     string `json:"timezone" validate:"required"`
 	DateFormat   string `json:"date_format" validate:"required"`
 	TimeFormat   string `json:"time_format" validate:"required"`
-	WeekStartDay uint   `json:"week_start_day" validate:"required"`
+	WeekStartDay int64  `json:"week_start_day" validate:"required"`
 }
 
 func (s *UserSettings) ToString() string {

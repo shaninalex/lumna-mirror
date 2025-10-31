@@ -40,12 +40,12 @@ func (s *TokenHandler) HandleGetUserTokens(w http.ResponseWriter, r *http.Reques
 // HandleDeleteUserToken handles a request to delete a specific token for the authenticated user.
 // It reads the token ID from the URL, calls the service to delete the token, and responds with success/error.
 func (s *TokenHandler) HandleDeleteUserToken(w http.ResponseWriter, r *http.Request) {
-	tokenID, err := strconv.ParseUint(r.PathValue("tokenID"), 10, 64) // parse token ID from URL
+	tokenID, err := strconv.ParseInt(r.PathValue("tokenID"), 10, 64) // parse token ID from URL
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err) // invalid token ID format
 		return
 	}
-	err = s.tokenManager.Delete(r.Context(), web.GetUserID(r), uint(tokenID)) // delete token
+	err = s.tokenManager.Delete(r.Context(), web.GetUserID(r), tokenID) // delete token
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err) // deletion failed
 		return
@@ -56,12 +56,12 @@ func (s *TokenHandler) HandleDeleteUserToken(w http.ResponseWriter, r *http.Requ
 // HandleRevokeUserToken handles a request to revoke a specific token for the authenticated user.
 // Revoking a token marks it as invalid without deleting it, preventing further use.
 func (s *TokenHandler) HandleRevokeUserToken(w http.ResponseWriter, r *http.Request) {
-	tokenID, err := strconv.ParseUint(r.PathValue("tokenID"), 10, 64) // parse token ID from URL
+	tokenID, err := strconv.ParseInt(r.PathValue("tokenID"), 10, 64) // parse token ID from URL
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err) // invalid token ID format
 		return
 	}
-	err = s.tokenManager.Revoke(r.Context(), web.GetUserID(r), uint(tokenID)) // revoke token
+	err = s.tokenManager.Revoke(r.Context(), web.GetUserID(r), tokenID) // revoke token
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err) // revocation failed
 		return

@@ -26,7 +26,7 @@ func (s *BadgeHandler) Post(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	if err = s.badgeWriter.AddToTask(ctx, uint(taskID), payload.BadgeId); err != nil {
+	if err = s.badgeWriter.AddToTask(ctx, taskID, payload.BadgeId); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
@@ -37,7 +37,7 @@ func (s *BadgeHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	taskID := web.UrlNumericParam(w, r, "id")
 	badgeID := web.UrlNumericParam(w, r, "badgeId")
-	if err := s.badgeWriter.DeleteFromTask(ctx, uint(taskID), uint(badgeID)); err != nil {
+	if err := s.badgeWriter.DeleteFromTask(ctx, taskID, badgeID); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}

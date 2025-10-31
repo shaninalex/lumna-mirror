@@ -9,7 +9,7 @@ import (
 )
 
 // ProjectGetByID get project by userID and project code
-func ProjectGetByID(ctx context.Context, db *sql.DB, id uint) (*Project, error) {
+func ProjectGetByID(ctx context.Context, db *sql.DB, id int64) (*Project, error) {
 	var project Project
 	query := `SELECT id, user_id, title, code, created_at, updated_at FROM projects WHERE id = ?`
 	row := db.QueryRowContext(ctx, query, id)
@@ -30,7 +30,7 @@ func ProjectSave(ctx context.Context, db *sql.DB, project *Project) error {
 	if err != nil {
 		return err
 	}
-	project.SetID(uint(id))
+	project.SetID(id)
 	return err
 }
 
@@ -77,7 +77,7 @@ func ProjectUpdate(ctx context.Context, db *sql.DB, project *Project) error {
 	return nil
 }
 
-func ProjectDelete(ctx context.Context, db *sql.DB, id uint) error {
+func ProjectDelete(ctx context.Context, db *sql.DB, id int64) error {
 	query := `
 		DELETE FROM 
 			projects

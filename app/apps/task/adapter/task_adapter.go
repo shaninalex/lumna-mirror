@@ -10,9 +10,9 @@ import (
 
 // ChangeTaskStatusInput - change task status dto.
 type ChangeTaskStatusInput struct {
-	FromStatusID uint    `json:"from_status"`
-	ToStatusID   uint    `json:"to_status"`
-	FromIdx      uint    `json:"from_idx"`
+	FromStatusID int64   `json:"from_status"`
+	ToStatusID   int64   `json:"to_status"`
+	FromIdx      int64   `json:"from_idx"`
 	ToIdx        float64 `json:"to_idx"`
 }
 
@@ -21,14 +21,14 @@ type TaskDetailInput struct {
 	Completed   bool    `json:"completed"`
 	Description string  `json:"description"`
 	ListIndex   float64 `json:"list_index"`
-	StatusID    uint    `json:"status_id"`
+	StatusID    int64   `json:"status_id"`
 }
 
 type TaskDto struct {
-	ID          uint        `json:"id"`
-	UserID      uint        `json:"user_id"`
-	ProjectID   uint        `json:"project_id"`
-	StatusID    uint        `json:"status_id"`
+	ID          int64       `json:"id"`
+	UserID      int64       `json:"user_id"`
+	ProjectID   int64       `json:"project_id"`
+	StatusID    int64       `json:"status_id"`
 	Title       string      `json:"title"`
 	Completed   bool        `json:"completed"`
 	Description string      `json:"description"`

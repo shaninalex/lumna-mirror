@@ -9,7 +9,7 @@ import (
 )
 
 type BadgeDto struct {
-	ID        uint
+	ID        int64
 	Title     string
 	Config    domain.BadgeConfig
 	CreatedAt time.Time
@@ -25,5 +25,5 @@ func NewBadgeDto(badge *domain.Badge) *BadgeDto {
 }
 
 type BadgeAddToTask struct {
-	BadgeId uint `json:"badgeId"`
+	BadgeId int64 `json:"badgeId"`
 }
