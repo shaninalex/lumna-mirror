@@ -27,8 +27,8 @@ jobs:
 
       - name: Ensure embed directory exists
         run: |
-          mkdir -p app/cmd/web/browser
-          touch app/cmd/web/browser/.keep
+          mkdir -p app/cmd/standalone/web/browser
+          touch app/cmd/standalone/web/browser/.keep
 
       - name: tests
         run: go test -tags noembed ./... -v
