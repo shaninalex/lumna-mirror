@@ -31,4 +31,4 @@ jobs:
           touch app/cmd/web/browser/.keep
 
       - name: tests
-        run: make test
+        run: go test -tags noembed ./... -v
