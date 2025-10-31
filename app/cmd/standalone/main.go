@@ -4,10 +4,8 @@ package main
 
 import (
 	"database/sql"
-	"embed"
 	"errors"
 	"fmt"
-	"io/fs"
 	"net/http"
 
 	authApp "github.com/shaninalex/lumna/app/apps/auth"
@@ -20,9 +18,6 @@ import (
 	"github.com/shaninalex/lumna/app/startup"
 )
 
-//go:embed all:web/browser
-var webFS embed.FS
-
 func main() {
 	config := base.GetConfig()
 
@@ -31,7 +26,7 @@ func main() {
 		panic(err)
 	}
 	db.ApplyMigrationsEmbed(sqlDB)
-	static, _ := fs.Sub(webFS, "web/browser")
+	static := getStaticFS()
 
 	if startup.IsNew(sqlDB) {
 		initializer := startup.NewStartup(sqlDB)
@@ -43,7 +38,9 @@ func main() {
 	router := web.DefaultRouter(sqlDB)
 
 	// Public controllers
-	router.GET("/", frontendHandler(static))
+	if static != nil {
+		router.GET("/", frontendHandler(static))
+	}
 	authApp.NewAuthController(router)
 
 	// Private controllers

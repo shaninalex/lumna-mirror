@@ -19,7 +19,7 @@ build:
 	cd app/frontend && \
 	yarn build && \
 	cd ../../ && \
-	go build -o bin/lumna ./app/cmd/standalone/
+	go build -tags embed -o bin/lumna ./app/cmd/standalone/
 
 
 clear_local:
@@ -29,7 +29,7 @@ clear_local:
 	rm -rf ~/.config/lumna
 
 run:
-	LUMNA_CONFIG_PATH=$$HOME/go/src/github.com/shaninalex/lumna/config/ go run ./app/cmd/standalone/
+	LUMNA_CONFIG_PATH=$$HOME/go/src/github.com/shaninalex/lumna/config/ go run  -tags embed ./app/cmd/standalone/
 
 clear_port:
 	@pid=$$(sudo lsof -t -i :8000); \
@@ -39,3 +39,6 @@ clear_port:
 	else \
 		echo "No process is listening on port 8000."; \
 	fi
+
+test:
+	go test -tags noembed ./... -v
