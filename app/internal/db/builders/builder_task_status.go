@@ -19,13 +19,13 @@ func NewIssueStatusBuilder() *TaskStatusBuilder {
 }
 
 // ID - id.
-func (b *TaskStatusBuilder) ID(iD uint) *TaskStatusBuilder {
+func (b *TaskStatusBuilder) ID(iD int64) *TaskStatusBuilder {
 	b.issueStatus.ID = iD
 	return b
 }
 
 // ProjectID - project id.
-func (b *TaskStatusBuilder) ProjectID(projectID uint) *TaskStatusBuilder {
+func (b *TaskStatusBuilder) ProjectID(projectID int64) *TaskStatusBuilder {
 	b.issueStatus.ProjectID = projectID
 	return b
 }
@@ -37,7 +37,7 @@ func (b *TaskStatusBuilder) Title(title string) *TaskStatusBuilder {
 }
 
 // Index - index.
-func (b *TaskStatusBuilder) Index(index uint) *TaskStatusBuilder {
+func (b *TaskStatusBuilder) Index(index int64) *TaskStatusBuilder {
 	b.issueStatus.ListIndex = index
 	return b
 }

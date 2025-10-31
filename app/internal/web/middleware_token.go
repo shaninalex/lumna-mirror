@@ -53,7 +53,7 @@ func (s *TokenMiddleware) Wrap(next http.Handler) http.Handler {
 			return
 		}
 
-		userID, err := strconv.ParseUint(claims.Subject, 10, 64)
+		userID, err := strconv.ParseInt(claims.Subject, 10, 64)
 		if err != nil {
 			//token.ClearAuthCookies(w)
 			w.WriteHeader(http.StatusUnauthorized)
@@ -63,7 +63,7 @@ func (s *TokenMiddleware) Wrap(next http.Handler) http.Handler {
 		ctx := r.Context()
 
 		// store claims in context
-		ctx = context.WithValue(ctx, base.ContextUserID, uint(userID))
+		ctx = context.WithValue(ctx, base.ContextUserID, userID)
 
 		// Call next handler
 		next.ServeHTTP(w, r.WithContext(ctx))

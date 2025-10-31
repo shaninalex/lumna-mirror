@@ -17,14 +17,14 @@ import (
 type AccessTokenResult struct {
 	Token     string
 	ExpiresAt time.Time
-	Sub       uint // user ID
+	Sub       int64 // user ID
 	JTI       string
 }
 
 // AccessTokenService handles creation and validation of access tokens
 type AccessTokenService interface {
 	// Create generates a new access token for a given user ID and audience
-	Create(userID uint, aud AudToken) (*AccessTokenResult, error)
+	Create(userID int64, aud AudToken) (*AccessTokenResult, error)
 
 	// Validate parses and validates the token string, returns claims if valid
 	Validate(rawToken string, aud AudToken) (*jwt.RegisteredClaims, error)
@@ -46,13 +46,13 @@ func NewAccessTokenJWTService(signingKey string, issuer string) *AccessTokenJWTS
 	}
 }
 
-func (s *AccessTokenJWTService) Create(userID uint, aud AudToken) (*AccessTokenResult, error) {
+func (s *AccessTokenJWTService) Create(userID int64, aud AudToken) (*AccessTokenResult, error) {
 	now := time.Now()
 	exp := now.Add(AccessTokenLifeTime)
 	jti := uuid.NewString()
 	claims := jwt.RegisteredClaims{
 		Issuer:    s.issuer,
-		Subject:   strconv.Itoa(int(userID)),
+		Subject:   strconv.FormatInt(userID, 64),
 		Audience:  []string{string(aud)},
 		ExpiresAt: jwt.NewNumericDate(exp),
 		NotBefore: jwt.NewNumericDate(now),
@@ -110,7 +110,7 @@ type RefreshTokenClaims struct {
 // RefreshTokenService handles creation and validation of refresh tokens
 type RefreshTokenService interface {
 	// Create generates a new refresh token string with expiration
-	Create(userID uint, device string) (*RefreshTokenResult, error)
+	Create(userID int64, device string) (*RefreshTokenResult, error)
 
 	// Validate checks if a given refresh token string is valid (signature/format)
 	Validate(token string) (*jwt.RegisteredClaims, error)
@@ -132,13 +132,13 @@ func NewRefreshTokenJWTService(signingKey string, issuer string) *RefreshTokenJW
 	}
 }
 
-func (s *RefreshTokenJWTService) Create(userID uint, device string) (*RefreshTokenResult, error) {
+func (s *RefreshTokenJWTService) Create(userID int64, device string) (*RefreshTokenResult, error) {
 	now := time.Now()
 	exp := now.Add(RefreshTokenLifeTime)
 	jti := uuid.NewString()
 	claims := jwt.RegisteredClaims{
 		Issuer:    s.issuer,
-		Subject:   strconv.Itoa(int(userID)),
+		Subject:   strconv.FormatInt(userID, 64),
 		ExpiresAt: jwt.NewNumericDate(exp),
 		IssuedAt:  jwt.NewNumericDate(now),
 		ID:        jti,

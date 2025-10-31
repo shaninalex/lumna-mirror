@@ -11,8 +11,8 @@ import (
 )
 
 type Badge struct {
-	ID        uint
-	ProjectID uint
+	ID        int64
+	ProjectID int64
 	Title     string
 	Config    BadgeConfig
 	CreatedAt time.Time
@@ -41,14 +41,14 @@ func NewBadgeStatusConfig() BadgeConfig {
 }
 
 type BadgeReader interface {
-	List(ctx context.Context, projectID uint) ([]*Badge, error)
+	List(ctx context.Context, projectID int64) ([]*Badge, error)
 }
 
 type BadgeWriter interface {
 	Create(ctx context.Context, badge *Badge) error
-	Delete(ctx context.Context, projectID, badgeID uint) error
-	AddToTask(ctx context.Context, taskID, badgeID uint) error
-	DeleteFromTask(ctx context.Context, taskID, badgeID uint) error
+	Delete(ctx context.Context, projectID, badgeID int64) error
+	AddToTask(ctx context.Context, taskID, badgeID int64) error
+	DeleteFromTask(ctx context.Context, taskID, badgeID int64) error
 }
 
 type BadgeManager interface {
@@ -59,12 +59,12 @@ type BadgeManager interface {
 type BadgeService struct {
 }
 
-func (b *BadgeService) AddToTask(ctx context.Context, taskID, badgeID uint) error {
+func (b *BadgeService) AddToTask(ctx context.Context, taskID, badgeID int64) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b *BadgeService) DeleteFromTask(ctx context.Context, taskID, badgeID uint) error {
+func (b *BadgeService) DeleteFromTask(ctx context.Context, taskID, badgeID int64) error {
 	//TODO implement me
 	panic("implement me")
 }
@@ -73,7 +73,7 @@ func NewBadgeService() *BadgeService {
 	return &BadgeService{}
 }
 
-func (b *BadgeService) List(ctx context.Context, projectID uint) ([]*Badge, error) {
+func (b *BadgeService) List(ctx context.Context, projectID int64) ([]*Badge, error) {
 	dbBadges, err := db.BadgeProjectList(ctx, db.GetDb(ctx), projectID)
 	if err != nil {
 		return nil, err
@@ -110,6 +110,6 @@ func (b *BadgeService) Create(ctx context.Context, badge *Badge) error {
 	return nil
 }
 
-func (b *BadgeService) Delete(ctx context.Context, projectID, badgeID uint) error {
+func (b *BadgeService) Delete(ctx context.Context, projectID, badgeID int64) error {
 	return db.BadgeDelete(ctx, db.GetDb(ctx), projectID, badgeID)
 }

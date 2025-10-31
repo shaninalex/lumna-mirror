@@ -60,12 +60,12 @@ func SaveToken(ctx context.Context, db *sql.DB, token *UserToken) error {
 	if err != nil {
 		return err
 	}
-	token.SetID(uint(id))
+	token.SetID(id)
 	return err
 }
 
 // GetTokens retrieves all tokens for a given user.
-func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*UserToken, error) {
+func GetTokens(ctx context.Context, db *sql.DB, userID int64) ([]*UserToken, error) {
 	query := `
 		SELECT 
 		    id, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
@@ -103,7 +103,7 @@ func GetTokens(ctx context.Context, db *sql.DB, userID uint) ([]*UserToken, erro
 }
 
 // DeleteToken removes a specific token for a user by token ID.
-func DeleteToken(ctx context.Context, db *sql.DB, userID, id uint) error {
+func DeleteToken(ctx context.Context, db *sql.DB, userID, id int64) error {
 	query := `
 		DELETE FROM 
 			users_tokens
@@ -128,7 +128,7 @@ func DeleteToken(ctx context.Context, db *sql.DB, userID, id uint) error {
 }
 
 // DeleteTokenByRefreshString removes a specific token for a user by token ID.
-func DeleteTokenByRefreshString(ctx context.Context, db *sql.DB, userID uint, refreshToken string) error {
+func DeleteTokenByRefreshString(ctx context.Context, db *sql.DB, userID int64, refreshToken string) error {
 	query := `
 		DELETE FROM 
 			users_tokens
@@ -152,7 +152,7 @@ func DeleteTokenByRefreshString(ctx context.Context, db *sql.DB, userID uint, re
 }
 
 // RevokeToken removes a specific token for a user by token ID.
-func RevokeToken(ctx context.Context, db *sql.DB, userID, tokenID uint) error {
+func RevokeToken(ctx context.Context, db *sql.DB, userID, tokenID int64) error {
 	query := `
 		UPDATE users_tokens
 		SET

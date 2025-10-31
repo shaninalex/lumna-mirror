@@ -13,10 +13,10 @@ type TaskCreateInput struct {
 }
 
 type TaskDto struct {
-	ID        uint        `json:"id"`
-	UserID    uint        `json:"user_id"`
-	ProjectID uint        `json:"project_id"`
-	StatusID  uint        `json:"status_id"`
+	ID        int64       `json:"id"`
+	UserID    int64       `json:"user_id"`
+	ProjectID int64       `json:"project_id"`
+	StatusID  int64       `json:"status_id"`
 	Title     string      `json:"title"`
 	Completed bool        `json:"completed"`
 	ListIndex float64     `json:"list_index"`

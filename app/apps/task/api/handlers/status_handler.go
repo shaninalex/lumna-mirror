@@ -30,7 +30,7 @@ func (s *StatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	task, err := s.taskManager.TaskDetail(ctx, uint(taskID))
+	task, err := s.taskManager.TaskDetail(ctx, taskID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

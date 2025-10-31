@@ -8,10 +8,10 @@ import (
 
 // Task - task.
 type Task struct {
-	ID          uint      `db:"id"`
-	UserID      uint      `db:"user_id"`
-	ProjectID   uint      `db:"project_id"`
-	StatusID    uint      `db:"status_id"`
+	ID          int64     `db:"id"`
+	UserID      int64     `db:"user_id"`
+	ProjectID   int64     `db:"project_id"`
+	StatusID    int64     `db:"status_id"`
 	Title       string    `db:"title"`
 	Completed   bool      `db:"completed"`
 	Description *string   `db:"description"`
@@ -22,13 +22,13 @@ type Task struct {
 }
 
 // GetID - returns the id.
-func (s *Task) GetID() uint { return s.ID }
+func (s *Task) GetID() int64 { return s.ID }
 
 // SetID - sets the id.
-func (s *Task) SetID(id uint) { s.ID = id }
+func (s *Task) SetID(id int64) { s.ID = id }
 
 // GetOwnerID - returns the owner id.
-func (s *Task) GetOwnerID() uint { return s.UserID }
+func (s *Task) GetOwnerID() int64 { return s.UserID }
 
 // IsOwner - checks if it is owner.
 func (s *Task) IsOwner(entity AuthUser) bool { return entity.GetID() == s.GetOwnerID() }
@@ -40,7 +40,7 @@ func (s *Task) GetCreatedAt() time.Time { return s.CreatedAt }
 func (s *Task) GetUpdatedAt() time.Time { return s.UpdatedAt }
 
 // GetCreatedBy - returns the created by.
-func (s *Task) GetCreatedBy() uint { return s.GetOwnerID() }
+func (s *Task) GetCreatedBy() int64 { return s.GetOwnerID() }
 
 // SetCode - sets the code.
 func (s *Task) SetCode(code string) { s.Code = code }

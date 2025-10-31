@@ -8,8 +8,8 @@ import (
 
 // Identifiable each database model has ID and can set/get its
 type Identifiable interface {
-	GetID() uint
-	SetID(uint)
+	GetID() int64
+	SetID(int64)
 }
 
 // AuthUser describe an authenticated model interface that should has Traits ( email, name, code etc )
@@ -25,7 +25,7 @@ type AuthUser interface {
 // Ownable has an owner and can validate other
 type Ownable interface {
 	Identifiable
-	GetOwnerID() uint
+	GetOwnerID() int64
 	GetOwner() AuthUser
 	IsOwner(entity AuthUser) bool
 }
@@ -39,7 +39,7 @@ type Timestamped interface {
 
 // Auditable get id of an entity created
 type Auditable interface {
-	GetCreatedBy() uint
+	GetCreatedBy() int64
 }
 
 // Coded describe an entity has and use codes

@@ -8,7 +8,7 @@ import (
 
 func IsNew(db *sql.DB) bool {
 	row := db.QueryRow(`SELECT count(*) FROM users`)
-	var count int
+	var count int64
 	err := row.Scan(&count)
 	if err != nil {
 		panic(err)
