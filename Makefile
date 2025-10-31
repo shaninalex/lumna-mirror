@@ -41,5 +41,4 @@ clear_port:
 	fi
 
 test:
-	PKGS=$$(go list ./... | grep -v 'app/cmd'); \
-	go test -tags noembed $$PKGS -v
+	go test -tags noembed ./... -v
