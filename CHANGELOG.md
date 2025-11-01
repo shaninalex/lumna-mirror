@@ -1,3 +1,10 @@
+## 0.19.1 (2025-11-01)
+
+### Fix
+
+- **ci**: migrate github actions to gitlab pipelines pipeline #53 %2
+- **ci**: migrate github actions #53
+
 ## 0.19.0 (2025-11-01)
 
 ### Feat
