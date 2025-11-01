@@ -8,8 +8,8 @@ test:
   stage: test
   image: golang:${GO_VERSION}
   rules:
-    - if: '$CI_COMMIT_BRANCH == "migrate_to_gitlab"'
-    # - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
 
   before_script:
     - git fetch --all
