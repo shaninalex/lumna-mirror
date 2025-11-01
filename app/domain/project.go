@@ -6,8 +6,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/shaninalex/lumna/app/internal/db"
-	"github.com/shaninalex/lumna/app/internal/utils"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/utils"
 )
 
 type Project struct {

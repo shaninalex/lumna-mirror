@@ -5,7 +5,7 @@ package token
 import (
 	"context"
 
-	"github.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
 
 type ApiAuthService interface {

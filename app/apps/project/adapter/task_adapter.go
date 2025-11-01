@@ -5,7 +5,7 @@ package adapter
 import (
 	"time"
 
-	"github.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/domain"
 )
 
 type TaskCreateInput struct {

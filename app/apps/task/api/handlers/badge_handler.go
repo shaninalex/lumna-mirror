@@ -5,9 +5,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/shaninalex/lumna/app/apps/task/adapter"
-	"github.com/shaninalex/lumna/app/domain"
-	"github.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/apps/task/adapter"
+	"gitlab.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
 
 type BadgeHandler struct {

@@ -3,7 +3,7 @@ package adapter
 import (
 	"time"
 
-	"github.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
 
 // UserTokenDto is a Data Transfer Object (DTO) for user tokens.

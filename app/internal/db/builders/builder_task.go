@@ -5,7 +5,7 @@ package builders
 import (
 	"time"
 
-	"github.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
 
 // TaskBuilder builder pattern code

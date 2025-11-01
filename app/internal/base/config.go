@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/shaninalex/lumna/app/internal/dir"
 	"github.com/spf13/viper"
+	"gitlab.com/shaninalex/lumna/app/internal/dir"
 )
 
 const EnvProduction = "production"

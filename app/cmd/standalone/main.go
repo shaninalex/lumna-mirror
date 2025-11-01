@@ -10,14 +10,14 @@ import (
 	"net/http"
 	"os"
 
-	authApp "github.com/shaninalex/lumna/app/apps/auth"
-	projectApp "github.com/shaninalex/lumna/app/apps/project/api"
-	taskApp "github.com/shaninalex/lumna/app/apps/task/api"
-	userApp "github.com/shaninalex/lumna/app/apps/user/api"
-	"github.com/shaninalex/lumna/app/internal/base"
-	"github.com/shaninalex/lumna/app/internal/db"
-	"github.com/shaninalex/lumna/app/internal/web"
-	"github.com/shaninalex/lumna/app/startup"
+	authApp "gitlab.com/shaninalex/lumna/app/apps/auth"
+	projectApp "gitlab.com/shaninalex/lumna/app/apps/project/api"
+	taskApp "gitlab.com/shaninalex/lumna/app/apps/task/api"
+	userApp "gitlab.com/shaninalex/lumna/app/apps/user/api"
+	"gitlab.com/shaninalex/lumna/app/internal/base"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/startup"
 )
 
 func main() {

@@ -3,8 +3,8 @@
 package handlers
 
 import (
-	"github.com/shaninalex/lumna/app/domain"
-	"github.com/shaninalex/lumna/app/internal/token"
+	"gitlab.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/internal/token"
 )
 
 func NewAuthHandler() *AuthHandler {

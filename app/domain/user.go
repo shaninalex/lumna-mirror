@@ -6,7 +6,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
 	"golang.org/x/crypto/bcrypt"
 )
 

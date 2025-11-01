@@ -3,9 +3,9 @@
 package api
 
 import (
-	"github.com/shaninalex/lumna/app/apps/user/api/handler"
-	"github.com/shaninalex/lumna/app/domain"
-	"github.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/apps/user/api/handler"
+	"gitlab.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
 
 // UserController sets up HTTP routes for user-related operations.

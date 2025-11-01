@@ -6,7 +6,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
 
 type registerPayload struct {

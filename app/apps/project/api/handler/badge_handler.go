@@ -5,9 +5,9 @@ package handler
 import (
 	"net/http"
 
-	"github.com/shaninalex/lumna/app/apps/project/adapter"
-	"github.com/shaninalex/lumna/app/domain"
-	"github.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/apps/project/adapter"
+	"gitlab.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
 
 // ProjectBadgeHandler - task handler.

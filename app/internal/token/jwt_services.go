@@ -9,7 +9,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
-	"github.com/shaninalex/lumna/app/internal/base"
+	"gitlab.com/shaninalex/lumna/app/internal/base"
 )
 
 // AccessTokenResult contains the signed token and metadata

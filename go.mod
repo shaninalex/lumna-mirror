@@ -1,4 +1,4 @@
-module github.com/shaninalex/lumna
+module gitlab.com/shaninalex/lumna
 
 go 1.24.2
 

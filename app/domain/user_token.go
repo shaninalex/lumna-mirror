@@ -5,7 +5,7 @@ package domain
 import (
 	"context"
 
-	"github.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
 
 // UserTokenManager defines the interface for managing user tokens.

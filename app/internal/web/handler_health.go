@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/shaninalex/lumna"
+	"gitlab.com/shaninalex/lumna"
 )
 
 func HandleHealth(w http.ResponseWriter, r *http.Request) {

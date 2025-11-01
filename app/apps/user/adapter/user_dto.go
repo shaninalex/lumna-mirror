@@ -3,8 +3,8 @@
 package adapter
 
 import (
-	"github.com/shaninalex/lumna/app/domain"
-	"github.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
 
 type UserDto struct {

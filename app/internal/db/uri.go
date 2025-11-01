@@ -6,8 +6,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/shaninalex/lumna/app/internal/base"
-	"github.com/shaninalex/lumna/app/internal/dir"
+	"gitlab.com/shaninalex/lumna/app/internal/base"
+	"gitlab.com/shaninalex/lumna/app/internal/dir"
 )
 
 type DatabaseProvider string

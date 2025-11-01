@@ -3,7 +3,7 @@
 package builders
 
 import (
-	"github.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
 
 // TaskStatusBuilder builder pattern code
