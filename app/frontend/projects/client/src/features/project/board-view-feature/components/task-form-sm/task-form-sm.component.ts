@@ -9,9 +9,9 @@ import { Project } from "@client/entities/project"
 import { StatusColumn } from "@client/features/project/board-view-feature/board.model"
 
 @Component({
-	selector: "lu-task-form-sm",
-	imports: [LoaderComponent, ReactiveFormsModule],
-	template: `
+    selector: "lu-task-form-sm",
+    imports: [LoaderComponent, ReactiveFormsModule],
+    template: `
 		@if (showForm) {
 			<form [formGroup]="form" (ngSubmit)="submitForm()">
 				<div class="mb-2">
@@ -48,49 +48,49 @@ import { StatusColumn } from "@client/features/project/board-view-feature/board.
 	`,
 })
 export class TaskFormSmComponent implements OnInit {
-	@Input() project: Project
-	@Input() column: StatusColumn
+    @Input() project: Project
+    @Input() column: StatusColumn
 
-	eRef = inject(ElementRef)
+    eRef = inject(ElementRef)
 
-	showForm: boolean = false
-	loading: boolean = false
-	form: FormGroup = new FormGroup({
-		title: new FormControl({ value: "", disabled: this.loading }, [Validators.required]),
-	})
+    showForm: boolean = false
+    loading: boolean = false
+    form: FormGroup = new FormGroup({
+        title: new FormControl({ value: "", disabled: this.loading }, [Validators.required]),
+    })
 
-	private action$ = inject(Actions)
-	private store = inject(Store<AppState>)
+    private action$ = inject(Actions)
+    private store = inject(Store<AppState>)
 
-	ngOnInit() {
-		this.action$.pipe(ofType(TaskSetAction)).subscribe(() => {
-			this.loading = false
-		})
-	}
+    ngOnInit() {
+        this.action$.pipe(ofType(TaskSetAction)).subscribe(() => {
+            this.loading = false
+        })
+    }
 
-	@HostListener("document:click", ["$event"])
-	clickout(event: { target: any }) {
-		if (!this.eRef.nativeElement.contains(event.target) && this.showForm) {
-			this.showForm = false
-		}
-	}
+    @HostListener("document:click", ["$event"])
+    clickout(event: { target: any }) {
+        if (!this.eRef.nativeElement.contains(event.target) && this.showForm) {
+            this.showForm = false
+        }
+    }
 
-	submitForm(): void {
-		this.loading = true
-		this.store.dispatch(
-			TaskCreateAction({
-				projectId: this.project.id,
-				payload: {
-					title: this.form.value["title"],
-					status_id: this.column.status.id,
-				},
-			})
-		)
-		this.form.reset()
-	}
+    submitForm(): void {
+        this.loading = true
+        this.store.dispatch(
+            TaskCreateAction({
+                projectId: this.project.id,
+                payload: {
+                    title: this.form.value["title"],
+                    status_id: this.column.status.id,
+                },
+            })
+        )
+        this.form.reset()
+    }
 
-	cancel(): void {
-		this.form.reset()
-		this.showForm = false
-	}
+    cancel(): void {
+        this.form.reset()
+        this.showForm = false
+    }
 }

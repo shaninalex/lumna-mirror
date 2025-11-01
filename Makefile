@@ -29,7 +29,7 @@ clear_local:
 	rm -rf ~/.config/lumna
 
 run:
-	LUMNA_CONFIG_PATH=$$HOME/go/src/github.com/shaninalex/lumna/config/ go run  -tags embed ./app/cmd/standalone/
+	LUMNA_CONFIG_PATH=$$HOME/gitlab/lumna/config/ go run  -tags embed ./app/cmd/standalone/
 
 clear_port:
 	@pid=$$(sudo lsof -t -i :8000); \

@@ -3,6 +3,7 @@
 package web
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"path"
@@ -79,12 +80,15 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 	})
 }
 
-func (r *Router) Run() error {
+func (r *Router) Run(port int) error {
 	//if base.IsDebug() {
 	//	r.printRoutes()
 	//}
-	log.Println("server started... on port :8000")
-	return http.ListenAndServe(":8000", corsMiddleware(r))
+	if port == 0 {
+		panic("port is not provided")
+	}
+	log.Printf("server started... on port :%d", port)
+	return http.ListenAndServe(fmt.Sprintf(":%d", port), corsMiddleware(r))
 }
 
 //func (r *Router) printRoutes() {

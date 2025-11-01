@@ -49,7 +49,8 @@ func main() {
 	projectApp.NewProjectController(router)
 	taskApp.NewTaskController(router)
 
-	if err = router.Run(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	port := config.Int("port")
+	if err = router.Run(port); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		panic(fmt.Errorf("server error: %v\n", err))
 	}
 }

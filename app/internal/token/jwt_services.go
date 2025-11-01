@@ -5,7 +5,6 @@ package token
 import (
 	"fmt"
 	"slices"
-	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -52,7 +51,7 @@ func (s *AccessTokenJWTService) Create(userID int64, aud AudToken) (*AccessToken
 	jti := uuid.NewString()
 	claims := jwt.RegisteredClaims{
 		Issuer:    s.issuer,
-		Subject:   strconv.FormatInt(userID, 64),
+		Subject:   fmt.Sprintf("%d", userID),
 		Audience:  []string{string(aud)},
 		ExpiresAt: jwt.NewNumericDate(exp),
 		NotBefore: jwt.NewNumericDate(now),
@@ -138,7 +137,7 @@ func (s *RefreshTokenJWTService) Create(userID int64, device string) (*RefreshTo
 	jti := uuid.NewString()
 	claims := jwt.RegisteredClaims{
 		Issuer:    s.issuer,
-		Subject:   strconv.FormatInt(userID, 64),
+		Subject:   fmt.Sprintf("%d", userID),
 		ExpiresAt: jwt.NewNumericDate(exp),
 		IssuedAt:  jwt.NewNumericDate(now),
 		ID:        jti,
