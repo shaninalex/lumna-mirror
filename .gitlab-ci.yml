@@ -1,0 +1,3 @@
+include:
+  - local: .gitlab/test.yml
+  - local: .gitlab/release.yml
