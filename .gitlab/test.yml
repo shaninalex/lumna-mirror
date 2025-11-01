@@ -10,6 +10,7 @@ test:
   rules:
     # - if: '$CI_COMMIT_BRANCH == "dev"'
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
   before_script:
     - git fetch --all
