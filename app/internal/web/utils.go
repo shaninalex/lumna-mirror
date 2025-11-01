@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/shaninalex/lumna/app/internal/apperrors"
-	"github.com/shaninalex/lumna/app/internal/base"
+	"gitlab.com/shaninalex/lumna/app/internal/apperrors"
+	"gitlab.com/shaninalex/lumna/app/internal/base"
 )
 
 // ReturnJSON writes JSON response
@@ -51,8 +51,8 @@ func Error(w http.ResponseWriter, status int, err error) {
 }
 
 // GetUserID retrieves the user ID from context
-func GetUserID(r *http.Request) uint {
-	if id, ok := r.Context().Value(base.ContextUserID).(uint); ok {
+func GetUserID(r *http.Request) int64 {
+	if id, ok := r.Context().Value(base.ContextUserID).(int64); ok {
 		return id
 	}
 	panic("user was not found in request")
@@ -75,8 +75,8 @@ func BodyParser[T any](r *http.Request) (*T, error) {
 	return &data, nil
 }
 
-func UrlNumericParam(w http.ResponseWriter, r *http.Request, name string) uint64 {
-	id, err := strconv.ParseUint(r.PathValue(name), 10, 64)
+func UrlNumericParam(w http.ResponseWriter, r *http.Request, name string) int64 {
+	id, err := strconv.ParseInt(r.PathValue(name), 10, 64)
 	if err != nil {
 		Error(w, http.StatusBadRequest, err)
 		return 0

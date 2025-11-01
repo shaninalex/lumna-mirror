@@ -5,11 +5,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/shaninalex/lumna/app/apps/user/adapter"
-	"github.com/shaninalex/lumna/app/domain"
-	"github.com/shaninalex/lumna/app/internal/db"
-	"github.com/shaninalex/lumna/app/internal/token"
-	"github.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/apps/user/adapter"
+	"gitlab.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/token"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
 
 // UserHandler handles HTTP requests related to user accounts.

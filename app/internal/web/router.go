@@ -3,13 +3,10 @@
 package web
 
 import (
-	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"path"
-
-	"github.com/shaninalex/lumna/app/internal/base"
-	"github.com/shaninalex/lumna/app/internal/db"
 )
 
 type Middleware func(http.Handler) http.Handler
@@ -83,12 +80,15 @@ func (r *Router) handleWithAllMiddlewares(mux *http.ServeMux, pattern string, ha
 	})
 }
 
-func (r *Router) Run() error {
+func (r *Router) Run(port int) error {
 	//if base.IsDebug() {
 	//	r.printRoutes()
 	//}
-	log.Println("server started... on port :8000")
-	return http.ListenAndServe(":8000", corsMiddleware(r))
+	if port == 0 {
+		panic("port is not provided")
+	}
+	log.Printf("server started... on port :%d", port)
+	return http.ListenAndServe(fmt.Sprintf(":%d", port), corsMiddleware(r))
 }
 
 //func (r *Router) printRoutes() {
@@ -96,18 +96,3 @@ func (r *Router) Run() error {
 //		log.Printf("%s %s\n", rt.method, rt.path)
 //	}
 //}
-
-// DefaultRouter - default router.
-func DefaultRouter(dbConnection *sql.DB) *Router {
-	r := NewRouter()
-	if base.IsDebug() {
-		r.Use(NewRecoveryMiddleware().Wrap)
-	}
-	r.Use(db.NewMiddleware(dbConnection).Wrap)
-	r.Use(NewLoggerMiddleware().Wrap)
-	r.Use(NewCommonMiddleware().Wrap)
-	r.Use(NewHeadersMiddleware().Wrap)
-	r.GET("/_health", HandleHealth)
-
-	return r
-}

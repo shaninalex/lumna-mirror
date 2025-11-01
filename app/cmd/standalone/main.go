@@ -4,39 +4,33 @@ package main
 
 import (
 	"database/sql"
-	"embed"
 	"errors"
 	"fmt"
-	"io/fs"
+	"log"
 	"net/http"
+	"os"
 
-	authApp "github.com/shaninalex/lumna/app/apps/auth"
-	projectApp "github.com/shaninalex/lumna/app/apps/project/api"
-	taskApp "github.com/shaninalex/lumna/app/apps/task/api"
-	userApp "github.com/shaninalex/lumna/app/apps/user/api"
-	"github.com/shaninalex/lumna/app/internal/base"
-	"github.com/shaninalex/lumna/app/internal/db"
-	"github.com/shaninalex/lumna/app/internal/dir"
-	"github.com/shaninalex/lumna/app/internal/web"
-	"github.com/shaninalex/lumna/app/startup"
+	authApp "gitlab.com/shaninalex/lumna/app/apps/auth"
+	projectApp "gitlab.com/shaninalex/lumna/app/apps/project/api"
+	taskApp "gitlab.com/shaninalex/lumna/app/apps/task/api"
+	userApp "gitlab.com/shaninalex/lumna/app/apps/user/api"
+	"gitlab.com/shaninalex/lumna/app/internal/base"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/startup"
 )
 
-//go:embed all:web/browser
-var webFS embed.FS
-
 func main() {
-	if err := dir.MakeProjectDirectories(); err != nil {
-		panic(err)
-	}
-
 	config := base.GetConfig()
 
-	sqlDB, err := sql.Open("sqlite3", config.String("database_path"))
+	dbPath := db.GetDatabaseUri(config)
+
+	sqlDB, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		panic(err)
 	}
 	db.ApplyMigrationsEmbed(sqlDB)
-	static, _ := fs.Sub(webFS, "web/browser")
+	static := getStaticFS()
 
 	if startup.IsNew(sqlDB) {
 		initializer := startup.NewStartup(sqlDB)
@@ -48,7 +42,9 @@ func main() {
 	router := web.DefaultRouter(sqlDB)
 
 	// Public controllers
-	router.GET("/", frontendHandler(static))
+	if static != nil {
+		router.GET("/", frontendHandler(static))
+	}
 	authApp.NewAuthController(router)
 
 	// Private controllers
@@ -57,7 +53,11 @@ func main() {
 	projectApp.NewProjectController(router)
 	taskApp.NewTaskController(router)
 
-	if err = router.Run(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	log.Printf("Configuration path: %s", os.Getenv("LUMNA_CONFIG_PATH"))
+	log.Printf("Database path: %s", dbPath)
+
+	port := config.Int("port")
+	if err = router.Run(port); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		panic(fmt.Errorf("server error: %v\n", err))
 	}
 }

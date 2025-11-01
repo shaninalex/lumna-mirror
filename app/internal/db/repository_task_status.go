@@ -9,7 +9,7 @@ import (
 )
 
 // TaskStatusByID get task status by id
-func TaskStatusByID(ctx context.Context, db *sql.DB, id uint) (*TaskStatus, error) {
+func TaskStatusByID(ctx context.Context, db *sql.DB, id int64) (*TaskStatus, error) {
 	q := `select id, project_id, title, list_index, config from statuses where id = ?`
 	row := db.QueryRowContext(ctx, q, id)
 	s := &TaskStatus{}
@@ -20,7 +20,7 @@ func TaskStatusByID(ctx context.Context, db *sql.DB, id uint) (*TaskStatus, erro
 }
 
 // TaskStatusListByProject get task status list by project code
-func TaskStatusListByProject(ctx context.Context, db *sql.DB, id uint) ([]*TaskStatus, error) {
+func TaskStatusListByProject(ctx context.Context, db *sql.DB, id int64) ([]*TaskStatus, error) {
 	q := `
 	select s.id, s.project_id, s.title, s.list_index, s.config 
 	from statuses s
@@ -63,11 +63,11 @@ func TaskStatusCreate(ctx context.Context, db *sql.DB, status *TaskStatus) (*Tas
 	if err != nil {
 		return nil, err
 	}
-	status.ID = uint(id)
+	status.ID = id
 	return status, nil
 }
 
-func TaskStatusDelete(ctx context.Context, db *sql.DB, id uint) error {
+func TaskStatusDelete(ctx context.Context, db *sql.DB, id int64) error {
 	q := `delete from statuses where id = ?`
 	if _, err := db.ExecContext(ctx, q, id); err != nil {
 		return err

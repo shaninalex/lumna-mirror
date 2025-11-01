@@ -5,17 +5,17 @@ package adapter
 import (
 	"time"
 
-	"github.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/domain"
 )
 
 type ProjectInput struct {
 	Title    string `json:"title"`
-	StatusId int    `json:"status_id"`
+	StatusId int64  `json:"status_id"`
 }
 
 // ProjectDto - project dto.
 type ProjectDto struct {
-	ID        uint      `json:"id"`
+	ID        int64     `json:"id"`
 	Title     string    `json:"title"`
 	Code      string    `json:"code"`
 	CreatedAt time.Time `json:"created_at"`

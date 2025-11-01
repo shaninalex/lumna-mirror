@@ -5,9 +5,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/shaninalex/lumna/app/apps/task/adapter"
-	"github.com/shaninalex/lumna/app/domain"
-	"github.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/apps/task/adapter"
+	"gitlab.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
 
 type TaskHandler struct {
@@ -22,7 +22,7 @@ func NewTaskHandler() *TaskHandler {
 
 func (s *TaskHandler) Get(w http.ResponseWriter, r *http.Request) {
 	taskID := web.UrlNumericParam(w, r, "id")
-	task, err := s.taskManager.TaskDetail(r.Context(), uint(taskID))
+	task, err := s.taskManager.TaskDetail(r.Context(), taskID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -38,7 +38,7 @@ func (s *TaskHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	task, err := s.taskManager.TaskDetail(ctx, uint(taskID))
+	task, err := s.taskManager.TaskDetail(ctx, taskID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -60,7 +60,7 @@ func (s *TaskHandler) Patch(w http.ResponseWriter, r *http.Request) {
 
 func (s *TaskHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	taskID := web.UrlNumericParam(w, r, "id")
-	if err := s.taskManager.TaskDelete(r.Context(), uint(taskID)); err != nil {
+	if err := s.taskManager.TaskDelete(r.Context(), taskID); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}

@@ -14,7 +14,7 @@ import { LoaderComponent } from "@client/shared/ui"
 		<lu-auth-layout title="Login">
 			<form [formGroup]="form" (ngSubmit)="onSubmit()" class="mt-4 flex flex-col items-start">
 				<div class="mb-4">
-					<input class="input" type="email" formControlName="email" placeholder="Email" />
+					<input class="input" autofocus type="email" formControlName="email" placeholder="Email" />
 				</div>
 				<div class="mb-4">
 					<input class="input" type="password" formControlName="password" placeholder="Password" />

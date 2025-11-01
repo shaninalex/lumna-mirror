@@ -5,9 +5,9 @@ package handler
 import (
 	"net/http"
 
-	"github.com/shaninalex/lumna/app/apps/project/adapter"
-	"github.com/shaninalex/lumna/app/domain"
-	"github.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/apps/project/adapter"
+	"gitlab.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
 
 // ProjectBadgeHandler - task handler.
@@ -25,7 +25,7 @@ func NewProjectBadgeHandler() *ProjectBadgeHandler {
 // List - retrieve all project badges
 func (s *ProjectBadgeHandler) List(w http.ResponseWriter, r *http.Request) {
 	projectID := web.UrlNumericParam(w, r, "id")
-	badges, err := s.badgeManager.List(r.Context(), uint(projectID))
+	badges, err := s.badgeManager.List(r.Context(), projectID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -46,7 +46,7 @@ func (s *ProjectBadgeHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	badge := &domain.Badge{
-		ProjectID: uint(projectID),
+		ProjectID: projectID,
 		Title:     payload.Title,
 		Config:    payload.Config,
 	}
@@ -62,7 +62,7 @@ func (s *ProjectBadgeHandler) Create(w http.ResponseWriter, r *http.Request) {
 func (s *ProjectBadgeHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	projectId := web.UrlNumericParam(w, r, "id")
 	badgeId := web.UrlNumericParam(w, r, "badgeId")
-	err := s.badgeManager.Delete(r.Context(), uint(projectId), uint(badgeId))
+	err := s.badgeManager.Delete(r.Context(), projectId, badgeId)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

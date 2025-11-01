@@ -5,9 +5,9 @@ package handler
 import (
 	"net/http"
 
-	"github.com/shaninalex/lumna/app/apps/project/adapter"
-	"github.com/shaninalex/lumna/app/domain"
-	"github.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/apps/project/adapter"
+	"gitlab.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
 
 // ProjectTaskHandler - task handler.
@@ -25,7 +25,7 @@ func NewProjectTaskHandler() *ProjectTaskHandler {
 // List - retrieve tasks for a project
 func (s *ProjectTaskHandler) List(w http.ResponseWriter, r *http.Request) {
 	projectID := web.UrlNumericParam(w, r, "id")
-	tasks, err := s.taskManager.TasksList(r.Context(), uint(projectID))
+	tasks, err := s.taskManager.TasksList(r.Context(), projectID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -46,8 +46,8 @@ func (s *ProjectTaskHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	task := &domain.Task{
 		Title:     input.Title,
-		ProjectID: uint(projectID),
-		StatusID:  uint(input.StatusId),
+		ProjectID: projectID,
+		StatusID:  input.StatusId,
 		UserID:    userID,
 	}
 	task, err = s.taskManager.TaskCreate(ctx, task)

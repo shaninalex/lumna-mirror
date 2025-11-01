@@ -6,7 +6,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/shaninalex/lumna/app/internal/base"
+	"gitlab.com/shaninalex/lumna/app/internal/base"
 )
 
 // GetDb - returns the *sql.DB

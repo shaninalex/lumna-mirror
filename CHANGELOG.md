@@ -1,3 +1,20 @@
+## 0.19.0 (2025-11-01)
+
+### Feat
+
+- move to gitlab #51
+- do not use absolute path #52
+- add port number to configuration file
+
+### Fix
+
+- **ci**: build tags for embed directory
+- **ui**: minor ui fixes
+
+### Refactor
+
+- **auth**: provide UserService
+
 ## 0.18.0 (2025-10-25)
 
 ### Feat

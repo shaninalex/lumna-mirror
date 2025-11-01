@@ -59,7 +59,9 @@ import { OverlayModule } from "@angular/cdk/overlay"
 								<div class="text-sm font-bold">Description</div>
 								<div class="NgxEditor__Wrapper">
 									<ngx-editor-menu [editor]="editor"></ngx-editor-menu>
-									<ngx-editor [editor]="editor" formControlName="description"></ngx-editor>
+									<div class="task-detail-editor">
+										<ngx-editor [editor]="editor" formControlName="description"></ngx-editor>
+									</div>
 								</div>
 							</div>
 							<div class="mb-4 flex justify-between">
@@ -67,7 +69,7 @@ import { OverlayModule } from "@angular/cdk/overlay"
 							</div>
 						</form>
 					</div>
-					<div class="rounded-br-xl bg-gray-100 p-4">
+					<div class="rounded-br-xl bg-gray-100 p-4 dark:bg-gray-900">
 						<div class="text-xs text-gray-500">Created: {{ task.created_at | date }}</div>
 						<div class="text-lg font-bold text-gray-600">Activity:</div>
 					</div>

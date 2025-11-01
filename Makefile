@@ -19,4 +19,26 @@ build:
 	cd app/frontend && \
 	yarn build && \
 	cd ../../ && \
-	go build -o bin/lumna ./app/cmd/standalone/
+	go build -tags embed -o bin/lumna ./app/cmd/standalone/
+
+
+clear_local:
+	rm -rf ~/.local/share/lumna/ && \
+	rm -rf ~/.local/state/lumna/ && \
+	rm ~/.local/bin/lumna && \
+	rm -rf ~/.config/lumna
+
+run:
+	LUMNA_CONFIG_PATH=$$HOME/gitlab/lumna/config/ go run  -tags embed ./app/cmd/standalone/
+
+clear_port:
+	@pid=$$(sudo lsof -t -i :8000); \
+	if [ -n "$$pid" ]; then \
+		echo "Killing process on port 8000 (PID: $$pid)"; \
+		sudo kill -9 $$pid; \
+	else \
+		echo "No process is listening on port 8000."; \
+	fi
+
+test:
+	go test -tags noembed ./... -v

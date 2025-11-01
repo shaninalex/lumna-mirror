@@ -5,7 +5,7 @@ package builders
 import (
 	"time"
 
-	"github.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
 
 // TaskBuilder builder pattern code
@@ -21,25 +21,25 @@ func NewTaskBuilder() *TaskBuilder {
 }
 
 // ID - id.
-func (b *TaskBuilder) ID(iD uint) *TaskBuilder {
+func (b *TaskBuilder) ID(iD int64) *TaskBuilder {
 	b.task.ID = iD
 	return b
 }
 
 // UserID - user id.
-func (b *TaskBuilder) UserID(userID uint) *TaskBuilder {
+func (b *TaskBuilder) UserID(userID int64) *TaskBuilder {
 	b.task.UserID = userID
 	return b
 }
 
 // ProjectID - project id.
-func (b *TaskBuilder) ProjectID(projectID uint) *TaskBuilder {
+func (b *TaskBuilder) ProjectID(projectID int64) *TaskBuilder {
 	b.task.ProjectID = projectID
 	return b
 }
 
 // TaskStatusID - task status id.
-func (b *TaskBuilder) TaskStatusID(taskStatusID uint) *TaskBuilder {
+func (b *TaskBuilder) TaskStatusID(taskStatusID int64) *TaskBuilder {
 	b.task.StatusID = taskStatusID
 	return b
 }

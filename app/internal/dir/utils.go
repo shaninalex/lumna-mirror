@@ -5,7 +5,9 @@ package dir
 import (
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
+	"runtime"
 )
 
 const (
@@ -13,16 +15,45 @@ const (
 	// Directory for config yaml file, may be some credentials files or certs
 	ConfigDirectory = ".config/lumna"
 
-	// PersistenceDirectory - persistence directory
-	// This is a directory for database and uploading file
-	PersistenceDirectory = ".local/share/lumna"
+	// ShareDirectory - user owned directories for db and uploads
+	ShareDirectory = ".local/share/lumna"
+
+	// StateDirectory - for logs and sessions
+	StateDirectory = ".local/state/lumna"
 
 	// defaultPermissions - default permissions read/write
 	defaultPermissions = 0700
 )
 
-// CreateDirectory - creates directory in user home folder
-func CreateDirectory(path string) error {
+// DefaultDatabasePath default path of the database if env or config not provided
+func DefaultDatabasePath() string {
+	if runtime.GOOS == "windows" {
+		return ""
+	}
+	return ".local/state/lumna/lumna.db"
+}
+
+// MakeProjectDirectories - creates directories used by project in user home folder
+func MakeProjectDirectories() error {
+	fmt.Print("Working directories ... ")
+	if err := createDirectory(ConfigDirectory); err != nil {
+		return err
+	}
+
+	if err := createDirectory(ShareDirectory); err != nil {
+		return err
+	}
+
+	if err := createDirectory(StateDirectory); err != nil {
+		return err
+	}
+
+	fmt.Print("ok\n")
+	return nil
+}
+
+// createDirectory - creates directory in user home folder
+func createDirectory(path string) error {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return err
@@ -30,16 +61,12 @@ func CreateDirectory(path string) error {
 	return os.MkdirAll(filepath.Join(home, path), defaultPermissions)
 }
 
-// MakeProjectDirectories - creates directories used by project in user home folder
-func MakeProjectDirectories() error {
-	fmt.Print("Working directories ... ")
-	if err := CreateDirectory(ConfigDirectory); err != nil {
-		return err
+// GetShareDir - return path for share directory
+func GetShareDir() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
 	}
 
-	if err := CreateDirectory(PersistenceDirectory); err != nil {
-		return err
-	}
-	fmt.Print("ok\n")
-	return nil
+	return path.Join(home, ShareDirectory)
 }

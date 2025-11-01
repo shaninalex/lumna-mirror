@@ -9,7 +9,7 @@ import (
 )
 
 // BadgeGet fetches a badge by ID.
-func BadgeGet(ctx context.Context, db *sql.DB, id uint) (*Badge, error) {
+func BadgeGet(ctx context.Context, db *sql.DB, id int64) (*Badge, error) {
 	row := db.QueryRowContext(ctx, `
 		SELECT id, project_id, title, config, created_at
 		FROM badge
@@ -39,7 +39,7 @@ func BadgeCreate(ctx context.Context, db *sql.DB, badge *Badge) error {
 	if err != nil {
 		return err
 	}
-	badge.ID = uint(id)
+	badge.ID = id
 	return nil
 }
 
@@ -54,13 +54,13 @@ func BadgeUpdate(ctx context.Context, db *sql.DB, badge *Badge) error {
 }
 
 // BadgeDelete deletes a badge by ID.
-func BadgeDelete(ctx context.Context, db *sql.DB, projectId, id uint) error {
+func BadgeDelete(ctx context.Context, db *sql.DB, projectId, id int64) error {
 	_, err := db.ExecContext(ctx, `DELETE FROM badge WHERE project_id = ? AND id = ?`, projectId, id)
 	return err
 }
 
 // BadgeProjectList returns all badges belonging to a project.
-func BadgeProjectList(ctx context.Context, db *sql.DB, projectID uint) ([]*Badge, error) {
+func BadgeProjectList(ctx context.Context, db *sql.DB, projectID int64) ([]*Badge, error) {
 	rows, err := db.QueryContext(ctx, `
 		SELECT id, project_id, title, config, created_at
 		FROM badge
@@ -83,7 +83,7 @@ func BadgeProjectList(ctx context.Context, db *sql.DB, projectID uint) ([]*Badge
 }
 
 // BadgeTaskList returns all badges assigned to a given task.
-func BadgeTaskList(ctx context.Context, db *sql.DB, taskID uint) ([]*Badge, error) {
+func BadgeTaskList(ctx context.Context, db *sql.DB, taskID int64) ([]*Badge, error) {
 	rows, err := db.QueryContext(ctx, `
 		SELECT b.id, b.project_id, b.title, b.config, b.created_at
 		FROM badge b

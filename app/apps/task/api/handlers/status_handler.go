@@ -5,9 +5,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/shaninalex/lumna/app/apps/task/adapter"
-	"github.com/shaninalex/lumna/app/domain"
-	"github.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/apps/task/adapter"
+	"gitlab.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
 
 type StatusHandler struct {
@@ -30,7 +30,7 @@ func (s *StatusHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	task, err := s.taskManager.TaskDetail(ctx, uint(taskID))
+	task, err := s.taskManager.TaskDetail(ctx, taskID)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

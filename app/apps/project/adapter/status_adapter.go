@@ -3,15 +3,15 @@
 package adapter
 
 import (
-	"github.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/domain"
 )
 
 // TaskStatusDto - task status dto.
 type TaskStatusDto struct {
-	ID        uint                     `json:"id"`
+	ID        int64                    `json:"id"`
 	Title     string                   `json:"title"`
-	ProjectId uint                     `json:"project_id"`
-	Index     uint                     `json:"index"`
+	ProjectId int64                    `json:"project_id"`
+	Index     int64                    `json:"index"`
 	Config    *domain.TaskStatusConfig `json:"config"`
 }
 

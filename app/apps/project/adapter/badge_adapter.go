@@ -3,13 +3,13 @@
 package adapter
 
 import (
-	"github.com/shaninalex/lumna/app/domain"
+	"gitlab.com/shaninalex/lumna/app/domain"
 )
 
 type BadgeDto struct {
-	ID        uint               `json:"id"`
+	ID        int64              `json:"id"`
 	Title     string             `json:"title"`
-	ProjectID uint               `json:"projectId"`
+	ProjectID int64              `json:"projectId"`
 	Config    domain.BadgeConfig `json:"config"`
 }
 
@@ -24,6 +24,6 @@ func NewBadgeDto(badge *domain.Badge) *BadgeDto {
 
 type BadgeInput struct {
 	Title     string             `json:"title"`
-	ProjectID uint               `json:"projectId"`
+	ProjectID int64              `json:"projectId"`
 	Config    domain.BadgeConfig `json:"config"`
 }

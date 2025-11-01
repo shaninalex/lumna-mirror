@@ -7,10 +7,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/shaninalex/lumna/app/internal/db"
-	"github.com/shaninalex/lumna/app/internal/token"
-	"github.com/shaninalex/lumna/app/internal/web"
-	"golang.org/x/crypto/bcrypt"
+	"gitlab.com/shaninalex/lumna/app/internal/token"
+	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
 
 type loginPayload struct {
@@ -26,13 +24,13 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := db.UserGetByField(ctx, db.GetDb(r.Context()), "email", payload.Email)
+	user, err := s.userService.GetUserByEmail(ctx, payload.Email)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
-	if err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(payload.Password)); err != nil {
+	if err := s.userService.CheckPassword(ctx, user.GetID(), payload.Password); err != nil {
 		web.Error(w, http.StatusBadRequest, errors.New("invalid password"))
 		return
 	}

@@ -5,7 +5,7 @@ package builders
 import (
 	"time"
 
-	"github.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
 
 // UserBuilder builder pattern code
@@ -21,7 +21,7 @@ func NewUserBuilder() *UserBuilder {
 }
 
 // ID - id.
-func (b *UserBuilder) ID(iD uint) *UserBuilder {
+func (b *UserBuilder) ID(iD int64) *UserBuilder {
 	b.user.ID = iD
 	return b
 }

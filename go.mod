@@ -1,4 +1,4 @@
-module github.com/shaninalex/lumna
+module gitlab.com/shaninalex/lumna
 
 go 1.24.2
 
@@ -9,6 +9,7 @@ require (
 	github.com/spf13/viper v1.21.0
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/crypto v0.42.0
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (

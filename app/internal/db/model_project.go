@@ -8,8 +8,8 @@ import (
 
 // Project - project.
 type Project struct {
-	ID        uint      `db:"id"`
-	UserID    uint      `db:"user_id"`
+	ID        int64     `db:"id"`
+	UserID    int64     `db:"user_id"`
 	Title     string    `db:"title"`
 	Code      string    `db:"code"`
 	CreatedAt time.Time `db:"created_at"`
@@ -17,13 +17,13 @@ type Project struct {
 }
 
 // GetID - returns the id.
-func (s *Project) GetID() uint { return s.ID }
+func (s *Project) GetID() int64 { return s.ID }
 
 // SetID - sets the id.
-func (s *Project) SetID(id uint) { s.ID = id }
+func (s *Project) SetID(id int64) { s.ID = id }
 
 // GetOwnerID - returns the owner id.
-func (s *Project) GetOwnerID() uint { return s.UserID }
+func (s *Project) GetOwnerID() int64 { return s.UserID }
 
 // IsOwner - checks if it is owner.
 func (s *Project) IsOwner(entity AuthUser) bool { return entity.GetID() == s.GetOwnerID() }
@@ -35,4 +35,4 @@ func (s *Project) GetCreatedAt() time.Time { return s.CreatedAt }
 func (s *Project) GetUpdatedAt() time.Time { return s.UpdatedAt }
 
 // GetCreatedBy - returns the created by.
-func (s *Project) GetCreatedBy() uint { return s.GetOwnerID() }
+func (s *Project) GetCreatedBy() int64 { return s.GetOwnerID() }

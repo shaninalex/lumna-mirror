@@ -25,6 +25,10 @@ jobs:
       - name: tidy
         run: go mod tidy
 
+      - name: Ensure embed directory exists
+        run: |
+          mkdir -p app/cmd/standalone/web/browser
+          touch app/cmd/standalone/web/browser/.keep
+
       - name: tests
-        run: go test ./... -v
-#          go build -o bin/lumna ./app/cmd/standalone/
+        run: go test -tags noembed ./app/... -v

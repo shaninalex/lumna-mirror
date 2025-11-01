@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/shaninalex/lumna"
+	"gitlab.com/shaninalex/lumna"
 )
 
 // HeadersMiddleware - headers middleware.
