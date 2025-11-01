@@ -1,0 +1,24 @@
+stages:
+  - test
+
+variables:
+  GO_VERSION: "1.25.0"
+
+test:
+  stage: test
+  image: golang:${GO_VERSION}
+  rules:
+    # - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+  before_script:
+    - git fetch --all
+    - git checkout main || true
+    - go version
+    - mkdir -p app/cmd/standalone/web/browser
+    - touch app/cmd/standalone/web/browser/.keep
+
+  script:
+    - go mod tidy
+    - go test -tags noembed ./app/... -v
