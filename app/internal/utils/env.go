@@ -1,5 +1,3 @@
-// Copyright © 2025 Lumna. All rights reserved.
-
 package utils
 
 import (
