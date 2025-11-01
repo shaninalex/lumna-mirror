@@ -1,5 +1,3 @@
-// Copyright © 2025 Lumna. All rights reserved.
-
 // Create default config file if not exists
 
 package base
