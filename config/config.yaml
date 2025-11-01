@@ -3,7 +3,7 @@ port: 8000
 
 # database connection path
 # if it's SQLite3 file - use absolute system path
-database_path: "/home/alex/gitlab/lumna/lumna.db?cache=shared&mode=rwc"
+database_path: "lumna.db?cache=shared&mode=rwc"
 
 
 # for jwt signing and verification

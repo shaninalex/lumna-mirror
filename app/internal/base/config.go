@@ -25,11 +25,7 @@ func GetConfig() *Config {
 }
 
 func init() {
-	fmt.Print("Init config ... ")
-
 	config = NewConfig()
-
-	fmt.Print("ok\n")
 }
 
 func NewConfig() *Config {

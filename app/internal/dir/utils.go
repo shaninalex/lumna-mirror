@@ -5,6 +5,7 @@ package dir
 import (
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"runtime"
 )
@@ -14,9 +15,11 @@ const (
 	// Directory for config yaml file, may be some credentials files or certs
 	ConfigDirectory = ".config/lumna"
 
-	// PersistenceDirectory - persistence directory
-	// This is a directory for database and uploading file
-	PersistenceDirectory = ".local/share/lumna"
+	// ShareDirectory - user owned directories for db and uploads
+	ShareDirectory = ".local/share/lumna"
+
+	// StateDirectory - for logs and sessions
+	StateDirectory = ".local/state/lumna"
 
 	// defaultPermissions - default permissions read/write
 	defaultPermissions = 0700
@@ -37,9 +40,14 @@ func MakeProjectDirectories() error {
 		return err
 	}
 
-	if err := createDirectory(PersistenceDirectory); err != nil {
+	if err := createDirectory(ShareDirectory); err != nil {
 		return err
 	}
+
+	if err := createDirectory(StateDirectory); err != nil {
+		return err
+	}
+
 	fmt.Print("ok\n")
 	return nil
 }
@@ -51,4 +59,14 @@ func createDirectory(path string) error {
 		return err
 	}
 	return os.MkdirAll(filepath.Join(home, path), defaultPermissions)
+}
+
+// GetShareDir - return path for share directory
+func GetShareDir() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	return path.Join(home, ShareDirectory)
 }

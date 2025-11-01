@@ -6,7 +6,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 
 	authApp "github.com/shaninalex/lumna/app/apps/auth"
 	projectApp "github.com/shaninalex/lumna/app/apps/project/api"
@@ -21,7 +23,9 @@ import (
 func main() {
 	config := base.GetConfig()
 
-	sqlDB, err := sql.Open("sqlite3", config.String("database_path"))
+	dbPath := db.GetDatabaseUri(config)
+
+	sqlDB, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		panic(err)
 	}
@@ -48,6 +52,9 @@ func main() {
 	userApp.NewUserController(router)
 	projectApp.NewProjectController(router)
 	taskApp.NewTaskController(router)
+
+	log.Printf("Configuration path: %s", os.Getenv("LUMNA_CONFIG_PATH"))
+	log.Printf("Database path: %s", dbPath)
 
 	port := config.Int("port")
 	if err = router.Run(port); err != nil && !errors.Is(err, http.ErrServerClosed) {
