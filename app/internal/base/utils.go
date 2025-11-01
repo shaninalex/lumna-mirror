@@ -1,5 +1,3 @@
-// Copyright © 2025 Lumna. All rights reserved.
-
 package base
 
 import "crypto/rand"
