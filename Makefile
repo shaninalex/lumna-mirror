@@ -31,6 +31,9 @@ clear_local:
 run:
 	LUMNA_CONFIG_PATH=$$HOME/gitlab/lumna/config/ go run  -tags embed ./app/cmd/standalone/
 
+debug:
+	LUMNA_CONFIG_PATH=$$HOME/gitlab/lumna/config/ dlv exec ./bin/lumna
+
 clear_port:
 	@pid=$$(sudo lsof -t -i :8000); \
 	if [ -n "$$pid" ]; then \

@@ -35,5 +35,8 @@ func (s *TaskController) init() {
 	// Remove badge from task
 	s.router.DELETE("/api/v1/task/{id}/badges/{badgeId}", badgeHandler.Delete)
 
-
+	commentHandler := handlers.NewCommentHandler()
+	s.router.GET("/api/v1/task/{id}/comments", commentHandler.List)
+	s.router.POST("/api/v1/task/{id}/comments", commentHandler.Post)
+	s.router.DELETE("/api/v1/task/{id}/comments/{commentId}", commentHandler.Delete)
 }
