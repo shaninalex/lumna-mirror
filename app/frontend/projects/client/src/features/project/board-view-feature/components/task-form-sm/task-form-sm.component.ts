@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, inject, Input, OnInit } from "@angular/core"
+import { AfterViewChecked, Component, ElementRef, HostListener, inject, Input, OnInit, ViewChild } from "@angular/core"
 import { LoaderComponent } from "@client/shared/ui/loader"
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms"
 import { TaskCreateAction, TaskSetAction } from "@client/entities/task"
@@ -9,13 +9,19 @@ import { Project } from "@client/entities/project"
 import { StatusColumn } from "@client/features/project/board-view-feature/board.model"
 
 @Component({
-    selector: "lu-task-form-sm",
-    imports: [LoaderComponent, ReactiveFormsModule],
-    template: `
+	selector: "lu-task-form-sm",
+	imports: [LoaderComponent, ReactiveFormsModule],
+	template: `
 		@if (showForm) {
 			<form [formGroup]="form" (ngSubmit)="submitForm()">
 				<div class="mb-2">
-					<input class="input" autofocus placeholder="Task title" type="text" formControlName="title" />
+					<input
+						#titleInput
+						class="input"
+						placeholder="Task title"
+						type="text"
+						formControlName="title"
+					/>
 					@if (form.controls["title"].dirty && form.controls["title"].errors) {
 						@if (form.controls["title"].errors["required"]) {
 							<div class="text-sm">This field is required</div>
@@ -40,57 +46,72 @@ import { StatusColumn } from "@client/features/project/board-view-feature/board.
 				</div>
 			</form>
 		} @else {
-			<button (click)="showForm = true" class="hover-space flex w-full items-center gap-2">
+			<button (click)="toggleForm()" class="hover-space flex w-full items-center gap-2">
 				<i class="i-plus-circle text-xl"></i>
 				Add a card
 			</button>
 		}
 	`,
 })
-export class TaskFormSmComponent implements OnInit {
-    @Input() project: Project
-    @Input() column: StatusColumn
+export class TaskFormSmComponent implements OnInit, AfterViewChecked {
+	@Input() project!: Project
+	@Input() column!: StatusColumn
 
-    eRef = inject(ElementRef)
+	@ViewChild("titleInput") titleInput!: ElementRef<HTMLInputElement>
 
-    showForm: boolean = false
-    loading: boolean = false
-    form: FormGroup = new FormGroup({
-        title: new FormControl({ value: "", disabled: this.loading }, [Validators.required]),
-    })
+	eRef = inject(ElementRef)
+	private action$ = inject(Actions)
+	private store = inject(Store<AppState>)
 
-    private action$ = inject(Actions)
-    private store = inject(Store<AppState>)
+	showForm = false
+	loading = false
+	form = new FormGroup({
+		title: new FormControl("", [Validators.required]),
+	})
 
-    ngOnInit() {
-        this.action$.pipe(ofType(TaskSetAction)).subscribe(() => {
-            this.loading = false
-        })
-    }
+	private shouldFocus = false
 
-    @HostListener("document:click", ["$event"])
-    clickout(event: { target: any }) {
-        if (!this.eRef.nativeElement.contains(event.target) && this.showForm) {
-            this.showForm = false
-        }
-    }
+	ngOnInit() {
+		this.action$.pipe(ofType(TaskSetAction)).subscribe(() => {
+			this.loading = false
+		})
+	}
 
-    submitForm(): void {
-        this.loading = true
-        this.store.dispatch(
-            TaskCreateAction({
-                projectId: this.project.id,
-                payload: {
-                    title: this.form.value["title"],
-                    status_id: this.column.status.id,
-                },
-            })
-        )
-        this.form.reset()
-    }
+	ngAfterViewChecked() {
+		if (this.shouldFocus && this.titleInput) {
+			this.titleInput.nativeElement.focus()
+			this.shouldFocus = false
+		}
+	}
 
-    cancel(): void {
-        this.form.reset()
-        this.showForm = false
-    }
+	toggleForm() {
+		this.showForm = true
+		this.shouldFocus = true
+	}
+
+	@HostListener("document:click", ["$event"])
+	clickout(event: MouseEvent) {
+		if (!this.eRef.nativeElement.contains(event.target) && this.showForm) {
+			this.showForm = false
+		}
+	}
+
+	submitForm() {
+		this.loading = true
+		this.store.dispatch(
+			TaskCreateAction({
+				projectId: this.project.id,
+				payload: {
+					title: this.form.value["title"]!,
+					status_id: this.column.status.id,
+				},
+			})
+		)
+		this.form.reset()
+	}
+
+	cancel() {
+		this.form.reset()
+		this.showForm = false
+	}
 }
