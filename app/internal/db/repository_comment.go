@@ -53,7 +53,7 @@ func CommentsList(ctx context.Context, db *sql.DB, taskID int64) ([]*Comment, er
 	rows, err := db.QueryContext(ctx, `
 		SELECT id, task_id, user_id, content, created_at
 		FROM comments
-		WHERE project_id = ?
+		WHERE task_id = ?
 		ORDER BY created_at ASC`, taskID)
 	if err != nil {
 		return nil, err
@@ -71,3 +71,18 @@ func CommentsList(ctx context.Context, db *sql.DB, taskID int64) ([]*Comment, er
 	return result, rows.Err()
 }
 
+// CommentsCount returns amount of comments for a task.
+func CommentsCount(ctx context.Context, db *sql.DB, taskID int64) (int, error) {
+	row := db.QueryRowContext(ctx, `
+		SELECT count(*)
+		FROM comments
+		WHERE task_id = ?
+		ORDER BY created_at ASC`, taskID)
+
+	var count int
+	if err := row.Scan(&count); err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}

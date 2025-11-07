@@ -8,17 +8,14 @@ import (
 )
 
 type Comment struct {
-	Id        int64
-	TaskId    int64
-	UserId    int64
-	UserName  string
-	UserImage string
-	Content   string
-	CreatedAt time.Time
+	Id        int64     `json:"id" db:"id"`
+	TaskId    int64     `json:"task_id" db:"user_id"`
+	UserId    int64     `json:"user_id" db:"project_id"`
+	Content   string    `json:"content" db:"title"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
 }
 
 type CommentManager interface {
-	List(ctx context.Context, taskId int64) ([]*Comment, error)
 	CreateComment(ctx context.Context, comment *Comment) error
 	DeleteComment(ctx context.Context, id int64) error
 }
@@ -28,18 +25,6 @@ func NewCommentService() CommentManager {
 }
 
 type CommentService struct{}
-
-func (c CommentService) List(ctx context.Context, taskId int64) ([]*Comment, error) {
-	dbComments, err := db.CommentsList(ctx, db.GetDb(ctx), taskId)
-	if err != nil {
-		return nil, err
-	}
-	comments := make([]*Comment, len(dbComments))
-	for i, comment := range dbComments {
-		comments[i] = ToDomainComment(comment)
-	}
-	return comments, nil
-}
 
 func (c CommentService) CreateComment(ctx context.Context, comment *Comment) error {
 	dbComment := &db.Comment{
@@ -62,14 +47,4 @@ func (c CommentService) DeleteComment(ctx context.Context, id int64) error {
 		return err
 	}
 	return nil
-}
-
-func ToDomainComment(comment *db.Comment) *Comment {
-	return &Comment{
-		Id:        comment.ID,
-		TaskId:    comment.TaskID,
-		UserId:    comment.UserID,
-		Content:   comment.Content,
-		CreatedAt: comment.CreatedAt,
-	}
 }

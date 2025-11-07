@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 
-	"gitlab.com/shaninalex/lumna/app/apps/task/adapter"
 	"gitlab.com/shaninalex/lumna/app/domain"
 	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
@@ -20,18 +19,8 @@ func NewCommentHandler() *CommentHandler {
 	}
 }
 
-func (s *CommentHandler) List(w http.ResponseWriter, r *http.Request) {
-	taskID := web.UrlNumericParam(w, r, "id")
-	comments, err := s.commentManager.List(r.Context(), taskID)
-	if err != nil {
-		web.Error(w, http.StatusBadRequest, err)
-		return
-	}
-	web.Success(w, adapter.NewCommentsDtoList(comments))
-}
-
 func (s *CommentHandler) Post(w http.ResponseWriter, r *http.Request) {
-	payload, err := web.BodyParser[adapter.CommentDto](r)
+	comment, err := web.BodyParser[domain.Comment](r)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
@@ -39,16 +28,15 @@ func (s *CommentHandler) Post(w http.ResponseWriter, r *http.Request) {
 	taskId := web.UrlNumericParam(w, r, "id")
 	userId := web.GetUserID(r)
 
-	payload.TaskId = taskId
-	payload.UserId = userId
+	comment.TaskId = taskId
+	comment.UserId = userId
 
-	comment := adapter.NewDomainCommentFromDto(payload)
 	if err = s.commentManager.CreateComment(r.Context(), comment); err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
-	web.Success(w, adapter.NewCommentDto(comment), "New comment created")
+	web.Success(w, comment, "New comment created")
 }
 
 func (s *CommentHandler) Delete(w http.ResponseWriter, r *http.Request) {

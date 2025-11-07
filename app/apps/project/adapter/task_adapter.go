@@ -22,6 +22,8 @@ type TaskDto struct {
 	Badges    []*BadgeDto `json:"badges"`
 	CreatedAt time.Time   `json:"created_at"`
 	UpdatedAt time.Time   `json:"updated_at"`
+
+	CommentsCount int `json:"comments_count"`
 }
 
 func ToTaskDto(task *domain.Task) *TaskDto {
@@ -30,17 +32,18 @@ func ToTaskDto(task *domain.Task) *TaskDto {
 		badges[i] = NewBadgeDto(badge)
 	}
 	return &TaskDto{
-		ID:        task.ID,
-		UserID:    task.UserID,
-		ProjectID: task.ProjectID,
-		StatusID:  task.StatusID,
-		Title:     task.Title,
-		Completed: task.Completed,
-		ListIndex: task.ListIndex,
-		Code:      task.Code,
-		Badges:    badges,
-		CreatedAt: task.CreatedAt,
-		UpdatedAt: task.UpdatedAt,
+		ID:            task.ID,
+		UserID:        task.UserID,
+		ProjectID:     task.ProjectID,
+		StatusID:      task.StatusID,
+		Title:         task.Title,
+		Completed:     task.Completed,
+		ListIndex:     task.ListIndex,
+		Code:          task.Code,
+		Badges:        badges,
+		CreatedAt:     task.CreatedAt,
+		UpdatedAt:     task.UpdatedAt,
+		CommentsCount: task.CommentsCount,
 	}
 }
 

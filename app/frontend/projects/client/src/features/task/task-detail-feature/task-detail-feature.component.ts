@@ -10,6 +10,7 @@ import { UiService } from "@client/shared/ui/ui.service"
 import { ActivatedRoute, Router } from "@angular/router"
 import { CdkMenuModule } from "@angular/cdk/menu"
 import { OverlayModule } from "@angular/cdk/overlay"
+import { CommentsListComponent } from "@client/features/task/task-detail-feature/task-comments-list"
 
 @Component({
 	selector: "lu-task-detail-feature",
@@ -22,6 +23,7 @@ import { OverlayModule } from "@angular/cdk/overlay"
 		NgxEditorMenuComponent,
 		CdkMenuModule,
 		OverlayModule,
+		CommentsListComponent,
 	],
 	styleUrl: "./task-detail-feature.component.scss",
 	template: ` <div class="fixed inset-0 cursor-pointer bg-black/20" (click)="close()"></div>
@@ -68,6 +70,10 @@ import { OverlayModule } from "@angular/cdk/overlay"
 								<button [disabled]="!form.valid" class="btn btn-primary" type="submit">Save</button>
 							</div>
 						</form>
+
+						<hr class="my-4">
+
+						<lu-task-comments-list [task]="task" />
 					</div>
 					<div class="rounded-br-xl bg-gray-100 p-4 dark:bg-gray-900">
 						<div class="text-xs text-gray-500">Created: {{ task.created_at | date }}</div>

@@ -19,9 +19,13 @@ type Task struct {
 	Description *string
 	ListIndex   float64
 	Code        string
-	Badges      []*Badge
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+
+	// related structures
+	Badges        []*Badge
+	Comments      []*Comment
+	CommentsCount int
 }
 
 // TaskReader - task reader.
@@ -72,19 +76,8 @@ func (t TaskService) TasksList(ctx context.Context, projectID int64) ([]*Task, e
 			CreatedAt:   task.CreatedAt,
 			UpdatedAt:   task.UpdatedAt,
 		}
-		badges, err := db.BadgeTaskList(ctx, db.GetDb(ctx), task.ID)
-		if err != nil {
-			log.Println(err)
+		if err = getCommentsCount(ctx, tasks[i]); err != nil {
 			continue
-		}
-		for _, badge := range badges {
-			tasks[i].Badges = append(tasks[i].Badges, &Badge{
-				ID:        badge.ID,
-				ProjectID: badge.ProjectID,
-				Title:     badge.Title,
-				Config:    ToBadgeConfig(badge.Config),
-				CreatedAt: badge.CreatedAt,
-			})
 		}
 	}
 	return tasks, nil
@@ -108,19 +101,7 @@ func (t TaskService) TaskDetail(ctx context.Context, taskID int64) (*Task, error
 		CreatedAt:   task.CreatedAt,
 		UpdatedAt:   task.UpdatedAt,
 	}
-	badges, err := db.BadgeTaskList(ctx, db.GetDb(ctx), task.ID)
-	if err != nil {
-		return nil, err
-	}
-	for _, badge := range badges {
-		model.Badges = append(model.Badges, &Badge{
-			ID:        badge.ID,
-			ProjectID: badge.ProjectID,
-			Title:     badge.Title,
-			Config:    ToBadgeConfig(badge.Config),
-			CreatedAt: badge.CreatedAt,
-		})
-	}
+	getTaskRelations(ctx, model)
 	return model, nil
 }
 
@@ -158,4 +139,59 @@ func (t TaskService) TaskCreate(ctx context.Context, data *Task) (*Task, error) 
 	data.Code = task.Code
 	data.ListIndex = task.ListIndex
 	return data, nil
+}
+
+func getTaskRelations(ctx context.Context, task *Task) {
+	if err := getBadges(ctx, task); err != nil {
+		log.Println(err)
+	}
+	if err := getComments(ctx, task); err != nil {
+		log.Println(err)
+	}
+}
+
+func getComments(ctx context.Context, task *Task) error {
+	comments, err := db.CommentsList(ctx, db.GetDb(ctx), task.ID)
+	if err != nil {
+		return err
+	}
+	for _, comment := range comments {
+		task.Comments = append(task.Comments, &Comment{
+			Id:        comment.ID,
+			TaskId:    comment.TaskID,
+			UserId:    comment.UserID,
+			Content:   comment.Content,
+			CreatedAt: comment.CreatedAt,
+		})
+	}
+
+	task.CommentsCount = len(comments)
+
+	return nil
+}
+
+func getCommentsCount(ctx context.Context, task *Task) error {
+	count, err := db.CommentsCount(ctx, db.GetDb(ctx), task.ID)
+	if err != nil {
+		return err
+	}
+	task.CommentsCount = count
+	return nil
+}
+
+func getBadges(ctx context.Context, task *Task) error {
+	badges, err := db.BadgeTaskList(ctx, db.GetDb(ctx), task.ID)
+	if err != nil {
+		return err
+	}
+	for _, badge := range badges {
+		task.Badges = append(task.Badges, &Badge{
+			ID:        badge.ID,
+			ProjectID: badge.ProjectID,
+			Title:     badge.Title,
+			Config:    ToBadgeConfig(badge.Config),
+			CreatedAt: badge.CreatedAt,
+		})
+	}
+	return nil
 }

@@ -8,9 +8,11 @@ export interface Task {
     description: string
     list_index: number
     code: string
-    // badges:
     created_at: Date
     updated_at: Date
+
+	comments: Comment[]
+	comments_count: number
 }
 
 export interface CreateTaskInput {
@@ -24,4 +26,12 @@ export interface TaskDetailInput {
     description: string
     list_index: number
     status_id: number
+}
+
+export interface Comment {
+	id: number
+	task_id: number
+	user_id: number
+	content: string
+	created_at: Date
 }
