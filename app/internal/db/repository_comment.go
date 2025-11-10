@@ -10,12 +10,12 @@ import (
 // CommentGet get comment by id
 func CommentGet(ctx context.Context, db *sql.DB, id int64) (*Comment, error) {
 	row := db.QueryRowContext(ctx, `
-		SELECT id, task_id, user_id, content, created_at
+		SELECT id, entity_id, entity_type, user_id, content, created_at
 		FROM comments
 		WHERE id = ?`, id)
 
 	var b Comment
-	if err := row.Scan(&b.ID, &b.TaskID, &b.UserID, &b.Content, &b.CreatedAt); err != nil {
+	if err := row.Scan(&b.ID, &b.EntityId, &b.EntityType, &b.UserID, &b.Content, &b.CreatedAt); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil // not found
 		}
@@ -27,9 +27,9 @@ func CommentGet(ctx context.Context, db *sql.DB, id int64) (*Comment, error) {
 // CommentCreate inserts a new comment and updates its ID.
 func CommentCreate(ctx context.Context, db *sql.DB, comment *Comment) error {
 	res, err := db.ExecContext(ctx, `
-		INSERT INTO comments (task_id, user_id, content)
-		VALUES (?, ?, ?)`,
-		comment.TaskID, comment.UserID, comment.Content)
+		INSERT INTO comments (entity_id, entity_type, user_id, content)
+		VALUES (?, ?, ?, ?)`,
+		comment.EntityId, comment.EntityType, comment.UserID, comment.Content)
 	if err != nil {
 		return err
 	}
@@ -49,12 +49,12 @@ func CommentDelete(ctx context.Context, db *sql.DB, id int64) error {
 }
 
 // CommentsList returns all comments belonging to a task.
-func CommentsList(ctx context.Context, db *sql.DB, taskID int64) ([]*Comment, error) {
+func CommentsList(ctx context.Context, db *sql.DB, entityId int64, entityType string) ([]*Comment, error) {
 	rows, err := db.QueryContext(ctx, `
-		SELECT id, task_id, user_id, content, created_at
+		SELECT id, entity_id, entity_type, user_id, content, created_at
 		FROM comments
-		WHERE task_id = ?
-		ORDER BY created_at ASC`, taskID)
+		WHERE entity_id = ? and entity_type = ?
+		ORDER BY created_at ASC`, entityId, entityType)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func CommentsList(ctx context.Context, db *sql.DB, taskID int64) ([]*Comment, er
 	var result []*Comment
 	for rows.Next() {
 		var b Comment
-		if err := rows.Scan(&b.ID, &b.TaskID, &b.UserID, &b.Content, &b.CreatedAt); err != nil {
+		if err := rows.Scan(&b.ID, &b.EntityId, &b.EntityType, &b.UserID, &b.Content, &b.CreatedAt); err != nil {
 			return nil, err
 		}
 		result = append(result, &b)
@@ -72,12 +72,12 @@ func CommentsList(ctx context.Context, db *sql.DB, taskID int64) ([]*Comment, er
 }
 
 // CommentsCount returns amount of comments for a task.
-func CommentsCount(ctx context.Context, db *sql.DB, taskID int64) (int, error) {
+func CommentsCount(ctx context.Context, db *sql.DB, entityId int64, entityType string) (int, error) {
 	row := db.QueryRowContext(ctx, `
 		SELECT count(*)
 		FROM comments
-		WHERE task_id = ?
-		ORDER BY created_at ASC`, taskID)
+		WHERE entity_id = ? and entity_type = ?
+		ORDER BY created_at ASC`, entityId, entityType)
 
 	var count int
 	if err := row.Scan(&count); err != nil {

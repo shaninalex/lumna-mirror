@@ -81,3 +81,12 @@ func UrlNumericParam(w http.ResponseWriter, r *http.Request, name string) int64 
 	}
 	return id
 }
+
+func UrlNumericQueryParam(w http.ResponseWriter, r *http.Request, name string) int64 {
+	id, err := strconv.ParseInt(r.URL.Query().Get(name), 10, 64)
+	if err != nil {
+		Error(w, http.StatusBadRequest, err)
+		return 0
+	}
+	return id
+}

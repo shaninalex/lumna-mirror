@@ -6,11 +6,12 @@ import (
 
 // Comment - task comment:w
 type Comment struct {
-	ID        int64     `db:"id"`
-	UserID    int64     `db:"user_id"`
-	TaskID    int64     `db:"project_id"`
-	Content   string    `db:"title"`
-	CreatedAt time.Time `db:"created_at"`
+	ID         int64     `db:"id"`
+	EntityId   int64     `db:"entity_id"`
+	EntityType string    `db:"entity_type"`
+	UserID     int64     `db:"user_id"`
+	Content    string    `db:"title"`
+	CreatedAt  time.Time `db:"created_at"`
 }
 
 // GetID - returns the id.

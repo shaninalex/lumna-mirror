@@ -9,6 +9,8 @@ import (
 	"gitlab.com/shaninalex/lumna/app/internal/utils"
 )
 
+const EntityTypeTask = "task"
+
 type Task struct {
 	ID          int64
 	UserID      int64
@@ -151,17 +153,18 @@ func getTaskRelations(ctx context.Context, task *Task) {
 }
 
 func getComments(ctx context.Context, task *Task) error {
-	comments, err := db.CommentsList(ctx, db.GetDb(ctx), task.ID)
+	comments, err := db.CommentsList(ctx, db.GetDb(ctx), task.ID, EntityTypeTask)
 	if err != nil {
 		return err
 	}
 	for _, comment := range comments {
 		task.Comments = append(task.Comments, &Comment{
-			Id:        comment.ID,
-			TaskId:    comment.TaskID,
-			UserId:    comment.UserID,
-			Content:   comment.Content,
-			CreatedAt: comment.CreatedAt,
+			Id:         comment.ID,
+			EntityId:   comment.EntityId,
+			EntityType: comment.EntityType,
+			UserId:     comment.UserID,
+			Content:    comment.Content,
+			CreatedAt:  comment.CreatedAt,
 		})
 	}
 
@@ -171,7 +174,7 @@ func getComments(ctx context.Context, task *Task) error {
 }
 
 func getCommentsCount(ctx context.Context, task *Task) error {
-	count, err := db.CommentsCount(ctx, db.GetDb(ctx), task.ID)
+	count, err := db.CommentsCount(ctx, db.GetDb(ctx), task.ID, EntityTypeTask)
 	if err != nil {
 		return err
 	}

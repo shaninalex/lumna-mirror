@@ -25,10 +25,7 @@ func (s *CommentHandler) Post(w http.ResponseWriter, r *http.Request) {
 		web.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	taskId := web.UrlNumericParam(w, r, "id")
 	userId := web.GetUserID(r)
-
-	comment.TaskId = taskId
 	comment.UserId = userId
 
 	if err = s.commentManager.CreateComment(r.Context(), comment); err != nil {
@@ -37,6 +34,13 @@ func (s *CommentHandler) Post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	web.Success(w, comment, "New comment created")
+}
+
+func (s *CommentHandler) List(w http.ResponseWriter, r *http.Request) {
+	entityId := web.UrlNumericQueryParam(w, r, "entity_id")
+	entityType := r.URL.Query().Get("entity_type")
+	comments := s.commentManager.ListComments(r.Context(), entityId, entityType)
+	web.Success(w, comments)
 }
 
 func (s *CommentHandler) Delete(w http.ResponseWriter, r *http.Request) {

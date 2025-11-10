@@ -1,8 +1,11 @@
-import { Component, inject, Input } from "@angular/core"
+import { Component, inject, Input, OnInit } from "@angular/core"
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms"
-import { Task, TaskCreateCommentAction } from "@client/entities/task"
+import { Comment, CommentCreateAction } from "@client/entities/comment"
+import { Task } from "@client/entities/task"
+import { selectUser } from "@client/entities/user"
 import { AppState } from "@client/shared/store"
 import { Store } from "@ngrx/store"
+import { filter, map, Observable } from "rxjs"
 
 @Component({
 	selector: "lu-task-comment-form",
@@ -17,20 +20,33 @@ import { Store } from "@ngrx/store"
 		</form>
 	`,
 })
-export class TaskCommentFormComponent {
-	private store: Store<AppState> = inject(Store<AppState>)
+export class TaskCommentFormComponent implements OnInit {
 	@Input() task: Task
+
 	form: FormGroup = new FormGroup({
 		message: new FormControl("", Validators.required),
 	})
 
-	save(): void {
-		this.store.dispatch(
-			TaskCreateCommentAction({
-				taskId: this.task.id,
-				message: this.form.value["message"],
-			})
+	private userId: number
+	private store: Store<AppState> = inject(Store<AppState>)
+
+	ngOnInit(): void {
+		this.store.select(selectUser).pipe(
+			filter(user => !!user),
+			map(user => (this.userId = user.id))
 		)
+	}
+
+	save(): void {
+		const comment: Comment = {
+			id: 0,
+			entity_id: this.task.id,
+			entity_type: "task",
+			user_id: this.userId,
+			content: this.form.value["message"],
+			created_at: new Date(),
+		}
+		this.store.dispatch(CommentCreateAction({ comment }))
 		this.form.reset()
 	}
 }
