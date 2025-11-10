@@ -5,6 +5,7 @@ import { Task, TaskDeleteAction, TaskDetailInput, TaskPatchAction } from "@clien
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms"
 import { DatePipe } from "@angular/common"
 import { TaskStatusDropdownComponent } from "./task-status-dropdown"
+import { TaskCommentFormComponent } from "./task-comment-form"
 import { Editor, NgxEditorComponent, NgxEditorMenuComponent } from "ngx-editor"
 import { UiService } from "@client/shared/ui/ui.service"
 import { ActivatedRoute, Router } from "@angular/router"
@@ -24,6 +25,7 @@ import { CommentsListComponent } from "@client/features/task/task-detail-feature
 		CdkMenuModule,
 		OverlayModule,
 		CommentsListComponent,
+		TaskCommentFormComponent,
 	],
 	styleUrl: "./task-detail-feature.component.scss",
 	template: ` <div class="fixed inset-0 cursor-pointer bg-black/20" (click)="close()"></div>
@@ -71,7 +73,11 @@ import { CommentsListComponent } from "@client/features/task/task-detail-feature
 							</div>
 						</form>
 
-						<hr class="my-4">
+						<hr class="my-4" />
+
+						<div class="my-4">
+							<lu-task-comment-form [task]="task" />
+						</div>
 
 						<lu-task-comments-list [task]="task" />
 					</div>
