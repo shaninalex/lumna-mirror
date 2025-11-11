@@ -1,3 +1,21 @@
+## 0.20.0 (2025-11-11)
+
+### Feat
+
+- comment separate entity and api resource
+- **ui**: comment form (wrong)
+- **ui**: comment list
+- comment manager
+- add comments migrations and models
+
+### Fix
+
+- **ui**: set task title input as focus on form open
+
+### Refactor
+
+- **ui**: fix comments creations and list, place components in a proper package
+
 ## 0.19.1 (2025-11-01)
 
 ### Fix
