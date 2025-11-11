@@ -32,6 +32,7 @@ Background image, color or gradient
 ### timer, pomodoro timer working mode
 
 In that mode - timer will stop and start via pomodoro timer logic and send browser notifications about it's current status
+Also may be OS notifications? There should be std utilities for windows and linux? 🤔
 
 ### cli mode
 

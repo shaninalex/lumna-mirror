@@ -1,5 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity"
 import { createReducer, on } from "@ngrx/store"
+import * as _ from "lodash"
 import { Task } from "./task.model"
 import { TaskDeleteSuccessAction, TaskListSetActions, TaskSetAction, TaskUpdateAction } from "./task.actions"
 

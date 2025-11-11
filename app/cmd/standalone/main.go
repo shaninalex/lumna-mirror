@@ -9,6 +9,7 @@ import (
 	"os"
 
 	authApp "gitlab.com/shaninalex/lumna/app/apps/auth"
+	commentApp "gitlab.com/shaninalex/lumna/app/apps/comment/api"
 	projectApp "gitlab.com/shaninalex/lumna/app/apps/project/api"
 	taskApp "gitlab.com/shaninalex/lumna/app/apps/task/api"
 	userApp "gitlab.com/shaninalex/lumna/app/apps/user/api"
@@ -50,6 +51,7 @@ func main() {
 	userApp.NewUserController(router)
 	projectApp.NewProjectController(router)
 	taskApp.NewTaskController(router)
+	commentApp.NewCommentController(router)
 
 	log.Printf("Configuration path: %s", os.Getenv("LUMNA_CONFIG_PATH"))
 	log.Printf("Database path: %s", dbPath)
