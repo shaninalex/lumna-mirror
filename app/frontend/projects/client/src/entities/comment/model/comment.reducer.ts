@@ -1,11 +1,11 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity"
 import { createReducer, on } from "@ngrx/store"
-import { CommentCreateSuccessAction } from "./comment.actions"
+import { CommentsSetAction } from "./comment.actions"
 import { Comment } from "./comment.model"
 
 export interface CommentsState extends EntityState<Comment> {}
 export const commentsAdapter: EntityAdapter<Comment> = createEntityAdapter<Comment>()
 export const commentsReducer = createReducer(
 	commentsAdapter.getInitialState(),
-	on(CommentCreateSuccessAction, (state, action) => commentsAdapter.addOne(action.payload, state))
+	on(CommentsSetAction, (state, action) => commentsAdapter.addMany(action.payload, state))
 )

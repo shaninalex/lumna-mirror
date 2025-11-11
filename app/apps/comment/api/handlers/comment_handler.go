@@ -37,7 +37,7 @@ func (s *CommentHandler) Post(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *CommentHandler) List(w http.ResponseWriter, r *http.Request) {
-	entityId := web.UrlNumericQueryParam(w, r, "entity_id")
+	entityId := web.UrlNumericQueryParam(r, "entity_id")
 	entityType := r.URL.Query().Get("entity_type")
 	comments := s.commentManager.ListComments(r.Context(), entityId, entityType)
 	web.Success(w, comments)

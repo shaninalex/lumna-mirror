@@ -17,9 +17,7 @@ export class CommentService extends CommonApiService {
 	}
 
 	public List(entity_id: number, entity_type: string): Observable<Comment[]> {
-		const params = new HttpParams()
-		params.append("enitity_id", entity_id)
-		params.append("entity_type", entity_type)
+		const params = new HttpParams().set("entity_id", entity_id).set("entity_type", entity_type)
 		return this.get<Comment[]>(tasksUrl.comments(), params).pipe(map(data => data.data))
 	}
 }
