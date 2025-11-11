@@ -23,25 +23,24 @@ type TaskDetailInput struct {
 }
 
 type TaskDto struct {
-	ID          int64       `json:"id"`
-	UserID      int64       `json:"user_id"`
-	ProjectID   int64       `json:"project_id"`
-	StatusID    int64       `json:"status_id"`
-	Title       string      `json:"title"`
-	Completed   bool        `json:"completed"`
-	Description string      `json:"description"`
-	ListIndex   float64     `json:"list_index"`
-	Code        string      `json:"code"`
-	Badges      []*BadgeDto `json:"badges"`
-	CreatedAt   time.Time   `json:"created_at"`
-	UpdatedAt   time.Time   `json:"updated_at"`
+	ID          int64     `json:"id"`
+	UserID      int64     `json:"user_id"`
+	ProjectID   int64     `json:"project_id"`
+	StatusID    int64     `json:"status_id"`
+	Title       string    `json:"title"`
+	Completed   bool      `json:"completed"`
+	Description string    `json:"description"`
+	ListIndex   float64   `json:"list_index"`
+	Code        string    `json:"code"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+
+	// related structures
+	Badges   []*domain.Badge   `json:"badges"`
+	Comments []*domain.Comment `json:"comments"`
 }
 
 func ToTaskDto(task *domain.Task) *TaskDto {
-	badges := make([]*BadgeDto, len(task.Badges))
-	for i, badge := range task.Badges {
-		badges[i] = NewBadgeDto(badge)
-	}
 	out := &TaskDto{
 		ID:        task.ID,
 		UserID:    task.UserID,
@@ -51,9 +50,11 @@ func ToTaskDto(task *domain.Task) *TaskDto {
 		Completed: task.Completed,
 		ListIndex: task.ListIndex,
 		Code:      task.Code,
-		Badges:    badges,
 		CreatedAt: task.CreatedAt,
 		UpdatedAt: task.UpdatedAt,
+
+		Badges:   task.Badges,
+		Comments: task.Comments,
 	}
 
 	if task.Description != nil {

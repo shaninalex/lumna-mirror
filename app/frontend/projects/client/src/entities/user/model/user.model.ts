@@ -1,5 +1,5 @@
 export interface UserModel {
-	id: string
+	id: number
 	code: string
 	email: string
 	active: boolean
