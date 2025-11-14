@@ -30,7 +30,7 @@ import { CommentFormComponent, CommentsListComponent } from "@client/entities/co
 	template: ` <div class="fixed inset-0 cursor-pointer bg-black/20" (click)="close()"></div>
 		<div class="task-detail-feature">
 			<div class="card">
-				<div class="space-between flex items-center border-b border-gray-300 p-4">
+				<div class="space-between flex items-center border-b border-gray-300 p-4  dark:border-gray-600">
 					<lu-task-status-dropdown [task]="task" />
 					<span class="flex-grow"></span>
 					<div class="flex items-center gap-2">
