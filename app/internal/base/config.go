@@ -1,11 +1,9 @@
 package base
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path"
-	"path/filepath"
 	"time"
 
 	"github.com/spf13/viper"
@@ -45,54 +43,23 @@ func (s *Config) init() {
 	s.startTime = time.Now()
 	s.v = viper.New()
 
-	if env := os.Getenv("LUMNA_CONFIG_PATH"); env != "" {
-		if fi, err := os.Stat(env); err == nil && fi.IsDir() {
-			// if config file does not exists
-			if _, err := os.Stat(path.Join(env, "config.yaml")); err != nil {
-				CreateDefaultConfig(path.Join(env, "config.yaml"))
-			}
-			s.ReadConfig(env)
-			return
-		} else if err != nil {
-			panic(fmt.Errorf("LUMNA_CONFIG_PATH invalid: %w", err))
-		} else {
-			panic(fmt.Errorf("LUMNA_CONFIG_PATH is not a directory: %s", env))
-		}
-	}
-
-	// Use standard $HOME/.config/lumna path if env was not set.
-	home, err := os.UserHomeDir()
-	if err != nil {
-		panic(err)
-	}
-
-	configPath := filepath.Join(home, dir.ConfigDirectory)
-	if fi, err := os.Stat(configPath); err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			panic(fmt.Errorf("standard config directory does not exist: %s", configPath))
-		}
-		panic(fmt.Errorf("cannot stat standard config directory %s: %w", configPath, err))
-	} else if !fi.IsDir() {
-		panic(fmt.Errorf("standard config path is not a directory: %s", configPath))
-	}
-
-	// if config file does not exists
-	if _, err := os.Stat(path.Join(configPath, "config.yaml")); err != nil {
-		CreateDefaultConfig(path.Join(configPath, "config.yaml"))
-	}
+	configPath := os.Getenv("LUMNA_CONFIG_PATH")
 
 	s.ReadConfig(configPath)
 }
 
-func (s *Config) ReadConfig(path string) {
-	s.v.AddConfigPath(path)
-	s.v.SetConfigType("yaml")
-	s.v.SetConfigName("config")
+func (s *Config) ReadConfig(configPath string) {
+	if _, err := os.Stat(configPath); err != nil {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			panic(err)
+		}
+		configPath = path.Join(home, dir.ConfigDirectory, "config.yaml")
+	}
 
-	err := s.v.ReadInConfig()
-
-	if err != nil {
-		panic(fmt.Errorf("Can't open config file. %w \n", err))
+	s.v.SetConfigFile(configPath)
+	if err := s.v.ReadInConfig(); err != nil {
+		panic(fmt.Errorf("Can't open config file %s. ERROR: %w \n", configPath, err))
 	}
 }
 func (s *Config) Env() string {
