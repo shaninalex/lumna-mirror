@@ -5,8 +5,8 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/apps/user/adapter"
 	"gitlab.com/shaninalex/lumna/app/domain"
-	"gitlab.com/shaninalex/lumna/app/internal/token"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/token"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 // UserHandler handles HTTP requests related to user accounts.

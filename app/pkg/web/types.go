@@ -1,7 +1,7 @@
 package web
 
 import (
-	"gitlab.com/shaninalex/lumna/app/internal/apperrors"
+	"gitlab.com/shaninalex/lumna/app/pkg/apperrors"
 )
 
 // APIResponse standard response structure

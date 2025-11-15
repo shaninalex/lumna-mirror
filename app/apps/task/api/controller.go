@@ -2,7 +2,7 @@ package api
 
 import (
 	"gitlab.com/shaninalex/lumna/app/apps/task/api/handlers"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 // TaskController - task controller.

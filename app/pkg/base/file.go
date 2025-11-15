@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"gitlab.com/shaninalex/lumna/app/internal/dir"
-	"gitlab.com/shaninalex/lumna/app/internal/utils"
+	"gitlab.com/shaninalex/lumna/app/pkg/dir"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gopkg.in/yaml.v2"
 )
 

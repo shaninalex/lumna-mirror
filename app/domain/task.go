@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	"gitlab.com/shaninalex/lumna/app/internal/db"
-	"gitlab.com/shaninalex/lumna/app/internal/utils"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 )
 
 const EntityTypeTask = "task"

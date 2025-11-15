@@ -4,7 +4,7 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
-		"build": "ng build --configuration production --output-path ../cmd/standalone/web/",
+		"build": "ng build --configuration production --output-path ../cmd/web/embed/",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test"
 	},

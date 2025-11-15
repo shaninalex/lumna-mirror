@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"gitlab.com/shaninalex/lumna/app/internal/base"
-	"gitlab.com/shaninalex/lumna/app/internal/token"
+	"gitlab.com/shaninalex/lumna/app/pkg/base"
+	"gitlab.com/shaninalex/lumna/app/pkg/token"
 )
 
 type TokenMiddleware struct {

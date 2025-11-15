@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"gitlab.com/shaninalex/lumna/app/internal/apperrors"
-	"gitlab.com/shaninalex/lumna/app/internal/base"
+	"gitlab.com/shaninalex/lumna/app/pkg/apperrors"
+	"gitlab.com/shaninalex/lumna/app/pkg/base"
 )
 
 // ReturnJSON writes JSON response

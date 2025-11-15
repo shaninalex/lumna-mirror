@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/shaninalex/lumna/app/internal/utils"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 )
 
 // UserGetByField get user by field

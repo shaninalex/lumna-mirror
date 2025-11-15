@@ -3,8 +3,8 @@ package web
 import (
 	"database/sql"
 
-	"gitlab.com/shaninalex/lumna/app/internal/base"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/pkg/base"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 )
 
 // DefaultRouter - default router.

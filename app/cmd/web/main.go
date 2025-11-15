@@ -6,16 +6,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	authApp "gitlab.com/shaninalex/lumna/app/apps/auth"
 	commentApp "gitlab.com/shaninalex/lumna/app/apps/comment/api"
 	projectApp "gitlab.com/shaninalex/lumna/app/apps/project/api"
 	taskApp "gitlab.com/shaninalex/lumna/app/apps/task/api"
 	userApp "gitlab.com/shaninalex/lumna/app/apps/user/api"
-	"gitlab.com/shaninalex/lumna/app/internal/base"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/base"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 	"gitlab.com/shaninalex/lumna/app/startup"
 )
 
@@ -53,8 +52,10 @@ func main() {
 	taskApp.NewTaskController(router)
 	commentApp.NewCommentController(router)
 
-	log.Printf("Configuration path: %s", os.Getenv("LUMNA_CONFIG_PATH"))
-	log.Printf("Database path: %s", dbPath)
+	if base.IsDebug() {
+		log.Printf("Configuration path: %s", config.GetConfigPath())
+		log.Printf("Database path: %s", dbPath)
+	}
 
 	port := config.Int("port")
 	if err = router.Run(port); err != nil && !errors.Is(err, http.ErrServerClosed) {

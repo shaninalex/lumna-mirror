@@ -4,8 +4,8 @@ import (
 	"path"
 	"strings"
 
-	"gitlab.com/shaninalex/lumna/app/internal/base"
-	"gitlab.com/shaninalex/lumna/app/internal/dir"
+	"gitlab.com/shaninalex/lumna/app/pkg/base"
+	"gitlab.com/shaninalex/lumna/app/pkg/dir"
 )
 
 type DatabaseProvider string

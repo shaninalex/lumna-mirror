@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/spf13/viper"
-	"gitlab.com/shaninalex/lumna/app/internal/dir"
+	"gitlab.com/shaninalex/lumna/app/pkg/dir"
 )
 
 const EnvProduction = "production"
@@ -31,8 +31,9 @@ func NewConfig() *Config {
 }
 
 type Config struct {
-	v         *viper.Viper
-	startTime time.Time
+	v          *viper.Viper
+	startTime  time.Time
+	configPath string
 }
 
 func (s *Config) init() {
@@ -44,6 +45,7 @@ func (s *Config) init() {
 	s.v = viper.New()
 
 	configPath := os.Getenv("LUMNA_CONFIG_PATH")
+	s.configPath = configPath
 
 	s.ReadConfig(configPath)
 }
@@ -55,7 +57,7 @@ func (s *Config) ReadConfig(configPath string) {
 			panic(err)
 		}
 		configPath = path.Join(home, dir.ConfigDirectory, "config.yaml")
-
+		s.configPath = configPath
 		if _, err := os.Stat(configPath); err != nil {
 			// create default config
 			if err = CreateDefaultConfig(configPath); err != nil {
@@ -83,6 +85,10 @@ func (s *Config) Int(param string) int {
 
 func (s *Config) List(param string) []string {
 	return s.v.GetStringSlice(param)
+}
+
+func (s *Config) GetConfigPath() string {
+	return s.configPath
 }
 
 // IsDebug - return true if environment is in development mode

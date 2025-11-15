@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 )
 
 type Comment struct {

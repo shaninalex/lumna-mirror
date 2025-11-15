@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"golang.org/x/crypto/bcrypt"
 )
 

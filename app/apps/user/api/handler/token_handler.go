@@ -6,7 +6,7 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/apps/user/adapter"
 	"gitlab.com/shaninalex/lumna/app/domain"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 // TokenHandler handles HTTP requests related to user tokens.

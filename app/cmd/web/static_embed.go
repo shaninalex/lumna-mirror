@@ -9,7 +9,7 @@ import (
 	"log"
 )
 
-//go:embed all:web/browser
+//go:embed all:embed/browser
 var webFS embed.FS
 
 // GetStaticFS embedded static files

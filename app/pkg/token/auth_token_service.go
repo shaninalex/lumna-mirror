@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/domain"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 )
 
 type ApiAuthService interface {

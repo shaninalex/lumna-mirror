@@ -2,7 +2,7 @@ package auth
 
 import (
 	"gitlab.com/shaninalex/lumna/app/apps/auth/handlers"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 func NewAuthController(router *web.Router) {
