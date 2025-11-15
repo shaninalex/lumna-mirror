@@ -10,7 +10,7 @@ import (
 
 const (
 	// ConfigDirectory - config directory
-	// Directory for config yaml file, may be some credentials files or certs
+	//  for config yaml file, may be some credentials files or certs
 	ConfigDirectory = ".config/lumna"
 
 	// ShareDirectory - user owned directories for db and uploads
@@ -28,7 +28,7 @@ func DefaultDatabasePath() string {
 	if runtime.GOOS == "windows" {
 		return ""
 	}
-	return ".local/state/lumna/lumna.db"
+	return path.Join(ShareDirectory, "lumna.db")
 }
 
 // MakeProjectDirectories - creates directories used by project in user home folder

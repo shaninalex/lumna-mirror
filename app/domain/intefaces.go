@@ -1,10 +1,10 @@
-package db
+package domain
 
 import (
 	"time"
 )
 
-// Identifiable each database model has ID and can set/get its
+// Identifiable each database model has Id and can set/get its
 type Identifiable interface {
 	GetID() int64
 	SetID(int64)

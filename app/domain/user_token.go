@@ -2,16 +2,39 @@ package domain
 
 import (
 	"context"
+	"time"
 
 	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
+
+type UserToken struct {
+	ID               int64      `db:"id"`
+	UserID           int64      `db:"user_id"`
+	Device           string     `db:"device"`
+	RefreshToken     string     `db:"refresh_token"`
+	RefreshExpiresAt time.Time  `db:"refresh_expires_at"`
+	Revoked          bool       `db:"revoked"`
+	RevokedAt        *time.Time `db:"revoked_at"`
+	CreatedAt        time.Time  `db:"created_at"`
+}
+
+// GetID - returns the id.
+func (s *UserToken) GetID() int64 { return s.ID }
+
+// SetID - sets the id.
+func (s *UserToken) SetID(id int64) { s.ID = id }
+
+// IsExpired - check is token expired
+func (s *UserToken) IsExpired() bool {
+	return s.RefreshExpiresAt.Before(time.Now())
+}
 
 // UserTokenManager defines the interface for managing user tokens.
 // It abstracts operations like listing, deleting, or revoking tokens.
 // Implementations should not care about how tokens are stored.
 type UserTokenManager interface {
 	// List returns all tokens associated with a specific user.
-	List(ctx context.Context, userID int64) ([]*db.UserToken, error)
+	List(ctx context.Context, userID int64) ([]*UserToken, error)
 
 	// Delete removes a token record permanently from the database.
 	Delete(ctx context.Context, userID, tokenID int64) error
@@ -32,8 +55,8 @@ func NewUserTokenService() *UserTokenService {
 
 // List fetches all tokens for a given user from the database.
 // It calls the repositories layer and returns any database errors.
-func (u UserTokenService) List(ctx context.Context, userID int64) ([]*db.UserToken, error) {
-	tokens, err := db.GetTokens(ctx, db.GetDb(ctx), userID)
+func (u UserTokenService) List(ctx context.Context, userID int64) ([]*UserToken, error) {
+	tokens, err := GetTokens(ctx, db.GetDb(ctx), userID)
 	if err != nil {
 		return nil, err
 	}
@@ -43,11 +66,11 @@ func (u UserTokenService) List(ctx context.Context, userID int64) ([]*db.UserTok
 // Delete removes a token for a specific user from the database.
 // Typically used for logout or administrative token cleanup.
 func (u UserTokenService) Delete(ctx context.Context, userID, tokenID int64) error {
-	return db.DeleteToken(ctx, db.GetDb(ctx), userID, tokenID)
+	return DeleteToken(ctx, db.GetDb(ctx), userID, tokenID)
 }
 
 // Revoke invalidates a token without deleting it from the database.
 // Useful for forcing logouts or invalidating refresh tokens.
 func (u UserTokenService) Revoke(ctx context.Context, userID, tokenID int64) error {
-	return db.RevokeToken(ctx, db.GetDb(ctx), userID, tokenID)
+	return RevokeToken(ctx, db.GetDb(ctx), userID, tokenID)
 }

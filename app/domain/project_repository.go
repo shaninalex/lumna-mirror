@@ -1,4 +1,4 @@
-package db
+package domain
 
 import (
 	"context"
@@ -11,7 +11,7 @@ func ProjectGetByID(ctx context.Context, db *sql.DB, id int64) (*Project, error)
 	var project Project
 	query := `SELECT id, user_id, title, code, created_at, updated_at FROM projects WHERE id = ?`
 	row := db.QueryRowContext(ctx, query, id)
-	if err := row.Scan(&project.ID, &project.UserID, &project.Title, &project.Code, &project.CreatedAt, &project.UpdatedAt); err != nil {
+	if err := row.Scan(&project.Id, 0, &project.Title, &project.Code, &project.CreatedAt, &project.UpdatedAt); err != nil {
 		return nil, err
 	}
 	return &project, nil
@@ -20,7 +20,7 @@ func ProjectGetByID(ctx context.Context, db *sql.DB, id int64) (*Project, error)
 // ProjectSave save project
 func ProjectSave(ctx context.Context, db *sql.DB, project *Project) error {
 	query := `INSERT INTO projects (user_id, title, code) VALUES (?, ?, ?)`
-	result, err := db.ExecContext(ctx, query, &project.UserID, &project.Title, &project.Code)
+	result, err := db.ExecContext(ctx, query, &project.UserId, &project.Title, &project.Code)
 	if err != nil {
 		return err
 	}
@@ -28,7 +28,7 @@ func ProjectSave(ctx context.Context, db *sql.DB, project *Project) error {
 	if err != nil {
 		return err
 	}
-	project.SetID(id)
+	project.Id = id
 	return err
 }
 
@@ -47,7 +47,7 @@ func ProjectList(ctx context.Context, db *sql.DB) ([]*Project, error) {
 	projects := make([]*Project, 0)
 	for rows.Next() {
 		project := &Project{}
-		if err = rows.Scan(&project.ID, &project.UserID, &project.Title, &project.Code, &project.CreatedAt, &project.UpdatedAt); err != nil {
+		if err = rows.Scan(&project.Id, &project.UserId, &project.Title, &project.Code, &project.CreatedAt, &project.UpdatedAt); err != nil {
 			return nil, err
 		}
 		projects = append(projects, project)
@@ -64,7 +64,7 @@ func ProjectUpdate(ctx context.Context, db *sql.DB, project *Project) error {
 			updated_at = CURRENT_TIMESTAMP
 		WHERE id = ?
 	`
-	result, err := db.ExecContext(ctx, query, project.Title, project.ID)
+	result, err := db.ExecContext(ctx, query, project.Title, project.Id)
 	if err != nil {
 		return err
 	}

@@ -1,4 +1,4 @@
-package db
+package domain
 
 import (
 	"context"
@@ -7,18 +7,18 @@ import (
 )
 
 // TaskStatusByID get task status by id
-func TaskStatusByID(ctx context.Context, db *sql.DB, id int64) (*TaskStatus, error) {
+func TaskStatusByID(ctx context.Context, db *sql.DB, id int64) (*Status, error) {
 	q := `select id, project_id, title, list_index, config from statuses where id = ?`
 	row := db.QueryRowContext(ctx, q, id)
-	s := &TaskStatus{}
-	if err := row.Scan(&s.ID, &s.ProjectID, &s.Title, &s.ListIndex, &s.Config); err != nil {
+	s := &Status{}
+	if err := row.Scan(&s.ID, &s.ProjectId, &s.Title, &s.ListIndex, &s.Config); err != nil {
 		return nil, err
 	}
 	return s, nil
 }
 
 // TaskStatusListByProject get task status list by project code
-func TaskStatusListByProject(ctx context.Context, db *sql.DB, id int64) ([]*TaskStatus, error) {
+func TaskStatusListByProject(ctx context.Context, db *sql.DB, id int64) ([]*Status, error) {
 	q := `
 	select s.id, s.project_id, s.title, s.list_index, s.config 
 	from statuses s
@@ -30,10 +30,10 @@ func TaskStatusListByProject(ctx context.Context, db *sql.DB, id int64) ([]*Task
 	if err != nil {
 		return nil, err
 	}
-	statuses := []*TaskStatus{}
+	statuses := []*Status{}
 	for rows.Next() {
-		s := &TaskStatus{}
-		if err = rows.Scan(&s.ID, &s.ProjectID, &s.Title, &s.ListIndex, &s.Config); err != nil {
+		s := &Status{}
+		if err = rows.Scan(&s.ID, &s.ProjectId, &s.Title, &s.ListIndex, &s.Config); err != nil {
 			return nil, err
 		}
 		statuses = append(statuses, s)
@@ -41,12 +41,12 @@ func TaskStatusListByProject(ctx context.Context, db *sql.DB, id int64) ([]*Task
 	return statuses, nil
 }
 
-func TaskStatusCreate(ctx context.Context, db *sql.DB, status *TaskStatus) (*TaskStatus, error) {
+func TaskStatusCreate(ctx context.Context, db *sql.DB, status *Status) (*Status, error) {
 	q := `
 	insert into statuses (project_id, title, list_index)
 	values (?, ?, ?)
 	`
-	result, err := db.ExecContext(ctx, q, status.ProjectID, status.Title, status.ListIndex)
+	result, err := db.ExecContext(ctx, q, status.ProjectId, status.Title, status.ListIndex)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func TaskStatusDelete(ctx context.Context, db *sql.DB, id int64) error {
 	return nil
 }
 
-func TaskStatusUpdate(ctx context.Context, db *sql.DB, status *TaskStatus) error {
+func TaskStatusUpdate(ctx context.Context, db *sql.DB, status *Status) error {
 	query := `
 		UPDATE statuses
 		SET 
@@ -84,7 +84,7 @@ func TaskStatusUpdate(ctx context.Context, db *sql.DB, status *TaskStatus) error
 		WHERE id = ?
 	`
 	_, err := db.ExecContext(ctx, query,
-		status.ProjectID,
+		status.ProjectId,
 		status.Title,
 		status.ListIndex,
 		status.Config,

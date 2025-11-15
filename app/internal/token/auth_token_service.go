@@ -3,6 +3,7 @@ package token
 import (
 	"context"
 
+	"gitlab.com/shaninalex/lumna/app/domain"
 	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
 
@@ -14,7 +15,7 @@ type ApiAuthService interface {
 	Logout(ctx context.Context, userID int64, refreshToken string) error
 
 	// ListSessions returns all refresh tokens for a user
-	ListSessions(ctx context.Context, userID int64) ([]*db.UserToken, error)
+	ListSessions(ctx context.Context, userID int64) ([]*domain.UserToken, error)
 
 	// RefreshAccessToken validates refresh token and returns a new access token
 	RefreshAccessToken(ctx context.Context, refreshToken string) (*AccessTokenResult, error)
@@ -43,13 +44,13 @@ func (s *AuthService) Login(ctx context.Context, userID int64, device string) (*
 		return nil, nil, err
 	}
 
-	tokenModel := &db.UserToken{
+	tokenModel := &domain.UserToken{
 		UserID:           userID,
 		Device:           device,
 		RefreshToken:     refreshResults.Token,
 		RefreshExpiresAt: refreshResults.ExpiresAt,
 	}
-	err = db.SaveToken(ctx, db.GetDb(ctx), tokenModel)
+	err = domain.SaveToken(ctx, db.GetDb(ctx), tokenModel)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -58,11 +59,11 @@ func (s *AuthService) Login(ctx context.Context, userID int64, device string) (*
 
 func (s *AuthService) Logout(ctx context.Context, userID int64, refreshToken string) error {
 	connection := db.GetDb(ctx)
-	return db.DeleteTokenByRefreshString(ctx, connection, userID, refreshToken)
+	return domain.DeleteTokenByRefreshString(ctx, connection, userID, refreshToken)
 }
 
-func (s *AuthService) ListSessions(ctx context.Context, userID int64) ([]*db.UserToken, error) {
-	tokens, err := db.GetTokens(ctx, db.GetDb(ctx), userID)
+func (s *AuthService) ListSessions(ctx context.Context, userID int64) ([]*domain.UserToken, error) {
+	tokens, err := domain.GetTokens(ctx, db.GetDb(ctx), userID)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +74,7 @@ func (s *AuthService) RefreshAccessToken(ctx context.Context, refreshToken strin
 	if _, err := s.refreshTokenService.Validate(refreshToken); err != nil {
 		return nil, err
 	}
-	token, err := db.GetTokenByField(ctx, db.GetDb(ctx), "refresh_token", refreshToken)
+	token, err := domain.GetTokenByField(ctx, db.GetDb(ctx), "refresh_token", refreshToken)
 	if err != nil {
 		return nil, err
 	}
