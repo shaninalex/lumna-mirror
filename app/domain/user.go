@@ -17,7 +17,7 @@ type (
 
 	// User user model
 	User struct {
-		ID           int64
+		Id           int64
 		Email        string
 		Settings     string
 		Active       bool
@@ -31,10 +31,10 @@ type (
 )
 
 // GetID - returns the id.
-func (s *User) GetID() int64 { return s.ID }
+func (s *User) GetID() int64 { return s.Id }
 
 // SetID - sets the id.
-func (s *User) SetID(id int64) { s.ID = id }
+func (s *User) SetID(id int64) { s.Id = id }
 
 // IsActive - checks if it is active.
 func (s *User) IsActive() bool { return s.Active }
@@ -163,7 +163,7 @@ func (s UserService) CreateUser(ctx context.Context, email, rawPassword string) 
 	}
 
 	return &User{
-		ID:        user.ID,
+		Id:        user.Id,
 		Email:     user.Email,
 		Settings:  user.Settings,
 		Active:    user.Active,

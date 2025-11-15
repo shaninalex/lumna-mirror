@@ -8,7 +8,7 @@ import (
 )
 
 type UserToken struct {
-	ID               int64      `db:"id"`
+	Id               int64      `db:"id"`
 	UserID           int64      `db:"user_id"`
 	Device           string     `db:"device"`
 	RefreshToken     string     `db:"refresh_token"`
@@ -19,10 +19,10 @@ type UserToken struct {
 }
 
 // GetID - returns the id.
-func (s *UserToken) GetID() int64 { return s.ID }
+func (s *UserToken) GetID() int64 { return s.Id }
 
 // SetID - sets the id.
-func (s *UserToken) SetID(id int64) { s.ID = id }
+func (s *UserToken) SetID(id int64) { s.Id = id }
 
 // IsExpired - check is token expired
 func (s *UserToken) IsExpired() bool {

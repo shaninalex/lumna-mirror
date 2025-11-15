@@ -34,7 +34,7 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx = context.WithValue(ctx, "device", r.UserAgent())
-	accessToken, refreshToken, err := s.authService.Login(ctx, user.ID, r.UserAgent())
+	accessToken, refreshToken, err := s.authService.Login(ctx, user.Id, r.UserAgent())
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err)
 		return

@@ -5,7 +5,7 @@ import (
 )
 
 type BadgeDto struct {
-	ID        int64              `json:"id"`
+	Id        int64              `json:"id"`
 	Title     string             `json:"title"`
 	ProjectID int64              `json:"projectId"`
 	Config    domain.BadgeConfig `json:"config"`
@@ -13,7 +13,7 @@ type BadgeDto struct {
 
 func NewBadgeDto(badge *domain.Badge) *BadgeDto {
 	return &BadgeDto{
-		ID:        badge.ID,
+		Id:        badge.Id,
 		Title:     badge.Title,
 		ProjectID: badge.ProjectID,
 		Config:    badge.Config,

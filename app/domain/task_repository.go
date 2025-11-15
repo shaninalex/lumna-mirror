@@ -24,7 +24,7 @@ func TaskList(ctx context.Context, db *sql.DB, projectID int64) ([]*Task, error)
 	tasks := make([]*Task, 0)
 	for rows.Next() {
 		t := &Task{}
-		if err = rows.Scan(&t.ID, &t.UserID, &t.ProjectID, &t.StatusID, &t.Title, &t.Code, &t.Completed, &t.Description, &t.ListIndex, &t.CreatedAt, &t.UpdatedAt); err != nil {
+		if err = rows.Scan(&t.Id, &t.UserID, &t.ProjectID, &t.StatusID, &t.Title, &t.Code, &t.Completed, &t.Description, &t.ListIndex, &t.CreatedAt, &t.UpdatedAt); err != nil {
 			return nil, err
 		}
 		tasks = append(tasks, t)
@@ -66,7 +66,7 @@ func TaskGet(ctx context.Context, db *sql.DB, id int64) (*Task, error) {
 	`
 	row := db.QueryRowContext(ctx, query, id)
 	t := &Task{}
-	if err := row.Scan(&t.ID, &t.UserID, &t.ProjectID, &t.StatusID, &t.Title, &t.Code, &t.Completed, &t.Description, &t.ListIndex, &t.CreatedAt, &t.UpdatedAt); err != nil {
+	if err := row.Scan(&t.Id, &t.UserID, &t.ProjectID, &t.StatusID, &t.Title, &t.Code, &t.Completed, &t.Description, &t.ListIndex, &t.CreatedAt, &t.UpdatedAt); err != nil {
 		return nil, err
 	}
 	return t, nil
@@ -78,7 +78,7 @@ func TaskSave(ctx context.Context, db *sql.DB, t *Task) error {
 		insert into tasks (user_id, project_id, status_id, title, code, completed, description, list_index)
 		values (?, ?, ?, ?, ?, ?, ?, ?);
 	`
-	result, err := db.ExecContext(ctx, query, &t.ID, &t.ProjectID, &t.StatusID, &t.Title, &t.Code, &t.Completed, &t.Description, &t.ListIndex)
+	result, err := db.ExecContext(ctx, query, &t.Id, &t.ProjectID, &t.StatusID, &t.Title, &t.Code, &t.Completed, &t.Description, &t.ListIndex)
 	if err != nil {
 		return err
 	}
@@ -86,7 +86,7 @@ func TaskSave(ctx context.Context, db *sql.DB, t *Task) error {
 	if err != nil {
 		return err
 	}
-	t.ID = id
+	t.Id = id
 	return nil
 }
 

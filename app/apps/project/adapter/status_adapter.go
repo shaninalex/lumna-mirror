@@ -6,7 +6,7 @@ import (
 
 // TaskStatusDto - task status dto.
 type TaskStatusDto struct {
-	ID        int64                    `json:"id"`
+	Id        int64                    `json:"id"`
 	Title     string                   `json:"title"`
 	ProjectId int64                    `json:"project_id"`
 	Index     int64                    `json:"index"`
@@ -16,7 +16,7 @@ type TaskStatusDto struct {
 // NewTaskStatusDto - new issue status dto.
 func NewTaskStatusDto(i *domain.Status) *TaskStatusDto {
 	return &TaskStatusDto{
-		ID:        i.ID,
+		Id:        i.Id,
 		Title:     i.Title,
 		Index:     i.ListIndex,
 		ProjectId: i.ProjectId,

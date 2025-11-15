@@ -1,5 +1,5 @@
 import { Component, inject, Input, OnInit } from "@angular/core"
-import { Comment, CommentComponent, CommentsListAction, selectComments } from "@client/entities/comment"
+import { Comment, CommentComponent, CommentListAction, selectComments } from "@client/entities/comment"
 import { Store } from "@ngrx/store"
 import { AppState } from "@client/shared/store"
 import { Observable } from "rxjs"
@@ -28,7 +28,7 @@ export class CommentsListComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.store.dispatch(
-			CommentsListAction({
+			CommentListAction({
 				entity_id: this.entity_id,
 				entity_type: "task",
 			})

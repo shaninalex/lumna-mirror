@@ -17,7 +17,7 @@ func UserGetByField(ctx context.Context, db *sql.DB, field string, value any) (*
 	FROM users WHERE %s = ? LIMIT 1
 	`, field)
 	row := db.QueryRowContext(ctx, query, value)
-	err := row.Scan(&user.ID, &user.Email, &user.Settings, &user.Active, &user.State, &user.Code, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)
+	err := row.Scan(&user.Id, &user.Email, &user.Settings, &user.Active, &user.State, &user.Code, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, sql.ErrNoRows

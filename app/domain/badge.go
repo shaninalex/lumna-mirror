@@ -18,7 +18,7 @@ import (
 )
 
 type Badge struct {
-	ID        int64       `json:"id"`
+	Id        int64       `json:"id"`
 	ProjectID int64       `json:"project_id"`
 	Title     string      `json:"title"`
 	Config    BadgeConfig `json:"config"`

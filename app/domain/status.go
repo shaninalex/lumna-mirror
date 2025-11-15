@@ -8,7 +8,7 @@ import (
 )
 
 type Status struct {
-	ID        int64   `db:"id" json:"id"`
+	Id        int64   `db:"id" json:"id"`
 	Title     string  `db:"title" json:"title"`
 	ListIndex int64   `db:"list_index" json:"list_index"`
 	ProjectId int64   `db:"project_id" json:"project_id"`
@@ -16,10 +16,10 @@ type Status struct {
 }
 
 // GetID - returns the id.
-func (s *Status) GetID() int64 { return s.ID }
+func (s *Status) GetID() int64 { return s.Id }
 
 // SetID - sets the id.
-func (s *Status) SetID(id int64) { s.ID = id }
+func (s *Status) SetID(id int64) { s.Id = id }
 
 // SaveConfig - saves the config.
 func (s *Status) SaveConfig(cnf TaskStatusConfig) {
@@ -96,7 +96,7 @@ func (s StatusService) Get(ctx context.Context, id int64) (*Status, error) {
 		return nil, err
 	}
 	return &Status{
-		ID:        status.ID,
+		Id:        status.Id,
 		Title:     status.Title,
 		ListIndex: status.ListIndex,
 		ProjectId: status.ProjectId,
@@ -112,7 +112,7 @@ func (s StatusService) ProjectStatuses(ctx context.Context, projectId int64) ([]
 	statuses := make([]*Status, len(dbStatuses))
 	for i, status := range dbStatuses {
 		statuses[i] = &Status{
-			ID:        status.ID,
+			Id:        status.Id,
 			Title:     status.Title,
 			ListIndex: status.ListIndex,
 			ProjectId: status.ProjectId,

@@ -18,7 +18,7 @@ func GetTokenByField(ctx context.Context, db *sql.DB, field string, value any) (
 	`, field)
 	row := db.QueryRowContext(ctx, query, value)
 	err := row.Scan(
-		&token.ID,
+		&token.Id,
 		&token.UserID,
 		&token.Device,
 		&token.RefreshToken,
@@ -84,7 +84,7 @@ func GetTokens(ctx context.Context, db *sql.DB, userID int64) ([]*UserToken, err
 	for rows.Next() {
 		token := &UserToken{}
 		if err = rows.Scan(
-			&token.ID,
+			&token.Id,
 			&token.UserID,
 			&token.Device,
 			&token.RefreshToken,
@@ -100,7 +100,7 @@ func GetTokens(ctx context.Context, db *sql.DB, userID int64) ([]*UserToken, err
 	return tokens, nil
 }
 
-// DeleteToken removes a specific token for a user by token ID.
+// DeleteToken removes a specific token for a user by token Id.
 func DeleteToken(ctx context.Context, db *sql.DB, userID, id int64) error {
 	query := `
 		DELETE FROM 
@@ -125,7 +125,7 @@ func DeleteToken(ctx context.Context, db *sql.DB, userID, id int64) error {
 	return nil
 }
 
-// DeleteTokenByRefreshString removes a specific token for a user by token ID.
+// DeleteTokenByRefreshString removes a specific token for a user by token Id.
 func DeleteTokenByRefreshString(ctx context.Context, db *sql.DB, userID int64, refreshToken string) error {
 	query := `
 		DELETE FROM 
@@ -149,7 +149,7 @@ func DeleteTokenByRefreshString(ctx context.Context, db *sql.DB, userID int64, r
 	return nil
 }
 
-// RevokeToken removes a specific token for a user by token ID.
+// RevokeToken removes a specific token for a user by token Id.
 func RevokeToken(ctx context.Context, db *sql.DB, userID, tokenID int64) error {
 	query := `
 		UPDATE users_tokens

@@ -12,7 +12,7 @@ import (
 const EntityTypeTask = "task"
 
 type Task struct {
-	ID          int64
+	Id          int64
 	UserID      int64
 	ProjectID   int64
 	StatusID    int64
@@ -31,10 +31,10 @@ type Task struct {
 }
 
 // GetID - returns the id.
-func (s *Task) GetID() int64 { return s.ID }
+func (s *Task) GetID() int64 { return s.Id }
 
 // SetID - sets the id.
-func (s *Task) SetID(id int64) { s.ID = id }
+func (s *Task) SetID(id int64) { s.Id = id }
 
 // GetOwnerID - returns the owner id.
 func (s *Task) GetOwnerID() int64 { return s.UserID }
@@ -108,7 +108,7 @@ func (t TaskService) TaskDetail(ctx context.Context, taskID int64) (*Task, error
 }
 
 func (t TaskService) TaskUpdate(ctx context.Context, data *Task) error {
-	return TaskUpdate(ctx, db.GetDb(ctx), data.ID, &Task{
+	return TaskUpdate(ctx, db.GetDb(ctx), data.Id, &Task{
 		Title:       data.Title,
 		StatusID:    data.StatusID,
 		UserID:      data.UserID,
@@ -135,7 +135,7 @@ func (t TaskService) TaskCreate(ctx context.Context, data *Task) (*Task, error) 
 		return nil, err
 	}
 	now := time.Now()
-	data.ID = task.ID
+	data.Id = task.Id
 	data.CreatedAt = now
 	data.UpdatedAt = now
 	data.Code = task.Code
@@ -153,7 +153,7 @@ func getTaskRelations(ctx context.Context, task *Task) {
 }
 
 func getComments(ctx context.Context, task *Task) error {
-	comments, err := CommentsList(ctx, db.GetDb(ctx), task.ID, EntityTypeTask)
+	comments, err := CommentsList(ctx, db.GetDb(ctx), task.Id, EntityTypeTask)
 	if err != nil {
 		return err
 	}
@@ -174,7 +174,7 @@ func getComments(ctx context.Context, task *Task) error {
 }
 
 func getCommentsCount(ctx context.Context, task *Task) error {
-	count, err := CommentsCount(ctx, db.GetDb(ctx), task.ID, EntityTypeTask)
+	count, err := CommentsCount(ctx, db.GetDb(ctx), task.Id, EntityTypeTask)
 	if err != nil {
 		return err
 	}
@@ -183,7 +183,7 @@ func getCommentsCount(ctx context.Context, task *Task) error {
 }
 
 func getBadges(ctx context.Context, task *Task) error {
-	badges, err := BadgeTaskList(ctx, db.GetDb(ctx), task.ID)
+	badges, err := BadgeTaskList(ctx, db.GetDb(ctx), task.Id)
 	if err != nil {
 		return err
 	}

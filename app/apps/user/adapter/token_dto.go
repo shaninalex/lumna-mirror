@@ -22,7 +22,7 @@ type UserTokenDto struct {
 // into a UserTokenDto for safe exposure to clients.
 func ToUserTokenDto(token *domain.UserToken) *UserTokenDto {
 	return &UserTokenDto{
-		Id:               token.ID,
+		Id:               token.Id,
 		Device:           token.Device,
 		RefreshExpiresAt: token.RefreshExpiresAt,
 		Revoked:          token.Revoked,

@@ -15,7 +15,7 @@ func BadgeGet(ctx context.Context, db *sql.DB, id int64) (*Badge, error) {
 		WHERE id = ?`, id)
 
 	var b Badge
-	if err := row.Scan(&b.ID, &b.ProjectID, &b.Title, &b.Config, &b.CreatedAt); err != nil {
+	if err := row.Scan(&b.Id, &b.ProjectID, &b.Title, &b.Config, &b.CreatedAt); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil // not found
 		}
@@ -42,7 +42,7 @@ func BadgeCreate(ctx context.Context, db *sql.DB, badge *Badge) error {
 	if err != nil {
 		return err
 	}
-	badge.ID = id
+	badge.Id = id
 	return nil
 }
 
@@ -52,7 +52,7 @@ func BadgeUpdate(ctx context.Context, db *sql.DB, badge *Badge) error {
 		UPDATE badge
 		SET project_id = ?, title = ?, config = ?
 		WHERE id = ?`,
-		badge.ProjectID, badge.Title, badge.Config, badge.ID)
+		badge.ProjectID, badge.Title, badge.Config, badge.Id)
 	return err
 }
 
@@ -78,7 +78,7 @@ func BadgeProjectList(ctx context.Context, db *sql.DB, projectID int64) ([]*Badg
 	for rows.Next() {
 		var b Badge
 		var badgeConfig BadgeConfig
-		if err := rows.Scan(&b.ID, &b.ProjectID, &b.Title, &badgeConfig, &b.CreatedAt); err != nil {
+		if err := rows.Scan(&b.Id, &b.ProjectID, &b.Title, &badgeConfig, &b.CreatedAt); err != nil {
 			return nil, err
 		}
 		b.Config = badgeConfig
@@ -103,7 +103,7 @@ func BadgeTaskList(ctx context.Context, db *sql.DB, taskID int64) ([]*Badge, err
 	var result []*Badge
 	for rows.Next() {
 		var b Badge
-		if err := rows.Scan(&b.ID, &b.ProjectID, &b.Title, &b.Config, &b.CreatedAt); err != nil {
+		if err := rows.Scan(&b.Id, &b.ProjectID, &b.Title, &b.Config, &b.CreatedAt); err != nil {
 			return nil, err
 		}
 		result = append(result, &b)

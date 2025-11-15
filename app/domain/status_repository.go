@@ -11,7 +11,7 @@ func TaskStatusByID(ctx context.Context, db *sql.DB, id int64) (*Status, error) 
 	q := `select id, project_id, title, list_index, config from statuses where id = ?`
 	row := db.QueryRowContext(ctx, q, id)
 	s := &Status{}
-	if err := row.Scan(&s.ID, &s.ProjectId, &s.Title, &s.ListIndex, &s.Config); err != nil {
+	if err := row.Scan(&s.Id, &s.ProjectId, &s.Title, &s.ListIndex, &s.Config); err != nil {
 		return nil, err
 	}
 	return s, nil
@@ -33,7 +33,7 @@ func TaskStatusListByProject(ctx context.Context, db *sql.DB, id int64) ([]*Stat
 	statuses := []*Status{}
 	for rows.Next() {
 		s := &Status{}
-		if err = rows.Scan(&s.ID, &s.ProjectId, &s.Title, &s.ListIndex, &s.Config); err != nil {
+		if err = rows.Scan(&s.Id, &s.ProjectId, &s.Title, &s.ListIndex, &s.Config); err != nil {
 			return nil, err
 		}
 		statuses = append(statuses, s)
@@ -61,7 +61,7 @@ func TaskStatusCreate(ctx context.Context, db *sql.DB, status *Status) (*Status,
 	if err != nil {
 		return nil, err
 	}
-	status.ID = id
+	status.Id = id
 	return status, nil
 }
 
@@ -88,7 +88,7 @@ func TaskStatusUpdate(ctx context.Context, db *sql.DB, status *Status) error {
 		status.Title,
 		status.ListIndex,
 		status.Config,
-		status.ID,
+		status.Id,
 	)
 	return err
 }

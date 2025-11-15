@@ -6,7 +6,7 @@ import (
 
 // AppError - app error.
 type AppError struct {
-	ID      string `json:"id"`
+	Id      string `json:"id"`
 	Key     string `json:"key"`
 	Message string `json:"message"`
 	Data    any    `json:"data,omitempty"`
@@ -14,7 +14,7 @@ type AppError struct {
 
 // Error implements error interface
 func (e AppError) Error() string {
-	return fmt.Sprintf("[%s]: %s", e.ID, e.Message)
+	return fmt.Sprintf("[%s]: %s", e.Id, e.Message)
 }
 
 var (

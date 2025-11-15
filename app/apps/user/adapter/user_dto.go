@@ -5,7 +5,7 @@ import (
 )
 
 type UserDto struct {
-	ID       int64                `json:"id"`
+	Id       int64                `json:"id"`
 	Code     string               `json:"code"`
 	Email    string               `json:"email"`
 	Active   bool                 `json:"active"`
@@ -15,7 +15,7 @@ type UserDto struct {
 
 func ToUserDto(user *domain.User) *UserDto {
 	return &UserDto{
-		ID:       user.GetID(),
+		Id:       user.GetID(),
 		Code:     user.GetCode(),
 		Email:    user.Email,
 		Active:   user.Active,
