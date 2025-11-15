@@ -14,7 +14,7 @@ var webFS embed.FS
 
 // GetStaticFS embedded static files
 func getStaticFS() fs.FS {
-	sub, err := fs.Sub(webFS, "web/browser")
+	sub, err := fs.Sub(webFS, "embed/browser")
 	if err != nil {
 		log.Printf("warning: failed to load embedded static files: %v", err)
 		return nil
