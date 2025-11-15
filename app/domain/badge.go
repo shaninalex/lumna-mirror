@@ -1,3 +1,12 @@
+// Model Badge.
+//
+// Badge can be applied to entity and change it behaviour. For example tasks with blocked badge can't be
+// complete until block is resolved. Or tasks with "not now" can't be started. Or for example "waiting for approval",
+// "fix needed". You can imagine that situations.
+//
+// Badge is different from the "tag". Tag - help organize lists, badge - define special behaviour. It's not a "status",
+// it's a "state". Please, do not be confused.
+
 package domain
 
 import (
@@ -5,11 +14,11 @@ import (
 	"encoding/json"
 	"time"
 
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 )
 
 type Badge struct {
-	ID        int64       `json:"id"`
+	Id        int64       `json:"id"`
 	ProjectID int64       `json:"project_id"`
 	Title     string      `json:"title"`
 	Config    BadgeConfig `json:"config"`
@@ -72,42 +81,20 @@ func NewBadgeService() *BadgeService {
 }
 
 func (b *BadgeService) List(ctx context.Context, projectID int64) ([]*Badge, error) {
-	dbBadges, err := db.BadgeProjectList(ctx, db.GetDb(ctx), projectID)
+	badges, err := BadgeProjectList(ctx, db.GetDb(ctx), projectID)
 	if err != nil {
 		return nil, err
 	}
-	result := make([]*Badge, len(dbBadges))
-	for i, badge := range dbBadges {
-		result[i] = &Badge{
-			ID:        badge.ID,
-			ProjectID: badge.ProjectID,
-			Title:     badge.Title,
-			Config:    ToBadgeConfig(badge.Config),
-			CreatedAt: badge.CreatedAt,
-		}
-	}
-	return nil, nil
+	return badges, nil
 }
 
 func (b *BadgeService) Create(ctx context.Context, badge *Badge) error {
-	cnf, err := json.Marshal(badge.Config)
-	if err != nil {
+	if err := BadgeCreate(ctx, db.GetDb(ctx), badge); err != nil {
 		return err
 	}
-	dbBadge := &db.Badge{
-		Title:     badge.Title,
-		ProjectID: badge.ProjectID,
-		Config:    string(cnf),
-		CreatedAt: time.Now(),
-	}
-	err = db.BadgeCreate(ctx, db.GetDb(ctx), dbBadge)
-	if err != nil {
-		return err
-	}
-	badge.ID = dbBadge.ID
 	return nil
 }
 
 func (b *BadgeService) Delete(ctx context.Context, projectID, badgeID int64) error {
-	return db.BadgeDelete(ctx, db.GetDb(ctx), projectID, badgeID)
+	return BadgeDelete(ctx, db.GetDb(ctx), projectID, badgeID)
 }

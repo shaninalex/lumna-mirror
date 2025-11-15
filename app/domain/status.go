@@ -4,16 +4,22 @@ import (
 	"context"
 	"encoding/json"
 
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 )
 
 type Status struct {
-	ID        int64
-	Title     string
-	ListIndex int64
-	ProjectId int64
-	Config    *string
+	Id        int64   `db:"id" json:"id"`
+	Title     string  `db:"title" json:"title"`
+	ListIndex int64   `db:"list_index" json:"list_index"`
+	ProjectId int64   `db:"project_id" json:"project_id"`
+	Config    *string `db:"config" json:"config"`
 }
+
+// GetID - returns the id.
+func (s *Status) GetID() int64 { return s.Id }
+
+// SetID - sets the id.
+func (s *Status) SetID(id int64) { s.Id = id }
 
 // SaveConfig - saves the config.
 func (s *Status) SaveConfig(cnf TaskStatusConfig) {
@@ -72,12 +78,12 @@ type StatusService struct {
 
 func (s StatusService) SortProjectStatus(ctx context.Context, data map[int64]int64) error {
 	for idx, statusId := range data {
-		status, err := db.TaskStatusByID(ctx, db.GetDb(ctx), statusId)
+		status, err := TaskStatusByID(ctx, db.GetDb(ctx), statusId)
 		if err != nil {
 			return err
 		}
 		status.ListIndex = idx
-		if err = db.TaskStatusUpdate(ctx, db.GetDb(ctx), status); err != nil {
+		if err = TaskStatusUpdate(ctx, db.GetDb(ctx), status); err != nil {
 			return err
 		}
 	}
@@ -85,31 +91,31 @@ func (s StatusService) SortProjectStatus(ctx context.Context, data map[int64]int
 }
 
 func (s StatusService) Get(ctx context.Context, id int64) (*Status, error) {
-	status, err := db.TaskStatusByID(ctx, db.GetDb(ctx), id)
+	status, err := TaskStatusByID(ctx, db.GetDb(ctx), id)
 	if err != nil {
 		return nil, err
 	}
 	return &Status{
-		ID:        status.ID,
+		Id:        status.Id,
 		Title:     status.Title,
 		ListIndex: status.ListIndex,
-		ProjectId: status.ProjectID,
+		ProjectId: status.ProjectId,
 		Config:    status.Config,
 	}, nil
 }
 
 func (s StatusService) ProjectStatuses(ctx context.Context, projectId int64) ([]*Status, error) {
-	dbStatuses, err := db.TaskStatusListByProject(ctx, db.GetDb(ctx), projectId)
+	dbStatuses, err := TaskStatusListByProject(ctx, db.GetDb(ctx), projectId)
 	if err != nil {
 		return nil, err
 	}
 	statuses := make([]*Status, len(dbStatuses))
 	for i, status := range dbStatuses {
 		statuses[i] = &Status{
-			ID:        status.ID,
+			Id:        status.Id,
 			Title:     status.Title,
 			ListIndex: status.ListIndex,
-			ProjectId: status.ProjectID,
+			ProjectId: status.ProjectId,
 			Config:    status.Config,
 		}
 	}
@@ -117,38 +123,26 @@ func (s StatusService) ProjectStatuses(ctx context.Context, projectId int64) ([]
 }
 
 func (s StatusService) Create(ctx context.Context, projectId int64, title string) (*Status, error) {
-	dbStatus := &db.TaskStatus{
-		ProjectID: projectId,
+	status := &Status{
+		ProjectId: projectId,
 		Title:     title,
 	}
-	status, err := db.TaskStatusCreate(ctx, db.GetDb(ctx), dbStatus)
+	status, err := TaskStatusCreate(ctx, db.GetDb(ctx), status)
 	if err != nil {
 		return nil, err
 	}
-	return &Status{
-		ID:        status.ID,
-		Title:     status.Title,
-		ListIndex: status.ListIndex,
-		ProjectId: status.ProjectID,
-		Config:    status.Config,
-	}, nil
+	return status, nil
 }
 
 func (s StatusService) Patch(ctx context.Context, data *Status) (*Status, error) {
-	if err := db.TaskStatusUpdate(ctx, db.GetDb(ctx), &db.TaskStatus{
-		ID:        data.ID,
-		ProjectID: data.ProjectId,
-		Title:     data.Title,
-		ListIndex: data.ListIndex,
-		Config:    data.Config,
-	}); err != nil {
+	if err := TaskStatusUpdate(ctx, db.GetDb(ctx), data); err != nil {
 		return nil, err
 	}
 	return data, nil
 }
 
 func (s StatusService) Delete(ctx context.Context, statusId int64) error {
-	return db.TaskStatusDelete(ctx, db.GetDb(ctx), statusId)
+	return TaskStatusDelete(ctx, db.GetDb(ctx), statusId)
 }
 
 // NewStatusService - new status service

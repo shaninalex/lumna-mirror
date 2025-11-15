@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/lumna/app/domain"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 type CommentHandler struct {

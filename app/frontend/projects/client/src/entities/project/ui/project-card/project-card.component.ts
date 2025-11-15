@@ -6,13 +6,11 @@ import { RouterLink } from "@angular/router"
 	selector: "lu-project-card",
 	imports: [RouterLink],
 	template: `
-		<div class="card hover-space">
+		<a [routerLink]="[project.code]" class="card hover-space block">
 			<div class="card-title">
-				<a [routerLink]="[project.code]">
-					{{ project.title }}
-				</a>
+				{{ project.title }}
 			</div>
-		</div>
+		</a>
 	`,
 })
 export class ProjectCardComponent {

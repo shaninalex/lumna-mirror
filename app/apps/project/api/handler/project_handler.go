@@ -5,7 +5,7 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/apps/project/adapter"
 	"gitlab.com/shaninalex/lumna/app/domain"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 // ProjectHandler - project handler.
@@ -76,7 +76,7 @@ func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	project, err := s.projectService.UpdateProject(r.Context(), &domain.Project{
-		ID:    projectID,
+		Id:    projectID,
 		Title: input.Title,
 	})
 	if err != nil {

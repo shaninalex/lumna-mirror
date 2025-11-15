@@ -11,6 +11,6 @@ config/development.yml
 config/kratos/kratos.yml
 config/oathkeeper/access-rules.yml
 config/oathkeeper/oathkeeper.yml
-app/cmd/standalone/web/
+app/cmd/web/embed/
 *.db
 bin/

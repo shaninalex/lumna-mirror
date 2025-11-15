@@ -13,7 +13,7 @@ type ProjectInput struct {
 
 // ProjectDto - project dto.
 type ProjectDto struct {
-	ID        int64     `json:"id"`
+	Id        int64     `json:"id"`
 	Title     string    `json:"title"`
 	Code      string    `json:"code"`
 	CreatedAt time.Time `json:"created_at"`
@@ -23,7 +23,7 @@ type ProjectDto struct {
 // ToProjectDto - new project dto.
 func ToProjectDto(p *domain.Project) *ProjectDto {
 	return &ProjectDto{
-		ID:        p.ID,
+		Id:        p.Id,
 		Title:     p.Title,
 		Code:      p.Code,
 		CreatedAt: p.CreatedAt,

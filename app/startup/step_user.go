@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/domain"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -41,12 +41,12 @@ func (s *StepUser) Execute() error {
 		panic(err)
 	}
 
-	user := &db.User{
+	user := &domain.User{
 		Email:        email,
 		PasswordHash: string(hash),
 	}
 	ctx := context.Background()
-	user, err = db.UserSave(ctx, s.db, user)
+	user, err = domain.UserSave(ctx, s.db, user)
 	if err != nil {
 		panic(err)
 	}

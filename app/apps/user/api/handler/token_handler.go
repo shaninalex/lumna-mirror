@@ -6,7 +6,7 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/apps/user/adapter"
 	"gitlab.com/shaninalex/lumna/app/domain"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 // TokenHandler handles HTTP requests related to user tokens.
@@ -23,7 +23,7 @@ func NewTokenHandler() *TokenHandler {
 }
 
 // HandleGetUserTokens handles a request to list all tokens for the authenticated user.
-// It retrieves the user ID from the request context, fetches tokens via the service,
+// It retrieves the user Id from the request context, fetches tokens via the service,
 // converts them to DTOs, and returns them as JSON.
 func (s *TokenHandler) HandleGetUserTokens(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -36,11 +36,11 @@ func (s *TokenHandler) HandleGetUserTokens(w http.ResponseWriter, r *http.Reques
 }
 
 // HandleDeleteUserToken handles a request to delete a specific token for the authenticated user.
-// It reads the token ID from the URL, calls the service to delete the token, and responds with success/error.
+// It reads the token Id from the URL, calls the service to delete the token, and responds with success/error.
 func (s *TokenHandler) HandleDeleteUserToken(w http.ResponseWriter, r *http.Request) {
-	tokenID, err := strconv.ParseInt(r.PathValue("tokenID"), 10, 64) // parse token ID from URL
+	tokenID, err := strconv.ParseInt(r.PathValue("tokenID"), 10, 64) // parse token Id from URL
 	if err != nil {
-		web.Error(w, http.StatusBadRequest, err) // invalid token ID format
+		web.Error(w, http.StatusBadRequest, err) // invalid token Id format
 		return
 	}
 	err = s.tokenManager.Delete(r.Context(), web.GetUserID(r), tokenID) // delete token
@@ -54,9 +54,9 @@ func (s *TokenHandler) HandleDeleteUserToken(w http.ResponseWriter, r *http.Requ
 // HandleRevokeUserToken handles a request to revoke a specific token for the authenticated user.
 // Revoking a token marks it as invalid without deleting it, preventing further use.
 func (s *TokenHandler) HandleRevokeUserToken(w http.ResponseWriter, r *http.Request) {
-	tokenID, err := strconv.ParseInt(r.PathValue("tokenID"), 10, 64) // parse token ID from URL
+	tokenID, err := strconv.ParseInt(r.PathValue("tokenID"), 10, 64) // parse token Id from URL
 	if err != nil {
-		web.Error(w, http.StatusBadRequest, err) // invalid token ID format
+		web.Error(w, http.StatusBadRequest, err) // invalid token Id format
 		return
 	}
 	err = s.tokenManager.Revoke(r.Context(), web.GetUserID(r), tokenID) // revoke token

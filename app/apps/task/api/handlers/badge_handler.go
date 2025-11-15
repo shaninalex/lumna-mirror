@@ -5,7 +5,7 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/apps/task/adapter"
 	"gitlab.com/shaninalex/lumna/app/domain"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 type BadgeHandler struct {

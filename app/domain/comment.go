@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 )
 
 type Comment struct {
@@ -15,6 +15,24 @@ type Comment struct {
 	Content    string    `json:"content" db:"title"`
 	CreatedAt  time.Time `json:"created_at" db:"created_at"`
 }
+
+// GetID - returns the id.
+func (s *Comment) GetID() int64 { return s.Id }
+
+// SetID - sets the id.
+func (s *Comment) SetID(id int64) { s.Id = id }
+
+// GetOwnerID - returns the owner id.
+func (s *Comment) GetOwnerID() int64 { return s.UserId }
+
+// IsOwner - checks if it is owner.
+func (s *Comment) IsOwner(entity AuthUser) bool { return entity.GetID() == s.GetOwnerID() }
+
+// GetCreatedAt - returns the created at.
+func (s *Comment) GetCreatedAt() time.Time { return s.CreatedAt }
+
+// GetCreatedBy - returns the created by.
+func (s *Comment) GetCreatedBy() int64 { return s.UserId }
 
 type CommentManager interface {
 	ListComments(ctx context.Context, entityId int64, entityType string) []*Comment
@@ -29,45 +47,22 @@ func NewCommentService() CommentManager {
 type CommentService struct{}
 
 func (c CommentService) ListComments(ctx context.Context, entityId int64, entityType string) []*Comment {
-	dbComments, err := db.CommentsList(ctx, db.GetDb(ctx), entityId, entityType)
+	comments, err := CommentsList(ctx, db.GetDb(ctx), entityId, entityType)
 	if err != nil {
 		return []*Comment{}
 	}
-
-	comments := make([]*Comment, len(dbComments))
-	for i, c := range dbComments {
-		comments[i] = &Comment{
-			Id:         c.ID,
-			EntityId:   c.EntityId,
-			EntityType: c.EntityType,
-			UserId:     c.UserID,
-			Content:    c.Content,
-			CreatedAt:  c.CreatedAt,
-		}
-	}
-
 	return comments
 }
 
 func (c CommentService) CreateComment(ctx context.Context, comment *Comment) error {
-	dbComment := &db.Comment{
-		EntityId:   comment.EntityId,
-		EntityType: comment.EntityType,
-		UserID:     comment.UserId,
-		Content:    comment.Content,
-		CreatedAt:  comment.CreatedAt,
-	}
-	if err := db.CommentCreate(ctx, db.GetDb(ctx), dbComment); err != nil {
+	if err := CommentCreate(ctx, db.GetDb(ctx), comment); err != nil {
 		return err
 	}
-
-	comment.Id = dbComment.ID
-	comment.CreatedAt = dbComment.CreatedAt
 	return nil
 }
 
 func (c CommentService) DeleteComment(ctx context.Context, id int64) error {
-	if err := db.CommentDelete(ctx, db.GetDb(ctx), id); err != nil {
+	if err := CommentDelete(ctx, db.GetDb(ctx), id); err != nil {
 		return err
 	}
 	return nil

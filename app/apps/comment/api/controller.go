@@ -2,7 +2,7 @@ package api
 
 import (
 	"gitlab.com/shaninalex/lumna/app/apps/comment/api/handlers"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 // CommentController - task controller.

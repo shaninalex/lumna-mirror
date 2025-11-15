@@ -1,9 +1,9 @@
 migrate_create:
-	~/go/bin/migrate create -ext sql -dir ./app/internal/db/migrations -format "20060102150405" $(name)
+	~/go/bin/migrate create -ext sql -dir ./app/pkg/db/migrations -format "20060102150405" $(name)
 
 migrate_up:
 	~/go/bin/migrate \
-		-path ./app/internal/db/migrations \
+		-path ./app/pkg/db/migrations \
 		-database "sqlite3://lumna.db" \
 		-verbose up
 
@@ -11,7 +11,7 @@ migrate_up:
 # 	make migrate_down N=1 - for one migration down
 migrate_down:
 	~/go/bin/migrate \
-		-path ./app/internal/db/migrations \
+		-path ./app/pkg/db/migrations \
 		-database "sqlite3://lumna.db" \
 		-verbose down $(N)
 
@@ -19,7 +19,7 @@ build:
 	cd app/frontend && \
 	yarn build && \
 	cd ../../ && \
-	go build -tags embed -o bin/lumna ./app/cmd/standalone/
+	go build -tags embed -o bin/lumna ./app/cmd/web/
 
 
 clear_local:
@@ -29,10 +29,10 @@ clear_local:
 	rm -rf ~/.config/lumna
 
 run:
-	LUMNA_CONFIG_PATH=$$HOME/gitlab/lumna/config/ go run  -tags embed ./app/cmd/standalone/
+	go run -tags embed ./app/cmd/web/
 
 debug:
-	LUMNA_CONFIG_PATH=$$HOME/gitlab/lumna/config/ dlv exec ./bin/lumna
+	dlv exec ./bin/lumna
 
 clear_port:
 	@pid=$$(sudo lsof -t -i :8000); \

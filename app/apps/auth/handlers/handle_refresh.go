@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	"gitlab.com/shaninalex/lumna/app/internal/token"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/token"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 func (s *AuthHandler) HandleRefresh(w http.ResponseWriter, r *http.Request) {

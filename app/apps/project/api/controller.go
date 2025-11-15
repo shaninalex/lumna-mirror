@@ -2,7 +2,7 @@ package api
 
 import (
 	"gitlab.com/shaninalex/lumna/app/apps/project/api/handler"
-	"gitlab.com/shaninalex/lumna/app/internal/web"
+	"gitlab.com/shaninalex/lumna/app/pkg/web"
 )
 
 // ProjectController - project controller.

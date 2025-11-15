@@ -11,7 +11,7 @@ type TaskCreateInput struct {
 }
 
 type TaskDto struct {
-	ID        int64       `json:"id"`
+	Id        int64       `json:"id"`
 	UserID    int64       `json:"user_id"`
 	ProjectID int64       `json:"project_id"`
 	StatusID  int64       `json:"status_id"`
@@ -32,7 +32,7 @@ func ToTaskDto(task *domain.Task) *TaskDto {
 		badges[i] = NewBadgeDto(badge)
 	}
 	return &TaskDto{
-		ID:            task.ID,
+		Id:            task.Id,
 		UserID:        task.UserID,
 		ProjectID:     task.ProjectID,
 		StatusID:      task.StatusID,

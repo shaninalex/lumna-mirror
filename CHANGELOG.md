@@ -1,3 +1,18 @@
+## 0.20.1 (2025-11-15)
+
+### Fix
+
+- embed dir path
+- **ui**: project overview component layout
+- **ui**: dark mode inputs
+- **config**: fix configuration issues
+
+### Refactor
+
+- rename internal to pkg
+- struct definition duplications
+- fix duplications - badges and comments
+
 ## 0.20.0 (2025-11-11)
 
 ### Feat
