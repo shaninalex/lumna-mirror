@@ -7,7 +7,7 @@ import (
 	"errors"
 )
 
-// BadgeGet fetches a badge by ID.
+// BadgeGet fetches a badge by Id.
 func BadgeGet(ctx context.Context, db *sql.DB, id int64) (*Badge, error) {
 	row := db.QueryRowContext(ctx, `
 		SELECT id, project_id, title, config, created_at
@@ -24,7 +24,7 @@ func BadgeGet(ctx context.Context, db *sql.DB, id int64) (*Badge, error) {
 	return &b, nil
 }
 
-// BadgeCreate inserts a new badge and updates its ID.
+// BadgeCreate inserts a new badge and updates its Id.
 func BadgeCreate(ctx context.Context, db *sql.DB, badge *Badge) error {
 	b, err := json.Marshal(badge.Config)
 	if err != nil {
@@ -56,7 +56,7 @@ func BadgeUpdate(ctx context.Context, db *sql.DB, badge *Badge) error {
 	return err
 }
 
-// BadgeDelete deletes a badge by ID.
+// BadgeDelete deletes a badge by Id.
 func BadgeDelete(ctx context.Context, db *sql.DB, projectId, id int64) error {
 	_, err := db.ExecContext(ctx, `DELETE FROM badge WHERE project_id = ? AND id = ?`, projectId, id)
 	return err

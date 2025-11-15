@@ -30,6 +30,33 @@ type Task struct {
 	CommentsCount int
 }
 
+// GetID - returns the id.
+func (s *Task) GetID() int64 { return s.ID }
+
+// SetID - sets the id.
+func (s *Task) SetID(id int64) { s.ID = id }
+
+// GetOwnerID - returns the owner id.
+func (s *Task) GetOwnerID() int64 { return s.UserID }
+
+// IsOwner - checks if it is owner.
+func (s *Task) IsOwner(entity AuthUser) bool { return entity.GetID() == s.GetOwnerID() }
+
+// GetCreatedAt - returns the created at.
+func (s *Task) GetCreatedAt() time.Time { return s.CreatedAt }
+
+// GetUpdatedAt - returns the updated at.
+func (s *Task) GetUpdatedAt() time.Time { return s.UpdatedAt }
+
+// GetCreatedBy - returns the created by.
+func (s *Task) GetCreatedBy() int64 { return s.GetOwnerID() }
+
+// SetCode - sets the code.
+func (s *Task) SetCode(code string) { s.Code = code }
+
+// GetCode - returns the code.
+func (s *Task) GetCode() string { return s.Code }
+
 // TaskReader - task reader.
 type TaskReader interface {
 	TasksList(ctx context.Context, projectID int64) ([]*Task, error)
@@ -55,30 +82,16 @@ func NewTaskService() *TaskService {
 type TaskService struct{}
 
 func (t TaskService) TaskDelete(ctx context.Context, taskID int64) error {
-	return db.TaskDelete(ctx, db.GetDb(ctx), taskID)
+	return TaskDelete(ctx, db.GetDb(ctx), taskID)
 }
 
 func (t TaskService) TasksList(ctx context.Context, projectID int64) ([]*Task, error) {
-	dbTasks, err := db.TaskList(ctx, db.GetDb(ctx), projectID)
+	tasks, err := TaskList(ctx, db.GetDb(ctx), projectID)
 	if err != nil {
 		return nil, err
 	}
-	tasks := make([]*Task, len(dbTasks))
-	for i, task := range dbTasks {
-		tasks[i] = &Task{
-			ID:          task.ID,
-			UserID:      task.UserID,
-			ProjectID:   task.ProjectID,
-			StatusID:    task.StatusID,
-			Title:       task.Title,
-			Completed:   task.Completed,
-			Description: task.Description,
-			ListIndex:   task.ListIndex,
-			Code:        task.Code,
-			CreatedAt:   task.CreatedAt,
-			UpdatedAt:   task.UpdatedAt,
-		}
-		if err = getCommentsCount(ctx, tasks[i]); err != nil {
+	for _, task := range tasks {
+		if err = getCommentsCount(ctx, task); err != nil {
 			continue
 		}
 	}
@@ -86,29 +99,16 @@ func (t TaskService) TasksList(ctx context.Context, projectID int64) ([]*Task, e
 }
 
 func (t TaskService) TaskDetail(ctx context.Context, taskID int64) (*Task, error) {
-	task, err := db.TaskGet(ctx, db.GetDb(ctx), taskID)
+	task, err := TaskGet(ctx, db.GetDb(ctx), taskID)
 	if err != nil {
 		return nil, err
 	}
-	model := &Task{
-		ID:          task.ID,
-		UserID:      task.UserID,
-		ProjectID:   task.ProjectID,
-		StatusID:    task.StatusID,
-		Title:       task.Title,
-		Completed:   task.Completed,
-		Description: task.Description,
-		ListIndex:   task.ListIndex,
-		Code:        task.Code,
-		CreatedAt:   task.CreatedAt,
-		UpdatedAt:   task.UpdatedAt,
-	}
-	getTaskRelations(ctx, model)
-	return model, nil
+	getTaskRelations(ctx, task)
+	return task, nil
 }
 
 func (t TaskService) TaskUpdate(ctx context.Context, data *Task) error {
-	return db.TaskUpdate(ctx, db.GetDb(ctx), data.ID, &db.Task{
+	return TaskUpdate(ctx, db.GetDb(ctx), data.ID, &Task{
 		Title:       data.Title,
 		StatusID:    data.StatusID,
 		UserID:      data.UserID,
@@ -119,8 +119,8 @@ func (t TaskService) TaskUpdate(ctx context.Context, data *Task) error {
 }
 
 func (t TaskService) TaskCreate(ctx context.Context, data *Task) (*Task, error) {
-	maxIndex := db.TaskGetIndex(ctx, db.GetDb(ctx), data.StatusID)
-	task := db.Task{
+	maxIndex := TaskGetIndex(ctx, db.GetDb(ctx), data.StatusID)
+	task := Task{
 		UserID:      data.UserID,
 		ProjectID:   data.ProjectID,
 		StatusID:    data.StatusID,
@@ -130,7 +130,7 @@ func (t TaskService) TaskCreate(ctx context.Context, data *Task) (*Task, error) 
 		Description: data.Description,
 		ListIndex:   maxIndex,
 	}
-	err := db.TaskSave(ctx, db.GetDb(ctx), &task)
+	err := TaskSave(ctx, db.GetDb(ctx), &task)
 	if err != nil {
 		return nil, err
 	}

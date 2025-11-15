@@ -10,4 +10,7 @@ type ConfigModel struct {
 
 	// Mode working application mode such as "development", "production" ( default ) or "testing"
 	Mode *string `yaml:"mode,omitempty"`
+
+	// Port working server port number
+	Port *int `yaml:"port,omitempty"`
 }

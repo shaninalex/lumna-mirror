@@ -2,25 +2,24 @@ package adapter
 
 import (
 	"gitlab.com/shaninalex/lumna/app/domain"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
 )
 
 type UserDto struct {
-	ID       int64            `json:"id"`
-	Code     string           `json:"code"`
-	Email    string           `json:"email"`
-	Active   bool             `json:"active"`
-	State    domain.UserState `json:"state"`
-	Settings *db.UserSettings `json:"settings"`
+	ID       int64                `json:"id"`
+	Code     string               `json:"code"`
+	Email    string               `json:"email"`
+	Active   bool                 `json:"active"`
+	State    domain.UserState     `json:"state"`
+	Settings *domain.UserSettings `json:"settings"`
 }
 
-func ToUserDto(user *db.User) *UserDto {
+func ToUserDto(user *domain.User) *UserDto {
 	return &UserDto{
 		ID:       user.GetID(),
 		Code:     user.GetCode(),
 		Email:    user.Email,
 		Active:   user.Active,
-		State:    domain.UserState(user.State),
+		State:    user.State,
 		Settings: user.GetSettings(),
 	}
 }

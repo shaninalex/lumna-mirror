@@ -7,6 +7,5 @@ CREATE TABLE comments
     content     VARCHAR     NOT NULL,
     created_at  DATETIME    DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );

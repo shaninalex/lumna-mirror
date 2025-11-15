@@ -76,7 +76,7 @@ func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	project, err := s.projectService.UpdateProject(r.Context(), &domain.Project{
-		ID:    projectID,
+		Id:    projectID,
 		Title: input.Title,
 	})
 	if err != nil {

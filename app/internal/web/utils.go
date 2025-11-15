@@ -48,7 +48,7 @@ func Error(w http.ResponseWriter, status int, err error) {
 	ReturnJSON(w, status, nil, err)
 }
 
-// GetUserID retrieves the user ID from context
+// GetUserID retrieves the user Id from context
 func GetUserID(r *http.Request) int64 {
 	if id, ok := r.Context().Value(base.ContextUserID).(int64); ok {
 		return id

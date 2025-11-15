@@ -24,7 +24,7 @@ func CommentGet(ctx context.Context, db *sql.DB, id int64) (*Comment, error) {
 	return &b, nil
 }
 
-// CommentCreate inserts a new comment and updates its ID.
+// CommentCreate inserts a new comment and updates its Id.
 func CommentCreate(ctx context.Context, db *sql.DB, comment *Comment) error {
 	res, err := db.ExecContext(ctx, `
 		INSERT INTO comments (entity_id, entity_type, user_id, content)

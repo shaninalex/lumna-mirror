@@ -55,6 +55,13 @@ func (s *Config) ReadConfig(configPath string) {
 			panic(err)
 		}
 		configPath = path.Join(home, dir.ConfigDirectory, "config.yaml")
+
+		if _, err := os.Stat(configPath); err != nil {
+			// create default config
+			if err = CreateDefaultConfig(configPath); err != nil {
+				panic(err)
+			}
+		}
 	}
 
 	s.v.SetConfigFile(configPath)

@@ -23,7 +23,7 @@ type ProjectDto struct {
 // ToProjectDto - new project dto.
 func ToProjectDto(p *domain.Project) *ProjectDto {
 	return &ProjectDto{
-		ID:        p.ID,
+		ID:        p.Id,
 		Title:     p.Title,
 		Code:      p.Code,
 		CreatedAt: p.CreatedAt,

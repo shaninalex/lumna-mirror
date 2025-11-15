@@ -5,7 +5,6 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/apps/user/adapter"
 	"gitlab.com/shaninalex/lumna/app/domain"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
 	"gitlab.com/shaninalex/lumna/app/internal/token"
 	"gitlab.com/shaninalex/lumna/app/internal/web"
 )
@@ -27,7 +26,7 @@ func NewUserHandler(manager domain.UserManager) *UserHandler {
 }
 
 // HandleGetUser handles a request to fetch the current authenticated user's information.
-// Retrieves the user ID from the request context and returns a UserDto in the response.
+// Retrieves the user Id from the request context and returns a UserDto in the response.
 func (s *UserHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
 	user, err := s.manager.GetUser(r.Context(), web.GetUserID(r)) // fetch user from DB
 	if err != nil {
@@ -41,7 +40,7 @@ func (s *UserHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
 // It parses the request body into a UserSettings struct, updates the user, and returns the updated user.
 func (s *UserHandler) HandleUpdateSettings(w http.ResponseWriter, r *http.Request) {
 	// Parse request body into UserSettings struct
-	data, err := web.BodyParser[db.UserSettings](r)
+	data, err := web.BodyParser[domain.UserSettings](r)
 	if err != nil {
 		web.Error(w, http.StatusBadRequest, err) // invalid body
 		return

@@ -14,13 +14,13 @@ import (
 type AccessTokenResult struct {
 	Token     string
 	ExpiresAt time.Time
-	Sub       int64 // user ID
+	Sub       int64 // user Id
 	JTI       string
 }
 
 // AccessTokenService handles creation and validation of access tokens
 type AccessTokenService interface {
-	// Create generates a new access token for a given user ID and audience
+	// Create generates a new access token for a given user Id and audience
 	Create(userID int64, aud AudToken) (*AccessTokenResult, error)
 
 	// Validate parses and validates the token string, returns claims if valid

@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"gitlab.com/shaninalex/lumna/app/internal/dir"
+	"gitlab.com/shaninalex/lumna/app/internal/utils"
 	"gopkg.in/yaml.v2"
 )
 
@@ -18,6 +19,7 @@ func CreateDefaultConfig(configFilePath string) error {
 	conf := &ConfigModel{
 		DatabasePath: dir.DefaultDatabasePath(),
 		SecretKey:    key,
+		Port:         utils.Pointer[int](8000),
 	}
 
 	file, err := os.OpenFile(configFilePath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
