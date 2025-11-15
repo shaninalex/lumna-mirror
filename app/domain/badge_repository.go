@@ -1,8 +1,9 @@
-package db
+package domain
 
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 )
 
@@ -25,10 +26,14 @@ func BadgeGet(ctx context.Context, db *sql.DB, id int64) (*Badge, error) {
 
 // BadgeCreate inserts a new badge and updates its ID.
 func BadgeCreate(ctx context.Context, db *sql.DB, badge *Badge) error {
+	b, err := json.Marshal(badge.Config)
+	if err != nil {
+		return err
+	}
 	res, err := db.ExecContext(ctx, `
 		INSERT INTO badge (project_id, title, config)
 		VALUES (?, ?, ?)`,
-		badge.ProjectID, badge.Title, badge.Config)
+		badge.ProjectID, badge.Title, string(b))
 	if err != nil {
 		return err
 	}
@@ -72,9 +77,11 @@ func BadgeProjectList(ctx context.Context, db *sql.DB, projectID int64) ([]*Badg
 	var result []*Badge
 	for rows.Next() {
 		var b Badge
-		if err := rows.Scan(&b.ID, &b.ProjectID, &b.Title, &b.Config, &b.CreatedAt); err != nil {
+		var badgeConfig BadgeConfig
+		if err := rows.Scan(&b.ID, &b.ProjectID, &b.Title, &badgeConfig, &b.CreatedAt); err != nil {
 			return nil, err
 		}
+		b.Config = badgeConfig
 		result = append(result, &b)
 	}
 	return result, rows.Err()

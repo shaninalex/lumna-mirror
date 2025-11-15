@@ -1,4 +1,4 @@
-package db
+package domain
 
 import (
 	"context"
@@ -15,7 +15,7 @@ func CommentGet(ctx context.Context, db *sql.DB, id int64) (*Comment, error) {
 		WHERE id = ?`, id)
 
 	var b Comment
-	if err := row.Scan(&b.ID, &b.EntityId, &b.EntityType, &b.UserID, &b.Content, &b.CreatedAt); err != nil {
+	if err := row.Scan(&b.Id, &b.EntityId, &b.EntityType, &b.UserId, &b.Content, &b.CreatedAt); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil // not found
 		}
@@ -29,7 +29,7 @@ func CommentCreate(ctx context.Context, db *sql.DB, comment *Comment) error {
 	res, err := db.ExecContext(ctx, `
 		INSERT INTO comments (entity_id, entity_type, user_id, content)
 		VALUES (?, ?, ?, ?)`,
-		comment.EntityId, comment.EntityType, comment.UserID, comment.Content)
+		comment.EntityId, comment.EntityType, comment.UserId, comment.Content)
 	if err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func CommentCreate(ctx context.Context, db *sql.DB, comment *Comment) error {
 	if err != nil {
 		return err
 	}
-	comment.ID = id
+	comment.Id = id
 	comment.CreatedAt = time.Now()
 	return nil
 }
@@ -63,7 +63,7 @@ func CommentsList(ctx context.Context, db *sql.DB, entityId int64, entityType st
 	var result []*Comment
 	for rows.Next() {
 		var b Comment
-		if err := rows.Scan(&b.ID, &b.EntityId, &b.EntityType, &b.UserID, &b.Content, &b.CreatedAt); err != nil {
+		if err := rows.Scan(&b.Id, &b.EntityId, &b.EntityType, &b.UserId, &b.Content, &b.CreatedAt); err != nil {
 			return nil, err
 		}
 		result = append(result, &b)
