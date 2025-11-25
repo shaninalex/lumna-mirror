@@ -7,7 +7,7 @@
 // Badge is different from the "tag". Tag - help organize lists, badge - define special behaviour. It's not a "status",
 // it's a "state". Please, do not be confused.
 
-package domain
+package badge
 
 import (
 	"encoding/json"
