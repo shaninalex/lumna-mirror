@@ -3,7 +3,9 @@ package repositories
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/mail"
+	"strings"
 	"time"
 
 	"gitlab.com/shaninalex/lumna/app/models"
@@ -27,11 +29,20 @@ func (s *UserRepository) NewObject() models.User {
 	return models.User{}
 }
 
-func (s *UserRepository) Get(ctx context.Context, ID uint) (*models.User, bool) {
-	return nil, false
+func (s *UserRepository) Get(ctx context.Context, id uint) (*models.User, error) {
+	user := &models.User{}
+	row := db.FromContext(ctx).QueryRow(`
+		SELECT id, email, active, password_hash, created_at, updated_at FROM users WHERE id = ?
+	`, id)
+	err := row.Scan(&user.Id, &user.Email, &user.Active, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
-func (s *UserRepository) Delete(ctx context.Context, userID uint) {
+func (s *UserRepository) Delete(ctx context.Context, id uint) {
 
 }
 
@@ -68,27 +79,39 @@ func (s *UserRepository) Update(ctx context.Context, user *models.User, columns 
 		return ErrorNoFieldsToUpdate
 	}
 
-	updates := ""
-	for field, value := range columns {
-		updates += fmt.Sprintf("%s = %v", field, value)
-	}
 	user.UpdatedAt = time.Now()
-	updates += fmt.Sprintf("updated_at = %v", user.UpdatedAt)
-	query := fmt.Sprintf("UPDATE users SET %s WHERE id = ?", updates)
-	res, err := db.FromContext(ctx).ExecContext(ctx, query, user.Id)
+	columns["updated_at"] = user.UpdatedAt
+	setParts := make([]string, 0, len(columns))
+	args := make([]any, 0, len(columns)+1)
+
+	for field, value := range columns {
+		setParts = append(setParts, fmt.Sprintf("%s = ?", field))
+		args = append(args, value)
+	}
+
+	query := fmt.Sprintf("UPDATE users SET %s WHERE id = ?",
+		strings.Join(setParts, ", "),
+	)
+	args = append(args, user.Id)
+	res, err := db.FromContext(ctx).ExecContext(ctx, query, args...)
 	if err != nil {
 		return err
 	}
 
-	c, err := res.RowsAffected()
+	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		return err
+		log.Println(err)
+		return ErrorUnableToUpdateUser
 	}
-	if c == 0 {
+
+	if rowsAffected == 0 {
 		return ErrorNoRowsAffected
 	}
 
-	return nil
+	// NOTE: that's not required second call, since we already know what fields will be updated
+	updatedUser, err := s.Get(ctx, user.Id)
+	*user = *updatedUser
+	return err
 }
 
 func (s *UserRepository) Count(ctx context.Context, options map[string]any) (int, error) {
