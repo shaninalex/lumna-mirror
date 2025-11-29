@@ -1,5 +1,5 @@
 migrate_create:
-	~/go/bin/migrate create -ext sql -dir ./app/pkg/db/migrations -format "20060102150405" $(name)
+	~/go/bin/migrate create -ext sql -dir ./app2/migrations -format "20060102150405" $(name)
 
 migrate_up:
 	~/go/bin/migrate \
