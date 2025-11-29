@@ -10,16 +10,6 @@ type Identifiable interface {
 	SetId(uint)
 }
 
-// AuthUser describe an authenticated model interface that should has
-// and can be active/inactive
-type AuthUser interface {
-	Identifiable
-	GetEmail() string
-	SetEmail(string)
-	IsActive() bool
-	SetActive(bool)
-}
-
 // Ownable has an owner and can validate other
 type Ownable interface {
 	Identifiable

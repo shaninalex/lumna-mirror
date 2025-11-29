@@ -1,9 +1,9 @@
 migrate_create:
-	~/go/bin/migrate create -ext sql -dir ./app2/migrations -format "20060102150405" $(name)
+	~/go/bin/migrate create -ext sql -dir ./app/migrations -format "20060102150405" $(name)
 
 migrate_up:
 	~/go/bin/migrate \
-		-path ./app/pkg/db/migrations \
+		-path ./app/migrations \
 		-database "sqlite3://lumna.db" \
 		-verbose up
 
@@ -11,7 +11,7 @@ migrate_up:
 # 	make migrate_down N=1 - for one migration down
 migrate_down:
 	~/go/bin/migrate \
-		-path ./app/pkg/db/migrations \
+		-path ./app/migrations \
 		-database "sqlite3://lumna.db" \
 		-verbose down $(N)
 

@@ -5,7 +5,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"runtime"
 )
 
 const (
@@ -25,9 +24,6 @@ const (
 
 // DefaultDatabasePath default path of the database if env or config not provided
 func DefaultDatabasePath() string {
-	if runtime.GOOS == "windows" {
-		return ""
-	}
 	return path.Join(ShareDirectory, "lumna.db")
 }
 
