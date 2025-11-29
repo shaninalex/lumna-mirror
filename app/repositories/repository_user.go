@@ -12,6 +12,10 @@ import (
 type UserRepository struct {
 }
 
+func NewUserRepository() *UserRepository {
+	return &UserRepository{}
+}
+
 var _ Repository[models.User] = (*UserRepository)(nil)
 
 func (s *UserRepository) GetByEmail(ctx context.Context, email string) (*models.User, bool) {
@@ -30,7 +34,7 @@ func (s *UserRepository) Delete(ctx context.Context, userID uint) {
 
 }
 
-func (s *UserRepository) Create(ctx context.Context, user models.User) error {
+func (s *UserRepository) Create(ctx context.Context, user *models.User) error {
 	query := `
 		INSERT INTO users (email, active, created_at, updated_at, password_hash)
 		VALUES (?, ?, ?, ?, ?)
@@ -53,7 +57,7 @@ func (s *UserRepository) List(ctx context.Context, options map[string]any) []*mo
 	return []*models.User{}
 }
 
-func (s *UserRepository) Update(ctx context.Context, user models.User, columns map[string]any) error {
+func (s *UserRepository) Update(ctx context.Context, user *models.User, columns map[string]any) error {
 	if len(columns) == 0 {
 		return ErrorNoFieldsToUpdate
 	}

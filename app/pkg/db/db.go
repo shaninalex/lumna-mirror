@@ -5,7 +5,7 @@ import (
 	"database/sql"
 )
 
-const CONTEXT_DB = "postgres_write"
+const CONTEXT_DB = "database_context"
 
 func FromContext(ctx context.Context) (conn *sql.DB) {
 	conn = ctx.Value(CONTEXT_DB).(*sql.DB)
