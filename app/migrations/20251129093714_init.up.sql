@@ -11,7 +11,10 @@ CREATE TABLE users
     active          BOOLEAN NOT NULL DEFAULT 1,
     password_hash   TEXT    NOT NULL,
     created_at      DATETIME NOT NULL,
-    updated_at      DATETIME NOT NULL
+    updated_at      DATETIME NOT NULL,
+
+    CONSTRAINT users_email_not_empty CHECK (email <> "")
+    CONSTRAINT users_password_hash_not_empty CHECK (password_hash <> "")
 );
 
 -------------------------

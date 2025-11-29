@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"fmt"
+	"net/mail"
 	"time"
 
 	"gitlab.com/shaninalex/lumna/app/models"
@@ -41,6 +42,11 @@ func (s *UserRepository) Create(ctx context.Context, user *models.User) error {
 	`
 	user.UpdatedAt = time.Now()
 	user.CreatedAt = time.Now()
+
+	if err := validateUserObject(*user); err != nil {
+		return err
+	}
+
 	result, err := db.FromContext(ctx).ExecContext(ctx, query, user.Email, user.Active, user.CreatedAt, user.UpdatedAt, user.PasswordHash)
 	if err != nil {
 		return err
@@ -87,4 +93,17 @@ func (s *UserRepository) Update(ctx context.Context, user *models.User, columns 
 
 func (s *UserRepository) Count(ctx context.Context, options map[string]any) (int, error) {
 	return 0, nil
+}
+
+func validateUserObject(user models.User) error {
+	_, err := mail.ParseAddress(user.Email)
+	if err != nil {
+		return err
+	}
+
+	if user.PasswordHash == "" {
+		return ErrorInvalidPassword
+	}
+
+	return nil
 }
