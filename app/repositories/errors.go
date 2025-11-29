@@ -5,8 +5,9 @@ import (
 )
 
 var (
-	ErrorNoFieldsToUpdate   = errors.New("no fields to update")
-	ErrorNoRowsAffected     = errors.New("no rows affected")
-	ErrorInvalidPassword    = errors.New("invalid password hash")
-	ErrorUnableToUpdateUser = errors.New("Unable to update user")
+	ErrorUserNoFieldsToUpdate = errors.New("no fields to update")
+	ErrorUserNoRowsAffected   = errors.New("no rows affected")
+	ErrorUserInvalidPassword  = errors.New("invalid password hash")
+	ErrorUserUnableToUpdate   = errors.New("Unable to update user")
+	ErrorUserNotFound         = errors.New("user not found")
 )

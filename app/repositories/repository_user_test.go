@@ -59,3 +59,58 @@ func Test_UpdateUser(t *testing.T) {
 
 	assert.True(t, user.Email == newEmail, "User should have updated email")
 }
+
+func Test_GetUser(t *testing.T) {
+	repo := repositories.NewUserRepository()
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
+
+	h, _ := utils.CreatePasswordHash("123")
+	user := models.User{
+		Email:        "test@test.com",
+		PasswordHash: h,
+	}
+	_ = repo.Create(ctx, &user)
+
+	dbUser, err := repo.Get(ctx, user.Id)
+	assert.NoError(t, err, "should get user by id")
+	assert.Equal(t, dbUser.Id, user.Id)
+	assert.Equal(t, dbUser.Email, user.Email)
+}
+
+func Test_GetUserByEmail(t *testing.T) {
+	repo := repositories.NewUserRepository()
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
+
+	h, _ := utils.CreatePasswordHash("123")
+	user := models.User{
+		Email:        "test@test.com",
+		PasswordHash: h,
+	}
+	_ = repo.Create(ctx, &user)
+
+	dbUser, err := repo.GetByEmail(ctx, user.Email)
+	assert.NoError(t, err, "should get user by email")
+	assert.Equal(t, dbUser.Id, user.Id)
+	assert.Equal(t, dbUser.Email, user.Email)
+}
+
+func Test_DeleteUser(t *testing.T) {
+	repo := repositories.NewUserRepository()
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
+
+	h, _ := utils.CreatePasswordHash("123")
+	user := models.User{
+		Email:        "test@test.com",
+		PasswordHash: h,
+	}
+	_ = repo.Create(ctx, &user)
+
+	err := repo.Delete(ctx, user.Id)
+	assert.NoError(t, err, "should get user by email")
+
+	_, err = repo.Get(ctx, user.Id)
+	assert.Error(t, err, "should not get user")
+}

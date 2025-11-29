@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"net/mail"
@@ -21,8 +23,20 @@ func NewUserRepository() *UserRepository {
 
 var _ Repository[models.User] = (*UserRepository)(nil)
 
-func (s *UserRepository) GetByEmail(ctx context.Context, email string) (*models.User, bool) {
-	return nil, false
+func (s *UserRepository) GetByEmail(ctx context.Context, email string) (*models.User, error) {
+	user := &models.User{}
+	row := db.FromContext(ctx).QueryRow(`
+		SELECT id, email, active, password_hash, created_at, updated_at FROM users WHERE email = ?
+	`, email)
+	err := row.Scan(&user.Id, &user.Email, &user.Active, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrorUserNotFound
+		}
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func (s *UserRepository) NewObject() models.User {
@@ -36,14 +50,31 @@ func (s *UserRepository) Get(ctx context.Context, id uint) (*models.User, error)
 	`, id)
 	err := row.Scan(&user.Id, &user.Email, &user.Active, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrorUserNotFound
+		}
 		return nil, err
 	}
 
 	return user, nil
 }
 
-func (s *UserRepository) Delete(ctx context.Context, id uint) {
+func (s *UserRepository) Delete(ctx context.Context, id uint) error {
+	res, err := db.FromContext(ctx).ExecContext(ctx, `DELETE FROM users WHERE id = ?`, id)
+	if err != nil {
+		return err
+	}
 
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrorUserNoRowsAffected
+	}
+
+	return nil
 }
 
 func (s *UserRepository) Create(ctx context.Context, user *models.User) error {
@@ -76,7 +107,7 @@ func (s *UserRepository) List(ctx context.Context, options map[string]any) []*mo
 
 func (s *UserRepository) Update(ctx context.Context, user *models.User, columns map[string]any) error {
 	if len(columns) == 0 {
-		return ErrorNoFieldsToUpdate
+		return ErrorUserNoFieldsToUpdate
 	}
 
 	user.UpdatedAt = time.Now()
@@ -101,11 +132,11 @@ func (s *UserRepository) Update(ctx context.Context, user *models.User, columns 
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
 		log.Println(err)
-		return ErrorUnableToUpdateUser
+		return ErrorUserUnableToUpdate
 	}
 
 	if rowsAffected == 0 {
-		return ErrorNoRowsAffected
+		return ErrorUserNoRowsAffected
 	}
 
 	// NOTE: that's not required second call, since we already know what fields will be updated
@@ -125,7 +156,7 @@ func validateUserObject(user models.User) error {
 	}
 
 	if user.PasswordHash == "" {
-		return ErrorInvalidPassword
+		return ErrorUserInvalidPassword
 	}
 
 	return nil
