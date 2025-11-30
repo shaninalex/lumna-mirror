@@ -16,13 +16,6 @@ func main() {
 
 	router := web.NewDefaultRouter()
 
-	// TODO: make controller registry
-	// For example:
-	// router.RegisterController("/auth", auth.NewAuthController)
-	// router.RegisterController("/user", auth.NewUserController)
-	// router.RegisterController("/projects", auth.NewProjectsController)
-	// router.RegisterController("/task", auth.NewTaskController)
-
 	port := config.Int("port")
 
 	if err := router.Run(port); err != nil && !errors.Is(err, http.ErrServerClosed) {
