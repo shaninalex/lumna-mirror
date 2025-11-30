@@ -19,7 +19,7 @@ func ApplyMigrationsEmbed(db *sql.DB) {
 		panic(err)
 	}
 
-	d, err := iofs.New(app.MigrationsFS, "migrations")
+	d, err := iofs.New(app.EmbedDatabaseMigrations, "migrations")
 	if err != nil {
 		panic(err)
 	}
