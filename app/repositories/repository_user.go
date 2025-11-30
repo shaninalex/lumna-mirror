@@ -39,10 +39,6 @@ func (s *UserRepository) GetByEmail(ctx context.Context, email string) (*models.
 	return user, nil
 }
 
-func (s *UserRepository) NewObject() models.User {
-	return models.User{}
-}
-
 func (s *UserRepository) Get(ctx context.Context, id uint) (*models.User, error) {
 	user := &models.User{}
 	row := db.FromContext(ctx).QueryRow(`
@@ -105,19 +101,19 @@ func (s *UserRepository) List(ctx context.Context, options map[string]any) []*mo
 	return []*models.User{}
 }
 
-func (s *UserRepository) Update(ctx context.Context, user *models.User, columns map[string]any) error {
-	if len(columns) == 0 {
+func (s *UserRepository) Update(ctx context.Context, user *models.User, opts ...Option) error {
+	if len(opts) == 0 {
 		return ErrorUserNoFieldsToUpdate
 	}
 
 	user.UpdatedAt = time.Now()
-	columns["updated_at"] = user.UpdatedAt
-	setParts := make([]string, 0, len(columns))
-	args := make([]any, 0, len(columns)+1)
+	opts = append(opts, Option{Key: "updated_at", Value: user.UpdatedAt})
+	setParts := make([]string, 0, len(opts))
+	args := make([]any, 0, len(opts)+1)
 
-	for field, value := range columns {
-		setParts = append(setParts, fmt.Sprintf("%s = ?", field))
-		args = append(args, value)
+	for _, opt := range opts {
+		setParts = append(setParts, fmt.Sprintf("%s = ?", opt.Key))
+		args = append(args, opt.Value)
 	}
 
 	query := fmt.Sprintf("UPDATE users SET %s WHERE id = ?",

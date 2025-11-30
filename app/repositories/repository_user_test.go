@@ -48,9 +48,7 @@ func Test_UpdateUser(t *testing.T) {
 		t.Log(err)
 		return
 	}
-	err = repo.Update(ctx, &user, map[string]any{
-		"email": newEmail,
-	})
+	err = repo.Update(ctx, &user, repositories.Option{Key: "email", Value: newEmail})
 	assert.NoError(t, err, "Should update user without errors")
 	if err != nil {
 		t.Log(err)
