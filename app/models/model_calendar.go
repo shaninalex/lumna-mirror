@@ -20,3 +20,4 @@ type Calendar struct {
 
 func (s *Calendar) GetId() uint  { return s.Id }
 func (s *Calendar) SetId(u uint) { s.Id = u }
+
