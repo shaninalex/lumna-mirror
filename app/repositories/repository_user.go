@@ -97,8 +97,31 @@ func (s *UserRepository) Create(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-func (s *UserRepository) List(ctx context.Context, options map[string]any) []*models.User {
-	return []*models.User{}
+func (s *UserRepository) List(ctx context.Context, where string) ([]*models.User, error) {
+	query := `SELECT id, email, active, created_at, updated_at FROM users`
+	if where != "" {
+		query = fmt.Sprintf(`SELECT id, email, active, created_at, updated_at FROM users WHERE %s`, where)
+	}
+	rows, err := db.FromContext(ctx).Query(query)
+	if err != nil {
+		return nil, err
+	}
+
+	users := []*models.User{}
+	for rows.Next() {
+		var user models.User
+		if err := rows.Scan(
+			&user.Id,
+			&user.Email,
+			&user.Active,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		users = append(users, &user)
+	}
+	return users, nil
 }
 
 func (s *UserRepository) Update(ctx context.Context, user *models.User, opts ...Option) error {
@@ -141,8 +164,17 @@ func (s *UserRepository) Update(ctx context.Context, user *models.User, opts ...
 	return err
 }
 
-func (s *UserRepository) Count(ctx context.Context, options map[string]any) (int, error) {
-	return 0, nil
+func (s *UserRepository) Count(ctx context.Context, where string) (int, error) {
+	query := `SELECT count(*) FROM users`
+	if where != "" {
+		query = fmt.Sprintf(`SELECT count(*) FROM users WHERE %s`, where)
+	}
+	var count int
+	row := db.FromContext(ctx).QueryRow(query)
+	if err := row.Scan(&count); err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
 func validateUserObject(user models.User) error {

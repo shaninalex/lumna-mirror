@@ -11,7 +11,7 @@ type Repository[T any] interface {
 	Get(ctx context.Context, id uint) (*T, error)
 	Delete(ctx context.Context, id uint) error
 	Create(ctx context.Context, entry *T) error
-	List(ctx context.Context, options map[string]any) []*T
+	List(ctx context.Context, where string) ([]*T, error)
 	Update(ctx context.Context, entry *T, opts ...Option) error
-	Count(ctx context.Context, options map[string]any) (int, error)
+	Count(ctx context.Context, where string) (int, error)
 }
