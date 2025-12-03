@@ -5,11 +5,11 @@ type ContextKey string
 
 const (
 	// ContextUserID - user id
-	ContextUserID = "user_id"
+	ContextUserID ContextKey = "user_id"
 
 	// ContextDB - database
-	ContextDB = "database"
+	ContextDB ContextKey = "database"
 
 	// ContextAppName - used to map request to a service
-	ContextAppName = "app_name"
+	ContextAppName ContextKey = "app_name"
 )

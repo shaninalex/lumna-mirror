@@ -5,7 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"gitlab.com/shaninalex/lumna/_old_app/domain"
+	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -41,12 +42,12 @@ func (s *StepUser) Execute() error {
 		panic(err)
 	}
 
-	user := &domain.User{
+	user := &models.User{
 		Email:        email,
 		PasswordHash: string(hash),
 	}
 	ctx := context.Background()
-	user, err = domain.UserSave(ctx, s.db, user)
+	err = repositories.NewUserRepository().Create(ctx, user)
 	if err != nil {
 		panic(err)
 	}
