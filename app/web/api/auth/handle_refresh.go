@@ -1,0 +1,38 @@
+package auth
+
+import (
+	"log"
+	"net/http"
+
+	"gitlab.com/shaninalex/lumna/_old_app/pkg/token"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
+)
+
+func (s *AuthHandler) HandleRefresh(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	refreshCookie, err := r.Cookie(token.RefreshTokenCookieName)
+	if err != nil {
+		http.Error(w, "missing refresh token", http.StatusUnauthorized)
+		return
+	}
+
+	// NOTE: tmp, while services not ready
+	log.Println(ctx, refreshCookie)
+
+	// result, err := s.authService.RefreshAccessToken(ctx, refreshCookie.Value)
+	// if err != nil {
+	// 	web.Error(w, http.StatusBadRequest, err)
+	// 	return
+	// }
+	// http.SetCookie(w, &http.Cookie{
+	// 	Name:     token.AccessTokenCookieName,
+	// 	Value:    result.Token,
+	// 	HttpOnly: true,
+	// 	Secure:   true,
+	// 	Path:     "/",
+	// 	SameSite: http.SameSiteLaxMode,
+	// 	MaxAge:   token.NumericAccessTokenLifeTime,
+	// })
+
+	utils.Success(w, nil, "Refresh Successful")
+}

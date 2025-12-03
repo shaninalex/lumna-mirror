@@ -9,6 +9,8 @@ import (
 	"gitlab.com/shaninalex/lumna/app/base"
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"gitlab.com/shaninalex/lumna/app/web"
+
+	authApp "gitlab.com/shaninalex/lumna/app/web/api/auth"
 )
 
 func main() {
@@ -31,6 +33,8 @@ func main() {
 	if static != nil {
 		router.GET("/", web.FrontendHandler(static))
 	}
+
+	authApp.NewAuthController(router)
 
 	port := config.Int("port")
 	if err := router.Run(port); err != nil && !errors.Is(err, http.ErrServerClosed) {
