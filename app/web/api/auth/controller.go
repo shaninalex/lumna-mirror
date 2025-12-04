@@ -1,12 +1,17 @@
 package auth
 
-import "gitlab.com/shaninalex/lumna/app/web"
+import (
+	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/web"
+)
 
 func NewAuthHandler() *AuthHandler {
 	return &AuthHandler{}
 }
 
 type AuthHandler struct {
+	userService services.UserManager
+	authService services.AuthManager
 }
 
 func NewAuthController(router *web.Router) {

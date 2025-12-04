@@ -6,21 +6,21 @@ import (
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
-type ApiAuthService interface {
+type AuthManager interface {
 	// Login generates new access + refresh tokens and stores refresh token
-	Login(ctx context.Context, userID int64, device string) (*AccessTokenResult, *RefreshTokenResult, error)
+	Login(ctx context.Context, userID uint, device string) (*AccessTokenResult, *RefreshTokenResult, error)
 
 	// Logout deletes refresh token (single device)
-	Logout(ctx context.Context, userID int64, refreshToken string) error
+	Logout(ctx context.Context, userID uint, refreshToken string) error
 
 	// ListSessions returns all refresh tokens for a user
-	ListSessions(ctx context.Context, userID int64) ([]*models.UserToken, error)
+	ListSessions(ctx context.Context, userID uint) ([]*models.UserToken, error)
 
 	// RefreshAccessToken validates refresh token and returns a new access token
 	RefreshAccessToken(ctx context.Context, refreshToken string) (*AccessTokenResult, error)
 }
 
-func NewAuthService() ApiAuthService {
+func NewAuthManager() AuthManager {
 	return &AuthService{
 		accessTokenService:  NewDefaultAccessTokenService(),
 		refreshTokenService: NewDefaultRefreshTokenService(),
@@ -32,7 +32,7 @@ type AuthService struct {
 	refreshTokenService RefreshTokenService
 }
 
-func (s *AuthService) Login(ctx context.Context, userID int64, device string) (*AccessTokenResult, *RefreshTokenResult, error) {
+func (s *AuthService) Login(ctx context.Context, userID uint, device string) (*AccessTokenResult, *RefreshTokenResult, error) {
 	//accessResult, err := s.accessTokenService.Create(userID, token.AudTokenAPIUser)
 	//if err != nil {
 	//	return nil, nil, err
@@ -57,13 +57,13 @@ func (s *AuthService) Login(ctx context.Context, userID int64, device string) (*
 	panic("not implemented")
 }
 
-func (s *AuthService) Logout(ctx context.Context, userID int64, refreshToken string) error {
+func (s *AuthService) Logout(ctx context.Context, userID uint, refreshToken string) error {
 	//connection := db.GetDb(ctx)
 	//return models.DeleteTokenByRefreshString(ctx, connection, userID, refreshToken)
 	panic("not implemented")
 }
 
-func (s *AuthService) ListSessions(ctx context.Context, userID int64) ([]*models.UserToken, error) {
+func (s *AuthService) ListSessions(ctx context.Context, userID uint) ([]*models.UserToken, error) {
 	//tokens, err := domain.GetTokens(ctx, db.GetDb(ctx), userID)
 	//if err != nil {
 	//	return nil, err

@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"log"
 	"net/http"
 
 	"gitlab.com/shaninalex/lumna/app/pkg/token"
@@ -16,23 +15,20 @@ func (s *AuthHandler) HandleRefresh(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// NOTE: tmp, while services not ready
-	log.Println(ctx, refreshCookie)
-
-	// result, err := s.authService.RefreshAccessToken(ctx, refreshCookie.Value)
-	// if err != nil {
-	// 	web.Error(w, http.StatusBadRequest, err)
-	// 	return
-	// }
-	// http.SetCookie(w, &http.Cookie{
-	// 	Name:     token.AccessTokenCookieName,
-	// 	Value:    result.Token,
-	// 	HttpOnly: true,
-	// 	Secure:   true,
-	// 	Path:     "/",
-	// 	SameSite: http.SameSiteLaxMode,
-	// 	MaxAge:   token.NumericAccessTokenLifeTime,
-	// })
+	result, err := s.authService.RefreshAccessToken(ctx, refreshCookie.Value)
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:     token.AccessTokenCookieName,
+		Value:    result.Token,
+		HttpOnly: true,
+		Secure:   true,
+		Path:     "/",
+		SameSite: http.SameSiteLaxMode,
+		MaxAge:   token.NumericAccessTokenLifeTime,
+	})
 
 	utils.Success(w, nil, "Refresh Successful")
 }

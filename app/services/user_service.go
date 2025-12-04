@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserManager interface {
@@ -50,7 +50,7 @@ func (s UserService) CheckPassword(ctx context.Context, userId uint, password st
 	if err != nil {
 		return err
 	}
-	if err = bcrypt.CompareHashAndPassword([]byte(pwdHash), []byte(password)); err != nil {
+	if err = utils.ValidatePassword(pwdHash, password); err != nil {
 		return err
 	}
 	return nil
@@ -58,7 +58,7 @@ func (s UserService) CheckPassword(ctx context.Context, userId uint, password st
 
 // CreateUser create user
 func (s UserService) CreateUser(ctx context.Context, email, rawPassword string) (*models.User, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(rawPassword), bcrypt.DefaultCost)
+	hash, err := utils.CreatePasswordHash(rawPassword)
 	if err != nil {
 		return nil, err
 	}

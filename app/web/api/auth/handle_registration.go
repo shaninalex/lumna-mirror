@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"log"
+	"errors"
 	"net/http"
 
 	"gitlab.com/shaninalex/lumna/app/web/utils"
@@ -20,18 +20,15 @@ func (s *AuthHandler) HandleRegistration(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// NOTE: tmp, while services not ready
-	log.Println(ctx, payload)
+	if _, err = s.userService.GetUserByEmail(ctx, payload.Email); err == nil {
+		utils.Error(w, http.StatusBadRequest, errors.New("user with email already exists"))
+		return
+	}
 
-	// if _, err = s.userService.GetUserByEmail(ctx, payload.Email); err == nil {
-	// 	web.Error(w, http.StatusBadRequest, errors.New("user with email already exists"))
-	// 	return
-	// }
-	//
-	// if _, err = s.userService.CreateUser(ctx, payload.Email, payload.Password); err != nil {
-	// 	web.Error(w, http.StatusBadRequest, err)
-	// 	return
-	// }
+	if _, err = s.userService.CreateUser(ctx, payload.Email, payload.Password); err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
 
 	utils.Success(w, nil, "Registration Successful")
 }

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 	"gitlab.com/shaninalex/lumna/app/services"
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
@@ -18,21 +19,54 @@ func Test_UserServiceGetUser(t *testing.T) {
 	user, err := service.GetUser(ctx, testUser.GetId())
 	assert.NoError(t, err, "should get user without errors")
 	assert.Equal(t, user.Id, testUser.Id, "should have correct user id")
-
 }
 
 func Test_UserServiceGetUserByEmail(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
 
+	service := services.NewUserService()
+	testUser := tests.CreateUser(ctx, "test@test.com")
+
+	user, err := service.GetUserByEmail(ctx, testUser.Email)
+	assert.NoError(t, err, "should get user without errors")
+	assert.Equal(t, user.Email, testUser.Email, "should have correct user email")
 }
 
 func Test_UserServiceCheckPassword(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
 
+	service := services.NewUserService()
+	testUser := tests.CreateUser(ctx, "test@test.com")
+
+	err := service.CheckPassword(ctx, testUser.GetId(), testUser.Email)
+	assert.NoError(t, err, "should check password without errors")
 }
 
 func Test_UserServiceCreateUser(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
+	service := services.NewUserService()
 
+	user, err := service.CreateUser(ctx, "test@test.com", "password")
+	assert.NoError(t, err, "should create user without errors")
+	err = service.CheckPassword(ctx, user.GetId(), "password")
+	assert.NoError(t, err, "should check password without errors")
 }
 
 func Test_UserServiceUpdate(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
 
+	service := services.NewUserService()
+	testUser := tests.CreateUser(ctx, "test@test.com")
+
+	newEmail := "test2@test.com"
+	err := service.Update(ctx, testUser.GetId(), repositories.Option{Key: "email", Value: newEmail})
+	assert.NoError(t, err, "should update user without errors")
+
+	user, err := service.GetUser(ctx, testUser.GetId())
+	assert.NoError(t, err, "should get user without errors")
+	assert.Equal(t, user.Email, newEmail, "should have correct user email")
 }
