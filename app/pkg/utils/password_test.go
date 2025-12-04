@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/shaninalex/lumna/_old_app/pkg/utils"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 )
 
 func Test_CreatePasswordHash(t *testing.T) {

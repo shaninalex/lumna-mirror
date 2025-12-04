@@ -123,7 +123,7 @@ func Test_ListUsers(t *testing.T) {
 	userA := createUser(ctx, repo, "test1@test.com")
 	_ = createUser(ctx, repo, "test2@test.com")
 
-	usersList, err := repo.List(ctx, fmt.Sprintf("email = \"%s\"", userA.Email))
+	usersList, err := repo.List(ctx, repositories.Option{Key: "email", Value: userA.Email})
 	assert.NoError(t, err, "should list users without errors")
 	assert.Equal(t, len(usersList), 1, "should get only 1 user")
 	assert.Equal(t, usersList[0].Email, userA.Email)
@@ -137,7 +137,7 @@ func Test_ListAllUsers(t *testing.T) {
 	userA := createUser(ctx, repo, "test1@test.com")
 	userB := createUser(ctx, repo, "test2@test.com")
 
-	usersList, err := repo.List(ctx, "")
+	usersList, err := repo.List(ctx)
 	assert.NoError(t, err, "should list users without errors")
 	assert.Equal(t, len(usersList), 2, "should get 2 users")
 

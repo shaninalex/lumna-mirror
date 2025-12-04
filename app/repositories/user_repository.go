@@ -39,6 +39,22 @@ func (s *UserRepository) GetByEmail(ctx context.Context, email string) (*models.
 	return user, nil
 }
 
+func (s *UserRepository) GetUserPasswordHash(ctx context.Context, id uint) (string, error) {
+	pwdHash := ""
+	row := db.FromContext(ctx).QueryRow(`
+		SELECT password_hash FROM users WHERE id = ?
+	`, id)
+	err := row.Scan(&pwdHash)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", ErrorUserNotFound
+		}
+		return "", err
+	}
+
+	return pwdHash, nil
+}
+
 func (s *UserRepository) Get(ctx context.Context, id uint) (*models.User, error) {
 	user := &models.User{}
 	row := db.FromContext(ctx).QueryRow(`
@@ -97,14 +113,32 @@ func (s *UserRepository) Create(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-func (s *UserRepository) List(ctx context.Context, where string) ([]*models.User, error) {
+func (s *UserRepository) List(ctx context.Context, opts ...Option) ([]*models.User, error) {
 	query := `SELECT id, email, active, created_at, updated_at FROM users`
-	if where != "" {
-		query = fmt.Sprintf(`SELECT id, email, active, created_at, updated_at FROM users WHERE %s`, where)
-	}
-	rows, err := db.FromContext(ctx).Query(query)
-	if err != nil {
-		return nil, err
+	var rows *sql.Rows
+	var err error
+	if len(opts) != 0 {
+		whereParts := make([]string, 0, len(opts))
+		args := make([]any, 0, len(opts))
+
+		for _, opt := range opts {
+			whereParts = append(whereParts, fmt.Sprintf("%s = ?", opt.Key))
+			args = append(args, opt.Value)
+		}
+
+		query = fmt.Sprintf("SELECT id, email, active, created_at, updated_at FROM users WHERE %s",
+			strings.Join(whereParts, " AND "),
+		)
+		rows, err = db.FromContext(ctx).QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, err
+		}
+
+	} else {
+		rows, err = db.FromContext(ctx).QueryContext(ctx, query)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	users := []*models.User{}

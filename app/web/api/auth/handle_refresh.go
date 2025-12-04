@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"gitlab.com/shaninalex/lumna/_old_app/pkg/token"
+	"gitlab.com/shaninalex/lumna/app/pkg/token"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
