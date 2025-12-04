@@ -11,6 +11,8 @@ import (
 	"gitlab.com/shaninalex/lumna/app/web"
 
 	authApp "gitlab.com/shaninalex/lumna/app/web/api/auth"
+	tokenApp "gitlab.com/shaninalex/lumna/app/web/api/token"
+	userApp "gitlab.com/shaninalex/lumna/app/web/api/user"
 )
 
 func main() {
@@ -34,7 +36,9 @@ func main() {
 		router.GET("/", web.FrontendHandler(static))
 	}
 
-	authApp.NewAuthController(router)
+	authApp.RegisterAuthController(router, "/api/v1/auth")
+	userApp.RegisterUserController(router, "/api/v1/user")
+	tokenApp.RegisterTokenController(router, "/api/v1/token")
 
 	port := config.Int("port")
 	if err := router.Run(port); err != nil && !errors.Is(err, http.ErrServerClosed) {

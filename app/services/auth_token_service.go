@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/token"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
 type AuthManager interface {
@@ -24,37 +26,39 @@ func NewAuthManager() AuthManager {
 	return &AuthService{
 		accessTokenService:  NewDefaultAccessTokenService(),
 		refreshTokenService: NewDefaultRefreshTokenService(),
+		userTokenRepository: repositories.NewUserTokenRepository(),
 	}
 }
 
 type AuthService struct {
 	accessTokenService  AccessTokenService
 	refreshTokenService RefreshTokenService
+	userTokenRepository *repositories.UserTokenRepository
 }
 
-func (s *AuthService) Login(ctx context.Context, userID uint, device string) (*AccessTokenResult, *RefreshTokenResult, error) {
-	//accessResult, err := s.accessTokenService.Create(userID, token.AudTokenAPIUser)
-	//if err != nil {
-	//	return nil, nil, err
-	//}
-	//
-	//refreshResults, err := s.refreshTokenService.Create(userID, device)
-	//if err != nil {
-	//	return nil, nil, err
-	//}
-	//
-	//tokenModel := &models.UserToken{
-	//	UserID:           userID,
-	//	Device:           device,
-	//	RefreshToken:     refreshResults.Token,
-	//	RefreshExpiresAt: refreshResults.ExpiresAt,
-	//}
-	//err = domain.SaveToken(ctx, db.GetDb(ctx), tokenModel)
-	//if err != nil {
-	//	return nil, nil, err
-	//}
-	//return accessResult, refreshResults, nil
-	panic("not implemented")
+func (s *AuthService) Login(ctx context.Context, userId uint, device string) (*AccessTokenResult, *RefreshTokenResult, error) {
+	accessResult, err := s.accessTokenService.Create(userId, token.AudTokenAPIUser)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	refreshResults, err := s.refreshTokenService.Create(userId, device)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	tokenModel := &models.UserToken{
+		UserID:           userId,
+		Device:           device,
+		RefreshToken:     refreshResults.Token,
+		RefreshExpiresAt: refreshResults.ExpiresAt,
+	}
+	err = s.userTokenRepository.Create(ctx, tokenModel)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return accessResult, refreshResults, nil
 }
 
 func (s *AuthService) Logout(ctx context.Context, userID uint, refreshToken string) error {

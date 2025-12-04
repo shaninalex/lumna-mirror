@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"fmt"
+
 	"gitlab.com/shaninalex/lumna/app/services"
 	"gitlab.com/shaninalex/lumna/app/web"
 )
@@ -14,9 +16,9 @@ type AuthHandler struct {
 	authService services.AuthManager
 }
 
-func NewAuthController(router *web.Router) {
+func RegisterAuthController(router *web.Router, baseUrl string) {
 	h := NewAuthHandler()
-	router.POST("/api/v1/auth/login", h.HandleLogin)
-	router.POST("/api/v1/auth/register", h.HandleRegistration)
-	router.POST("/api/v1/auth/refresh", h.HandleRefresh)
+	router.POST(fmt.Sprintf("%s/login", baseUrl), h.HandleLogin)
+	router.POST(fmt.Sprintf("%s/register", baseUrl), h.HandleRegistration)
+	router.POST(fmt.Sprintf("%s/refresh", baseUrl), h.HandleRefresh)
 }

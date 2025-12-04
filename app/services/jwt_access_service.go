@@ -22,7 +22,7 @@ type AccessTokenResult struct {
 // AccessTokenService handles creation and validation of access tokens
 type AccessTokenService interface {
 	// Create generates a new access token for a given user Id and audience
-	Create(userID int64, aud token.AudToken) (*AccessTokenResult, error)
+	Create(userID uint, aud token.AudToken) (*AccessTokenResult, error)
 
 	// Validate parses and validates the token string, returns claims if valid
 	Validate(rawToken string, aud token.AudToken) (*jwt.RegisteredClaims, error)
@@ -44,7 +44,7 @@ func NewAccessTokenJWTService(signingKey string, issuer string) *AccessTokenJWTS
 	}
 }
 
-func (s *AccessTokenJWTService) Create(userID int64, aud token.AudToken) (*AccessTokenResult, error) {
+func (s *AccessTokenJWTService) Create(userID uint, aud token.AudToken) (*AccessTokenResult, error) {
 	now := time.Now()
 	exp := now.Add(token.AccessTokenLifeTime)
 	jti := uuid.NewString()
@@ -66,7 +66,7 @@ func (s *AccessTokenJWTService) Create(userID int64, aud token.AudToken) (*Acces
 	return &AccessTokenResult{
 		Token:     accessToken,
 		ExpiresAt: exp,
-		Sub:       userID,
+		Sub:       int64(userID),
 		JTI:       jti,
 	}, nil
 }

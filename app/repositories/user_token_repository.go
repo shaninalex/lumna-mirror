@@ -65,7 +65,7 @@ func (s *UserTokenRepository) Create(ctx context.Context, entry *models.UserToke
 	if err != nil {
 		return err
 	}
-	entry.SetID(id)
+	entry.SetID(uint(id))
 	return err
 }
 
