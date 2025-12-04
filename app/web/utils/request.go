@@ -9,8 +9,8 @@ import (
 )
 
 // GetUserID retrieves the user Id from context
-func GetUserID(r *http.Request) int64 {
-	if id, ok := r.Context().Value(base.ContextUserID).(int64); ok {
+func GetUserID(r *http.Request) uint {
+	if id, ok := r.Context().Value(base.ContextUserID).(uint); ok {
 		return id
 	}
 	panic("user was not found in request")

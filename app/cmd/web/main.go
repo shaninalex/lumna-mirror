@@ -36,9 +36,9 @@ func main() {
 		router.GET("/", web.FrontendHandler(static))
 	}
 
-	authApp.RegisterAuthController(router, "/api/v1/auth")
-	userApp.RegisterUserController(router, "/api/v1/user")
-	tokenApp.RegisterTokenController(router, "/api/v1/token")
+	authApp.RegisterAuthController(router)   // /api/v1/auth/...
+	userApp.RegisterUserController(router)   // /api/v1/user/...
+	tokenApp.RegisterTokenController(router) // /api/v1/token/...
 
 	port := config.Int("port")
 	if err := router.Run(port); err != nil && !errors.Is(err, http.ErrServerClosed) {

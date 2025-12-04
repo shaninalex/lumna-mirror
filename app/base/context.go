@@ -12,4 +12,6 @@ const (
 
 	// ContextAppName - used to map request to a service
 	ContextAppName ContextKey = "app_name"
+
+	ContextDevice ContextKey = "device"
 )

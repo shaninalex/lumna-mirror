@@ -4,7 +4,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/web"
 )
 
-func RegisterTokenController(router *web.Router, baseUrl string) {
+func RegisterTokenController(router *web.Router) {
 	h := NewTokenHandler()
 
 	// list all user tokens
