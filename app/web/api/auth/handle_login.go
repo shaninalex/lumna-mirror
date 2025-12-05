@@ -52,7 +52,7 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	})
 
 	http.SetCookie(w, &http.Cookie{
-		Name:     "refresh_token",
+		Name:     token.RefreshTokenCookieName,
 		Value:    refreshToken.Token,
 		HttpOnly: true,
 		Secure:   true,

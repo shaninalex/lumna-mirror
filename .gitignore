@@ -14,3 +14,5 @@ config/oathkeeper/oathkeeper.yml
 app/web/embed/
 *.db
 bin/
+
+__debug_*

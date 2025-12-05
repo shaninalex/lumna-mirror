@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 
 	"gitlab.com/shaninalex/lumna/app/base"
@@ -19,6 +20,8 @@ import (
 func main() {
 	config := base.GetConfig()
 	fmt.Println("Run Lumna as a webserver")
+	log.Println("Configuration path: ", config.GetConfigPath())
+	log.Println("Database path: ", config.String("database_path"))
 
 	dbConnection, err := sql.Open("sqlite3", config.String("database_path"))
 	if err != nil {
