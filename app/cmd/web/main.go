@@ -9,6 +9,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/base"
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"gitlab.com/shaninalex/lumna/app/web"
+	"gitlab.com/shaninalex/lumna/app/web/middlewares"
 
 	authApp "gitlab.com/shaninalex/lumna/app/web/api/auth"
 	tokenApp "gitlab.com/shaninalex/lumna/app/web/api/token"
@@ -26,7 +27,11 @@ func main() {
 
 	router := web.NewDefaultRouter()
 	router.ApplyMiddlewares([]web.RouterMiddleware{
+		middlewares.NewRecoveryMiddleware(),
 		db.NewMiddleware(dbConnection),
+		middlewares.NewLoggerMiddleware(),
+		middlewares.NewCommonMiddleware(),
+		middlewares.NewHeadersMiddleware(),
 	})
 
 	static := web.GetStaticFS()

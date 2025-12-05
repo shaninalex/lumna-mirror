@@ -6,7 +6,10 @@ import (
 )
 
 func NewAuthHandler() *AuthHandler {
-	return &AuthHandler{}
+	return &AuthHandler{
+		userService: services.NewUserService(),
+		authService: services.NewAuthManager(),
+	}
 }
 
 type AuthHandler struct {

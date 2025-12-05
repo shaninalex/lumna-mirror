@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"path"
 
-	"gitlab.com/shaninalex/lumna/app/web/middelwares"
+	"gitlab.com/shaninalex/lumna/app/web/middlewares"
 )
 
 const (
@@ -92,7 +92,7 @@ func (r *Router) Run(port int) error {
 		panic("port is not provided")
 	}
 	log.Printf("server started... on port :%d", port)
-	return http.ListenAndServe(fmt.Sprintf(":%d", port), middelwares.CorsMiddleware(r))
+	return http.ListenAndServe(fmt.Sprintf(":%d", port), middlewares.CorsMiddleware(r))
 }
 
 func (r *Router) printRoutes() {
