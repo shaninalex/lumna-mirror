@@ -1,5 +1,5 @@
 migrate_create:
-	~/go/bin/migrate create -ext sql -dir ./app/migrations -format "20060102150405" $(name)
+	~/go/bin/migrate create -ext sql -dir ./app/persistance/migrations -format "20060102150405" $(name)
 
 migrate_up:
 	~/go/bin/migrate \
@@ -34,7 +34,7 @@ dir_list:
 	ls -la ~/.config/lumna
 
 run:
-	go run -tags embed ./app/cmd/web/
+	go run ./app
 
 debug:
 	dlv exec ./bin/lumna

@@ -5,8 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
+	"strconv"
 
+	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/base"
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"gitlab.com/shaninalex/lumna/app/web"
@@ -17,7 +20,36 @@ import (
 	userApp "gitlab.com/shaninalex/lumna/app/web/api/user"
 )
 
-func Serve() {
+func NewRootServeCommand() (cmd *cobra.Command) {
+	cmd = &cobra.Command{
+		Use:   "serve",
+		Short: "Run webserver",
+		Args:  cobra.ArbitraryArgs,
+		Run:   RunWebServer,
+	}
+
+	cmd.Flags().Int("port", 8000, "port to listen on")
+	cmd.Flags().Bool("embed", false, "Embed web client static files")
+	return cmd
+}
+
+func RunWebServer(cmd *cobra.Command, args []string) {
+	port, err := cmd.Flags().GetInt("port")
+	if err != nil {
+		panic(err)
+	}
+
+	ln, err := net.Listen("tcp", ":"+strconv.Itoa(port))
+	if err != nil {
+		panic(err)
+	}
+	_ = ln.Close()
+
+	embed, err := cmd.Flags().GetBool("embed")
+	if err != nil {
+		panic(fmt.Errorf("unable to set embed"))
+	}
+
 	config := base.GetConfig()
 	fmt.Println("Run Lumna as a webserver")
 	log.Println("Configuration path: ", config.GetConfigPath())
@@ -37,18 +69,16 @@ func Serve() {
 		middlewares.NewHeadersMiddleware(),
 	})
 
-	static := web.GetStaticFS()
-
-	// Public controllers
-	if static != nil {
-		router.GET("/", web.FrontendHandler(static))
+	if embed {
+		if static := web.GetStaticFS(); static != nil {
+			router.GET("/", web.FrontendHandler(static))
+		}
 	}
 
 	authApp.RegisterAuthController(router)   // /api/v1/auth/...
 	userApp.RegisterUserController(router)   // /api/v1/user/...
 	tokenApp.RegisterTokenController(router) // /api/v1/token/...
 
-	port := config.Int("port")
 	if err := router.Run(port); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		panic(fmt.Errorf("server error: %v", err))
 	}
