@@ -12,6 +12,8 @@ func NewRootCmd() (cmd *cobra.Command) {
 		Use: "Lumna",
 	}
 	cmd.AddCommand(serve.NewRootServeCommand())
+	cmd.PersistentFlags().String("config", "", "Configuration path. Required.")
+	cmd.MarkPersistentFlagRequired("config")
 	return cmd
 }
 

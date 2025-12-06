@@ -10,7 +10,7 @@ database_path: "lumna.db?cache=shared&mode=rwc"
 secret_key: "a-string-secret-at-least-256-bits-long"
 
 # Application working mode:
-# development - many things logging in stdout, things can work in mock or local way
-# production - more silent way
+# development - additional logging, things can work in mock or local way
+# production - more 
 # testing - most of the things working in mocking way
 mode: development

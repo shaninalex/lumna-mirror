@@ -24,7 +24,20 @@ const (
 
 // DefaultDatabasePath default path of the database if env or config not provided
 func DefaultDatabasePath() string {
-	return path.Join(ShareDirectory, "lumna.db")
+	p, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	return path.Join(p, ShareDirectory, "lumna.db")
+}
+
+// DefaultConfigDirectory default path for the configuration directory
+func DefaultConfigDirectory() string {
+	p, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	return path.Join(p, ConfigDirectory)
 }
 
 // MakeProjectDirectories - creates directories used by project in user home folder
