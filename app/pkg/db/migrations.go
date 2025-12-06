@@ -8,7 +8,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
-	"gitlab.com/shaninalex/lumna/app"
+	"gitlab.com/shaninalex/lumna/app/persistance"
 )
 
 func ApplyMigrationsEmbed(db *sql.DB) {
@@ -19,7 +19,7 @@ func ApplyMigrationsEmbed(db *sql.DB) {
 		panic(err)
 	}
 
-	d, err := iofs.New(app.EmbedDatabaseMigrations, "migrations")
+	d, err := iofs.New(persistance.EmbedDatabaseMigrations, "migrations")
 	if err != nil {
 		panic(err)
 	}

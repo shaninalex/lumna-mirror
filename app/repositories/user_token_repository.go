@@ -69,7 +69,7 @@ func (s *UserTokenRepository) Create(ctx context.Context, entry *models.UserToke
 	return err
 }
 
-func (s *UserTokenRepository) List(ctx context.Context, opts ...Option) ([]*models.UserToken, error) {
+func (s *UserTokenRepository) List(ctx context.Context, opts ...db.Option) ([]*models.UserToken, error) {
 	if len(opts) == 0 {
 		return nil, fmt.Errorf("no options provided")
 	}
@@ -118,7 +118,7 @@ func (s *UserTokenRepository) List(ctx context.Context, opts ...Option) ([]*mode
 	return tokens, nil
 }
 
-func (s *UserTokenRepository) Update(ctx context.Context, entry *models.UserToken, opts ...Option) error {
+func (s *UserTokenRepository) Update(ctx context.Context, entry *models.UserToken, opts ...db.Option) error {
 	return nil
 }
 

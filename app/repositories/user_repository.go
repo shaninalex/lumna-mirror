@@ -113,7 +113,7 @@ func (s *UserRepository) Create(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-func (s *UserRepository) List(ctx context.Context, opts ...Option) ([]*models.User, error) {
+func (s *UserRepository) List(ctx context.Context, opts ...db.Option) ([]*models.User, error) {
 	query := `SELECT id, email, active, created_at, updated_at FROM users`
 	var rows *sql.Rows
 	var err error
@@ -158,13 +158,13 @@ func (s *UserRepository) List(ctx context.Context, opts ...Option) ([]*models.Us
 	return users, nil
 }
 
-func (s *UserRepository) Update(ctx context.Context, user *models.User, opts ...Option) error {
+func (s *UserRepository) Update(ctx context.Context, user *models.User, opts ...db.Option) error {
 	if len(opts) == 0 {
 		return ErrorUserNoFieldsToUpdate
 	}
 
 	user.UpdatedAt = time.Now()
-	opts = append(opts, Option{Key: "updated_at", Value: user.UpdatedAt})
+	opts = append(opts, db.Option{Key: "updated_at", Value: user.UpdatedAt})
 	setParts := make([]string, 0, len(opts))
 	args := make([]any, 0, len(opts)+1)
 

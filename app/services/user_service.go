@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 )
@@ -13,7 +14,7 @@ type UserManager interface {
 	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
 	CheckPassword(ctx context.Context, userId uint, rawPassword string) error
 	CreateUser(ctx context.Context, email string, rawPassword string) (*models.User, error)
-	Update(ctx context.Context, userId uint, option ...repositories.Option) error
+	Update(ctx context.Context, userId uint, option ...db.Option) error
 }
 
 var _ UserManager = &UserService{}
@@ -83,7 +84,7 @@ func (s UserService) CreateUser(ctx context.Context, email, rawPassword string) 
 }
 
 // Update update user
-func (s UserService) Update(ctx context.Context, userId uint, options ...repositories.Option) error {
+func (s UserService) Update(ctx context.Context, userId uint, options ...db.Option) error {
 	user, err := s.repository.Get(ctx, userId)
 	if err != nil {
 		return err

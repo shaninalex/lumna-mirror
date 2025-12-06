@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"gitlab.com/shaninalex/lumna/app/services"
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
@@ -63,7 +63,7 @@ func Test_UserServiceUpdate(t *testing.T) {
 	testUser := tests.CreateUser(ctx, "test@test.com")
 
 	newEmail := "test2@test.com"
-	err := service.Update(ctx, testUser.GetId(), repositories.Option{Key: "email", Value: newEmail})
+	err := service.Update(ctx, testUser.GetId(), db.Option{Key: "email", Value: newEmail})
 	assert.NoError(t, err, "should update user without errors")
 
 	user, err := service.GetUser(ctx, testUser.GetId())

@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 	"gitlab.com/shaninalex/lumna/app/tests"
@@ -50,7 +51,7 @@ func Test_UpdateUser(t *testing.T) {
 		t.Log(err)
 		return
 	}
-	err = repo.Update(ctx, &user, repositories.Option{Key: "email", Value: newEmail})
+	err = repo.Update(ctx, &user, db.Option{Key: "email", Value: newEmail})
 	assert.NoError(t, err, "Should update user without errors")
 	if err != nil {
 		t.Log(err)
@@ -123,7 +124,7 @@ func Test_ListUsers(t *testing.T) {
 	userA := createUser(ctx, repo, "test1@test.com")
 	_ = createUser(ctx, repo, "test2@test.com")
 
-	usersList, err := repo.List(ctx, repositories.Option{Key: "email", Value: userA.Email})
+	usersList, err := repo.List(ctx, db.Option{Key: "email", Value: userA.Email})
 	assert.NoError(t, err, "should list users without errors")
 	assert.Equal(t, len(usersList), 1, "should get only 1 user")
 	assert.Equal(t, usersList[0].Email, userA.Email)
