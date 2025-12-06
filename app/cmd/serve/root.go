@@ -1,4 +1,4 @@
-package main
+package serve
 
 import (
 	"database/sql"
@@ -17,7 +17,7 @@ import (
 	userApp "gitlab.com/shaninalex/lumna/app/web/api/user"
 )
 
-func main() {
+func Serve() {
 	config := base.GetConfig()
 	fmt.Println("Run Lumna as a webserver")
 	log.Println("Configuration path: ", config.GetConfigPath())

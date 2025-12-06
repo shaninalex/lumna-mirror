@@ -20,7 +20,6 @@ import (
 
 func main() {
 	config := base.GetConfig()
-
 	dbPath := db.GetDatabaseUri(config)
 
 	sqlDB, err := sql.Open("sqlite3", dbPath)
