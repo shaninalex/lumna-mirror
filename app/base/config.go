@@ -37,10 +37,6 @@ type Config struct {
 }
 
 func (s *Config) init() {
-	if err := dir.MakeProjectDirectories(); err != nil {
-		panic(err)
-	}
-
 	s.startTime = time.Now()
 	s.v = viper.New()
 

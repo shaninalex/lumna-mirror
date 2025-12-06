@@ -41,3 +41,8 @@ full cli mode without any web related things - sockets and http routers. Should 
 ### Calendar
 
 Calendar for fast task/reminder assignments
+
+### documentation
+
+add `man-like` documentation page. Big documentation text with all commands. Should gather that information from
+different packages and embed ( or not ) into binary.

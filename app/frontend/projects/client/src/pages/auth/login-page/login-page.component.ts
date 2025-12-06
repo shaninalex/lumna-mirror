@@ -26,11 +26,10 @@ import { LoaderComponent } from "@client/shared/ui"
 						Login
 					}
 				</button>
-				@if (errors) {
-					@for (err of errors; track $index) {
-						<div class="text-warning text-sm">{{ err }}</div>
-					}
-				}
+                @for (err of errors; track $index) {
+                    <div class="text-warning text-sm">{{ err }}</div>
+                }
+                {{ errors }}
 			</form>
 			<hr class="mb-4" />
 			<a [routerLink]="['/auth/register']" class="text-sm">Register</a>
@@ -53,15 +52,9 @@ export class LoginPageComponent {
 		this.errors = []
 		this.api
 			.login(this.form.value)
-			.pipe(
-				tap({
-					error: (err: APIResponse<any>) => (this.errors = err.messages),
-				}),
-				filter(resp => resp.status),
-				finalize(() => (this.loading = false))
-			)
 			.subscribe({
 				next: (data: APIResponse<{ token: string }>) => {
+                    console.log(data)
 					this.router.navigate(["/"])
 				},
 			})

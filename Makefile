@@ -22,11 +22,16 @@ build:
 	go build -tags embed -o bin/lumna ./app/cmd/web/
 
 
-clear_local:
-	rm -rf ~/.local/share/lumna/ && \
-	rm -rf ~/.local/state/lumna/ && \
-	rm ~/.local/bin/lumna && \
+dir_clear:
+	rm -rf ~/.local/share/lumna/
+	rm -rf ~/.local/state/lumna/
+	rm ~/.local/bin/lumna
 	rm -rf ~/.config/lumna
+
+dir_list:
+	ls -la ~/.local/share/lumna/
+	ls -la ~/.local/state/lumna/
+	ls -la ~/.config/lumna
 
 run:
 	go run -tags embed ./app/cmd/web/

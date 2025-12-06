@@ -11,8 +11,7 @@ type APIResponse[T any] struct {
 	Data     T        `json:"data,omitempty"`
 	Messages []string `json:"messages,omitempty"`
 
-	// TODO: make app error type
-	Errors []error `json:"errors,omitempty"`
+	Errors []string `json:"errors,omitempty"`
 }
 
 // NewAPIResponse - new api response.
@@ -35,7 +34,7 @@ func ReturnJSON(w http.ResponseWriter, status int, data any, params ...any) {
 		case string:
 			resp.Messages = append(resp.Messages, v)
 		case error:
-			resp.Errors = append(resp.Errors, v)
+			resp.Errors = append(resp.Errors, v.Error())
 		}
 	}
 
