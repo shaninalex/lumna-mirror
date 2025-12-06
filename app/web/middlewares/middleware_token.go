@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"gitlab.com/shaninalex/lumna/app/base"
+	"gitlab.com/shaninalex/lumna/app/global"
 	"gitlab.com/shaninalex/lumna/app/pkg/token"
 	"gitlab.com/shaninalex/lumna/app/services"
 )
@@ -62,7 +62,7 @@ func (s *TokenMiddleware) Wrap(next http.Handler) http.Handler {
 		ctx := r.Context()
 
 		// store claims in context
-		ctx = context.WithValue(ctx, base.ContextUserID, userID)
+		ctx = context.WithValue(ctx, global.ContextUserID, userID)
 
 		// Call next handler
 		next.ServeHTTP(w, r.WithContext(ctx))

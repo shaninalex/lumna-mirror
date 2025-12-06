@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/lumna/app/base"
+	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/pkg/token"
 )
 
@@ -34,7 +34,7 @@ type AccessTokenJWTService struct {
 }
 
 func NewDefaultAccessTokenService() AccessTokenService {
-	return NewAccessTokenJWTService(base.GetConfig().String("secret_key"), token.Issuer)
+	return NewAccessTokenJWTService(config.GetConfig().String("secret_key"), token.Issuer)
 }
 
 func NewAccessTokenJWTService(signingKey string, issuer string) *AccessTokenJWTService {

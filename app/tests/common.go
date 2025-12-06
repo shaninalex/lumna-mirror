@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 
-	"gitlab.com/shaninalex/lumna/app/base"
+	"gitlab.com/shaninalex/lumna/app/global"
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
 )
 
@@ -32,7 +32,7 @@ func SharedDatabase() *sql.DB {
 
 func TestContext() context.Context {
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, base.ContextDB, SharedDatabase())
+	ctx = context.WithValue(ctx, global.ContextDB, SharedDatabase())
 
 	return ctx
 }

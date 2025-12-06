@@ -10,7 +10,7 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/base"
+	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"gitlab.com/shaninalex/lumna/app/web"
 	"gitlab.com/shaninalex/lumna/app/web/middlewares"
@@ -50,7 +50,7 @@ func RunWebServer(cmd *cobra.Command, args []string) {
 		panic(fmt.Errorf("unable to set embed"))
 	}
 
-	config := base.GetConfig()
+	config := config.GetConfig()
 	fmt.Println("Run Lumna as a webserver")
 	log.Println("Configuration path: ", config.GetConfigPath())
 	log.Println("Database path: ", config.String("database_path"))

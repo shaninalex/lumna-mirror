@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/lumna/app/base"
+	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/pkg/token"
 )
 
@@ -36,7 +36,7 @@ type RefreshTokenJWTService struct {
 }
 
 func NewDefaultRefreshTokenService() RefreshTokenService {
-	return NewRefreshTokenJWTService(base.GetConfig().String("secret_key"), token.Issuer)
+	return NewRefreshTokenJWTService(config.GetConfig().String("secret_key"), token.Issuer)
 }
 
 func NewRefreshTokenJWTService(signingKey string, issuer string) *RefreshTokenJWTService {

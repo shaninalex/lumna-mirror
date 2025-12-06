@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"gitlab.com/shaninalex/lumna/app/base"
+	"gitlab.com/shaninalex/lumna/app/global"
 )
 
 // GetUserID retrieves the user Id from context
 func GetUserID(r *http.Request) uint {
-	if id, ok := r.Context().Value(base.ContextUserID).(uint); ok {
+	if id, ok := r.Context().Value(global.ContextUserID).(uint); ok {
 		return id
 	}
 	panic("user was not found in request")
@@ -18,7 +18,7 @@ func GetUserID(r *http.Request) uint {
 
 // GetAppName retrieves the app name from context
 func GetAppName(r *http.Request) *string {
-	if user, ok := r.Context().Value(base.ContextAppName).(*string); ok {
+	if user, ok := r.Context().Value(global.ContextAppName).(*string); ok {
 		return user
 	}
 	return nil

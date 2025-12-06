@@ -1,4 +1,4 @@
-package base
+package global
 
 // ContextKey - context key.
 type ContextKey string
