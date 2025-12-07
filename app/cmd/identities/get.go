@@ -2,6 +2,7 @@ package identities
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/cmd/client"
@@ -17,9 +18,20 @@ func NewIdentitiesGetRootCmd() *cobra.Command {
 			if err != nil {
 				panic(err)
 			}
+			c.DBConnect()
 
-			log.Println("Get identity", c)
+			id, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				panic(err)
+			}
 
+			user, err := c.UserManager.GetUser(c.Context(), uint(id))
+			if err != nil {
+				panic(err)
+			}
+
+			log.Println("ID: ", user.GetId())
+			log.Println("Email: ", user.GetEmail())
 		},
 	}
 

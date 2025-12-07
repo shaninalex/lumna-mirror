@@ -7,10 +7,13 @@ import (
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/global"
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
+	"gitlab.com/shaninalex/lumna/app/services"
 )
 
 type Client struct {
 	ctx context.Context
+
+	UserManager services.UserManager
 }
 
 func (s *Client) Context() context.Context {
@@ -44,6 +47,7 @@ func NewClient(cmd *cobra.Command) (*Client, error) {
 	cnf := config.ReadConfig(configPath)
 
 	return &Client{
-		ctx: context.WithValue(cmd.Context(), global.ContextConfig, cnf),
+		ctx:         context.WithValue(cmd.Context(), global.ContextConfig, cnf),
+		UserManager: services.NewUserService(),
 	}, nil
 }
