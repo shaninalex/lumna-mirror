@@ -23,7 +23,7 @@ func SharedDatabase() *sql.DB {
 		if err != nil {
 			panic(err)
 		}
-		db.ApplyMigrationsEmbed(sqlDB)
+		db.ApplyMigrations(sqlDB)
 	})
 
 	return sqlDB
