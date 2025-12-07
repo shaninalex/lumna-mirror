@@ -158,7 +158,7 @@ func (s *UserTokenRepository) GetTokenByField(ctx context.Context, field string,
 }
 
 // DeleteTokenByRefreshString removes a specific token for a user by token Id.
-func (s *UserTokenRepository) DeleteTokenByRefreshString(ctx context.Context, userID int64, refreshToken string) error {
+func (s *UserTokenRepository) DeleteTokenByRefreshString(ctx context.Context, userID uint, refreshToken string) error {
 	query := `
 		DELETE FROM 
 			users_tokens
@@ -182,7 +182,7 @@ func (s *UserTokenRepository) DeleteTokenByRefreshString(ctx context.Context, us
 }
 
 // RevokeToken removes a specific token for a user by token Id.
-func (s *UserTokenRepository) RevokeToken(ctx context.Context, userID, tokenID int64) error {
+func (s *UserTokenRepository) RevokeToken(ctx context.Context, userID, tokenID uint) error {
 	query := `
 		UPDATE users_tokens
 		SET

@@ -10,7 +10,7 @@ import (
 
 func NewIdentitiesGetRootCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "get",
+		Use:   "get [id]",
 		Short: "Get identity by id",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {

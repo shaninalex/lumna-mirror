@@ -27,12 +27,16 @@ type RefreshTokenService interface {
 
 	// Validate checks if a given refresh token string is valid (signature/format)
 	Validate(token string) (*jwt.RegisteredClaims, error)
+
+	// RefreshToken
 }
 
 type RefreshTokenJWTService struct {
 	signingKey []byte
 	issuer     string
 }
+
+var _ RefreshTokenService = &RefreshTokenJWTService{}
 
 func NewDefaultRefreshTokenService() RefreshTokenService {
 	return NewRefreshTokenJWTService(secretKey, token.Issuer)
@@ -69,7 +73,7 @@ func (s *RefreshTokenJWTService) Create(userID uint, device string) (*RefreshTok
 
 func (s *RefreshTokenJWTService) Validate(rawToken string) (*jwt.RegisteredClaims, error) {
 	claims := &jwt.RegisteredClaims{}
-	token, err := jwt.ParseWithClaims(rawToken, claims, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(rawToken, claims, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method")
 		}

@@ -71,7 +71,7 @@ func (s *AccessTokenJWTService) Create(userID uint, aud token.AudToken) (*Access
 }
 
 func (s *AccessTokenJWTService) Validate(rawToken string, aud token.AudToken) (*jwt.RegisteredClaims, error) {
-	token, err := jwt.ParseWithClaims(rawToken, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(rawToken, &jwt.RegisteredClaims{}, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method")
 		}

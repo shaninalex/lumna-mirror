@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"gitlab.com/shaninalex/lumna/app/pkg/token"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 )
@@ -36,6 +37,8 @@ type AuthService struct {
 	userTokenRepository *repositories.UserTokenRepository
 }
 
+var _ AuthManager = &AuthService{}
+
 func (s *AuthService) Login(ctx context.Context, userId uint, device string) (*AccessTokenResult, *RefreshTokenResult, error) {
 	accessResult, err := s.accessTokenService.Create(userId, token.AudTokenAPIUser)
 	if err != nil {
@@ -62,32 +65,28 @@ func (s *AuthService) Login(ctx context.Context, userId uint, device string) (*A
 }
 
 func (s *AuthService) Logout(ctx context.Context, userID uint, refreshToken string) error {
-	//connection := db.GetDb(ctx)
-	//return models.DeleteTokenByRefreshString(ctx, connection, userID, refreshToken)
-	panic("not implemented")
+	return s.userTokenRepository.DeleteTokenByRefreshString(ctx, userID, refreshToken)
 }
 
 func (s *AuthService) ListSessions(ctx context.Context, userID uint) ([]*models.UserToken, error) {
-	//tokens, err := domain.GetTokens(ctx, db.GetDb(ctx), userID)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//return tokens, nil
-	panic("not implemented")
+	return s.userTokenRepository.List(ctx, db.Option{
+		Key:   "user_id",
+		Value: userID,
+	})
 }
 
 func (s *AuthService) RefreshAccessToken(ctx context.Context, refreshToken string) (*AccessTokenResult, error) {
-	//if _, err := s.refreshTokenService.Validate(refreshToken); err != nil {
-	//	return nil, err
-	//}
-	//token, err := domain.GetTokenByField(ctx, db.GetDb(ctx), "refresh_token", refreshToken)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//result, err := s.accessTokenService.Create(token.UserID, AudTokenAPIUser)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//return result, nil
-	panic("not implemented")
+	if _, err := s.refreshTokenService.Validate(refreshToken); err != nil {
+		return nil, err
+	}
+
+	t, err := s.userTokenRepository.GetTokenByField(ctx, "refresh_token", refreshToken)
+	if err != nil {
+		return nil, err
+	}
+	result, err := s.accessTokenService.Create(t.UserID, token.AudTokenAPIUser)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
