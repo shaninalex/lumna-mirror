@@ -4,14 +4,20 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"gitlab.com/shaninalex/lumna/app/cmd/identities"
+	"gitlab.com/shaninalex/lumna/app/cmd/migrate"
 	"gitlab.com/shaninalex/lumna/app/cmd/serve"
 )
 
 func NewRootCmd() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
-		Use: "Lumna",
+		Use: "lumna",
 	}
+
 	cmd.AddCommand(serve.NewRootServeCommand())
+	cmd.AddCommand(migrate.NewMigrateRootCmd())
+	cmd.AddCommand(identities.NewIdentitiesRootCmd())
+
 	cmd.PersistentFlags().String("config", "", "Configuration path. Required.")
 	cmd.MarkPersistentFlagRequired("config")
 	return cmd

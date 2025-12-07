@@ -11,7 +11,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/persistance"
 )
 
-func ApplyMigrationsEmbed(db *sql.DB) {
+func ApplyMigrations(db *sql.DB) {
 	fmt.Print("Apply migrations ... ")
 
 	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})

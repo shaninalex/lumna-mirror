@@ -14,4 +14,6 @@ const (
 	ContextAppName ContextKey = "app_name"
 
 	ContextDevice ContextKey = "device"
+
+	ContextConfig ContextKey = "config"
 )

@@ -1,7 +1,6 @@
 package serve
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"net"
@@ -9,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
+	"gitlab.com/shaninalex/lumna/app/cmd/client"
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"gitlab.com/shaninalex/lumna/app/web"
 	"gitlab.com/shaninalex/lumna/app/web/middlewares"
@@ -32,11 +32,16 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 }
 
 func RunWebServer(cmd *cobra.Command, args []string) {
+	c, err := client.NewClient(cmd)
+	if err != nil {
+		panic(err)
+	}
 	port, err := cmd.Flags().GetInt("port")
 	if err != nil {
 		panic(err)
 	}
 
+	// check is port is open
 	ln, err := net.Listen("tcp", ":"+strconv.Itoa(port))
 	if err != nil {
 		panic(err)
@@ -47,16 +52,12 @@ func RunWebServer(cmd *cobra.Command, args []string) {
 	if err != nil {
 		panic(fmt.Errorf("unable to set embed"))
 	}
-
-	dbConnection, err := sql.Open("sqlite3", "lumna.db")
-	if err != nil {
-		panic(err)
-	}
+	conn := c.DBConnect()
 
 	router := web.NewDefaultRouter()
 	router.ApplyMiddlewares([]web.RouterMiddleware{
 		middlewares.NewRecoveryMiddleware(),
-		db.NewMiddleware(dbConnection),
+		db.NewMiddleware(conn),
 		middlewares.NewLoggerMiddleware(),
 		middlewares.NewCommonMiddleware(),
 		middlewares.NewHeadersMiddleware(),
