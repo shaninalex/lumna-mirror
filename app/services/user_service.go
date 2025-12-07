@@ -24,7 +24,9 @@ type UserService struct {
 }
 
 func NewUserService() *UserService {
-	return &UserService{}
+	return &UserService{
+		repository: repositories.NewUserRepository(),
+	}
 }
 
 // GetUser get user

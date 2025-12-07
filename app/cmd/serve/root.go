@@ -3,9 +3,7 @@ package serve
 import (
 	"errors"
 	"fmt"
-	"net"
 	"net/http"
-	"strconv"
 
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/cmd/client"
@@ -26,7 +24,6 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 		Run:   RunWebServer,
 	}
 
-	cmd.Flags().Int("port", 8000, "port to listen on")
 	cmd.Flags().Bool("embed", false, "Embed web client static files")
 	return cmd
 }
@@ -36,23 +33,12 @@ func RunWebServer(cmd *cobra.Command, args []string) {
 	if err != nil {
 		panic(err)
 	}
-	port, err := cmd.Flags().GetInt("port")
-	if err != nil {
-		panic(err)
-	}
-
-	// check is port is open
-	ln, err := net.Listen("tcp", ":"+strconv.Itoa(port))
-	if err != nil {
-		panic(err)
-	}
-	_ = ln.Close()
+	conn := c.DBConnect()
 
 	embed, err := cmd.Flags().GetBool("embed")
 	if err != nil {
 		panic(fmt.Errorf("unable to set embed"))
 	}
-	conn := c.DBConnect()
 
 	router := web.NewDefaultRouter()
 	router.ApplyMiddlewares([]web.RouterMiddleware{
@@ -69,11 +55,13 @@ func RunWebServer(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	authApp.RegisterAuthController(router)   // /api/v1/auth/...
+	authApp.RegisterAuthController(router) // /api/v1/auth/...
+
+	router.Use(middlewares.NewTokenMiddleware().Wrap)
 	userApp.RegisterUserController(router)   // /api/v1/user/...
 	tokenApp.RegisterTokenController(router) // /api/v1/token/...
 
-	if err := router.Run(port); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	if err := router.Run(c.Config().Serve.Port); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		panic(fmt.Errorf("server error: %v", err))
 	}
 }
