@@ -7,7 +7,7 @@ import (
 
 func NewAuthHandler() *AuthHandler {
 	return &AuthHandler{
-		userService: services.NewUserService(),
+		userService: services.NewUserManager(),
 		authService: services.NewAuthManager(),
 	}
 }

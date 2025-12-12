@@ -13,7 +13,7 @@ func Test_UserServiceGetUser(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	service := services.NewUserService()
+	service := services.NewUserManager()
 	testUser := tests.CreateUser(ctx, "test@test.com")
 
 	user, err := service.GetUser(ctx, testUser.GetId())
@@ -25,7 +25,7 @@ func Test_UserServiceGetUserByEmail(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	service := services.NewUserService()
+	service := services.NewUserManager()
 	testUser := tests.CreateUser(ctx, "test@test.com")
 
 	user, err := service.GetUserByEmail(ctx, testUser.Email)
@@ -37,7 +37,7 @@ func Test_UserServiceCheckPassword(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	service := services.NewUserService()
+	service := services.NewUserManager()
 	testUser := tests.CreateUser(ctx, "test@test.com")
 
 	err := service.CheckPassword(ctx, testUser.GetId(), testUser.Email)
@@ -47,7 +47,7 @@ func Test_UserServiceCheckPassword(t *testing.T) {
 func Test_UserServiceCreateUser(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
-	service := services.NewUserService()
+	service := services.NewUserManager()
 
 	user, err := service.CreateUser(ctx, "test@test.com", "password")
 	assert.NoError(t, err, "should create user without errors")
@@ -59,7 +59,7 @@ func Test_UserServiceUpdate(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	service := services.NewUserService()
+	service := services.NewUserManager()
 	testUser := tests.CreateUser(ctx, "test@test.com")
 
 	newEmail := "test2@test.com"

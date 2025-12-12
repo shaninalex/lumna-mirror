@@ -23,7 +23,7 @@ type UserService struct {
 	repository *repositories.UserRepository
 }
 
-func NewUserService() *UserService {
+func NewUserManager() UserManager {
 	return &UserService{
 		repository: repositories.NewUserRepository(),
 	}

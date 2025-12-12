@@ -48,6 +48,6 @@ func NewClient(cmd *cobra.Command) (*Client, error) {
 
 	return &Client{
 		ctx:         context.WithValue(cmd.Context(), global.ContextConfig, cnf),
-		UserManager: services.NewUserService(),
+		UserManager: services.NewUserManager(),
 	}, nil
 }

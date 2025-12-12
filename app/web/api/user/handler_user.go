@@ -10,7 +10,7 @@ import (
 
 func NewUserHandler() *UserHandler {
 	return &UserHandler{
-		userService: services.NewUserService(),
+		userService: services.NewUserManager(),
 		authService: services.NewAuthManager(),
 	}
 }
