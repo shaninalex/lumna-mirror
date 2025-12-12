@@ -38,9 +38,9 @@ func (s *User) SetCreatedAt(v time.Time) { s.CreatedAt = v }
 func (s *User) SetUpdatedAt(v time.Time) { s.UpdatedAt = v }
 
 type UserToken struct {
-	Id               uint       `db:"id"`
-	UserID           uint       `db:"user_id"`
-	Device           string     `db:"device"`
+	Id     uint `db:"id"`
+	UserId uint `db:"user_id"`
+	// Device           string     `db:"device"`
 	RefreshToken     string     `db:"refresh_token"`
 	RefreshExpiresAt time.Time  `db:"refresh_expires_at"`
 	Revoked          bool       `db:"revoked"`
@@ -48,13 +48,18 @@ type UserToken struct {
 	CreatedAt        time.Time  `db:"created_at"`
 }
 
-// GetID - returns the id.
-func (s *UserToken) GetID() uint { return s.Id }
+// GetI - returns the id.
+func (s *UserToken) GetId() uint { return s.Id }
 
 // SetID - sets the id.
-func (s *UserToken) SetID(id uint) { s.Id = id }
+func (s *UserToken) SetId(id uint) { s.Id = id }
 
 // IsExpired - check is token expired
 func (s *UserToken) IsExpired() bool {
 	return s.RefreshExpiresAt.Before(time.Now())
+}
+
+// IsRevoked - check is token revoked
+func (s *UserToken) IsRevoked() bool {
+	return s.Revoked
 }

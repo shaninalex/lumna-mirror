@@ -48,13 +48,12 @@ func (s *UserTokenRepository) Delete(ctx context.Context, id uint) error {
 func (s *UserTokenRepository) Create(ctx context.Context, entry *models.UserToken) error {
 	query := `
 		INSERT INTO users_tokens 
-		    (user_id, device, refresh_token, refresh_expires_at)
+		    (user_id, refresh_token, refresh_expires_at)
 		VALUES 
-		    (?, ?, ?, ?)
+		    (?, ?, ?)
 	`
 	result, err := db.FromContext(ctx).ExecContext(ctx, query,
-		&entry.UserID,
-		&entry.Device,
+		&entry.UserId,
 		&entry.RefreshToken,
 		&entry.RefreshExpiresAt,
 	)
@@ -65,7 +64,7 @@ func (s *UserTokenRepository) Create(ctx context.Context, entry *models.UserToke
 	if err != nil {
 		return err
 	}
-	entry.SetID(uint(id))
+	entry.SetId(uint(id))
 	return err
 }
 
@@ -84,7 +83,7 @@ func (s *UserTokenRepository) List(ctx context.Context, opts ...db.Option) ([]*m
 	}
 	query := `
 		SELECT 
-		    id, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
+		    id, user_id, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
 		FROM users_tokens
 		WHERE user_id = ?
 	`
@@ -103,8 +102,7 @@ func (s *UserTokenRepository) List(ctx context.Context, opts ...db.Option) ([]*m
 		token := &models.UserToken{}
 		if err = rows.Scan(
 			&token.Id,
-			&token.UserID,
-			&token.Device,
+			&token.UserId,
 			&token.RefreshToken,
 			&token.RefreshExpiresAt,
 			&token.Revoked,
@@ -131,7 +129,7 @@ func (s *UserTokenRepository) GetTokenByField(ctx context.Context, field string,
 	token := &models.UserToken{}
 	query := fmt.Sprintf(`
 		SELECT 
-		    id, user_id, device, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
+		    id, user_id, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
 		FROM users_tokens 
 		WHERE %s = ? 
 		LIMIT 1
@@ -139,8 +137,7 @@ func (s *UserTokenRepository) GetTokenByField(ctx context.Context, field string,
 	row := db.FromContext(ctx).QueryRowContext(ctx, query, value)
 	err := row.Scan(
 		&token.Id,
-		&token.UserID,
-		&token.Device,
+		&token.UserId,
 		&token.RefreshToken,
 		&token.RefreshExpiresAt,
 		&token.Revoked,
@@ -182,17 +179,17 @@ func (s *UserTokenRepository) DeleteTokenByRefreshString(ctx context.Context, us
 }
 
 // RevokeToken removes a specific token for a user by token Id.
-func (s *UserTokenRepository) RevokeToken(ctx context.Context, userID, tokenID uint) error {
+func (s *UserTokenRepository) RevokeToken(ctx context.Context, userId, tokenId uint) error {
 	query := `
 		UPDATE users_tokens
 		SET
 		    revoked = true,
-		    revoked_at = NOW()
+		    revoked_at = datetime()
 		WHERE 
-		    user_id = ? AND 
-		    refresh_token = ?
+		    id = ? AND
+		    user_id = ? 
 	`
-	result, err := db.FromContext(ctx).ExecContext(ctx, query, userID, tokenID)
+	result, err := db.FromContext(ctx).ExecContext(ctx, query, tokenId, userId)
 	if err != nil {
 		return err
 	}

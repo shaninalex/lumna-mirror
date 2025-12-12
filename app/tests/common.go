@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	once  sync.Once
-	sqlDB *sql.DB
+	once          sync.Once
+	sqlDB         *sql.DB
+	TestSecretKey = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )
 
 func SharedDatabase() *sql.DB {
@@ -38,7 +39,7 @@ func TestContext() context.Context {
 }
 
 func ResetDatabase() {
-	tables := []string{"users"}
+	tables := []string{"users", "users_tokens"}
 	for _, t := range tables {
 		sqlDB.Exec("DELETE FROM " + t)
 	}

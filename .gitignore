@@ -7,10 +7,7 @@
 var/
 frontend/node_modules
 
-config/development.yml
-config/kratos/kratos.yml
-config/oathkeeper/access-rules.yml
-config/oathkeeper/oathkeeper.yml
+config/config.dev.yaml
 app/web/embed/
 *.db
 bin/

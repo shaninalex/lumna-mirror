@@ -23,7 +23,7 @@ type RefreshTokenClaims struct {
 // RefreshTokenService handles creation and validation of refresh tokens
 type RefreshTokenService interface {
 	// Create generates a new refresh token string with expiration
-	Create(userID uint, device string) (*RefreshTokenResult, error)
+	Create(userID uint) (*RefreshTokenResult, error)
 
 	// Validate checks if a given refresh token string is valid (signature/format)
 	Validate(token string) (*jwt.RegisteredClaims, error)
@@ -49,7 +49,7 @@ func NewRefreshTokenJWTService(signingKey string, issuer string) *RefreshTokenJW
 	}
 }
 
-func (s *RefreshTokenJWTService) Create(userID uint, device string) (*RefreshTokenResult, error) {
+func (s *RefreshTokenJWTService) Create(userID uint) (*RefreshTokenResult, error) {
 	now := time.Now()
 	exp := now.Add(token.RefreshTokenLifeTime)
 	jti := uuid.NewString()

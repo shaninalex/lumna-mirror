@@ -1,0 +1,15 @@
+env: testing
+
+serve:
+  # port of the server
+  port: 8001
+
+database:
+  # database connection path
+  # if it's SQLite3 file - use absolute system path
+  url: ":memory:"
+
+
+# for jwt signing and verification
+secret_key: "a-string-secret-at-least-256-bits-long"
+

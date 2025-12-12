@@ -2,6 +2,8 @@ package services
 
 import (
 	"context"
+	"fmt"
+	"log"
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
@@ -11,7 +13,8 @@ import (
 
 type AuthManager interface {
 	// Login generates new access + refresh tokens and stores refresh token
-	Login(ctx context.Context, userID uint, device string) (*AccessTokenResult, *RefreshTokenResult, error)
+	// TODO: replace "device" argument with "meta" dictionary
+	Login(ctx context.Context, userID uint) (*AccessTokenResult, *RefreshTokenResult, error)
 
 	// Logout deletes refresh token (single device)
 	Logout(ctx context.Context, userID uint, refreshToken string) error
@@ -39,20 +42,20 @@ type AuthService struct {
 
 var _ AuthManager = &AuthService{}
 
-func (s *AuthService) Login(ctx context.Context, userId uint, device string) (*AccessTokenResult, *RefreshTokenResult, error) {
+func (s *AuthService) Login(ctx context.Context, userId uint) (*AccessTokenResult, *RefreshTokenResult, error) {
 	accessResult, err := s.accessTokenService.Create(userId, token.AudTokenAPIUser)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	refreshResults, err := s.refreshTokenService.Create(userId, device)
+	refreshResults, err := s.refreshTokenService.Create(userId)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	tokenModel := &models.UserToken{
-		UserID:           userId,
-		Device:           device,
+		UserId: userId,
+		// Device:           device,
 		RefreshToken:     refreshResults.Token,
 		RefreshExpiresAt: refreshResults.ExpiresAt,
 	}
@@ -84,7 +87,20 @@ func (s *AuthService) RefreshAccessToken(ctx context.Context, refreshToken strin
 	if err != nil {
 		return nil, err
 	}
-	result, err := s.accessTokenService.Create(t.UserID, token.AudTokenAPIUser)
+
+	if t.IsRevoked() {
+		return nil, fmt.Errorf("token is revoked")
+	}
+
+	if t.IsExpired() {
+		if err := s.userTokenRepository.RevokeToken(ctx, t.UserId, t.GetId()); err != nil {
+			log.Println(err)
+			return nil, fmt.Errorf("unable to revoke token")
+		}
+		return nil, fmt.Errorf("refresh token is expired")
+	}
+
+	result, err := s.accessTokenService.Create(t.UserId, token.AudTokenAPIUser)
 	if err != nil {
 		return nil, err
 	}

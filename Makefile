@@ -49,4 +49,5 @@ clear_port:
 	fi
 
 test:
-	go test -tags noembed ./... -v
+#  --config=./config/config.test.yaml
+	go test ./app/... -v

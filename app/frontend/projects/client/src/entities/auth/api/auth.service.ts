@@ -17,7 +17,7 @@ export class AuthService {
 	}
 
 	refresh(): Observable<void> {
-		return this.http.post(`${env.API_ROOT}/api/v1/auth/refresh`, {}, { withCredentials: true }).pipe(
+		return this.http.get(`${env.API_ROOT}/api/v1/auth/refresh`, { withCredentials: true }).pipe(
 			map(() => void 0), // emit something
 			catchError(err => {
 				return throwError(() => err) // propagate error

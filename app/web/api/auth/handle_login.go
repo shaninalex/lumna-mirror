@@ -1,11 +1,9 @@
 package auth
 
 import (
-	"context"
 	"errors"
 	"net/http"
 
-	"gitlab.com/shaninalex/lumna/app/global"
 	"gitlab.com/shaninalex/lumna/app/pkg/token"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
@@ -34,8 +32,7 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx = context.WithValue(ctx, global.ContextDevice, r.UserAgent())
-	accessToken, refreshToken, err := s.authService.Login(ctx, user.GetId(), r.UserAgent())
+	accessToken, refreshToken, err := s.authService.Login(ctx, user.GetId())
 	if err != nil {
 		utils.Error(w, http.StatusBadRequest, err)
 		return

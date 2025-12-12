@@ -14,7 +14,7 @@ import (
 type AccessTokenResult struct {
 	Token     string
 	ExpiresAt time.Time
-	Sub       int64 // user Id
+	Sub       uint // user Id
 	JTI       string
 }
 
@@ -65,7 +65,7 @@ func (s *AccessTokenJWTService) Create(userID uint, aud token.AudToken) (*Access
 	return &AccessTokenResult{
 		Token:     accessToken,
 		ExpiresAt: exp,
-		Sub:       int64(userID),
+		Sub:       userID,
 		JTI:       jti,
 	}, nil
 }
