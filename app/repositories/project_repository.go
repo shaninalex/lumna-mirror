@@ -14,6 +14,10 @@ import (
 type ProjectRespository struct {
 }
 
+func NewProjectRespository() *ProjectRespository {
+	return &ProjectRespository{}
+}
+
 var _ Repository[models.Project] = (*ProjectRespository)(nil)
 
 // Count implements Repository.

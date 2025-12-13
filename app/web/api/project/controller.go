@@ -13,7 +13,8 @@ func RegisterProjectController(router *web.Router) {
 	h := NewProjectHandler()
 
 	// list all user tokens
-	router.GET("/api/v1/token", h.List)
+	router.GET("/api/v1/projects", h.List)
+	router.POST("/api/v1/projects", h.Create)
 	// s.router.GET("/api/v1/projects", projectHandler.List)
 	// s.router.POST("/api/v1/projects", projectHandler.Create)
 	// s.router.GET("/api/v1/project/{id}", projectHandler.Get)

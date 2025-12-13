@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
@@ -69,33 +70,18 @@ func (s *UserTokenRepository) Create(ctx context.Context, entry *models.UserToke
 }
 
 func (s *UserTokenRepository) List(ctx context.Context, opts ...db.Option) ([]*models.UserToken, error) {
-	if len(opts) == 0 {
-		return nil, fmt.Errorf("no options provided")
-	}
-	var userId uint = 0
-	for _, opt := range opts {
-		if opt.Key == "user_id" {
-			userId = opt.Value.(uint)
-		}
-	}
-	if userId == 0 {
-		return nil, fmt.Errorf("no user id provided")
-	}
-	query := `
-		SELECT 
-		    id, user_id, refresh_token, refresh_expires_at, revoked, revoked_at, created_at
-		FROM users_tokens
-		WHERE user_id = ?
-	`
-	rows, err := db.FromContext(ctx).QueryContext(ctx, query, userId)
+	where, args := db.Where(opts)
+
+	query := fmt.Sprintf(
+		`SELECT id, user_id, refresh_token, refresh_expires_at, revoked, revoked_at, created_at FROM users_tokens %s`,
+		where,
+	)
+
+	rows, err := db.FromContext(ctx).QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		if err = rows.Close(); err != nil {
-			panic(err)
-		}
-	}()
+	defer rows.Close()
 
 	tokens := make([]*models.UserToken, 0)
 	for rows.Next() {
@@ -117,11 +103,54 @@ func (s *UserTokenRepository) List(ctx context.Context, opts ...db.Option) ([]*m
 }
 
 func (s *UserTokenRepository) Update(ctx context.Context, id uint, opts ...db.Option) error {
+	if len(opts) == 0 {
+		return ErrorUserNoFieldsToUpdate
+	}
+
+	set, args := db.Set(opts)
+	if set == "" {
+		return ErrorUserNoFieldsToUpdate
+	}
+
+	query := fmt.Sprintf(
+		`UPDATE user_tokens %s WHERE id = ?`,
+		set,
+	)
+
+	args = append(args, id)
+
+	res, err := db.FromContext(ctx).ExecContext(ctx, query, args...)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrorNoRowsAffected
+	}
+
 	return nil
 }
 
 func (s *UserTokenRepository) Count(ctx context.Context, opts ...db.Option) (int, error) {
-	return 0, nil
+	where, args := db.Where(opts)
+
+	query := fmt.Sprintf(
+		`SELECT count(*) FROM users_tokens %s`,
+		where,
+	)
+
+	var count int
+	row := db.FromContext(ctx).QueryRowContext(ctx, query, args...)
+	if err := row.Scan(&count); err != nil {
+		return 0, err
+	}
+
+	return count, nil
 }
 
 // GetTokenByField loads a token from DB by field.
@@ -180,25 +209,9 @@ func (s *UserTokenRepository) DeleteTokenByRefreshString(ctx context.Context, us
 
 // RevokeToken removes a specific token for a user by token Id.
 func (s *UserTokenRepository) RevokeToken(ctx context.Context, userId, tokenId uint) error {
-	query := `
-		UPDATE users_tokens
-		SET
-		    revoked = true,
-		    revoked_at = datetime()
-		WHERE 
-		    id = ? AND
-		    user_id = ? 
-	`
-	result, err := db.FromContext(ctx).ExecContext(ctx, query, tokenId, userId)
-	if err != nil {
-		return err
-	}
-	affected, err := result.RowsAffected()
-	if err != nil {
-		return err
-	}
-	if affected == 0 {
-		return sql.ErrNoRows
-	}
-	return nil
+	return s.Update(
+		ctx,
+		tokenId,
+		db.Option{Key: "revoked", Value: true},
+		db.Option{Key: "revoked_at", Value: time.Now()})
 }
