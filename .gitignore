@@ -13,3 +13,4 @@ app/web/embed/
 bin/
 
 __debug_*
+cover.out
