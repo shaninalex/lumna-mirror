@@ -70,7 +70,7 @@ func Test_HandleLoginInvalid(t *testing.T) {
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
-	assert.Equal(t, rr.Code, http.StatusBadRequest, "Should return status: \"400 OK\"")
+	assert.Equal(t, rr.Code, http.StatusBadRequest, "Should return status: \"400 Bad Reaquest\"")
 }
 
 func Test_HandleRegister(t *testing.T) {

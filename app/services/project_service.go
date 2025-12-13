@@ -2,20 +2,41 @@ package services
 
 import (
 	"context"
+	"fmt"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
 type ProjectManager interface {
-	List(ctx context.Context) ([]models.Project, error)
+	List(ctx context.Context) ([]*models.Project, error)
+	Create(ctx context.Context, entry *models.Project) error
 }
 
 type ProjectService struct {
+	projectRepository *repositories.ProjectRespository
+}
+
+func NewProjectManager() ProjectManager {
+	return &ProjectService{
+		projectRepository: repositories.NewProjectRespository(),
+	}
 }
 
 var _ ProjectManager = (*ProjectService)(nil)
 
-// List implements ProjectManager.
-func (p *ProjectService) List(ctx context.Context) ([]models.Project, error) {
-	panic("unimplemented")
+func (s *ProjectService) List(ctx context.Context) ([]*models.Project, error) {
+	return s.projectRepository.List(ctx)
+}
+
+func (s *ProjectService) Create(ctx context.Context, entry *models.Project) error {
+	count, err := s.projectRepository.Count(ctx, db.Option{Key: "name", Value: entry.Name})
+	if err != nil {
+		return err
+	}
+	if err == nil && count > 0 {
+		return fmt.Errorf("project with name %s already exist", entry.Name)
+	}
+	return s.projectRepository.Create(ctx, entry)
 }

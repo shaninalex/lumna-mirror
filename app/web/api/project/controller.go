@@ -1,12 +1,18 @@
 package project
 
-import "gitlab.com/shaninalex/lumna/app/web"
+import (
+	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/web"
+)
 
 type ProjectHandler struct {
+	projectService services.ProjectManager
 }
 
 func NewProjectHandler() *ProjectHandler {
-	return &ProjectHandler{}
+	return &ProjectHandler{
+		projectService: services.NewProjectManager(),
+	}
 }
 
 func RegisterProjectController(router *web.Router) {

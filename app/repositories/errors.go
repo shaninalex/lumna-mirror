@@ -11,6 +11,6 @@ var (
 
 	ErrorUserNoFieldsToUpdate = errors.New("no fields to update")
 	ErrorUserInvalidPassword  = errors.New("invalid password hash")
-	ErrorUserUnableToUpdate   = errors.New("Unable to update user")
+	ErrorUserUnableToUpdate   = errors.New("unable to update user")
 	ErrorUserNotFound         = errors.New("user not found")
 )

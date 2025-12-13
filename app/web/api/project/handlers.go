@@ -8,11 +8,29 @@ import (
 )
 
 func (s *ProjectHandler) List(w http.ResponseWriter, r *http.Request) {
-	projects := []*models.Project{}
+	projects, err := s.projectService.List(r.Context())
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
 	utils.Success(w, projects)
 }
 
+type createProjectPayload struct {
+	Name string `json:"name"`
+}
+
 func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
-	projects := []*models.Project{}
-	utils.Success(w, projects)
+	payload, err := utils.BodyParser[createProjectPayload](r)
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	project := &models.Project{Name: payload.Name}
+	err = s.projectService.Create(r.Context(), project)
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(w, project)
 }

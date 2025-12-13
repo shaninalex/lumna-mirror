@@ -164,7 +164,6 @@ func (s *UserRepository) Update(ctx context.Context, userID uint, opts ...db.Opt
 	)
 
 	args = append(args, userID)
-
 	res, err := db.FromContext(ctx).ExecContext(ctx, query, args...)
 	if err != nil {
 		return err

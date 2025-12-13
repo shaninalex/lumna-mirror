@@ -26,6 +26,8 @@ func (s *UserHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
 	}
+
+	// IMPORTANT! we should return user through adapter
 	utils.Success(w, user)
 }
 
