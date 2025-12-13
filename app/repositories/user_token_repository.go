@@ -116,7 +116,7 @@ func (s *UserTokenRepository) List(ctx context.Context, opts ...db.Option) ([]*m
 	return tokens, nil
 }
 
-func (s *UserTokenRepository) Update(ctx context.Context, entry *models.UserToken, opts ...db.Option) error {
+func (s *UserTokenRepository) Update(ctx context.Context, id uint, opts ...db.Option) error {
 	return nil
 }
 

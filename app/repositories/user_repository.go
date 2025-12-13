@@ -5,9 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"net/mail"
-	"strings"
 	"time"
 
 	"gitlab.com/shaninalex/lumna/app/models"
@@ -83,7 +81,7 @@ func (s *UserRepository) Delete(ctx context.Context, id uint) error {
 	}
 
 	if rowsAffected == 0 {
-		return ErrorUserNoRowsAffected
+		return ErrorNoRowsAffected
 	}
 
 	return nil
@@ -114,32 +112,18 @@ func (s *UserRepository) Create(ctx context.Context, user *models.User) error {
 }
 
 func (s *UserRepository) List(ctx context.Context, opts ...db.Option) ([]*models.User, error) {
-	query := `SELECT id, email, active, created_at, updated_at FROM users`
-	var rows *sql.Rows
-	var err error
-	if len(opts) != 0 {
-		whereParts := make([]string, 0, len(opts))
-		args := make([]any, 0, len(opts))
+	where, args := db.Where(opts)
 
-		for _, opt := range opts {
-			whereParts = append(whereParts, fmt.Sprintf("%s = ?", opt.Key))
-			args = append(args, opt.Value)
-		}
+	query := fmt.Sprintf(
+		`SELECT id, email, active, created_at, updated_at FROM users %s`,
+		where,
+	)
 
-		query = fmt.Sprintf("SELECT id, email, active, created_at, updated_at FROM users WHERE %s",
-			strings.Join(whereParts, " AND "),
-		)
-		rows, err = db.FromContext(ctx).QueryContext(ctx, query, args...)
-		if err != nil {
-			return nil, err
-		}
-
-	} else {
-		rows, err = db.FromContext(ctx).QueryContext(ctx, query)
-		if err != nil {
-			return nil, err
-		}
+	rows, err := db.FromContext(ctx).QueryContext(ctx, query, args...)
+	if err != nil {
+		return nil, err
 	}
+	defer rows.Close()
 
 	users := []*models.User{}
 	for rows.Next() {
@@ -158,25 +142,29 @@ func (s *UserRepository) List(ctx context.Context, opts ...db.Option) ([]*models
 	return users, nil
 }
 
-func (s *UserRepository) Update(ctx context.Context, user *models.User, opts ...db.Option) error {
+func (s *UserRepository) Update(ctx context.Context, userID uint, opts ...db.Option) error {
 	if len(opts) == 0 {
 		return ErrorUserNoFieldsToUpdate
 	}
 
-	user.UpdatedAt = time.Now()
-	opts = append(opts, db.Option{Key: "updated_at", Value: user.UpdatedAt})
-	setParts := make([]string, 0, len(opts))
-	args := make([]any, 0, len(opts)+1)
+	// always update updated_at
+	opts = append(opts, db.Option{
+		Key:   "updated_at",
+		Value: time.Now(),
+	})
 
-	for _, opt := range opts {
-		setParts = append(setParts, fmt.Sprintf("%s = ?", opt.Key))
-		args = append(args, opt.Value)
+	set, args := db.Set(opts)
+	if set == "" {
+		return ErrorUserNoFieldsToUpdate
 	}
 
-	query := fmt.Sprintf("UPDATE users SET %s WHERE id = ?",
-		strings.Join(setParts, ", "),
+	query := fmt.Sprintf(
+		`UPDATE users %s WHERE id = ?`,
+		set,
 	)
-	args = append(args, user.Id)
+
+	args = append(args, userID)
+
 	res, err := db.FromContext(ctx).ExecContext(ctx, query, args...)
 	if err != nil {
 		return err
@@ -184,18 +172,14 @@ func (s *UserRepository) Update(ctx context.Context, user *models.User, opts ...
 
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		log.Println(err)
-		return ErrorUserUnableToUpdate
+		return err
 	}
 
 	if rowsAffected == 0 {
-		return ErrorUserNoRowsAffected
+		return ErrorNoRowsAffected
 	}
 
-	// NOTE: that's not required second call, since we already know what fields will be updated
-	updatedUser, err := s.Get(ctx, user.Id)
-	*user = *updatedUser
-	return err
+	return nil
 }
 
 func (s *UserRepository) Count(ctx context.Context, opts ...db.Option) (int, error) {

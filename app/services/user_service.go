@@ -87,11 +87,7 @@ func (s UserService) CreateUser(ctx context.Context, email, rawPassword string) 
 
 // Update update user
 func (s UserService) Update(ctx context.Context, userId uint, options ...db.Option) error {
-	user, err := s.repository.Get(ctx, userId)
-	if err != nil {
-		return err
-	}
-	if err = s.repository.Update(ctx, user, options...); err != nil {
+	if err := s.repository.Update(ctx, userId, options...); err != nil {
 		return err
 	}
 	return nil

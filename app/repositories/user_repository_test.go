@@ -51,14 +51,15 @@ func Test_UpdateUser(t *testing.T) {
 		t.Log(err)
 		return
 	}
-	err = repo.Update(ctx, &user, db.Option{Key: "email", Value: newEmail})
+	err = repo.Update(ctx, user.Id, db.Option{Key: "email", Value: newEmail})
 	assert.NoError(t, err, "Should update user without errors")
 	if err != nil {
 		t.Log(err)
 		return
 	}
 
-	assert.True(t, user.Email == newEmail, "User should have updated email")
+	dbUser, _ := repo.Get(ctx, user.Id)
+	assert.True(t, dbUser.Email == newEmail, "User should have updated email")
 }
 
 func Test_GetUser(t *testing.T) {
