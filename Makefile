@@ -50,4 +50,4 @@ clear_port:
 
 test:
 #  --config=./config/config.test.yaml
-	go test ./app/... -v
+	go test -v -coverprofile cover.out ./app/...

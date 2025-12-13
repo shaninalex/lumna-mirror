@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"time"
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
@@ -129,11 +128,11 @@ func (p *ProjectRespository) Update(ctx context.Context, userID uint, opts ...db
 		return ErrorUserNoFieldsToUpdate
 	}
 
-	// always update updated_at
-	opts = append(opts, db.Option{
-		Key:   "updated_at",
-		Value: time.Now(),
-	})
+	// // always update updated_at
+	// opts = append(opts, db.Option{
+	// 	Key:   "updated_at",
+	// 	Value: time.Now(),
+	// })
 
 	set, args := db.Set(opts)
 	if set == "" {
@@ -141,7 +140,7 @@ func (p *ProjectRespository) Update(ctx context.Context, userID uint, opts ...db
 	}
 
 	query := fmt.Sprintf(
-		`UPDATE users %s WHERE id = ?`,
+		`UPDATE projects %s WHERE id = ?`,
 		set,
 	)
 
