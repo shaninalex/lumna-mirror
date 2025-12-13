@@ -198,16 +198,20 @@ func (s *UserRepository) Update(ctx context.Context, user *models.User, opts ...
 	return err
 }
 
-func (s *UserRepository) Count(ctx context.Context, where string) (int, error) {
-	query := `SELECT count(*) FROM users`
-	if where != "" {
-		query = fmt.Sprintf(`SELECT count(*) FROM users WHERE %s`, where)
-	}
+func (s *UserRepository) Count(ctx context.Context, opts ...db.Option) (int, error) {
+	where, args := db.Where(opts)
+
+	query := fmt.Sprintf(
+		`SELECT count(*) FROM users %s`,
+		where,
+	)
+
 	var count int
-	row := db.FromContext(ctx).QueryRow(query)
+	row := db.FromContext(ctx).QueryRowContext(ctx, query, args...)
 	if err := row.Scan(&count); err != nil {
 		return 0, err
 	}
+
 	return count, nil
 }
 

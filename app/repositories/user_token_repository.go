@@ -120,7 +120,7 @@ func (s *UserTokenRepository) Update(ctx context.Context, entry *models.UserToke
 	return nil
 }
 
-func (s *UserTokenRepository) Count(ctx context.Context, where string) (int, error) {
+func (s *UserTokenRepository) Count(ctx context.Context, opts ...db.Option) (int, error) {
 	return 0, nil
 }
 

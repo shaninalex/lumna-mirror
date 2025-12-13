@@ -161,7 +161,7 @@ func Test_CountSpecificUsers(t *testing.T) {
 	userA := createUser(ctx, repo, "test1@test.com")
 	_ = createUser(ctx, repo, "test2@test.com")
 
-	count, err := repo.Count(ctx, fmt.Sprintf("email = \"%s\"", userA.Email))
+	count, err := repo.Count(ctx, db.Option{"email", userA.Email})
 	assert.NoError(t, err, "should count users without errors")
 	assert.Equal(t, count, 1, "should count only 1 user")
 }
@@ -174,7 +174,7 @@ func Test_CountAllUsers(t *testing.T) {
 	_ = createUser(ctx, repo, "test1@test.com")
 	_ = createUser(ctx, repo, "test2@test.com")
 
-	count, err := repo.Count(ctx, "")
+	count, err := repo.Count(ctx)
 	assert.NoError(t, err, "should count users without errors")
 	assert.Equal(t, count, 2, "should count 2 user")
 }
