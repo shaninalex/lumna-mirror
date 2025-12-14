@@ -35,7 +35,7 @@ func (s *ProjectService) Create(ctx context.Context, entry *models.Project) erro
 	if err != nil {
 		return err
 	}
-	if err == nil && count > 0 {
+	if count > 0 {
 		return fmt.Errorf("project with name %s already exist", entry.Name)
 	}
 	return s.projectRepository.Create(ctx, entry)

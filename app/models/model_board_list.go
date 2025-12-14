@@ -1,9 +1,10 @@
 package models
 
 type BoardList struct {
-	Id    uint
-	Name  string
-	Order uint
+	Id      uint
+	Name    string
+	Order   uint
+	BoardId uint
 }
 
 func (s *BoardList) GetId() uint  { return s.Id }

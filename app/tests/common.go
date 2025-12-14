@@ -41,7 +41,7 @@ func TestContext() context.Context {
 }
 
 func ResetDatabase() {
-	tables := []string{"users", "users_tokens", "projects"}
+	tables := []string{"users", "users_tokens", "projects", "boards", "board_lists"}
 	for _, t := range tables {
 		sqlDB.Exec("DELETE FROM " + t)
 	}

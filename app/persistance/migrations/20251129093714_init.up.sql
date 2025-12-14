@@ -32,6 +32,7 @@ CREATE TABLE projects
 CREATE TABLE boards
 (
     id         INTEGER PRIMARY KEY,
+    name       TEXT    NULL,
     project_id INTEGER NOT NULL,
     settings   TEXT,
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
@@ -40,7 +41,7 @@ CREATE TABLE boards
 -------------------------
 -- LISTS (child of board)
 -------------------------
-CREATE TABLE lists
+CREATE TABLE board_lists
 (
     id       INTEGER PRIMARY KEY,
     board_id INTEGER NOT NULL,
