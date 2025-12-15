@@ -15,7 +15,7 @@ func Test_RepositoryBoardListCreate(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	listRepo := repositories.NewBoardListRepository()
-	board := createBoard(ctx, createProject(ctx).GetId(), "test")
+	board := tests.CreateBoard(ctx, tests.CreateProject(ctx).GetId(), "test")
 	entry := models.BoardList{
 		Name:    "todo",
 		BoardId: board.GetId(),
@@ -29,8 +29,8 @@ func Test_RepositoryBoardListCount(t *testing.T) {
 	tests.ResetDatabase()
 
 	repo := repositories.NewBoardListRepository()
-	board := createBoard(ctx, createProject(ctx).GetId(), "test")
-	_ = createBoardList(ctx, board.Id, "test")
+	board := tests.CreateBoard(ctx, tests.CreateProject(ctx).GetId(), "test")
+	_ = tests.CreateBoardList(ctx, board.Id, "test")
 
 	count, err := repo.Count(ctx)
 	assert.NoError(t, err, "Should count board list without errors")
@@ -50,8 +50,8 @@ func Test_RepositoryBoardListDelete(t *testing.T) {
 	tests.ResetDatabase()
 
 	repo := repositories.NewBoardListRepository()
-	board := createBoard(ctx, createProject(ctx).GetId(), "test")
-	boardList := createBoardList(ctx, board.Id, "test")
+	board := tests.CreateBoard(ctx, tests.CreateProject(ctx).GetId(), "test")
+	boardList := tests.CreateBoardList(ctx, board.Id, "test")
 
 	err := repo.Delete(ctx, boardList.GetId())
 	assert.NoError(t, err, "Should not find deleted board list")
@@ -66,8 +66,8 @@ func Test_RepositoryBoardListGet(t *testing.T) {
 	tests.ResetDatabase()
 
 	repo := repositories.NewBoardListRepository()
-	board := createBoard(ctx, createProject(ctx).GetId(), "test")
-	boardList := createBoardList(ctx, board.Id, "test")
+	board := tests.CreateBoard(ctx, tests.CreateProject(ctx).GetId(), "test")
+	boardList := tests.CreateBoardList(ctx, board.Id, "test")
 	dbBoardList, err := repo.Get(ctx, boardList.GetId())
 	assert.NoError(t, err, "Should get board list by id without errors")
 	assert.Equal(t, boardList.GetId(), dbBoardList.GetId())
@@ -79,9 +79,9 @@ func Test_RepositoryBoardListList(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	board := createBoard(ctx, createProject(ctx).GetId(), "test")
-	boardListA := createBoardList(ctx, board.Id, "test A")
-	boardListB := createBoardList(ctx, board.Id, "test B")
+	board := tests.CreateBoard(ctx, tests.CreateProject(ctx).GetId(), "test")
+	boardListA := tests.CreateBoardList(ctx, board.Id, "test A")
+	boardListB := tests.CreateBoardList(ctx, board.Id, "test B")
 
 	repo := repositories.NewBoardListRepository()
 	boardLists, err := repo.List(ctx)
@@ -103,9 +103,9 @@ func Test_RepositoryBoardListListWithOption(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	board := createBoard(ctx, createProject(ctx).GetId(), "test")
-	_ = createBoardList(ctx, board.Id, "test A")
-	_ = createBoardList(ctx, board.Id, "test B")
+	board := tests.CreateBoard(ctx, tests.CreateProject(ctx).GetId(), "test")
+	_ = tests.CreateBoardList(ctx, board.Id, "test A")
+	_ = tests.CreateBoardList(ctx, board.Id, "test B")
 
 	repo := repositories.NewBoardListRepository()
 	boardLists, err := repo.List(ctx, db.Option{Key: "name", Value: "test A"})
@@ -118,8 +118,8 @@ func Test_RepositoryBoardListUpdate(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	board := createBoard(ctx, createProject(ctx).GetId(), "test")
-	boardList := createBoardList(ctx, board.Id, "test A")
+	board := tests.CreateBoard(ctx, tests.CreateProject(ctx).GetId(), "test")
+	boardList := tests.CreateBoardList(ctx, board.Id, "test A")
 
 	newName := "New Name"
 

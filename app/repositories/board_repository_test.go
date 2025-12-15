@@ -16,7 +16,7 @@ func Test_RepositoryBoardCount(t *testing.T) {
 	tests.ResetDatabase()
 
 	repo := repositories.NewBoardRepository()
-	project := createProject(ctx)
+	project := tests.CreateProject(ctx)
 	entry := models.Board{
 		Name:      "test",
 		ProjectId: project.GetId(),
@@ -33,7 +33,7 @@ func Test_RepositoryBoardCreate(t *testing.T) {
 	tests.ResetDatabase()
 
 	repo := repositories.NewBoardRepository()
-	project := createProject(ctx)
+	project := tests.CreateProject(ctx)
 	entry := models.Board{
 		Name:      "test",
 		ProjectId: project.GetId(),
@@ -46,8 +46,8 @@ func Test_RepositoryBoardDelete(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	project := createProject(ctx)
-	board := createBoard(ctx, project.GetId(), "test")
+	project := tests.CreateProject(ctx)
+	board := tests.CreateBoard(ctx, project.GetId(), "test")
 	repo := repositories.NewBoardRepository()
 
 	count, _ := repo.Count(ctx)
@@ -64,8 +64,8 @@ func Test_RepositoryBoardGet(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	project := createProject(ctx)
-	board := createBoard(ctx, project.GetId(), "test")
+	project := tests.CreateProject(ctx)
+	board := tests.CreateBoard(ctx, project.GetId(), "test")
 	repo := repositories.NewBoardRepository()
 
 	dbBoard, err := repo.Get(ctx, board.GetId())
@@ -78,9 +78,9 @@ func Test_RepositoryBoardList(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	project := createProject(ctx)
-	boardA := createBoard(ctx, project.GetId(), "A")
-	boardB := createBoard(ctx, project.GetId(), "B")
+	project := tests.CreateProject(ctx)
+	boardA := tests.CreateBoard(ctx, project.GetId(), "A")
+	boardB := tests.CreateBoard(ctx, project.GetId(), "B")
 	repo := repositories.NewBoardRepository()
 
 	boards, err := repo.List(ctx)
@@ -102,9 +102,9 @@ func Test_RepositoryBoardListWithOption(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	project := createProject(ctx)
-	boardA := createBoard(ctx, project.GetId(), "A")
-	_ = createBoard(ctx, project.GetId(), "B")
+	project := tests.CreateProject(ctx)
+	boardA := tests.CreateBoard(ctx, project.GetId(), "A")
+	_ = tests.CreateBoard(ctx, project.GetId(), "B")
 	repo := repositories.NewBoardRepository()
 
 	projects, err := repo.List(ctx, db.Option{Key: "name", Value: boardA.Name})
@@ -117,8 +117,8 @@ func Test_RepositoryBoardUpdate(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	project := createProject(ctx)
-	boardA := createBoard(ctx, project.GetId(), "A")
+	project := tests.CreateProject(ctx)
+	boardA := tests.CreateBoard(ctx, project.GetId(), "A")
 	repo := repositories.NewBoardRepository()
 
 	newName := "New Name"

@@ -121,8 +121,8 @@ func Test_RepositoryListUsers(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	userA := createUser(ctx, repo, "test1@test.com")
-	_ = createUser(ctx, repo, "test2@test.com")
+	userA := tests.CreateUser(ctx, "test1@test.com")
+	_ = tests.CreateUser(ctx, "test2@test.com")
 
 	usersList, err := repo.List(ctx, db.Option{Key: "email", Value: userA.Email})
 	assert.NoError(t, err, "should list users without errors")
@@ -135,8 +135,8 @@ func Test_RepositoryListAllUsers(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	userA := createUser(ctx, repo, "test1@test.com")
-	userB := createUser(ctx, repo, "test2@test.com")
+	userA := tests.CreateUser(ctx, "test1@test.com")
+	userB := tests.CreateUser(ctx, "test2@test.com")
 
 	usersList, err := repo.List(ctx)
 	assert.NoError(t, err, "should list users without errors")
@@ -158,8 +158,8 @@ func Test_RepositoryCountSpecificUsers(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	userA := createUser(ctx, repo, "test1@test.com")
-	_ = createUser(ctx, repo, "test2@test.com")
+	userA := tests.CreateUser(ctx, "test1@test.com")
+	_ = tests.CreateUser(ctx, "test2@test.com")
 
 	count, err := repo.Count(ctx, db.Option{"email", userA.Email})
 	assert.NoError(t, err, "should count users without errors")
@@ -171,8 +171,8 @@ func Test_RepositoryCountAllUsers(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
-	_ = createUser(ctx, repo, "test1@test.com")
-	_ = createUser(ctx, repo, "test2@test.com")
+	_ = tests.CreateUser(ctx, "test1@test.com")
+	_ = tests.CreateUser(ctx, "test2@test.com")
 
 	count, err := repo.Count(ctx)
 	assert.NoError(t, err, "should count users without errors")
