@@ -24,8 +24,8 @@ func (s *BoardService) ProjectBoards(ctx context.Context, projectID uint) ([]*mo
 	return s.boardRepository.List(ctx, db.Option{Key: "project_id", Value: projectID})
 }
 
-func (s *BoardService) Update(ctx context.Context, listID uint, opts ...db.Option) error {
-	if err := s.boardRepository.Update(ctx, listID, opts...); err != nil {
+func (s *BoardService) Update(ctx context.Context, id uint, opts ...db.Option) error {
+	if err := s.boardRepository.Update(ctx, id, opts...); err != nil {
 		return err
 	}
 	return nil
@@ -48,4 +48,19 @@ func (s *BoardService) Lists(ctx context.Context, id uint) ([]*models.BoardList,
 		return nil, err
 	}
 	return boardList, nil
+}
+
+func (s *BoardService) ListCreate(ctx context.Context, entry *models.BoardList) (*models.BoardList, error) {
+	if err := s.boardListRepository.Create(ctx, entry); err != nil {
+		return nil, err
+	}
+	return entry, nil
+}
+
+func (s *BoardService) ListUpdate(ctx context.Context, id uint, opts ...db.Option) error {
+	return s.boardListRepository.Update(ctx, id, opts...)
+}
+
+func (s *BoardService) ListDelete(ctx context.Context, id uint) error {
+	return s.boardListRepository.Delete(ctx, id)
 }

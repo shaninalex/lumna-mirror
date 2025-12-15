@@ -24,7 +24,7 @@ func RegisterProjectController(router *web.Router) {
 
 	// Manage board lists
 	router.GET("/api/v1/board/{id}/lists", h.ListsGet)
-	// router.POST("/api/v1/board/{id}/lists", h.ListsCreate)
-	// router.PATCH("/api/v1/board/{id}/lists/{id}", h.ListsPatch)
-	// router.DELETE("/api/v1/board/{id}/lists/{id}", h.ListsDelete)
+	router.POST("/api/v1/board/{id}/lists", h.ListsCreate)
+	router.PATCH("/api/v1/lists/{listId}", h.ListsPatch)
+	router.DELETE("/api/v1/lists/{listId}", h.ListsDelete)
 }
