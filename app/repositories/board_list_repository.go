@@ -40,11 +40,11 @@ func (p *BoardListRepository) Count(ctx context.Context, opts ...db.Option) (int
 // Create implements Repository.
 func (p *BoardListRepository) Create(ctx context.Context, entry *models.BoardList) error {
 	query := `
-		INSERT INTO board_lists (name)
-		VALUES (?)
+		INSERT INTO board_lists (name, board_id)
+		VALUES (?, ?)
 	`
 
-	result, err := db.FromContext(ctx).ExecContext(ctx, query, entry.Name)
+	result, err := db.FromContext(ctx).ExecContext(ctx, query, entry.Name, entry.BoardId)
 	if err != nil {
 		return err
 	}
@@ -79,9 +79,9 @@ func (p *BoardListRepository) Delete(ctx context.Context, id uint) error {
 func (p *BoardListRepository) Get(ctx context.Context, id uint) (*models.BoardList, error) {
 	list := &models.BoardList{}
 	row := db.FromContext(ctx).QueryRow(`
-		SELECT id, name, order FROM board_lists WHERE id = ?
+		SELECT id, name, "order", board_id FROM board_lists WHERE id = ?
 	`, id)
-	err := row.Scan(&list.Id, &list.Name, &list.Order)
+	err := row.Scan(&list.Id, &list.Name, &list.Order, &list.BoardId)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, ErrorProjectNotFound
@@ -97,7 +97,7 @@ func (p *BoardListRepository) List(ctx context.Context, opts ...db.Option) ([]*m
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
-		`SELECT id, name, order FROM board_lists %s`,
+		`SELECT id, name, "order", board_id FROM board_lists %s`,
 		where,
 	)
 
@@ -114,6 +114,7 @@ func (p *BoardListRepository) List(ctx context.Context, opts ...db.Option) ([]*m
 			&list.Id,
 			&list.Name,
 			&list.Order,
+			&list.BoardId,
 		); err != nil {
 			return nil, err
 		}

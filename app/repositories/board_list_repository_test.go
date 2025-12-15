@@ -1,151 +1,132 @@
 package repositories_test
 
-// func Test_RepositoryBoardListCreate(t *testing.T) {
-// 	ctx := tests.TestContext()
-// 	tests.ResetDatabase()
+import (
+	"fmt"
+	"testing"
 
-// 	repo := repositories.NewProjectRespository()
-// 	listRepo := repositories.NewBoardListRepository()
+	"github.com/stretchr/testify/assert"
+	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
+	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/tests"
+)
 
-// 	project := models.Project{Name: "test"}
-// 	_ = repo.Create(ctx, &project)
+func Test_RepositoryBoardListCreate(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
+	listRepo := repositories.NewBoardListRepository()
+	board := createBoard(ctx, createProject(ctx).GetId(), "test")
+	entry := models.BoardList{
+		Name:    "todo",
+		BoardId: board.GetId(),
+	}
+	err := listRepo.Create(ctx, &entry)
+	assert.NoError(t, err, "Should create board list without errors")
+}
 
-// 	entry := models.BoardList{
-// 		Name: "todo",
-// 		BoardId: pro,
-// 	}
-// 	listRepo.Create(ctx)
+func Test_RepositoryBoardListCount(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
 
-// 	count, err := repo.Count(ctx)
-// 	assert.NoError(t, err, "Should count project without errors")
-// 	assert.Equal(t, 1, count)
-// }
+	repo := repositories.NewBoardListRepository()
+	board := createBoard(ctx, createProject(ctx).GetId(), "test")
+	_ = createBoardList(ctx, board.Id, "test")
 
-// func Test_RepositoryBoardListCount(t *testing.T) {
-// 	ctx := tests.TestContext()
-// 	tests.ResetDatabase()
+	count, err := repo.Count(ctx)
+	assert.NoError(t, err, "Should count board list without errors")
+	assert.Equal(t, 1, count)
 
-// 	repo := repositories.NewProjectRespository()
+	count, err = repo.Count(ctx, db.Option{Key: "name", Value: "test"})
+	assert.NoError(t, err, "Should board list without errors")
+	assert.Equal(t, 1, count)
 
-// 	_ = repo.Create(ctx, &models.Project{Name: "test"})
-// 	_ = repo.Create(ctx, &models.Project{Name: "test 2"})
+	count, err = repo.Count(ctx, db.Option{Key: "name", Value: "none existed board list"})
+	assert.NoError(t, err, "Should board list without errors")
+	assert.Equal(t, 0, count)
+}
 
-// 	count, err := repo.Count(ctx, db.Option{Key: "name", Value: "test 2"})
-// 	assert.NoError(t, err, "Should count project without errors")
-// 	assert.Equal(t, 1, count)
+func Test_RepositoryBoardListDelete(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
 
-// 	count, err = repo.Count(ctx, db.Option{Key: "name", Value: "none existed project"})
-// 	assert.NoError(t, err, "Should count project without errors")
-// 	assert.Equal(t, 0, count)
+	repo := repositories.NewBoardListRepository()
+	board := createBoard(ctx, createProject(ctx).GetId(), "test")
+	boardList := createBoardList(ctx, board.Id, "test")
 
-// 	// We do not implement "OR" condition.
-// 	// count, err = repo.Count(ctx, db.Option{Key: "name", Value: "test"}, db.Option{Key: "name", Value: "test 2"})
-// 	// assert.NoError(t, err, "Should count project without errors")
-// 	// assert.Equal(t, 2, count)
-// }
+	err := repo.Delete(ctx, boardList.GetId())
+	assert.NoError(t, err, "Should not find deleted board list")
 
-// func Test_RepositoryBoardListDelete(t *testing.T) {
-// 	ctx := tests.TestContext()
-// 	tests.ResetDatabase()
+	count, err := repo.Count(ctx, db.Option{Key: "name", Value: "test"})
+	assert.NoError(t, err, "Should not find deleted board list")
+	assert.Equal(t, 0, count)
+}
 
-// 	repo := repositories.NewProjectRespository()
-// 	projectA := models.Project{Name: "A"}
-// 	_ = repo.Create(ctx, &projectA)
-// 	projectB := models.Project{Name: "B"}
-// 	_ = repo.Create(ctx, &projectB)
+func Test_RepositoryBoardListGet(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
 
-// 	count, _ := repo.Count(ctx)
-// 	assert.Equal(t, 2, count)
+	repo := repositories.NewBoardListRepository()
+	board := createBoard(ctx, createProject(ctx).GetId(), "test")
+	boardList := createBoardList(ctx, board.Id, "test")
+	dbBoardList, err := repo.Get(ctx, boardList.GetId())
+	assert.NoError(t, err, "Should get board list by id without errors")
+	assert.Equal(t, boardList.GetId(), dbBoardList.GetId())
+	assert.Equal(t, boardList.Name, dbBoardList.Name)
+	assert.Equal(t, boardList.Order, dbBoardList.Order)
+}
 
-// 	err := repo.Delete(ctx, projectA.GetId())
-// 	assert.NoError(t, err, "Should delete project without errors")
-// 	count, _ = repo.Count(ctx)
-// 	assert.Equal(t, 1, count)
+func Test_RepositoryBoardListList(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
 
-// 	count, _ = repo.Count(ctx, db.Option{Key: "name", Value: "A"})
-// 	assert.Equal(t, 0, count)
+	board := createBoard(ctx, createProject(ctx).GetId(), "test")
+	boardListA := createBoardList(ctx, board.Id, "test A")
+	boardListB := createBoardList(ctx, board.Id, "test B")
 
-// 	count, _ = repo.Count(ctx, db.Option{Key: "name", Value: "B"})
-// 	assert.Equal(t, 1, count)
-// }
+	repo := repositories.NewBoardListRepository()
+	boardLists, err := repo.List(ctx)
+	assert.NoError(t, err, "Should list projects without errors")
+	assert.Equal(t, 2, len(boardLists))
 
-// func Test_RepositoryBoardListGet(t *testing.T) {
-// 	ctx := tests.TestContext()
-// 	tests.ResetDatabase()
+	testBoardLists := []string{boardListA.Name, boardListB.Name}
+	queriedBoardLists := make([]string, len(boardLists))
+	for i, u := range boardLists {
+		queriedBoardLists[i] = u.Name
+	}
 
-// 	repo := repositories.NewProjectRespository()
-// 	projectA := models.Project{Name: "A"}
-// 	_ = repo.Create(ctx, &projectA)
-// 	projectB := models.Project{Name: "B"}
-// 	_ = repo.Create(ctx, &projectB)
+	for _, e := range testBoardLists {
+		assert.Contains(t, queriedBoardLists, e, fmt.Sprintf("Board list %s does not exists in queriedBoardLists %v", e, queriedBoardLists))
+	}
+}
 
-// 	dbProjectA, err := repo.Get(ctx, projectA.GetId())
-// 	assert.NoError(t, err, "Should get project without errors")
-// 	assert.Equal(t, dbProjectA.Name, projectA.Name)
+func Test_RepositoryBoardListListWithOption(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
 
-// 	dbProjectB, err := repo.Get(ctx, projectB.GetId())
-// 	assert.NoError(t, err, "Should get project without errors")
-// 	assert.Equal(t, dbProjectB.Name, projectB.Name)
+	board := createBoard(ctx, createProject(ctx).GetId(), "test")
+	_ = createBoardList(ctx, board.Id, "test A")
+	_ = createBoardList(ctx, board.Id, "test B")
 
-// 	dbProjectC, err := repo.Get(ctx, 123)
-// 	assert.Error(t, err, "Should NOT get non existed project")
-// 	assert.Nil(t, dbProjectC)
-// }
+	repo := repositories.NewBoardListRepository()
+	boardLists, err := repo.List(ctx, db.Option{Key: "name", Value: "test A"})
+	assert.NoError(t, err, "Should list projects without errors")
+	assert.Equal(t, 1, len(boardLists))
+	assert.Equal(t, "test A", boardLists[0].Name)
+}
 
-// func Test_RepositoryBoardListList(t *testing.T) {
-// 	ctx := tests.TestContext()
-// 	tests.ResetDatabase()
+func Test_RepositoryBoardListUpdate(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
 
-// 	repo := repositories.NewProjectRespository()
-// 	projectA := models.Project{Name: "A"}
-// 	_ = repo.Create(ctx, &projectA)
-// 	projectB := models.Project{Name: "B"}
-// 	_ = repo.Create(ctx, &projectB)
+	board := createBoard(ctx, createProject(ctx).GetId(), "test")
+	boardList := createBoardList(ctx, board.Id, "test A")
 
-// 	projects, err := repo.List(ctx)
-// 	assert.NoError(t, err, "Should list projects without errors")
-// 	assert.Equal(t, 2, len(projects))
+	newName := "New Name"
 
-// 	testProjects := []string{projectA.Name, projectB.Name}
-// 	queriedProjects := make([]string, len(projects))
-// 	for i, u := range projects {
-// 		queriedProjects[i] = u.Name
-// 	}
+	repo := repositories.NewBoardListRepository()
+	err := repo.Update(ctx, boardList.GetId(), db.Option{Key: "name", Value: newName})
+	assert.NoError(t, err, "Should update project without errors")
 
-// 	for _, e := range testProjects {
-// 		assert.Contains(t, queriedProjects, e, fmt.Sprintf("Project %s does not exists in queriedProjects %v", e, queriedProjects))
-// 	}
-// }
-
-// func Test_RepositoryBoardListListWithOption(t *testing.T) {
-// 	ctx := tests.TestContext()
-// 	tests.ResetDatabase()
-
-// 	repo := repositories.NewProjectRespository()
-// 	projectA := models.Project{Name: "A"}
-// 	_ = repo.Create(ctx, &projectA)
-// 	projectB := models.Project{Name: "B"}
-// 	_ = repo.Create(ctx, &projectB)
-
-// 	projects, err := repo.List(ctx, db.Option{Key: "name", Value: projectA.Name})
-// 	assert.NoError(t, err, "Should list projects without errors")
-// 	assert.Equal(t, 1, len(projects))
-// 	assert.Equal(t, projectA.Name, projects[0].Name)
-// }
-
-// func Test_RepositoryBoardListUpdate(t *testing.T) {
-// 	ctx := tests.TestContext()
-// 	tests.ResetDatabase()
-
-// 	repo := repositories.NewProjectRespository()
-// 	projectA := models.Project{Name: "A"}
-// 	_ = repo.Create(ctx, &projectA)
-
-// 	newName := "New Name"
-
-// 	err := repo.Update(ctx, projectA.GetId(), db.Option{Key: "name", Value: newName})
-// 	assert.NoError(t, err, "Should update project without errors")
-
-// 	updatedProject, _ := repo.Get(ctx, projectA.GetId())
-// 	assert.Equal(t, newName, updatedProject.Name)
-// }
+	updatedProject, _ := repo.Get(ctx, boardList.GetId())
+	assert.Equal(t, newName, updatedProject.Name)
+}

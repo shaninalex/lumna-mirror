@@ -1,7 +1,6 @@
 package repositories_test
 
 import (
-	"context"
 	"fmt"
 	"testing"
 
@@ -178,15 +177,4 @@ func Test_RepositoryCountAllUsers(t *testing.T) {
 	count, err := repo.Count(ctx)
 	assert.NoError(t, err, "should count users without errors")
 	assert.Equal(t, count, 2, "should count 2 user")
-}
-
-func createUser(ctx context.Context, repo *repositories.UserRepository, email string) *models.User {
-	h, _ := utils.CreatePasswordHash(email)
-	user := models.User{
-		Email:        email,
-		PasswordHash: h,
-	}
-	_ = repo.Create(ctx, &user)
-
-	return &user
 }

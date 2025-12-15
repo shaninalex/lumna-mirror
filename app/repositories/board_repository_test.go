@@ -1,7 +1,6 @@
 package repositories_test
 
 import (
-	"context"
 	"fmt"
 	"testing"
 
@@ -11,23 +10,6 @@ import (
 	"gitlab.com/shaninalex/lumna/app/repositories"
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
-
-func createProject(ctx context.Context) *models.Project {
-	repo := repositories.NewProjectRespository()
-	project := models.Project{Name: "test"}
-	_ = repo.Create(ctx, &project)
-	return &project
-}
-
-func createBoard(ctx context.Context, projectId uint, name string) *models.Board {
-	entry := models.Board{
-		Name:      name,
-		ProjectId: projectId,
-	}
-	repo := repositories.NewBoardRepository()
-	_ = repo.Create(ctx, &entry)
-	return &entry
-}
 
 func Test_RepositoryBoardCount(t *testing.T) {
 	ctx := tests.TestContext()
