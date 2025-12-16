@@ -7,6 +7,13 @@ import (
 	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
+func CreateProjectWithName(ctx context.Context, name string) *models.Project {
+	repo := repositories.NewProjectRespository()
+	project := models.Project{Name: name}
+	_ = repo.Create(ctx, &project)
+	return &project
+}
+
 func CreateProject(ctx context.Context) *models.Project {
 	repo := repositories.NewProjectRespository()
 	project := models.Project{Name: "test"}
