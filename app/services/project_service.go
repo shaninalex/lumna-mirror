@@ -31,6 +31,9 @@ func (s *ProjectService) List(ctx context.Context) ([]*models.Project, error) {
 }
 
 func (s *ProjectService) Create(ctx context.Context, entry *models.Project) error {
+	if entry.Name == "" {
+		return fmt.Errorf("project name is required")
+	}
 	count, err := s.projectRepository.Count(ctx, db.Option{Key: "name", Value: entry.Name})
 	if err != nil {
 		return err

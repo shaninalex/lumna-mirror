@@ -12,7 +12,7 @@ import { Project } from '@client/entities/project'
         <div class="mb-4 flex items-center gap-4">
             <a class="flex items-center gap-2 hover:underline" [routerLink]="['/', 'projects', project.code]">
                 <img src="/img/project.svg" class="w-6 rounded" />
-                <h3 class="text-xl font-bold">{{ project.title }}</h3>
+                <h3 class="text-xl font-bold">{{ project.name }}</h3>
             </a>
 
             <button class="cursor-pointer" cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="isOpen = !isOpen">

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/web/adapters"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -13,7 +14,7 @@ func (s *ProjectHandler) List(w http.ResponseWriter, r *http.Request) {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	utils.Success(w, projects)
+	utils.Success(w, adapters.ToProjectsDto(projects))
 }
 
 type createProjectPayload struct {
@@ -32,7 +33,7 @@ func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	utils.Success(w, project)
+	utils.Success(w, adapters.ToProjectDto(project))
 }
 
 func (s *ProjectHandler) BoardsList(w http.ResponseWriter, r *http.Request) {

@@ -14,7 +14,7 @@ type UserDTO struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func FromUserModel(u *models.User) *UserDTO {
+func ToUserDto(u *models.User) *UserDTO {
 	return &UserDTO{
 		Id:        u.Id,
 		Email:     u.Email,

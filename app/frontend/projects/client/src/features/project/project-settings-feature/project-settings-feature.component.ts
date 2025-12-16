@@ -59,7 +59,7 @@ export class ProjectSettingsFeatureComponent implements OnInit {
 		this.store.select(selectProjectStatusList(this.project.id)).subscribe(data => {
 			this.statusList = data
 		})
-		this.form.setValue({ title: this.project.title })
+		this.form.setValue({ title: this.project.name })
 	}
 
 	drop(event: CdkDragDrop<string[]>) {

@@ -28,8 +28,7 @@ func (s *UserHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// IMPORTANT! we should return user through adapter
-	utils.Success(w, adapters.FromUserModel(user))
+	utils.Success(w, adapters.ToUserDto(user))
 }
 
 func (s *UserHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {

@@ -11,6 +11,19 @@ import (
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
 
+func Test_ServiceProjectCreateEmptyName(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
+
+	service := services.NewProjectManager()
+	project := &models.Project{
+		Name: "",
+	}
+	err := service.Create(ctx, project)
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "project name is required")
+}
+
 func Test_ServiceProjectCreate(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()

@@ -8,7 +8,7 @@ import { RouterLink } from "@angular/router"
 	template: `
 		<a [routerLink]="[project.code]" class="card hover-space block">
 			<div class="card-title">
-				{{ project.title }}
+				{{ project.name }}
 			</div>
 		</a>
 	`,

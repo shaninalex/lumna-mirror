@@ -75,7 +75,7 @@ export class NewProjectFormComponent implements OnChanges {
 
 	onSubmit(): void {
 		this.loading = true
-		const project: Record<string, string> = { title: this.form.value["title"] }
+		const project: Record<string, string> = { name: this.form.value["title"] }
 		this.store.dispatch(ProjectCreateAction({ payload: project }))
 	}
 }

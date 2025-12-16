@@ -1,6 +1,6 @@
 export interface Project {
 	id: number
-	title: string
+	name: string
 	code: string
 	created_at: Date
 	updated_at: Date
