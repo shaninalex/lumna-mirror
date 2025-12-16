@@ -43,10 +43,10 @@ CREATE TABLE boards
 -------------------------
 CREATE TABLE board_lists
 (
-    id       INTEGER PRIMARY KEY,
-    board_id INTEGER NOT NULL,
-    name     TEXT    NOT NULL,
-    "order"  INTEGER NOT NULL DEFAULT 0,
+    id         INTEGER PRIMARY KEY,
+    board_id   INTEGER NOT NULL,
+    name       TEXT    NOT NULL,
+    list_order INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (board_id) REFERENCES boards (id) ON DELETE CASCADE
 );
 

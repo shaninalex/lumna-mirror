@@ -1,16 +1,16 @@
 package models
 
 type Board struct {
-	Id        uint
-	Name      string
-	ProjectId uint
+	Id        uint   `json:"id"`
+	Name      string `json:"name"`
+	ProjectId uint   `json:"project_id"`
 
 	Tasks []*Task
 	Lists []*BoardList
 
 	// settings contains:
 	// - order of lists on frontend
-	Settings *string
+	Settings *string `json:"settings"`
 }
 
 func (s *Board) GetId() uint  { return s.Id }

@@ -1,10 +1,10 @@
 package models
 
 type BoardList struct {
-	Id      uint
-	Name    string
-	Order   uint
-	BoardId uint
+	Id      uint   `json:"id"`
+	Name    string `json:"name"`
+	Order   uint   `json:"order"`
+	BoardId uint   `json:"board_id"`
 }
 
 func (s *BoardList) GetId() uint  { return s.Id }

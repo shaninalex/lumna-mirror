@@ -82,7 +82,7 @@ func (s *BoardHandler) ListsPatch(w http.ResponseWriter, r *http.Request) {
 		r.Context(),
 		uint(id),
 		db.Option{Key: "name", Value: payload.Name},
-		db.Option{Key: "order", Value: payload.Order},
+		db.Option{Key: "list_order", Value: payload.Order},
 	)
 	if err != nil {
 		utils.Error(w, http.StatusBadRequest, err)

@@ -79,7 +79,7 @@ func (p *BoardListRepository) Delete(ctx context.Context, id uint) error {
 func (p *BoardListRepository) Get(ctx context.Context, id uint) (*models.BoardList, error) {
 	list := &models.BoardList{}
 	row := db.FromContext(ctx).QueryRow(`
-		SELECT id, name, "order", board_id FROM board_lists WHERE id = ?
+		SELECT id, name, list_order, board_id FROM board_lists WHERE id = ?
 	`, id)
 	err := row.Scan(&list.Id, &list.Name, &list.Order, &list.BoardId)
 	if err != nil {
@@ -97,7 +97,7 @@ func (p *BoardListRepository) List(ctx context.Context, opts ...db.Option) ([]*m
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
-		`SELECT id, name, "order", board_id FROM board_lists %s`,
+		`SELECT id, name, list_order, board_id FROM board_lists %s`,
 		where,
 	)
 

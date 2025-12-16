@@ -9,14 +9,14 @@ type BoardHandler struct {
 	boardService *services.BoardService
 }
 
-func NewProjectHandler() *BoardHandler {
+func NewBoardHandler() *BoardHandler {
 	return &BoardHandler{
 		boardService: services.NewBoardService(),
 	}
 }
 
-func RegisterProjectController(router *web.Router) {
-	h := NewProjectHandler()
+func RegisterBoardController(router *web.Router) {
+	h := NewBoardHandler()
 
 	// Manage boards
 	router.PATCH("/api/v1/board/{id}", h.Patch)

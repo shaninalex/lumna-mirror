@@ -5,6 +5,7 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/pkg/token"
 	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/web/adapters"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -28,7 +29,7 @@ func (s *UserHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// IMPORTANT! we should return user through adapter
-	utils.Success(w, user)
+	utils.Success(w, adapters.FromUserModel(user))
 }
 
 func (s *UserHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {

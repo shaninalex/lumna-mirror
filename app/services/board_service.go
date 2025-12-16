@@ -20,6 +20,10 @@ func NewBoardService() *BoardService {
 	}
 }
 
+func (s *BoardService) GetBoard(ctx context.Context, boardId uint) (*models.Board, error) {
+	return s.boardRepository.Get(ctx, boardId)
+}
+
 func (s *BoardService) ProjectBoards(ctx context.Context, projectID uint) ([]*models.Board, error) {
 	return s.boardRepository.List(ctx, db.Option{Key: "project_id", Value: projectID})
 }
@@ -63,4 +67,8 @@ func (s *BoardService) ListUpdate(ctx context.Context, id uint, opts ...db.Optio
 
 func (s *BoardService) ListDelete(ctx context.Context, id uint) error {
 	return s.boardListRepository.Delete(ctx, id)
+}
+
+func (s *BoardService) ListGet(ctx context.Context, id uint) (*models.BoardList, error) {
+	return s.boardListRepository.Get(ctx, id)
 }

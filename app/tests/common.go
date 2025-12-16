@@ -57,3 +57,9 @@ func NewTestRouter(ctx context.Context) *web.Router {
 	})
 	return router
 }
+
+func Context() context.Context {
+	ctx := TestContext()
+	ResetDatabase()
+	return ctx
+}
