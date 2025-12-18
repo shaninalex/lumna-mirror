@@ -41,3 +41,14 @@ full cli mode without any web related things - sockets and http routers. Should 
 ### Calendar
 
 Calendar for fast task/reminder assignments
+
+### documentation
+
+add `man-like` documentation page. Big documentation text with all commands. Should gather that information from
+different packages and embed ( or not ) into binary.
+
+
+### different migrations for different database
+
+Well the Kratos approach is to use sufixes like `*.sqlite.sql` or `*.postgres.sql` for different databases.
+This solve the issue with specific sql syntax and logic for different databases.

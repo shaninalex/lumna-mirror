@@ -1,3 +1,26 @@
+## 0.21.0 (2025-12-19)
+
+### Feat
+
+- **db**: expresions and conditions
+- **test**: board+board_list
+- **auth**: authentication + tests
+- **api**: user handlers
+- **api**: auth controller
+- embed, db
+- **build**: static handlers and embed
+- **web**: router and test for that
+- **repository**: user
+
+### Fix
+
+- restore authentication
+
+### Refactor
+
+- use typed options
+- domain repositories
+
 ## 0.20.1 (2025-11-15)
 
 ### Fix

@@ -31,3 +31,11 @@ func Test_ValidatePasswordHash(t *testing.T) {
 	err = utils.ValidatePassword(hash, "wrongPassword")
 	assert.Error(t, err, "Wrong password should return an error")
 }
+
+func Test_ShouldBeUnique(t *testing.T) {
+	password := "mySecretPassword123!"
+	hashA, _ := utils.CreatePasswordHash(password)
+	hashB, _ := utils.CreatePasswordHash(password)
+
+	assert.NotEqual(t, hashA, hashB, "Hashes should NOT be equal")
+}

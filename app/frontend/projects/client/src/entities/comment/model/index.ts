@@ -1,5 +1,0 @@
-export * from "./comment.model"
-export * from "./comment.actions"
-export * from "./comment.selectors"
-export * from "./comment.reducer"
-export * from "./comment.effects"

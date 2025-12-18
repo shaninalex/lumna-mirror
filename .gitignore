@@ -7,10 +7,10 @@
 var/
 frontend/node_modules
 
-config/development.yml
-config/kratos/kratos.yml
-config/oathkeeper/access-rules.yml
-config/oathkeeper/oathkeeper.yml
-app/cmd/web/embed/
+config/config.dev.yaml
+app/web/embed/
 *.db
 bin/
+
+__debug_*
+cover.out

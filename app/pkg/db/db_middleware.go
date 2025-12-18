@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"net/http"
 
-	"gitlab.com/shaninalex/lumna/app/pkg/base"
+	"gitlab.com/shaninalex/lumna/app/global"
 )
 
 type Middleware struct {
@@ -18,7 +18,7 @@ func NewMiddleware(db *sql.DB) *Middleware {
 
 func (s *Middleware) Wrap(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		r = r.WithContext(context.WithValue(r.Context(), base.ContextDB, s.db))
+		r = r.WithContext(context.WithValue(r.Context(), global.ContextDB, s.db))
 		next.ServeHTTP(w, r)
 	})
 }

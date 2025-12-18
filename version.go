@@ -3,4 +3,4 @@
 package lumna
 
 // Version platform global version
-const Version = "0.20.1"
+const Version = "0.21.0"
