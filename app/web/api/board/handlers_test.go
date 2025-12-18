@@ -13,7 +13,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/web/api/board"
 )
 
-func Test_ApiBoardHandlersPatch(t *testing.T) {
+func Test_ApiBoardController_Patch(t *testing.T) {
 	ctx := tests.Context()
 	router := tests.NewTestRouter(ctx)
 
@@ -41,7 +41,7 @@ func Test_ApiBoardHandlersPatch(t *testing.T) {
 	assert.Equal(t, boardA.GetId(), dbBoard.GetId())
 }
 
-func Test_ApiBoardHandlersDelete(t *testing.T) {
+func Test_ApiBoardController_Delete(t *testing.T) {
 	ctx := tests.Context()
 	router := tests.NewTestRouter(ctx)
 
@@ -65,7 +65,7 @@ func Test_ApiBoardHandlersDelete(t *testing.T) {
 	assert.Nil(t, dbBoard)
 }
 
-func Test_ApiBoardHandlersListsGet(t *testing.T) {
+func Test_ApiBoardController_ListsGet(t *testing.T) {
 	ctx := tests.Context()
 	router := tests.NewTestRouter(ctx)
 
@@ -86,7 +86,7 @@ func Test_ApiBoardHandlersListsGet(t *testing.T) {
 	assert.Contains(t, rr.Body.String(), boardListB.Name)
 }
 
-func Test_ApiBoardHandlersListsCreate(t *testing.T) {
+func Test_ApiBoardController_ListsCreate(t *testing.T) {
 	ctx := tests.Context()
 	router := tests.NewTestRouter(ctx)
 
@@ -106,7 +106,7 @@ func Test_ApiBoardHandlersListsCreate(t *testing.T) {
 	assert.Contains(t, rr.Body.String(), name)
 }
 
-func Test_ApiBoardHandlersListsPatch(t *testing.T) {
+func Test_ApiBoardController_ListsPatch(t *testing.T) {
 	ctx := tests.Context()
 	router := tests.NewTestRouter(ctx)
 
@@ -131,7 +131,7 @@ func Test_ApiBoardHandlersListsPatch(t *testing.T) {
 	assert.Equal(t, name, dbBoardList.Name)
 }
 
-func Test_ApiBoardHandlersListsDelete(t *testing.T) {
+func Test_ApiBoardController_ListsDelete(t *testing.T) {
 	ctx := tests.Context()
 	router := tests.NewTestRouter(ctx)
 

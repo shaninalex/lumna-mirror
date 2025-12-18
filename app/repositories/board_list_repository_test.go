@@ -11,7 +11,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
 
-func Test_RepositoryBoardListCreate(t *testing.T) {
+func Test_RepositoryBoardList_Create(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	listRepo := repositories.NewBoardListRepository()
@@ -24,7 +24,7 @@ func Test_RepositoryBoardListCreate(t *testing.T) {
 	assert.NoError(t, err, "Should create board list without errors")
 }
 
-func Test_RepositoryBoardListCount(t *testing.T) {
+func Test_RepositoryBoardList_Count(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -45,7 +45,7 @@ func Test_RepositoryBoardListCount(t *testing.T) {
 	assert.Equal(t, 0, count)
 }
 
-func Test_RepositoryBoardListDelete(t *testing.T) {
+func Test_RepositoryBoardList_Delete(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -61,7 +61,7 @@ func Test_RepositoryBoardListDelete(t *testing.T) {
 	assert.Equal(t, 0, count)
 }
 
-func Test_RepositoryBoardListGet(t *testing.T) {
+func Test_RepositoryBoardList_Get(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -75,7 +75,7 @@ func Test_RepositoryBoardListGet(t *testing.T) {
 	assert.Equal(t, boardList.Order, dbBoardList.Order)
 }
 
-func Test_RepositoryBoardListList(t *testing.T) {
+func Test_RepositoryBoardList_List(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -99,7 +99,7 @@ func Test_RepositoryBoardListList(t *testing.T) {
 	}
 }
 
-func Test_RepositoryBoardListListWithOption(t *testing.T) {
+func Test_RepositoryBoardList_ListWithOption(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -114,7 +114,7 @@ func Test_RepositoryBoardListListWithOption(t *testing.T) {
 	assert.Equal(t, "test A", boardLists[0].Name)
 }
 
-func Test_RepositoryBoardListUpdate(t *testing.T) {
+func Test_RepositoryBoardList_Update(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 

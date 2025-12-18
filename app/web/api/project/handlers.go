@@ -46,12 +46,24 @@ func (s *ProjectHandler) BoardsList(w http.ResponseWriter, r *http.Request) {
 	utils.Success(w, boards)
 }
 
+type createBoardPayload struct {
+	Name string `json:"name"`
+}
+
 func (s *ProjectHandler) BoardsCreate(w http.ResponseWriter, r *http.Request) {
 	id := utils.UrlNumericParam(w, r, "id")
-	boards, err := s.boardService.ProjectBoards(r.Context(), uint(id))
+	payload, err := utils.BodyParser[createBoardPayload](r)
 	if err != nil {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	utils.Success(w, boards)
+	board, err := s.boardService.Create(r.Context(), &models.Board{
+		Name:      payload.Name,
+		ProjectId: uint(id),
+	})
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(w, board)
 }

@@ -12,7 +12,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
 
-func Test_ServiceBoardProjectBoards(t *testing.T) {
+func Test_ServiceBoard_ProjectBoards(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -43,7 +43,7 @@ func Test_ServiceBoardProjectBoards(t *testing.T) {
 	}
 }
 
-func Test_ServiceBoardUpdate(t *testing.T) {
+func Test_ServiceBoard_Update(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	projectA := tests.CreateProjectWithName(ctx, "ProjectA")
@@ -59,7 +59,7 @@ func Test_ServiceBoardUpdate(t *testing.T) {
 	assert.Equal(t, newName, dbBoard.Name)
 }
 
-func Test_ServiceBoardDelete(t *testing.T) {
+func Test_ServiceBoard_Delete(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	projectA := tests.CreateProjectWithName(ctx, "ProjectA")
@@ -75,7 +75,7 @@ func Test_ServiceBoardDelete(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func Test_ServiceBoardCreate(t *testing.T) {
+func Test_ServiceBoard_Create(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	projectA := tests.CreateProjectWithName(ctx, "ProjectA")
@@ -98,7 +98,7 @@ func Test_ServiceBoardCreate(t *testing.T) {
 	assert.Equal(t, boardA.Name, dbBoard.Name)
 }
 
-func Test_ServiceBoardLists(t *testing.T) {
+func Test_ServiceBoard_Lists(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -133,7 +133,7 @@ func Test_ServiceBoardLists(t *testing.T) {
 	}
 }
 
-func Test_ServiceBoardListCreate(t *testing.T) {
+func Test_ServiceBoard_ListCreate(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -157,7 +157,7 @@ func Test_ServiceBoardListCreate(t *testing.T) {
 	assert.Equal(t, list.Name, dbList.Name)
 }
 
-func Test_ServiceBoardListUpdate(t *testing.T) {
+func Test_ServiceBoard_ListUpdate(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -177,7 +177,7 @@ func Test_ServiceBoardListUpdate(t *testing.T) {
 	assert.Equal(t, newName, dbList.Name)
 }
 
-func Test_ServiceBoardListDelete(t *testing.T) {
+func Test_ServiceBoard_ListDelete(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 

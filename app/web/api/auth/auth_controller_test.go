@@ -14,7 +14,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/web/api/auth"
 )
 
-func Test_HandleLogin(t *testing.T) {
+func Test_ApiAuthController_Login(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -56,7 +56,7 @@ func Test_HandleLogin(t *testing.T) {
 	}
 }
 
-func Test_HandleLoginInvalid(t *testing.T) {
+func Test_ApiAuthController_LoginInvalid(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -73,7 +73,7 @@ func Test_HandleLoginInvalid(t *testing.T) {
 	assert.Equal(t, rr.Code, http.StatusBadRequest, "Should return status: \"400 Bad Reaquest\"")
 }
 
-func Test_HandleRegister(t *testing.T) {
+func Test_ApiAuthController_Register(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 

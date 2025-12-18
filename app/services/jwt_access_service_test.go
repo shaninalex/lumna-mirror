@@ -10,7 +10,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-func Test_AccessTokenServiceCreateAndValidate(t *testing.T) {
+func Test_ServiceAccessToken_CreateAndValidate(t *testing.T) {
 	service := services.NewDefaultAccessTokenService()
 	var userId uint = 1
 	accessToken, err := service.Create(userId, token.AudTokenAPIUser)

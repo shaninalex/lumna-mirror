@@ -8,7 +8,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-func Test_RefreshTokenServiceCreateAndValidate(t *testing.T) {
+func Test_ServiceRefreshToken_CreateAndValidate(t *testing.T) {
 	service := services.NewDefaultRefreshTokenService()
 	var userId uint = 1
 	refreshToken, err := service.Create(userId)

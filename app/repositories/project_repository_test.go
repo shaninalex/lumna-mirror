@@ -11,7 +11,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
 
-func Test_RepositoryProjectCreate(t *testing.T) {
+func Test_RepositoryProject_Create(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -26,7 +26,7 @@ func Test_RepositoryProjectCreate(t *testing.T) {
 	assert.Equal(t, 1, count)
 }
 
-func Test_RepositoryProjectCount(t *testing.T) {
+func Test_RepositoryProject_Count(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -49,7 +49,7 @@ func Test_RepositoryProjectCount(t *testing.T) {
 	// assert.Equal(t, 2, count)
 }
 
-func Test_RepositoryProjectDelete(t *testing.T) {
+func Test_RepositoryProject_Delete(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -74,7 +74,7 @@ func Test_RepositoryProjectDelete(t *testing.T) {
 	assert.Equal(t, 1, count)
 }
 
-func Test_RepositoryProjectGet(t *testing.T) {
+func Test_RepositoryProject_Get(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -97,7 +97,7 @@ func Test_RepositoryProjectGet(t *testing.T) {
 	assert.Nil(t, dbProjectC)
 }
 
-func Test_RepositoryProjectList(t *testing.T) {
+func Test_RepositoryProject_List(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -122,7 +122,7 @@ func Test_RepositoryProjectList(t *testing.T) {
 	}
 }
 
-func Test_RepositoryProjectListWithOption(t *testing.T) {
+func Test_RepositoryProject_ListWithOption(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -138,7 +138,7 @@ func Test_RepositoryProjectListWithOption(t *testing.T) {
 	assert.Equal(t, projectA.Name, projects[0].Name)
 }
 
-func Test_RepositoryProjectUpdate(t *testing.T) {
+func Test_RepositoryProject_Update(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 

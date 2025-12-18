@@ -16,7 +16,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/web/api/project"
 )
 
-func Test_WebProjectList(t *testing.T) {
+func Test_ApiProjectController_List(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	router := tests.NewTestRouter(ctx)
@@ -40,7 +40,7 @@ func Test_WebProjectList(t *testing.T) {
 	assert.Contains(t, string(b), fmt.Sprintf("%d", p.GetId()), "Should contain project id")
 }
 
-func Test_WebProjectCreate(t *testing.T) {
+func TTest_ApiProjectController_Create(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -64,4 +64,47 @@ func Test_WebProjectCreate(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(projectsList))
 	assert.Equal(t, "test", projectsList[0].Name)
+}
+
+func Test_ApiProjectController_BoardsList(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
+
+	p := tests.CreateProjectWithName(ctx, "test")
+	boardA := tests.CreateBoard(ctx, p.GetId(), "board A")
+	boardB := tests.CreateBoard(ctx, p.GetId(), "board B")
+	router := tests.NewTestRouter(ctx)
+	project.RegisterProjectController(router)
+	url := fmt.Sprintf("/api/v1/project/%d/boards", p.GetId())
+	req := httptest.NewRequest(http.MethodGet, url, nil)
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	assert.Equal(t, http.StatusOK, rr.Code, "Should return status: \"200 OK\"")
+
+	b, err := io.ReadAll(rr.Body)
+	assert.NoError(t, err)
+	assert.Contains(t, string(b), boardA.Name, "Should contain board name")
+	assert.Contains(t, string(b), boardB.Name, "Should contain board name")
+}
+
+func Test_ApiProjectController_BoardsCreate(t *testing.T) {
+	ctx := tests.TestContext()
+	tests.ResetDatabase()
+
+	p := tests.CreateProjectWithName(ctx, "test")
+	router := tests.NewTestRouter(ctx)
+	project.RegisterProjectController(router)
+
+	url := fmt.Sprintf("/api/v1/project/%d/boards", p.GetId())
+	boardName := "development"
+	reqBody := fmt.Sprintf("{\"name\": \"%s\"}", boardName)
+	req := httptest.NewRequest(http.MethodPost, url, bytes.NewBufferString(reqBody))
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+	assert.Equal(t, http.StatusOK, rr.Code, "Should return status: \"200 OK\"")
+
+	b, err := io.ReadAll(rr.Body)
+	assert.NoError(t, err)
+	assert.Contains(t, string(b), boardName, "Should contain board name")
 }

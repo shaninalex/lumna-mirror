@@ -12,7 +12,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
 
-func Test_RepositoryCreateUser(t *testing.T) {
+func Test_RepositoryUser_Create(t *testing.T) {
 	repo := repositories.NewUserRepository()
 	ctx := tests.TestContext()
 
@@ -32,7 +32,7 @@ func Test_RepositoryCreateUser(t *testing.T) {
 	assert.True(t, !user.CreatedAt.IsZero(), "User should not have zero creation time")
 }
 
-func Test_RepositoryUpdateUser(t *testing.T) {
+func Test_RepositoryUser_Update(t *testing.T) {
 	repo := repositories.NewUserRepository()
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
@@ -61,7 +61,7 @@ func Test_RepositoryUpdateUser(t *testing.T) {
 	assert.True(t, dbUser.Email == newEmail, "User should have updated email")
 }
 
-func Test_RepositoryGetUser(t *testing.T) {
+func Test_RepositoryUser_Get(t *testing.T) {
 	repo := repositories.NewUserRepository()
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
@@ -79,7 +79,7 @@ func Test_RepositoryGetUser(t *testing.T) {
 	assert.Equal(t, dbUser.Email, user.Email)
 }
 
-func Test_RepositoryGetUserByEmail(t *testing.T) {
+func Test_RepositoryUser_GetByEmail(t *testing.T) {
 	repo := repositories.NewUserRepository()
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
@@ -97,7 +97,7 @@ func Test_RepositoryGetUserByEmail(t *testing.T) {
 	assert.Equal(t, dbUser.Email, user.Email)
 }
 
-func Test_RepositoryDeleteUser(t *testing.T) {
+func Test_RepositoryUser_Delete(t *testing.T) {
 	repo := repositories.NewUserRepository()
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
@@ -116,7 +116,7 @@ func Test_RepositoryDeleteUser(t *testing.T) {
 	assert.Error(t, err, "should not get user")
 }
 
-func Test_RepositoryListUsers(t *testing.T) {
+func Test_RepositoryUser_List(t *testing.T) {
 	repo := repositories.NewUserRepository()
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
@@ -130,7 +130,7 @@ func Test_RepositoryListUsers(t *testing.T) {
 	assert.Equal(t, usersList[0].Email, userA.Email)
 }
 
-func Test_RepositoryListAllUsers(t *testing.T) {
+func Test_RepositoryUser_ListAll(t *testing.T) {
 	repo := repositories.NewUserRepository()
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
@@ -153,7 +153,7 @@ func Test_RepositoryListAllUsers(t *testing.T) {
 	}
 }
 
-func Test_RepositoryCountSpecificUsers(t *testing.T) {
+func Test_RepositoryUser_CountSpecific(t *testing.T) {
 	repo := repositories.NewUserRepository()
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
@@ -166,7 +166,7 @@ func Test_RepositoryCountSpecificUsers(t *testing.T) {
 	assert.Equal(t, count, 1, "should count only 1 user")
 }
 
-func Test_RepositoryCountAllUsers(t *testing.T) {
+func Test_RepositoryUser_CountAll(t *testing.T) {
 	repo := repositories.NewUserRepository()
 	ctx := tests.TestContext()
 	tests.ResetDatabase()

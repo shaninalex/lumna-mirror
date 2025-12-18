@@ -9,7 +9,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
 
-func Test_UserServiceGetUser(t *testing.T) {
+func Test_ServiceUser_Get(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -21,7 +21,7 @@ func Test_UserServiceGetUser(t *testing.T) {
 	assert.Equal(t, user.Id, testUser.Id, "should have correct user id")
 }
 
-func Test_UserServiceGetUserByEmail(t *testing.T) {
+func Test_ServiceUser_GetByEmail(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -33,7 +33,7 @@ func Test_UserServiceGetUserByEmail(t *testing.T) {
 	assert.Equal(t, user.Email, testUser.Email, "should have correct user email")
 }
 
-func Test_UserServiceCheckPassword(t *testing.T) {
+func Test_ServiceUser_CheckPassword(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -44,7 +44,7 @@ func Test_UserServiceCheckPassword(t *testing.T) {
 	assert.NoError(t, err, "should check password without errors")
 }
 
-func Test_UserServiceCreateUser(t *testing.T) {
+func Test_ServiceUser_CreateUser(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	service := services.NewUserManager()
@@ -55,7 +55,7 @@ func Test_UserServiceCreateUser(t *testing.T) {
 	assert.NoError(t, err, "should check password without errors")
 }
 
-func Test_UserServiceUpdate(t *testing.T) {
+func Test_ServiceUser_Update(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 

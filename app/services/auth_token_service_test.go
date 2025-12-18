@@ -13,7 +13,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
 
-func Test_AuthServiceLogin(t *testing.T) {
+func Test_ServiceAuth_Login(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	testUser := tests.CreateUser(ctx, "test@test.com")
@@ -51,7 +51,7 @@ func Test_AuthServiceLogin(t *testing.T) {
 	assert.Equal(t, uint(uintSubject), testUser.GetId())
 }
 
-func Test_AuthServiceRefresh(t *testing.T) {
+func Test_ServiceAuth_Refresh(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	testUser := tests.CreateUser(ctx, "test@test.com")
@@ -62,7 +62,7 @@ func Test_AuthServiceRefresh(t *testing.T) {
 	assert.NotNil(t, access)
 }
 
-func Test_AuthServiceLogout(t *testing.T) {
+func Test_ServiceAuth_Logout(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	testUser := tests.CreateUser(ctx, "test@test.com")
@@ -77,7 +77,7 @@ func Test_AuthServiceLogout(t *testing.T) {
 	assert.ErrorIs(t, err, sql.ErrNoRows)
 }
 
-func Test_AuthServiceListSessions(t *testing.T) {
+func Test_ServiceAuth_ListSessions(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 	testUser := tests.CreateUser(ctx, "test@test.com")

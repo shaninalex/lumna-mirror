@@ -11,7 +11,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/tests"
 )
 
-func Test_ServiceProjectCreateEmptyName(t *testing.T) {
+func Test_ServiceProject_CreateEmptyName(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -24,7 +24,7 @@ func Test_ServiceProjectCreateEmptyName(t *testing.T) {
 	assert.ErrorContains(t, err, "project name is required")
 }
 
-func Test_ServiceProjectCreate(t *testing.T) {
+func Test_ServiceProject_Create(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
@@ -43,7 +43,7 @@ func Test_ServiceProjectCreate(t *testing.T) {
 	assert.Equal(t, "test", dbProject.Name)
 }
 
-func Test_ServiceProjectList(t *testing.T) {
+func Test_ServiceProject_List(t *testing.T) {
 	ctx := tests.TestContext()
 	tests.ResetDatabase()
 
