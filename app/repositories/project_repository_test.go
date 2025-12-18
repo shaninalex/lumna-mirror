@@ -21,7 +21,7 @@ func Test_RepositoryProject_Create(t *testing.T) {
 	err := repo.Create(ctx, &project)
 	assert.NoError(t, err, "Should create project without errors")
 
-	count, err := repo.Count(ctx)
+	count, err := repo.Count(ctx, nil)
 	assert.NoError(t, err, "Should count project without errors")
 	assert.Equal(t, 1, count)
 }
@@ -35,11 +35,11 @@ func Test_RepositoryProject_Count(t *testing.T) {
 	_ = repo.Create(ctx, &models.Project{Name: "test"})
 	_ = repo.Create(ctx, &models.Project{Name: "test 2"})
 
-	count, err := repo.Count(ctx, db.Option{Key: "name", Value: "test 2"})
+	count, err := repo.Count(ctx, db.Eq("name", "test 2"))
 	assert.NoError(t, err, "Should count project without errors")
 	assert.Equal(t, 1, count)
 
-	count, err = repo.Count(ctx, db.Option{Key: "name", Value: "none existed project"})
+	count, err = repo.Count(ctx, db.Eq("name", "none existed project"))
 	assert.NoError(t, err, "Should count project without errors")
 	assert.Equal(t, 0, count)
 
@@ -59,18 +59,18 @@ func Test_RepositoryProject_Delete(t *testing.T) {
 	projectB := models.Project{Name: "B"}
 	_ = repo.Create(ctx, &projectB)
 
-	count, _ := repo.Count(ctx)
+	count, _ := repo.Count(ctx, nil)
 	assert.Equal(t, 2, count)
 
 	err := repo.Delete(ctx, projectA.GetId())
 	assert.NoError(t, err, "Should delete project without errors")
-	count, _ = repo.Count(ctx)
+	count, _ = repo.Count(ctx, nil)
 	assert.Equal(t, 1, count)
 
-	count, _ = repo.Count(ctx, db.Option{Key: "name", Value: "A"})
+	count, _ = repo.Count(ctx, db.Eq("name", "A"))
 	assert.Equal(t, 0, count)
 
-	count, _ = repo.Count(ctx, db.Option{Key: "name", Value: "B"})
+	count, _ = repo.Count(ctx, db.Eq("name", "B"))
 	assert.Equal(t, 1, count)
 }
 
@@ -107,7 +107,7 @@ func Test_RepositoryProject_List(t *testing.T) {
 	projectB := models.Project{Name: "B"}
 	_ = repo.Create(ctx, &projectB)
 
-	projects, err := repo.List(ctx)
+	projects, err := repo.List(ctx, nil)
 	assert.NoError(t, err, "Should list projects without errors")
 	assert.Equal(t, 2, len(projects))
 
@@ -132,7 +132,7 @@ func Test_RepositoryProject_ListWithOption(t *testing.T) {
 	projectB := models.Project{Name: "B"}
 	_ = repo.Create(ctx, &projectB)
 
-	projects, err := repo.List(ctx, db.Option{Key: "name", Value: projectA.Name})
+	projects, err := repo.List(ctx, db.Eq("name", projectA.Name))
 	assert.NoError(t, err, "Should list projects without errors")
 	assert.Equal(t, 1, len(projects))
 	assert.Equal(t, projectA.Name, projects[0].Name)
@@ -148,7 +148,7 @@ func Test_RepositoryProject_Update(t *testing.T) {
 
 	newName := "New Name"
 
-	err := repo.Update(ctx, projectA.GetId(), db.Option{Key: "name", Value: newName})
+	err := repo.Update(ctx, projectA.GetId(), db.Set(db.Field("name", newName)))
 	assert.NoError(t, err, "Should update project without errors")
 
 	updatedProject, _ := repo.Get(ctx, projectA.GetId())

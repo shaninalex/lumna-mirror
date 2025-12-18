@@ -20,7 +20,7 @@ func NewBoardListRepository() *BoardListRepository {
 var _ Repository[models.BoardList] = (*BoardListRepository)(nil)
 
 // Count implements Repository.
-func (p *BoardListRepository) Count(ctx context.Context, opts ...db.Option) (int, error) {
+func (p *BoardListRepository) Count(ctx context.Context, opts db.Expr) (int, error) {
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
@@ -93,7 +93,7 @@ func (p *BoardListRepository) Get(ctx context.Context, id uint) (*models.BoardLi
 }
 
 // List implements Repository.
-func (p *BoardListRepository) List(ctx context.Context, opts ...db.Option) ([]*models.BoardList, error) {
+func (p *BoardListRepository) List(ctx context.Context, opts db.Expr) ([]*models.BoardList, error) {
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
@@ -125,19 +125,11 @@ func (p *BoardListRepository) List(ctx context.Context, opts ...db.Option) ([]*m
 }
 
 // Update implements Repository.
-func (p *BoardListRepository) Update(ctx context.Context, listID uint, opts ...db.Option) error {
-	if len(opts) == 0 {
-		return ErrorUserNoFieldsToUpdate
-	}
-
-	set, args := db.Set(opts)
-	if set == "" {
-		return ErrorUserNoFieldsToUpdate
-	}
-
+func (p *BoardListRepository) Update(ctx context.Context, listID uint, opts db.SetExpr) error {
+	setQuery, args := opts.Build()
 	query := fmt.Sprintf(
 		`UPDATE board_lists %s WHERE id = ?`,
-		set,
+		setQuery,
 	)
 
 	args = append(args, listID)

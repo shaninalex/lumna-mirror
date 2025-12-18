@@ -111,7 +111,7 @@ func (s *UserRepository) Create(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-func (s *UserRepository) List(ctx context.Context, opts ...db.Option) ([]*models.User, error) {
+func (s *UserRepository) List(ctx context.Context, opts db.Expr) ([]*models.User, error) {
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
@@ -142,28 +142,17 @@ func (s *UserRepository) List(ctx context.Context, opts ...db.Option) ([]*models
 	return users, nil
 }
 
-func (s *UserRepository) Update(ctx context.Context, userID uint, opts ...db.Option) error {
-	if len(opts) == 0 {
-		return ErrorUserNoFieldsToUpdate
-	}
-
-	// always update updated_at
-	opts = append(opts, db.Option{
-		Key:   "updated_at",
-		Value: time.Now(),
-	})
-
-	set, args := db.Set(opts)
-	if set == "" {
-		return ErrorUserNoFieldsToUpdate
-	}
+func (s *UserRepository) Update(ctx context.Context, userID uint, opts db.SetExpr) error {
+	opts.Append(db.Field("updated_at", time.Now()))
+	setQuery, args := opts.Build()
 
 	query := fmt.Sprintf(
 		`UPDATE users %s WHERE id = ?`,
-		set,
+		setQuery,
 	)
 
 	args = append(args, userID)
+
 	res, err := db.FromContext(ctx).ExecContext(ctx, query, args...)
 	if err != nil {
 		return err
@@ -181,7 +170,7 @@ func (s *UserRepository) Update(ctx context.Context, userID uint, opts ...db.Opt
 	return nil
 }
 
-func (s *UserRepository) Count(ctx context.Context, opts ...db.Option) (int, error) {
+func (s *UserRepository) Count(ctx context.Context, opts db.Expr) (int, error) {
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(

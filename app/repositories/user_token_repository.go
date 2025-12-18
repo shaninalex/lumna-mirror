@@ -69,7 +69,7 @@ func (s *UserTokenRepository) Create(ctx context.Context, entry *models.UserToke
 	return err
 }
 
-func (s *UserTokenRepository) List(ctx context.Context, opts ...db.Option) ([]*models.UserToken, error) {
+func (s *UserTokenRepository) List(ctx context.Context, opts db.Expr) ([]*models.UserToken, error) {
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
@@ -102,19 +102,12 @@ func (s *UserTokenRepository) List(ctx context.Context, opts ...db.Option) ([]*m
 	return tokens, nil
 }
 
-func (s *UserTokenRepository) Update(ctx context.Context, id uint, opts ...db.Option) error {
-	if len(opts) == 0 {
-		return ErrorUserNoFieldsToUpdate
-	}
-
-	set, args := db.Set(opts)
-	if set == "" {
-		return ErrorUserNoFieldsToUpdate
-	}
-
+func (s *UserTokenRepository) Update(ctx context.Context, id uint, opts db.SetExpr) error {
+	opts.Append(db.Field("updated_at", time.Now()))
+	setQuery, args := opts.Build()
 	query := fmt.Sprintf(
 		`UPDATE user_tokens %s WHERE id = ?`,
-		set,
+		setQuery,
 	)
 
 	args = append(args, id)
@@ -136,7 +129,7 @@ func (s *UserTokenRepository) Update(ctx context.Context, id uint, opts ...db.Op
 	return nil
 }
 
-func (s *UserTokenRepository) Count(ctx context.Context, opts ...db.Option) (int, error) {
+func (s *UserTokenRepository) Count(ctx context.Context, opts db.Expr) (int, error) {
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
@@ -212,6 +205,9 @@ func (s *UserTokenRepository) RevokeToken(ctx context.Context, userId, tokenId u
 	return s.Update(
 		ctx,
 		tokenId,
-		db.Option{Key: "revoked", Value: true},
-		db.Option{Key: "revoked_at", Value: time.Now()})
+		db.Set(
+			db.Field("revoked", true),
+			db.Field("revoked_at", time.Now()),
+		),
+	)
 }

@@ -72,10 +72,7 @@ func (s *AuthService) Logout(ctx context.Context, userID uint, refreshToken stri
 }
 
 func (s *AuthService) ListSessions(ctx context.Context, userID uint) ([]*models.UserToken, error) {
-	return s.userTokenRepository.List(ctx, db.Option{
-		Key:   "user_id",
-		Value: userID,
-	})
+	return s.userTokenRepository.List(ctx, db.Eq("user_id", userID))
 }
 
 func (s *AuthService) RefreshAccessToken(ctx context.Context, refreshToken string) (*AccessTokenResult, error) {

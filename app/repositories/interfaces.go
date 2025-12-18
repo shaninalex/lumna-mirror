@@ -10,7 +10,9 @@ type Repository[T any] interface {
 	Get(ctx context.Context, id uint) (*T, error)
 	Delete(ctx context.Context, id uint) error
 	Create(ctx context.Context, entry *T) error
-	List(ctx context.Context, opts ...db.Option) ([]*T, error)
-	Update(ctx context.Context, id uint, opts ...db.Option) error
-	Count(ctx context.Context, opts ...db.Option) (int, error)
+
+	List(ctx context.Context, opts db.Expr) ([]*T, error)
+	Count(ctx context.Context, opts db.Expr) (int, error)
+
+	Update(ctx context.Context, id uint, opts db.SetExpr) error
 }

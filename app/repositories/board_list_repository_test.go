@@ -32,15 +32,15 @@ func Test_RepositoryBoardList_Count(t *testing.T) {
 	board := tests.CreateBoard(ctx, tests.CreateProject(ctx).GetId(), "test")
 	_ = tests.CreateBoardList(ctx, board.Id, "test")
 
-	count, err := repo.Count(ctx)
+	count, err := repo.Count(ctx, nil)
 	assert.NoError(t, err, "Should count board list without errors")
 	assert.Equal(t, 1, count)
 
-	count, err = repo.Count(ctx, db.Option{Key: "name", Value: "test"})
+	count, err = repo.Count(ctx, db.Eq("name", "test"))
 	assert.NoError(t, err, "Should board list without errors")
 	assert.Equal(t, 1, count)
 
-	count, err = repo.Count(ctx, db.Option{Key: "name", Value: "none existed board list"})
+	count, err = repo.Count(ctx, db.Eq("name", "none existed board list"))
 	assert.NoError(t, err, "Should board list without errors")
 	assert.Equal(t, 0, count)
 }
@@ -56,7 +56,7 @@ func Test_RepositoryBoardList_Delete(t *testing.T) {
 	err := repo.Delete(ctx, boardList.GetId())
 	assert.NoError(t, err, "Should not find deleted board list")
 
-	count, err := repo.Count(ctx, db.Option{Key: "name", Value: "test"})
+	count, err := repo.Count(ctx, db.Eq("name", "test"))
 	assert.NoError(t, err, "Should not find deleted board list")
 	assert.Equal(t, 0, count)
 }
@@ -84,7 +84,7 @@ func Test_RepositoryBoardList_List(t *testing.T) {
 	boardListB := tests.CreateBoardList(ctx, board.Id, "test B")
 
 	repo := repositories.NewBoardListRepository()
-	boardLists, err := repo.List(ctx)
+	boardLists, err := repo.List(ctx, nil)
 	assert.NoError(t, err, "Should list projects without errors")
 	assert.Equal(t, 2, len(boardLists))
 
@@ -108,7 +108,7 @@ func Test_RepositoryBoardList_ListWithOption(t *testing.T) {
 	_ = tests.CreateBoardList(ctx, board.Id, "test B")
 
 	repo := repositories.NewBoardListRepository()
-	boardLists, err := repo.List(ctx, db.Option{Key: "name", Value: "test A"})
+	boardLists, err := repo.List(ctx, db.Eq("name", "test A"))
 	assert.NoError(t, err, "Should list projects without errors")
 	assert.Equal(t, 1, len(boardLists))
 	assert.Equal(t, "test A", boardLists[0].Name)
@@ -124,7 +124,7 @@ func Test_RepositoryBoardList_Update(t *testing.T) {
 	newName := "New Name"
 
 	repo := repositories.NewBoardListRepository()
-	err := repo.Update(ctx, boardList.GetId(), db.Option{Key: "name", Value: newName})
+	err := repo.Update(ctx, boardList.GetId(), db.Set(db.Field("name", newName)))
 	assert.NoError(t, err, "Should update project without errors")
 
 	updatedProject, _ := repo.Get(ctx, boardList.GetId())

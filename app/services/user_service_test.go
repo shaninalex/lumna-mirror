@@ -63,7 +63,7 @@ func Test_ServiceUser_Update(t *testing.T) {
 	testUser := tests.CreateUser(ctx, "test@test.com")
 
 	newEmail := "test2@test.com"
-	err := service.Update(ctx, testUser.GetId(), db.Option{Key: "email", Value: newEmail})
+	err := service.Update(ctx, testUser.GetId(), db.Set(db.Field("email", newEmail)))
 	assert.NoError(t, err, "should update user without errors")
 
 	user, err := service.GetUser(ctx, testUser.GetId())

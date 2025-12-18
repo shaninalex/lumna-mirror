@@ -20,7 +20,13 @@ func (s *BoardHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = s.boardService.Update(r.Context(), uint(id), db.Option{Key: "name", Value: payload.Name})
+	err = s.boardService.Update(
+		r.Context(),
+		uint(id),
+		db.Set(
+			db.Field("name", payload.Name),
+		),
+	)
 	if err != nil {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
@@ -81,8 +87,10 @@ func (s *BoardHandler) ListsPatch(w http.ResponseWriter, r *http.Request) {
 	err = s.boardService.ListUpdate(
 		r.Context(),
 		uint(id),
-		db.Option{Key: "name", Value: payload.Name},
-		db.Option{Key: "list_order", Value: payload.Order},
+		db.Set(
+			db.Field("name", payload.Name),
+			db.Field("list_order", payload.Order),
+		),
 	)
 	if err != nil {
 		utils.Error(w, http.StatusBadRequest, err)

@@ -5,7 +5,8 @@ import (
 )
 
 var (
-	ErrorNoRowsAffected = errors.New("no rows affected")
+	ErrorNoRowsAffected    = errors.New("no rows affected")
+	ErrorNoFieldsForUpdate = errors.New("no fields to update")
 
 	ErrorProjectNotFound = errors.New("project not found")
 

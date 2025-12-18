@@ -124,7 +124,7 @@ func Test_ApiBoardController_ListsPatch(t *testing.T) {
 
 	router.ServeHTTP(rr, req)
 	assert.Equal(t, http.StatusOK, rr.Code, "Should return status: \"200 OK\"")
-
+	t.Log(rr.Body.String())
 	service := services.NewBoardService()
 	dbBoardList, err := service.ListGet(ctx, boardListA.GetId())
 	assert.NoError(t, err)

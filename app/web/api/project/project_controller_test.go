@@ -60,7 +60,7 @@ func TTest_ApiProjectController_Create(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Contains(t, string(b), "test", "Should contain project name")
 
-	projectsList, err := repo.List(ctx, db.Option{Key: "name", Value: "test"})
+	projectsList, err := repo.List(ctx, db.Eq("name", "test"))
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(projectsList))
 	assert.Equal(t, "test", projectsList[0].Name)

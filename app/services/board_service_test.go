@@ -51,7 +51,7 @@ func Test_ServiceBoard_Update(t *testing.T) {
 	service := services.NewBoardService()
 	newName := "B"
 
-	err := service.Update(ctx, boardA.GetId(), db.Option{Key: "name", Value: newName})
+	err := service.Update(ctx, boardA.GetId(), db.Set(db.Field("name", newName)))
 	assert.NoError(t, err)
 
 	repo := repositories.NewBoardRepository()
@@ -168,7 +168,7 @@ func Test_ServiceBoard_ListUpdate(t *testing.T) {
 	service := services.NewBoardService()
 	newName := "new name"
 
-	err := service.ListUpdate(ctx, listA.GetId(), db.Option{Key: "name", Value: newName})
+	err := service.ListUpdate(ctx, listA.GetId(), db.Set(db.Field("name", newName)))
 	assert.NoError(t, err)
 
 	repo := repositories.NewBoardListRepository()

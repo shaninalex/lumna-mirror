@@ -29,7 +29,7 @@ func NewProjectManager() ProjectManager {
 var _ ProjectManager = (*ProjectService)(nil)
 
 func (s *ProjectService) List(ctx context.Context) ([]*models.Project, error) {
-	projects, err := s.projectRepository.List(ctx)
+	projects, err := s.projectRepository.List(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func (s *ProjectService) List(ctx context.Context) ([]*models.Project, error) {
 	for _, p := range projects {
 		ids[0] = p.GetId()
 	}
-	if boards, err := s.boardRepository.List(ctx, db.Option{Key: "project_id", Value: ids}); err == nil {
+	if boards, err := s.boardRepository.List(ctx, db.Eq("project_id", ids)); err == nil {
 		for _, b := range boards {
 			for _, p := range projects {
 				if p.GetId() == b.GetId() {
@@ -55,7 +55,7 @@ func (s *ProjectService) Create(ctx context.Context, entry *models.Project) erro
 	if entry.Name == "" {
 		return fmt.Errorf("project name is required")
 	}
-	count, err := s.projectRepository.Count(ctx, db.Option{Key: "name", Value: entry.Name})
+	count, err := s.projectRepository.Count(ctx, db.Eq("name", entry.Name))
 	if err != nil {
 		return err
 	}

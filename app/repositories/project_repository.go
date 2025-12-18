@@ -20,7 +20,7 @@ func NewProjectRespository() *ProjectRespository {
 var _ Repository[models.Project] = (*ProjectRespository)(nil)
 
 // Count implements Repository.
-func (p *ProjectRespository) Count(ctx context.Context, opts ...db.Option) (int, error) {
+func (p *ProjectRespository) Count(ctx context.Context, opts db.Expr) (int, error) {
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
@@ -93,7 +93,7 @@ func (p *ProjectRespository) Get(ctx context.Context, id uint) (*models.Project,
 }
 
 // List implements Repository.
-func (p *ProjectRespository) List(ctx context.Context, opts ...db.Option) ([]*models.Project, error) {
+func (p *ProjectRespository) List(ctx context.Context, opts db.Expr) ([]*models.Project, error) {
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
@@ -123,29 +123,13 @@ func (p *ProjectRespository) List(ctx context.Context, opts ...db.Option) ([]*mo
 }
 
 // Update implements Repository.
-func (p *ProjectRespository) Update(ctx context.Context, userID uint, opts ...db.Option) error {
-	if len(opts) == 0 {
-		return ErrorUserNoFieldsToUpdate
-	}
-
-	// // always update updated_at
-	// opts = append(opts, db.Option{
-	// 	Key:   "updated_at",
-	// 	Value: time.Now(),
-	// })
-
-	set, args := db.Set(opts)
-	if set == "" {
-		return ErrorUserNoFieldsToUpdate
-	}
-
+func (p *ProjectRespository) Update(ctx context.Context, userID uint, opts db.SetExpr) error {
+	setQuery, args := opts.Build()
 	query := fmt.Sprintf(
 		`UPDATE projects %s WHERE id = ?`,
-		set,
+		setQuery,
 	)
-
 	args = append(args, userID)
-
 	res, err := db.FromContext(ctx).ExecContext(ctx, query, args...)
 	if err != nil {
 		return err
