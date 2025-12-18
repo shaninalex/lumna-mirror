@@ -36,3 +36,21 @@ func Set(opts []Option) (string, []any) {
 
 	return "SET " + strings.Join(setParts, ", "), args
 }
+
+func In(foreignKey uint, ids []uint) (string, []any) {
+	if len(ids) == 0 {
+		return "", nil
+	}
+
+	in := make([]string, 0, len(ids))
+	args := make([]any, 0, len(ids))
+
+	for _, id := range ids {
+		in = append(in, fmt.Sprintf("%d = ?", id))
+		args = append(args, id)
+	}
+
+	c := fmt.Sprintf("WHERE %d IN (%s)", foreignKey, strings.Join(in, ", "))
+
+	return c, args
+}

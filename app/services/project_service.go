@@ -16,18 +16,39 @@ type ProjectManager interface {
 
 type ProjectService struct {
 	projectRepository *repositories.ProjectRespository
+	boardRepository   *repositories.BoardRepository
 }
 
 func NewProjectManager() ProjectManager {
 	return &ProjectService{
 		projectRepository: repositories.NewProjectRespository(),
+		boardRepository:   repositories.NewBoardRepository(),
 	}
 }
 
 var _ ProjectManager = (*ProjectService)(nil)
 
 func (s *ProjectService) List(ctx context.Context) ([]*models.Project, error) {
-	return s.projectRepository.List(ctx)
+	projects, err := s.projectRepository.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	ids := make([]uint, len(projects))
+	for _, p := range projects {
+		ids[0] = p.GetId()
+	}
+	if boards, err := s.boardRepository.List(ctx, db.Option{Key: "project_id", Value: ids}); err == nil {
+		for _, b := range boards {
+			for _, p := range projects {
+				if p.GetId() == b.GetId() {
+					p.Boards = append(p.Boards, b)
+				}
+			}
+		}
+	}
+
+	return projects, nil
 }
 
 func (s *ProjectService) Create(ctx context.Context, entry *models.Project) error {

@@ -161,7 +161,7 @@ func Test_RepositoryUser_CountSpecific(t *testing.T) {
 	userA := tests.CreateUser(ctx, "test1@test.com")
 	_ = tests.CreateUser(ctx, "test2@test.com")
 
-	count, err := repo.Count(ctx, db.Option{"email", userA.Email})
+	count, err := repo.Count(ctx, db.Option{Key: "email", Value: userA.Email})
 	assert.NoError(t, err, "should count users without errors")
 	assert.Equal(t, count, 1, "should count only 1 user")
 }

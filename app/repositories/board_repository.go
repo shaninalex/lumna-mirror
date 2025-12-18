@@ -95,7 +95,6 @@ func (p *BoardRepository) Get(ctx context.Context, id uint) (*models.Board, erro
 // List implements Repository.
 func (p *BoardRepository) List(ctx context.Context, opts ...db.Option) ([]*models.Board, error) {
 	where, args := db.Where(opts)
-
 	query := fmt.Sprintf(
 		`SELECT id, name, project_id, settings FROM boards %s`,
 		where,
