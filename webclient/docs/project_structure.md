@@ -31,4 +31,5 @@ all about user.
 it's just noise, that does not have any meaning.
 - every component should have a folder. In other case it's just a mess. Add unit tests near component. 
 - Do not span nested folders! Better think twice before defining another one. If it's using only once in parent cmp - define inside parent *.component.ts
+- NGRX signal store?
 - always use Entity approach in NGRX
