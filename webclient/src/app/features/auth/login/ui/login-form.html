@@ -1,0 +1,26 @@
+<form (submit)="submit($event)" class="flex flex-col gap-2 ">
+    <div>
+        <input class="border block w-full rounded-md px-2 py-1 border-gray-300"
+               type="email" [field]="loginForm.email" />
+        @if (loginForm.email().touched() && loginForm.email().invalid()) {
+            <ul class="error-list">
+                @for (error of loginForm.email().errors(); track error) {
+                    <li>{{ error.message }}</li>
+                }
+            </ul>
+        }
+    </div>
+    <div>
+        <input class="border block w-full rounded-md px-2 py-1 border-gray-300"
+               type="password" [field]="loginForm.password" />
+        @if (loginForm.password().touched() && loginForm.password().invalid()) {
+            <div class="error-list">
+                @for (error of loginForm.password().errors(); track error) {
+                    <p>{{ error.message }}</p>
+                }
+            </div>
+        }
+    </div>
+
+    <button type="submit">Login</button>
+</form>
