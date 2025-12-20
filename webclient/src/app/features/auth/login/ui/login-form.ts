@@ -3,7 +3,6 @@ import {form, Field, required, email, debounce} from '@angular/forms/signals';
 
 import {LoginCredentials} from '../model/login.model';
 import {LoginService} from '../api/login.service';
-import {map} from 'rxjs';
 
 @Component({
     selector: 'app-login-form-feature',
@@ -14,7 +13,7 @@ import {map} from 'rxjs';
 })
 export class LoginFormFeature {
     service = inject(LoginService)
-
+    loading = signal<boolean>(false);
     loginModel = signal<LoginCredentials>({
         email: '',
         password: '',
@@ -29,8 +28,9 @@ export class LoginFormFeature {
 
     submit(event: Event): void {
         event.preventDefault()
+        this.loading.set(true)
         this.service.Login(this.loginModel()).subscribe(data => {
-            console.log(data);
+            this.loading.set(false)
         })
     }
 }

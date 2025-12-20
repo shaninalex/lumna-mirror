@@ -22,5 +22,11 @@
         }
     </div>
 
-    <button type="submit">Login</button>
+    <button type="submit">
+        @if(loading()) {
+            Processing...
+        } @else {
+            Login
+        }
+    </button>
 </form>

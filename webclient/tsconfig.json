@@ -22,6 +22,12 @@
             "@features/*": [
                 "./src/app/features/*"
             ],
+            "@environments/*": [
+                "./src/environments/*"
+            ],
+            "@tdata/*": [
+                "./src/tdata/*"
+            ],
             "@root/*": [
                 "./*",
             ]
