@@ -19,6 +19,9 @@
             "@shared/*": [
                 "./src/app/shared/*"
             ],
+            "@entities/*": [
+                "./src/app/entities/*"
+            ],
             "@features/*": [
                 "./src/app/features/*"
             ],
