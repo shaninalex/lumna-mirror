@@ -1,32 +1,42 @@
 <form (submit)="submit($event)" class="flex flex-col gap-2 ">
     <div>
-        <input class="border block w-full rounded-md px-2 py-1 border-gray-300"
-               type="email" [field]="loginForm.email" />
+        <input class="border block w-full rounded-lg px-2 py-1 border-gray-400"
+               type="email" placeholder="Email" [field]="loginForm.email" />
         @if (loginForm.email().touched() && loginForm.email().invalid()) {
             <ul class="error-list">
                 @for (error of loginForm.email().errors(); track error) {
-                    <li>{{ error.message }}</li>
+                    <li class="text-red-500 text-sm">{{ error.message }}</li>
                 }
             </ul>
         }
     </div>
     <div>
-        <input class="border block w-full rounded-md px-2 py-1 border-gray-300"
-               type="password" [field]="loginForm.password" />
+        <input class="border block w-full rounded-lg px-2 py-1 border-gray-400"
+               type="password" placeholder="Password" [field]="loginForm.password" />
         @if (loginForm.password().touched() && loginForm.password().invalid()) {
-            <div class="error-list">
+            <ul class="error-list">
                 @for (error of loginForm.password().errors(); track error) {
-                    <p>{{ error.message }}</p>
+                    <li class="text-red-500 text-sm">{{ error.message }}</li>
                 }
-            </div>
+            </ul>
         }
     </div>
 
-    <button type="submit">
-        @if(loading()) {
-            Processing...
-        } @else {
-            Login
-        }
-    </button>
+    @if (errors()) {
+        <ul class="text-center">
+            @for (error of errors(); track error) {
+                <li class="text-red-500 text-sm">{{ error }}</li>
+            }
+        </ul>
+    }
+
+    <div class="text-center">
+        <button type="submit" class="bg-teal-500 text-white rounded-lg px-4 py-2 cursor-pointer">
+            @if(loading()) {
+                Processing...
+            } @else {
+                Login
+            }
+        </button>
+    </div>
 </form>

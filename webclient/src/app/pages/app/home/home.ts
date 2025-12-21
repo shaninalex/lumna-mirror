@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import {Main} from '@shared/ui/layouts/main/main';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+    imports: [
+        Main
+    ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

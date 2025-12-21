@@ -3,6 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {LoginFormFeature} from './login-form';
 import {Subject} from 'rxjs';
 import {LoginService} from '@features/auth/login/api/login.service';
+import {provideRouter} from '@angular/router';
 
 class LoginServiceMock {
     login$ = new Subject<any>();
@@ -48,7 +49,7 @@ describe('LoginFormFeature', () => {
         component.loginForm.password().markAsTouched();
         fixture.detectChanges();
 
-        const error = fixture.nativeElement.querySelector('.error-list p');
+        const error = fixture.nativeElement.querySelector('.error-list li');
         expect(error.textContent).toContain('Password is required');
     });
     it('should show invalid email format error', () => {

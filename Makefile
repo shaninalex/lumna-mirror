@@ -34,7 +34,7 @@ dir_list:
 	ls -la ~/.config/lumna
 
 run:
-	go run ./app
+	go run ./app serve --config=./config/config.yaml
 
 debug:
 	dlv exec ./bin/lumna
