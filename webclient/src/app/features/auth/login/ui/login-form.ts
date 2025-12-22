@@ -4,10 +4,10 @@ import {Dispatcher} from '@ngrx/signals/events';
 
 import {LoginCredentials} from '../model/login.model';
 import {LoginService} from '../api/login.service';
-import {catchError, filter, finalize, map, of} from 'rxjs';
+import {catchError, filter, finalize, map, of, retry} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {userEvents, UserStore} from '@entities/user';
+import {userEvents} from '@entities/user';
 
 @Component({
     selector: 'app-login-form-feature',
@@ -27,7 +27,6 @@ export class LoginFormFeature {
     errors = signal<string[]>([]);
 
     readonly dispatcher = inject(Dispatcher)
-    readonly userStore = inject(UserStore);
 
     loginForm = form(this.loginModel, (schemaPath) => {
         debounce(schemaPath.email, 500);
@@ -40,9 +39,14 @@ export class LoginFormFeature {
         event.preventDefault()
         this.loading.set(true)
         this.service.Login(this.loginModel()).pipe(
+            retry(3),
             catchError((err: HttpErrorResponse) => {
-                if (!err.error.status) {
-                    this.errors.set(err.error.errors)
+                if (err.status === 0) {
+                    this.errors.set(["connection error"])
+                } else {
+                    if (!err.error.status) {
+                        this.errors.set(err.error.errors)
+                    }
                 }
                 return of(null)
             }),
