@@ -40,7 +40,7 @@ export const UserStore = signalStore(
                                         LS_REFRESH_STARTED_AT,
                                         Date.now().toString()
                                     );
-                                    userEvents.setUser(user)
+                                    return userEvents.setUser(user)
                                 },
                                 error: error => console.log(error)
                             })

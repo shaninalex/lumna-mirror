@@ -8,7 +8,7 @@ import {userEvents} from '@entities/user';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LS_REFRESH_STARTED_AT} from '@shared/global.const';
 
-const REFRESH_INTERVAL_MS = 14.5 * 60 * 1000; // 14.5 хв
+const REFRESH_INTERVAL_MS = 14.5 * 60 * 1000; // 14.5 min
 
 @Injectable({
     providedIn: 'root'
@@ -25,10 +25,6 @@ export class TokenRefreshService {
         this.restoreTimerIfNeeded();
     }
 
-    /* ----------------------------------------
-     * Events
-     * ------------------------------------- */
-
     private listenAuthEvents() {
         this.events
             .on(userEvents.authenticated)
@@ -40,10 +36,6 @@ export class TokenRefreshService {
 
         // TODO: logout → clear timer + storage
     }
-
-    /* ----------------------------------------
-     * Timer lifecycle
-     * ------------------------------------- */
 
     private startRefreshTimer(delayMs?: number) {
         this.stopRefreshTimer();
@@ -68,10 +60,6 @@ export class TokenRefreshService {
         this.refreshTimer$?.unsubscribe();
         this.refreshTimer$ = undefined;
     }
-
-    /* ----------------------------------------
-     * Persistence
-     * ------------------------------------- */
 
     private persistStartTime() {
         localStorage.setItem(
@@ -100,10 +88,6 @@ export class TokenRefreshService {
             this.startRefreshTimer(remaining);
         }
     }
-
-    /* ----------------------------------------
-     * HTTP
-     * ------------------------------------- */
 
     public Refresh(): Observable<void> {
         return this.http
