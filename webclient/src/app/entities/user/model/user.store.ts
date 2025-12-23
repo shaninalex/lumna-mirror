@@ -1,11 +1,9 @@
-import { patchState, signalStore, withState } from '@ngrx/signals';
-import { UserModel } from './user.model';
-import { Events, withEventHandlers } from '@ngrx/signals/events';
-import { inject } from '@angular/core';
-import { userEvents } from '@entities/user';
-import { switchMap, tap } from 'rxjs';
-import { mapResponse } from '@ngrx/operators';
-import { UserApi } from '@entities/user/api/user.service';
+import {patchState, signalStore, withState} from '@ngrx/signals';
+import {UserModel} from './user.model';
+import {Events, withEventHandlers} from '@ngrx/signals/events';
+import {inject} from '@angular/core';
+import {userEvents} from '@entities/user';
+import {tap} from 'rxjs';
 
 type UserState = {
     user: UserModel | undefined;
@@ -16,28 +14,13 @@ const initialState: UserState = {
 };
 
 export const UserStore = signalStore(
-    { providedIn: 'root' },
+    {providedIn: 'root'},
     withState(initialState),
     withEventHandlers(
         (
             store,
             events = inject(Events),
-            userService = inject(UserApi)
         ) => ({
-            userAuthenticated$: events
-                .on(userEvents.authenticated, userEvents.getUser)
-                .pipe(
-                    switchMap(() =>
-                        userService.GetUser().pipe(
-                            mapResponse({
-                                next: (user) => {
-                                    return userEvents.setUser(user)
-                                },
-                                error: error => console.log(error)
-                            })
-                        )
-                    )
-                ),
             setUser$: events
                 .on(userEvents.setUser)
                 .pipe(

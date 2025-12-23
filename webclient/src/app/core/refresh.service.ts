@@ -37,7 +37,7 @@ export class TokenRefreshService {
 
     private listenAuthEvents() {
         this.events
-            .on(userEvents.authenticated)
+            .on(userEvents.setUser)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.persistStartTime();

@@ -53,11 +53,8 @@ export class LoginFormFeature {
             finalize(() => this.loading.set(false)),
             filter(data => !!data),
             map(data => {
-                if (data.status) {
-                    this.router.navigate(["/"])
-                    // TODO: data.status - send to notification service
-                    this.dispatcher.dispatch(userEvents.authenticated());
-                }
+                this.dispatcher.dispatch(userEvents.setUser(data));
+                this.router.navigate(["/"])
             })
         ).subscribe()
     }

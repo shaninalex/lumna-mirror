@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/lumna/app/pkg/token"
+	"gitlab.com/shaninalex/lumna/app/web/adapters"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -58,5 +59,5 @@ func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 		MaxAge:   token.NumericRefreshTokenLifeTime,
 	})
 
-	utils.Success(w, nil, "Login Successful")
+	utils.Success(w, adapters.ToUserDto(user), "Login Successful")
 }

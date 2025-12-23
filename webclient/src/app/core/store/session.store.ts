@@ -1,13 +1,15 @@
-import {patchState, signalStore, withState} from '@ngrx/signals';
-import { withEventHandlers, Events } from '@ngrx/signals/events';
-import { inject } from '@angular/core';
-import { userEvents } from '@entities/user';
-import { mapResponse } from '@ngrx/operators';
-import { UserApi } from '@entities/user/api/user.service';
-import { tap, switchMap } from 'rxjs';
+import {signalStore, withState, patchState} from '@ngrx/signals';
+import {inject} from '@angular/core';
+import {userEvents} from '@entities/user';
+import {UserApi} from '@entities/user/api/user.service';
+import {switchMap, tap} from 'rxjs/operators';
+import {Events, withEventHandlers} from '@ngrx/signals/events';
+import {mapResponse} from '@ngrx/operators';
+
+export type SessionStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated';
 
 type SessionState = {
-    status: 'idle' | 'loading' | 'authenticated' | 'unauthenticated';
+    status: SessionStatus;
 };
 
 const initialState: SessionState = {
@@ -16,12 +18,8 @@ const initialState: SessionState = {
 
 export const SessionStore = signalStore(
     { providedIn: 'root' },
-    withState(initialState),
-    withEventHandlers((
-        store,
-        events = inject(Events),
-        userApi = inject(UserApi),
-    ) => ({
+    withState<SessionState>(initialState),
+    withEventHandlers((store, events = inject(Events), userApi = inject(UserApi)) => ({
         bootstrap$: events
             .on(userEvents.getUser)
             .pipe(
@@ -29,7 +27,7 @@ export const SessionStore = signalStore(
                 switchMap(() =>
                     userApi.GetUser().pipe(
                         mapResponse({
-                            next: (user) => userEvents.setUser(user),
+                            next: user => userEvents.setUser(user),
                             error: () => userEvents.sessionFailed(),
                         })
                     )
@@ -42,7 +40,7 @@ export const SessionStore = signalStore(
                 tap(() => patchState(store, { status: 'authenticated' }))
             ),
 
-        failed$: events
+        unauthenticated$: events
             .on(userEvents.sessionFailed)
             .pipe(
                 tap(() => patchState(store, { status: 'unauthenticated' }))

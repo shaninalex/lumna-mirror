@@ -11,5 +11,4 @@ export class Header {
     @Input() title: string
     readonly userStore = inject(UserStore);
     readonly user = this.userStore.user;
-    readonly isAuthenticated = this.userStore.isAuthenticated;
 }

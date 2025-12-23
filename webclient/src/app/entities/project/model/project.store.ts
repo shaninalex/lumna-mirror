@@ -7,7 +7,6 @@ import {switchMap, tap} from 'rxjs';
 import {mapResponse} from '@ngrx/operators';
 import {ProjectService} from '@entities/project/api/project.service';
 import {projectEvents} from '@entities/project';
-import {appEvents} from '@core/store/app.events';
 
 type ProjectState = {
     projects: ProjectModel[];

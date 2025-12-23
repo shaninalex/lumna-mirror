@@ -5,7 +5,6 @@ import { eventGroup } from '@ngrx/signals/events';
 export const userEvents = eventGroup({
     source: 'User',
     events: {
-        authenticated: type<void>(),
         getUser: type<void>(),
         setUser: type<UserModel>(),
         sessionFailed: type<void>(),
