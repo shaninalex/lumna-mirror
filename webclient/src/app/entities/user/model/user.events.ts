@@ -8,5 +8,6 @@ export const userEvents = eventGroup({
         authenticated: type<void>(),
         getUser: type<void>(),
         setUser: type<UserModel>(),
+        sessionFailed: type<void>(),
     },
 });

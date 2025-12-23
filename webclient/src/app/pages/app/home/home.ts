@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import {Main} from '@shared/ui/layouts/main/main';
+import {Component} from '@angular/core';
+import {MainLayout} from '@shared/ui/layouts/main/mainLayout';
 
 @Component({
-  selector: 'app-home',
+    selector: 'app-home',
     imports: [
-        Main
+        MainLayout
     ],
-  templateUrl: './home.html',
-  styleUrl: './home.css',
+    templateUrl: './home.html',
+    styleUrl: './home.css',
 })
 export class Home {
 

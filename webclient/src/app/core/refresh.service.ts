@@ -20,7 +20,17 @@ export class TokenRefreshService {
 
     private refreshTimer$?: Subscription;
 
+
     constructor() {
+        this.events
+            .on(userEvents.setUser)
+            .subscribe(() => {
+                localStorage.setItem(
+                    LS_REFRESH_STARTED_AT,
+                    Date.now().toString()
+                );
+            });
+
         this.listenAuthEvents();
         this.restoreTimerIfNeeded();
     }
