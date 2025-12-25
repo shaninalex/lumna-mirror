@@ -1,7 +1,10 @@
 import {Component, inject, signal} from '@angular/core';
-import {ProjectStore} from '@entities/project';
+import {projectEvents, ProjectPayload, ProjectStore} from '@entities/project';
 import {ProjectCard} from '@entities/project/ui/project-card/project-card';
 import {NgClass} from '@angular/common';
+import {ProjectForm} from '@features/project-form/project-form';
+import {Dialog} from '@angular/cdk/dialog';
+import {Dispatcher} from '@ngrx/signals/events';
 
 @Component({
     selector: 'app-projects-list-feature',
@@ -10,10 +13,12 @@ import {NgClass} from '@angular/common';
     styleUrl: './projects-list.css',
 })
 export class ProjectsListFeature {
-    readonly projectStore = inject(ProjectStore);
+    private readonly dispatcher = inject(Dispatcher)
+    private readonly projectStore = inject(ProjectStore);
     readonly projects = this.projectStore.entities;
 
     viewMode = signal<"list" | "grid">("grid");
+    dialog = inject(Dialog);
 
     toggleViewMode(): void {
         if (this.viewMode() === "list") {
@@ -24,6 +29,12 @@ export class ProjectsListFeature {
     }
 
     newProject(): void {
+        const dialogRef = this.dialog.open<ProjectPayload>(ProjectForm, {
+            width: '250px',
+        });
 
+        dialogRef.closed.subscribe(result => {
+            if (result) this.dispatcher.dispatch(projectEvents.createProject(result))
+        });
     }
 }
