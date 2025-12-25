@@ -7,7 +7,7 @@ import {eventGroup, Events, withEventHandlers} from '@ngrx/signals/events';
 import {mapResponse} from '@ngrx/operators';
 import {LoginCredentials} from '@features/auth/login/model/login.model';
 import {LoginService} from '@core/api/login.service';
-import {map} from 'rxjs';
+import {catchError, map} from 'rxjs';
 import {Router} from '@angular/router';
 
 export const sessionEvents = eventGroup({
@@ -16,6 +16,7 @@ export const sessionEvents = eventGroup({
         authenticate: type<LoginCredentials>(),
         authenticated: type<UserModel>(),
         refreshToken: type<void>(),
+        refreshSucceeded: type<void>(),
         sessionFailed: type<any>(), // TODO: replace any with auth error type
         logout: type<void>(),
     },
@@ -60,7 +61,7 @@ export const SessionStore = signalStore(
                 switchMap(() =>
                     loginApi.Refresh().pipe(
                         mapResponse({
-                            next: () => patchState(store, {status: 'authenticated'}),
+                            next: () => sessionEvents.refreshSucceeded(),
                             error: event => sessionEvents.sessionFailed(event),
                         })
                     )
@@ -71,7 +72,14 @@ export const SessionStore = signalStore(
             .on(sessionEvents.logout)
             .pipe(
                 tap(() => patchState(store, {status: 'unauthenticated'})),
-                map(() => [userEvents.clear()])
+                map(() => userEvents.clear())
+            ),
+
+        refreshSucceeded$: events
+            .on(sessionEvents.refreshSucceeded)
+            .pipe(
+                tap(() => patchState(store, {status: 'authenticated'})),
+                map(() => userEvents.clear())
             ),
 
         bootstrap$: events
