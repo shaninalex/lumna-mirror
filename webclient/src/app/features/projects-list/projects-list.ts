@@ -11,7 +11,7 @@ import {NgClass} from '@angular/common';
 })
 export class ProjectsListFeature {
     readonly projectStore = inject(ProjectStore);
-    readonly projects = this.projectStore.projects;
+    readonly projects = this.projectStore.entities;
 
     viewMode = signal<"list" | "grid">("grid");
 

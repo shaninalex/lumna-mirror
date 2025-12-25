@@ -1,5 +1,5 @@
 import { ProjectModel } from "./project.model";
-import {patchState, signalStore, withHooks} from "@ngrx/signals";
+import {patchState, signalStore, withHooks, withMethods} from "@ngrx/signals";
 import { withState } from "@ngrx/signals";
 import {Events, withEventHandlers} from "@ngrx/signals/events";
 import {inject} from '@angular/core';
@@ -7,18 +7,11 @@ import {switchMap, tap} from 'rxjs';
 import {mapResponse} from '@ngrx/operators';
 import {ProjectService} from '@entities/project/api/project.service';
 import {projectEvents} from '@entities/project';
-
-type ProjectState = {
-    projects: ProjectModel[];
-};
-
-const initialState: ProjectState = {
-    projects: [],
-};
+import {addEntities, addEntity, withEntities} from '@ngrx/signals/entities';
 
 export const ProjectStore = signalStore(
     { providedIn: 'root' },
-    withState(initialState),
+    withEntities<ProjectModel>(),
     withHooks({
         onInit() {
             console.log('ProjectStore initialized');
@@ -61,17 +54,13 @@ export const ProjectStore = signalStore(
             setProjects$: events
                 .on(projectEvents.setProjects)
                 .pipe(
-                    tap(eventData => patchState(store, {
-                        projects: eventData.payload,
-                    }))
+                    tap(e => patchState(store, addEntities(e.payload)))
                 ),
 
             setProject$: events
                 .on(projectEvents.setProject)
                 .pipe(
-                    tap(eventData => patchState(store, {
-                        projects: store.projects().push(eventData.payload),
-                    }))
+                    tap(e => patchState(store, addEntity(e.payload)))
                 ),
         })
     )
