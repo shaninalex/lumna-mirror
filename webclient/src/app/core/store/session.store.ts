@@ -85,9 +85,11 @@ export const SessionStore = signalStore(
                 tap(() => patchState(store, {status: 'loading'})),
                 switchMap(() =>
                     userApi.GetUser().pipe(
+                        tap(() => console.log('SessionStore: load user')),
                         mapResponse({
                             next: user => [
-                                userEvents.setUser(user)
+                                sessionEvents.authenticated(),
+                                userEvents.setUser(user),
                             ],
                             error: event => sessionEvents.sessionFailed(event),
                         })
@@ -95,7 +97,11 @@ export const SessionStore = signalStore(
                 )
             ),
 
-        authenticated$: events.on(sessionEvents.authenticated).pipe(tap(() => patchState(store, {status: 'authenticated'}))),
+        authenticated$: events.on(sessionEvents.authenticated).pipe(
+            tap(() => console.log('SessionStore: authenticated')),
+            tap(() => patchState(store, {status: 'authenticated'}))
+        ),
+
         unauthenticated$: events.on(sessionEvents.sessionFailed).pipe(
             tap(event => console.log("Notify about session failed error", event.payload)),
             tap(() => router.navigate(['/auth/login'])),
