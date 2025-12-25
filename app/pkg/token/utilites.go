@@ -15,10 +15,10 @@ const (
 	// Issuer default issuer
 	Issuer = "lumna"
 
-	// NumericRefreshTokenLifeTime numeric refresh token life time
+	// NumericRefreshTokenLifeTime numeric refresh token life time ( 1 week )
 	NumericRefreshTokenLifeTime = 7 * 24 * 60 * 60
 
-	// NumericAccessTokenLifeTime numeric access token life time
+	// NumericAccessTokenLifeTime numeric access token life time ( 15 min )
 	NumericAccessTokenLifeTime = 15 * 60
 
 	// Static auth cookie names
