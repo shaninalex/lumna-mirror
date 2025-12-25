@@ -22,4 +22,8 @@ export class ProjectsListFeature {
             this.viewMode.set("list")
         }
     }
+
+    newProject(): void {
+
+    }
 }

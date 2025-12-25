@@ -37,22 +37,42 @@ export const ProjectStore = signalStore(
                     switchMap(() =>
                         projectService.GetProjects().pipe(
                             mapResponse({
-                                next: (projects) => {
-                                    return projectEvents.setProjects(projects)
-                                },
+                                next: projects => projectEvents.setProjects(projects),
                                 error: error => console.log(error)
                             })
                         )
                     )
                 ),
+
+            createProject$: events
+                .on(projectEvents.createProject)
+                .pipe(
+                    tap(() => console.log(projectEvents.createProject.type)),
+                    switchMap(e =>
+                        projectService.CreateProject(e.payload).pipe(
+                            mapResponse({
+                                next: project => projectEvents.setProject(project),
+                                error: err => projectEvents.createProjectFailed(err)
+                            })
+                        )
+                    )
+                ),
+
             setProjects$: events
                 .on(projectEvents.setProjects)
                 .pipe(
                     tap(eventData => patchState(store, {
                         projects: eventData.payload,
                     }))
-                )
+                ),
 
+            setProject$: events
+                .on(projectEvents.setProject)
+                .pipe(
+                    tap(eventData => patchState(store, {
+                        projects: store.projects().push(eventData.payload),
+                    }))
+                ),
         })
     )
 )
