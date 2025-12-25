@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {LoginFormFeature} from './login-form';
 import {Subject} from 'rxjs';
-import {LoginService} from '@features/auth/login/api/login.service';
+import {LoginService} from '@core/api/login.service';
 import {provideRouter} from '@angular/router';
 
 class LoginServiceMock {

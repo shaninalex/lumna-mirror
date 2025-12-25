@@ -3,8 +3,8 @@ import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
 import {provideStoreDevtools} from '@ngrx/store-devtools';
-import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {GlobalInterceptor} from '@core/global.interceptor';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+// import {GlobalInterceptor} from '@core/global.interceptor';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -12,10 +12,10 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(withInterceptorsFromDi()),
         provideRouter(routes),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: GlobalInterceptor,
-            multi: true,
-        }
+        // {
+        //     provide: HTTP_INTERCEPTORS,
+        //     useClass: GlobalInterceptor,
+        //     multi: true,
+        // }
     ]
 };

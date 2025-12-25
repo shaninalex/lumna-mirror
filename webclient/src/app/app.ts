@@ -1,6 +1,8 @@
 import {Component, inject} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
-import {AppBootstrapService} from '@core/bootstrap.service';
+import {SessionStore} from '@core/store/session.store';
+import {toObservable} from '@angular/core/rxjs-interop';
+import {tap} from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -9,5 +11,11 @@ import {AppBootstrapService} from '@core/bootstrap.service';
     styleUrl: './app.css',
 })
 export class App {
-    readonly application = inject(AppBootstrapService)
+    readonly sessionStore = inject(SessionStore)
+
+    constructor() {
+        toObservable(this.sessionStore.status)
+            .pipe(tap(status => console.log(status)))
+            .subscribe();
+    }
 }

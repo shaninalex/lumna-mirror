@@ -27,6 +27,12 @@ export const UserStore = signalStore(
                     tap(eventData => patchState(store, {
                         user: eventData.payload,
                     }))
+                ),
+
+            clear$: events
+                .on(userEvents.clear)
+                .pipe(
+                    tap(() => patchState(store, { user: undefined }))
                 )
 
         })

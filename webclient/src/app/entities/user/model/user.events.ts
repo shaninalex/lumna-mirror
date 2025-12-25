@@ -7,6 +7,6 @@ export const userEvents = eventGroup({
     events: {
         getUser: type<void>(),
         setUser: type<UserModel>(),
-        sessionFailed: type<void>(),
+        clear: type<void>(),
     },
 });

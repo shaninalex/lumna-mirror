@@ -1,13 +1,11 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {debounce, email, Field, form, required} from '@angular/forms/signals';
-import {Dispatcher} from '@ngrx/signals/events';
+import {Dispatcher, Events} from '@ngrx/signals/events';
 
 import {LoginCredentials} from '../model/login.model';
-import {LoginService} from '../api/login.service';
-import {catchError, filter, finalize, map, of, retry} from 'rxjs';
-import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {userEvents} from '@entities/user';
+import {sessionEvents} from '@core/store/session.store';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-login-form-feature',
@@ -17,7 +15,6 @@ import {userEvents} from '@entities/user';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginFormFeature {
-    service = inject(LoginService)
     router = inject(Router)
     loading = signal<boolean>(false);
     loginModel = signal<LoginCredentials>({
@@ -26,6 +23,7 @@ export class LoginFormFeature {
     });
     errors = signal<string[]>([]);
 
+    private readonly events = inject(Events);
     readonly dispatcher = inject(Dispatcher)
 
     loginForm = form(this.loginModel, (schemaPath) => {
@@ -35,27 +33,23 @@ export class LoginFormFeature {
         email(schemaPath.email, {message: 'Email is in wrong format'});
     });
 
+    constructor() {
+        this.events
+            .on(sessionEvents.authenticated)
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.router.navigate(["/"]));
+
+        this.events
+            .on(sessionEvents.sessionFailed)
+            .pipe(takeUntilDestroyed())
+            .subscribe(data => {
+                this.errors.set(data.payload.error.errors)
+            });
+    }
+
     submit(event: Event): void {
         event.preventDefault()
         this.loading.set(true)
-        this.service.Login(this.loginModel()).pipe(
-            retry(3),
-            catchError((err: HttpErrorResponse) => {
-                if (err.status === 0) {
-                    this.errors.set(["connection error"])
-                } else {
-                    if (!err.error.status) {
-                        this.errors.set(err.error.errors)
-                    }
-                }
-                return of(null)
-            }),
-            finalize(() => this.loading.set(false)),
-            filter(data => !!data),
-            map(data => {
-                this.dispatcher.dispatch(userEvents.setUser(data));
-                this.router.navigate(["/"])
-            })
-        ).subscribe()
+        this.dispatcher.dispatch(sessionEvents.authenticate(this.loginModel()));
     }
 }
