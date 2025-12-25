@@ -1,5 +1,20 @@
-<div class="grid grid-cols-3 gap-4">
-    @for (p of projects(); track p.id) {
-        <app-project-card [project]="p" />
-    }
+<div class="flex flex-col gap-4">
+    <div [ngClass]="{
+            'grid grid-cols-3 gap-6': viewMode() === 'grid',
+            'flex flex-col gap-4': viewMode() === 'list',
+        }">
+        @for (p of projects(); track p.id) {
+            <app-project-card [project]="p" />
+        }
+    </div>
+
+    <div>
+        <button (click)="toggleViewMode()">
+            @if (viewMode() === 'grid') {
+                <i class="fa-solid fa-grip-lines"></i>
+            } @else {
+                <i class="fa-solid fa-grip"></i>
+            }
+        </button>
+    </div>
 </div>
