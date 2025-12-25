@@ -1,5 +1,5 @@
 import { ProjectModel } from "./project.model";
-import {patchState, signalStore} from "@ngrx/signals";
+import {patchState, signalStore, withHooks} from "@ngrx/signals";
 import { withState } from "@ngrx/signals";
 import {Events, withEventHandlers} from "@ngrx/signals/events";
 import {inject} from '@angular/core';
@@ -19,6 +19,11 @@ const initialState: ProjectState = {
 export const ProjectStore = signalStore(
     { providedIn: 'root' },
     withState(initialState),
+    withHooks({
+        onInit() {
+            console.log('ProjectStore initialized');
+        },
+    }),
     withEventHandlers(
         (
             store,

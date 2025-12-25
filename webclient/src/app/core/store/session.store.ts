@@ -1,6 +1,6 @@
 import {patchState, signalStore, type, withState} from '@ngrx/signals';
 import {inject} from '@angular/core';
-import {userEvents} from '@entities/user';
+import {userEvents, UserModel} from '@entities/user';
 import {UserApi} from '@entities/user/api/user.service';
 import {switchMap, tap} from 'rxjs/operators';
 import {eventGroup, Events, withEventHandlers} from '@ngrx/signals/events';
@@ -14,7 +14,7 @@ export const sessionEvents = eventGroup({
     source: 'Session',
     events: {
         authenticate: type<LoginCredentials>(),
-        authenticated: type<void>(),
+        authenticated: type<UserModel>(),
         refreshToken: type<void>(),
         sessionFailed: type<any>(), // TODO: replace any with auth error type
         logout: type<void>(),
@@ -46,10 +46,7 @@ export const SessionStore = signalStore(
                 switchMap(event =>
                     loginApi.Login(event.payload).pipe(
                         mapResponse({
-                            next: user => [
-                                sessionEvents.authenticated(),
-                                userEvents.setUser(user),
-                            ],
+                            next: user => sessionEvents.authenticated(user),
                             error: event => sessionEvents.sessionFailed(event),
                         })
                     )
@@ -63,9 +60,7 @@ export const SessionStore = signalStore(
                 switchMap(() =>
                     loginApi.Refresh().pipe(
                         mapResponse({
-                            next: () => [
-                                sessionEvents.authenticated(),
-                            ],
+                            next: () => patchState(store, {status: 'authenticated'}),
                             error: event => sessionEvents.sessionFailed(event),
                         })
                     )
@@ -87,10 +82,7 @@ export const SessionStore = signalStore(
                     userApi.GetUser().pipe(
                         tap(() => console.log('SessionStore: load user')),
                         mapResponse({
-                            next: user => [
-                                sessionEvents.authenticated(),
-                                userEvents.setUser(user),
-                            ],
+                            next: user => sessionEvents.authenticated(user),
                             error: event => sessionEvents.sessionFailed(event),
                         })
                     )
@@ -99,7 +91,8 @@ export const SessionStore = signalStore(
 
         authenticated$: events.on(sessionEvents.authenticated).pipe(
             tap(() => console.log('SessionStore: authenticated')),
-            tap(() => patchState(store, {status: 'authenticated'}))
+            tap(() => patchState(store, {status: 'authenticated'})),
+            map(e => userEvents.setUser(e.payload)),
         ),
 
         unauthenticated$: events.on(sessionEvents.sessionFailed).pipe(

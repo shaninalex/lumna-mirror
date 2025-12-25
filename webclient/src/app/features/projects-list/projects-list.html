@@ -1,1 +1,5 @@
-{{ projects() | json }}
+<div class="grid grid-cols-3 gap-4">
+    @for (p of projects(); track p.id) {
+        <app-project-card [project]="p" />
+    }
+</div>
