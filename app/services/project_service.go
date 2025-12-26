@@ -10,9 +10,11 @@ import (
 )
 
 type ProjectManager interface {
+	Get(ctx context.Context, id uint) (*models.Project, error)
 	List(ctx context.Context) ([]*models.Project, error)
 	Create(ctx context.Context, entry *models.Project) error
 	Delete(ctx context.Context, id uint) error
+	Patch(ctx context.Context, id uint, opts db.SetExpr) error
 }
 
 type ProjectService struct {
@@ -28,6 +30,10 @@ func NewProjectManager() ProjectManager {
 }
 
 var _ ProjectManager = (*ProjectService)(nil)
+
+func (s *ProjectService) Get(ctx context.Context, id uint) (*models.Project, error) {
+	return s.projectRepository.Get(ctx, id)
+}
 
 func (s *ProjectService) List(ctx context.Context) ([]*models.Project, error) {
 	projects, err := s.projectRepository.List(ctx, nil)
@@ -64,6 +70,10 @@ func (s *ProjectService) Create(ctx context.Context, entry *models.Project) erro
 		return fmt.Errorf("project with name %s already exist", entry.Name)
 	}
 	return s.projectRepository.Create(ctx, entry)
+}
+
+func (s *ProjectService) Patch(ctx context.Context, id uint, opts db.SetExpr) error {
+	return s.projectRepository.Update(ctx, id, opts)
 }
 
 func (s *ProjectService) Delete(ctx context.Context, id uint) error {

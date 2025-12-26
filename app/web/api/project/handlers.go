@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/db"
 	"gitlab.com/shaninalex/lumna/app/web/adapters"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
@@ -44,6 +45,29 @@ func (s *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.Success(w, nil, "Project deleted")
+}
+
+func (s *ProjectHandler) Patch(w http.ResponseWriter, r *http.Request) {
+	id := utils.UrlNumericParam(w, r, "id")
+	payload, err := utils.BodyParser[createProjectPayload](r)
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	err = s.projectService.Patch(r.Context(), uint(id), db.Set(
+		db.Field("name", payload.Name),
+	))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	project, err := s.projectService.Get(r.Context(), uint(id))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(w, adapters.ToProjectDto(project))
 }
 
 func (s *ProjectHandler) BoardsList(w http.ResponseWriter, r *http.Request) {

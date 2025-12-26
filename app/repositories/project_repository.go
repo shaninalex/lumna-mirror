@@ -123,13 +123,13 @@ func (p *ProjectRespository) List(ctx context.Context, opts db.Expr) ([]*models.
 }
 
 // Update implements Repository.
-func (p *ProjectRespository) Update(ctx context.Context, userID uint, opts db.SetExpr) error {
+func (p *ProjectRespository) Update(ctx context.Context, projectId uint, opts db.SetExpr) error {
 	setQuery, args := opts.Build()
 	query := fmt.Sprintf(
 		`UPDATE projects %s WHERE id = ?`,
 		setQuery,
 	)
-	args = append(args, userID)
+	args = append(args, projectId)
 	res, err := db.FromContext(ctx).ExecContext(ctx, query, args...)
 	if err != nil {
 		return err

@@ -1,13 +1,13 @@
 import { ProjectModel } from "./project.model";
-import {patchState, signalStore, withHooks, withMethods} from "@ngrx/signals";
+import { patchState, signalStore, withHooks, withMethods } from "@ngrx/signals";
 import { withState } from "@ngrx/signals";
-import {Events, withEventHandlers} from "@ngrx/signals/events";
-import {inject} from '@angular/core';
-import {filter, switchMap, tap} from 'rxjs';
-import {mapResponse} from '@ngrx/operators';
-import {ProjectService} from '@entities/project/api/project.service';
-import {projectEvents} from '@entities/project';
-import {addEntities, addEntity, removeEntity, withEntities} from '@ngrx/signals/entities';
+import { Events, withEventHandlers } from "@ngrx/signals/events";
+import { inject } from '@angular/core';
+import { filter, switchMap, tap } from 'rxjs';
+import { mapResponse } from '@ngrx/operators';
+import { ProjectService } from '@entities/project/api/project.service';
+import { projectEvents } from '@entities/project';
+import { addEntities, addEntity, removeEntity, updateEntity, withEntities } from '@ngrx/signals/entities';
 
 export const ProjectStore = signalStore(
     { providedIn: 'root' },
@@ -18,7 +18,7 @@ export const ProjectStore = signalStore(
         },
     }),
     withMethods((store) => ({
-        byId(id: number): ProjectModel|undefined {
+        byId(id: number): ProjectModel | undefined {
             console.log(store.entities())
             return store.entities().find(p => p.id === id)
         }
@@ -69,6 +69,29 @@ export const ProjectStore = signalStore(
                             })
                         )
                     )
+                ),
+
+            actionPatchProject$: events
+                .on(projectEvents.patch)
+                .pipe(
+                    tap(() => console.log(projectEvents.deleteProject.type)),
+                    switchMap(e =>
+                        projectService.Patch(e.payload.id, e.payload.data).pipe(
+                            mapResponse({
+                                next: data => projectEvents.updateProject(data),
+                                error: err => projectEvents.failed(err)
+                            })
+                        )
+                    )
+                ),
+
+            updateProject$: events
+                .on(projectEvents.updateProject)
+                .pipe(
+                    tap(e => patchState(store, updateEntity({
+                        id: e.payload.id,
+                        changes: e.payload,
+                    })))
                 ),
 
 
