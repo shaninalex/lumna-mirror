@@ -1,9 +1,10 @@
 import {inject, Injectable} from '@angular/core';
 import {map, Observable} from 'rxjs';
-import {ProjectModel} from '@entities/project';
+import {ProjectModel, ProjectPayload} from '@entities/project';
 import {APIResponse} from '@shared/models';
 import {environment as env} from '@environments/environment.development';
 import {HttpClient} from '@angular/common/http';
+import { ProjectEditModel } from '@features/project-edit';
 
 @Injectable({
     providedIn: 'root',
@@ -13,6 +14,24 @@ export class ProjectService {
 
     GetProjects(): Observable<ProjectModel[]> {
         return this.http.get<APIResponse<ProjectModel[]>>(`${env.API_ROOT}/api/v1/projects`, {withCredentials: true}).pipe(
+            map(response => response.data)
+        )
+    }
+
+    CreateProject(payload: ProjectPayload): Observable<ProjectModel> {
+        return this.http.post<APIResponse<ProjectModel>>(`${env.API_ROOT}/api/v1/projects`, payload, {withCredentials: true}).pipe(
+            map(response => response.data)
+        )
+    }
+
+    DeleteProject(projectId: number): Observable<void> {
+        return this.http.delete<APIResponse<void>>(`${env.API_ROOT}/api/v1/project/${projectId}`, {withCredentials: true}).pipe(
+            map(response => response.data)
+        )
+    }
+
+    Patch(projectId: number, payload: ProjectEditModel): Observable<ProjectModel> {
+        return this.http.patch<APIResponse<ProjectModel>>(`${env.API_ROOT}/api/v1/project/${projectId}`, payload, {withCredentials: true}).pipe(
             map(response => response.data)
         )
     }

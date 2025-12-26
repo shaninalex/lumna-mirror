@@ -19,7 +19,7 @@ export class TokenRefreshService {
     constructor() {
         // Start timer when authenticated (login, bootstrap, or token refresh success)
         this.events
-            .on(sessionEvents.authenticated)
+            .on(sessionEvents.authenticated, sessionEvents.refreshSucceeded)
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.startRefreshTimer());
 
