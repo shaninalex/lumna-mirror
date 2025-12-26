@@ -36,6 +36,16 @@ func (s *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
 	utils.Success(w, adapters.ToProjectDto(project))
 }
 
+func (s *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	id := utils.UrlNumericParam(w, r, "id")
+	err := s.projectService.Delete(r.Context(), uint(id))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(w, nil, "Project deleted")
+}
+
 func (s *ProjectHandler) BoardsList(w http.ResponseWriter, r *http.Request) {
 	id := utils.UrlNumericParam(w, r, "id")
 	boards, err := s.boardService.ProjectBoards(r.Context(), uint(id))

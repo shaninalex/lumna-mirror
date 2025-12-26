@@ -12,6 +12,7 @@ import (
 type ProjectManager interface {
 	List(ctx context.Context) ([]*models.Project, error)
 	Create(ctx context.Context, entry *models.Project) error
+	Delete(ctx context.Context, id uint) error
 }
 
 type ProjectService struct {
@@ -63,4 +64,8 @@ func (s *ProjectService) Create(ctx context.Context, entry *models.Project) erro
 		return fmt.Errorf("project with name %s already exist", entry.Name)
 	}
 	return s.projectRepository.Create(ctx, entry)
+}
+
+func (s *ProjectService) Delete(ctx context.Context, id uint) error {
+	return s.projectRepository.Delete(ctx, id)
 }

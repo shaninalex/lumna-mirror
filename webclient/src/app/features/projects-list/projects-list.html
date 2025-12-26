@@ -10,7 +10,7 @@
             'flex flex-col gap-4': viewMode() === 'list',
         }">
         @for (p of projects(); track p.id) {
-            <app-project-card [project]="p" />
+            <app-project-card [project]="p" (onDelete)="handleOnDeleteProject($event)" />
         }
     </div>
 

@@ -7,7 +7,7 @@ import {switchMap, tap} from 'rxjs';
 import {mapResponse} from '@ngrx/operators';
 import {ProjectService} from '@entities/project/api/project.service';
 import {projectEvents} from '@entities/project';
-import {addEntities, addEntity, withEntities} from '@ngrx/signals/entities';
+import {addEntities, addEntity, removeEntity, withEntities} from '@ngrx/signals/entities';
 
 export const ProjectStore = signalStore(
     { providedIn: 'root' },
@@ -23,7 +23,7 @@ export const ProjectStore = signalStore(
             events = inject(Events),
             projectService = inject(ProjectService)
         ) => ({
-            getProjects$: events
+            actionGetProjects$: events
                 .on(projectEvents.getProjects)
                 .pipe(
                     tap(() => console.log(projectEvents.getProjects.type)),
@@ -37,7 +37,7 @@ export const ProjectStore = signalStore(
                     )
                 ),
 
-            createProject$: events
+            actionCreateProject$: events
                 .on(projectEvents.createProject)
                 .pipe(
                     tap(() => console.log(projectEvents.createProject.type)),
@@ -45,13 +45,34 @@ export const ProjectStore = signalStore(
                         projectService.CreateProject(e.payload).pipe(
                             mapResponse({
                                 next: project => projectEvents.setProject(project),
-                                error: err => projectEvents.createProjectFailed(err)
+                                error: err => projectEvents.failed(err)
                             })
                         )
                     )
                 ),
 
-            setProjects$: events
+            actionDeleteProject$: events
+                .on(projectEvents.deleteProject)
+                .pipe(
+                    tap(() => console.log(projectEvents.deleteProject.type)),
+                    switchMap(e =>
+                        projectService.DeleteProject(e.payload).pipe(
+                            mapResponse({
+                                next: () => projectEvents._deleteProjectSuccess(e.payload),
+                                error: err => projectEvents.failed(err)
+                            })
+                        )
+                    )
+                ),
+
+
+            deleteProject$: events
+                .on(projectEvents._deleteProjectSuccess)
+                .pipe(
+                    tap(e => patchState(store, removeEntity(e.payload)))
+                ),
+
+            setProjectList$: events
                 .on(projectEvents.setProjects)
                 .pipe(
                     tap(e => patchState(store, addEntities(e.payload)))

@@ -10,6 +10,11 @@ export const projectEvents = eventGroup({
 
         createProject: type<ProjectPayload>(),
         setProject: type<ProjectModel>(),
-        createProjectFailed: type<any>(), // TODO: proper error typing
+
+        deleteProject: type<number>(),
+        _deleteProjectSuccess: type<number>(),
+
+
+        failed: type<any>(), // TODO: proper error typing
     },
 });

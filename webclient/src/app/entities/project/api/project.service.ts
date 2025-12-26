@@ -22,4 +22,10 @@ export class ProjectService {
             map(response => response.data)
         )
     }
+
+    DeleteProject(projectId: number): Observable<void> {
+        return this.http.delete<APIResponse<void>>(`${env.API_ROOT}/api/v1/project/${projectId}`, {withCredentials: true}).pipe(
+            map(response => response.data)
+        )
+    }
 }

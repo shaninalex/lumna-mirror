@@ -1,6 +1,6 @@
 import {Component, inject, signal} from '@angular/core';
 import {projectEvents, ProjectPayload, ProjectStore} from '@entities/project';
-import {ProjectCard} from '@entities/project/ui/project-card/project-card';
+import {ProjectCard} from '@entities/project/ui';
 import {NgClass} from '@angular/common';
 import {ProjectForm} from '@features/project-form/project-form';
 import {Dialog} from '@angular/cdk/dialog';
@@ -36,5 +36,9 @@ export class ProjectsListFeature {
         dialogRef.closed.subscribe(result => {
             if (result) this.dispatcher.dispatch(projectEvents.createProject(result))
         });
+    }
+
+    handleOnDeleteProject(projectId: number): void {
+        this.dispatcher.dispatch(projectEvents.deleteProject(projectId))
     }
 }
