@@ -37,8 +37,4 @@ export class ProjectsListFeature {
             if (result) this.dispatcher.dispatch(projectEvents.createProject(result))
         });
     }
-
-    handleOnDeleteProject(projectId: number): void {
-        this.dispatcher.dispatch(projectEvents.deleteProject(projectId))
-    }
 }

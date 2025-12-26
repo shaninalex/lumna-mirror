@@ -1,14 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ProjectModel} from '@entities/project';
 import {RouterLink} from '@angular/router';
-import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
+import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';
 
 @Component({
     selector: 'app-project-card',
     imports: [
         RouterLink,
         CdkMenu,
-        CdkMenuItem,
         CdkMenuTrigger
     ],
     template: `
@@ -25,8 +24,7 @@ import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
 
                 <ng-template #menu>
                     <div class="bg-white border border-gray-200 rounded-xl p-4" cdkMenu>
-                        <button class="block" cdkMenuItem>Edit</button>
-                        <button class="block" cdkMenuItem (click)="deleteProject()">Delete</button>
+                        <a [routerLink]="['/projects', project.id, 'edit']">Edit</a>
                     </div>
                 </ng-template>
 
@@ -36,9 +34,4 @@ import {CdkMenu, CdkMenuItem, CdkMenuTrigger} from '@angular/cdk/menu';
 })
 export class ProjectCard {
     @Input() project: ProjectModel
-    @Output() onDelete: EventEmitter<number> = new EventEmitter<number>();
-
-    deleteProject(): void {
-        this.onDelete.emit(this.project.id)
-    }
 }
