@@ -1,11 +1,13 @@
 import {Component, computed, inject, Input} from '@angular/core';
 import {BoardStore} from '@entities/board';
 import {BoardCreateFeature} from '@features/board-create';
+import {RouterLink} from '@angular/router';
 
 @Component({
     selector: 'app-boards-list',
     imports: [
-        BoardCreateFeature
+        BoardCreateFeature,
+        RouterLink
     ],
     template: `
         <div class="bg-gray-200 card">
@@ -13,7 +15,7 @@ import {BoardCreateFeature} from '@features/board-create';
             @if (boards(); as boards) {
                 <nav class="flex flex-wrap gap-4">
                     @for (board of boards; track board.id) {
-                        <button class="btn btn-primary">{{ board.name }}</button>
+                        <a [routerLink]="['board', board.id]" class="btn btn-primary">{{ board.name }}</a>
                     }
                     <app-board-create-feature [projectId]="projectId" />
                 </nav>

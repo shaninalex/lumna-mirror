@@ -1,12 +1,11 @@
 import {Routes} from "@angular/router";
+
 import {Home} from "./home/home";
 import {Projects} from './projects/projects';
-import {ProjectEdit} from './projects/project-edit/project-edit';
 
-import {authGuard} from '@root/src/app/pages/app/auth.guard';
-import { ProjectDetail } from "./projects/project-detail/project-detail";
-import { ProjectList } from "./projects/project-list/project-list";
-import {projectResolver} from '@root/src/app/pages/app/projects/project.resolver';
+import {authGuard} from './auth.guard';
+import {projectsRoutes} from './projects/projects.routes';
+import {boardRoutes} from './boards/boards.routes';
 
 export const routes: Routes = [
     {
@@ -20,27 +19,8 @@ export const routes: Routes = [
         component: Projects,
         canMatch: [authGuard],
         children: [
-            {
-                path: "",
-                component: ProjectList,
-                canMatch: [authGuard],
-            },
-            {
-                path: ":id",
-                component: ProjectDetail,
-                canMatch: [authGuard],
-                resolve: {
-                    project: projectResolver
-                }
-            },
-            {
-                path: ":id/edit",
-                component: ProjectEdit,
-                canMatch: [authGuard],
-                resolve: {
-                    project: projectResolver
-                }
-            }
+            ...projectsRoutes,
+            ...boardRoutes,
         ]
     }
 ]

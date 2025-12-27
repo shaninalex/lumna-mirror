@@ -41,7 +41,7 @@ export class BoardCreateFeature {
             <div>
                 <input class="border block w-full rounded-lg px-2 py-1 border-gray-400"
                        type="text" placeholder="Board name" [field]="boardForm.name" />
-                @if (boardForm.name().touched()) {
+                @if (boardForm.name().touched() && boardForm.name().errors()) {
                     <ul class="error-list">
                         @for (error of boardForm.name().errors(); track error) {
                             <li class="text-red-500 text-sm">{{ error.message }}</li>
@@ -59,7 +59,7 @@ export class BoardCreateFeature {
                     Create
                 </button>
 
-                <button type="button" (click)="cancel()"
+                <button type="button" (pointerdown)="cancel()"
                         class="bg-gray-200 text-white rounded-lg px-2 py-1 cursor-pointer text-sm">
                     Cancel
                 </button>
@@ -99,5 +99,4 @@ export class BoardForm {
     cancel(): void {
         this.dialogRef.close()
     }
-
 }

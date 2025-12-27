@@ -1,6 +1,6 @@
-import {Component, computed, inject} from '@angular/core';
+import {Component, computed, inject, signal} from '@angular/core';
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import { ProjectStore } from '@entities/project';
+import {ProjectModel, ProjectStore} from '@entities/project';
 import {BoardsList} from '@entities/board/ui/boards-list/boards-list';
 
 
@@ -34,13 +34,15 @@ import {BoardsList} from '@entities/board/ui/boards-list/boards-list';
 })
 export class ProjectDetail {
     projectId: number
-    private activatedRoute = inject(ActivatedRoute);
-
-    private readonly store = inject(ProjectStore);
-    project = computed(() => this.store.entities().find(p => p.id === this.projectId));
+    private route = inject(ActivatedRoute);
+    readonly project = signal<ProjectModel | null>(null);
 
     constructor() {
-        this.activatedRoute.params.subscribe((params) => {
+        this.route.data.subscribe(data => {
+            this.project.set(data['project']);
+        });
+
+        this.route.params.subscribe((params) => {
             try {
                 const id = parseInt(params['id'])
                 this.projectId = id;

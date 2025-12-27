@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {Header} from '@shared/ui/layouts/main/header/header';
-import {Sidebar} from '@shared/ui/layouts/main/sidebar/sidebar';
+import {Header} from '@core/layouts/main/header/header';
+import {Sidebar} from '@core/layouts/main/sidebar/sidebar';
 
 @Component({
     selector: 'app-main-layout',

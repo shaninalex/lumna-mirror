@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthLayout } from '@shared/ui/layouts'
+import { AuthLayout } from '@core/layouts'
 
 @Component({
     selector: 'app-confirm',

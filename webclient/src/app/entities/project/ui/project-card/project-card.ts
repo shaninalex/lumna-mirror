@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ProjectModel} from '@entities/project';
 import {RouterLink} from '@angular/router';
 import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';

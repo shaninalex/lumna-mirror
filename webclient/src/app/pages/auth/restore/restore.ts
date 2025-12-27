@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {AuthLayout} from "@shared/ui";
+import {AuthLayout} from "@core/layouts";
 import {RouterLink} from "@angular/router";
 
 @Component({
