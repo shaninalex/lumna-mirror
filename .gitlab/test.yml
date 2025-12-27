@@ -16,8 +16,8 @@ test:
     - git fetch --all
     - git checkout main || true
     - go version
-    - mkdir -p app/cmd/standalone/web/browser
-    - touch app/cmd/standalone/web/browser/.keep
+    - mkdir -p app/web/embed
+    - touch app/web/embed/.gitkeep
 
   script:
     - go mod tidy
