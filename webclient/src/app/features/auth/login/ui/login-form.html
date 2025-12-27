@@ -1,7 +1,6 @@
 <form (submit)="submit($event)" class="flex flex-col gap-2 ">
     <div>
-        <input class="border block w-full rounded-lg px-2 py-1 border-gray-400"
-               type="email" placeholder="Email" [field]="loginForm.email" />
+        <input class="input" type="email" placeholder="Email" [field]="loginForm.email" />
         @if (loginForm.email().touched() && loginForm.email().invalid()) {
             <ul class="error-list">
                 @for (error of loginForm.email().errors(); track error) {
@@ -11,8 +10,7 @@
         }
     </div>
     <div>
-        <input class="border block w-full rounded-lg px-2 py-1 border-gray-400"
-               type="password" placeholder="Password" [field]="loginForm.password" />
+        <input class="input" type="password" placeholder="Password" [field]="loginForm.password" />
         @if (loginForm.password().touched() && loginForm.password().invalid()) {
             <ul class="error-list">
                 @for (error of loginForm.password().errors(); track error) {
@@ -31,7 +29,7 @@
     }
 
     <div class="text-center">
-        <button type="submit" class="bg-teal-500 text-white rounded-lg px-4 py-2 cursor-pointer">
+        <button type="submit" class="btn btn-primary">
             @if(loading()) {
                 Processing...
             } @else {
