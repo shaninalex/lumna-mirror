@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProjectStore } from '@entities/project';
 import { ProjectEditFeature, ProjectDeleteFeature } from '@features/index';
 
 @Component({
@@ -19,7 +18,6 @@ import { ProjectEditFeature, ProjectDeleteFeature } from '@features/index';
 export class ProjectEdit {
     projectId: number
     private activatedRoute = inject(ActivatedRoute);
-    private readonly projectStore = inject(ProjectStore);
 
     constructor() {
         // Access route parameters
