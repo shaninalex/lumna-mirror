@@ -21,4 +21,4 @@ test:
 
   script:
     - go mod tidy
-    - go test -tags noembed ./app/... -v
+    - go test -v -coverprofile cover.out ./app/...
