@@ -12,11 +12,13 @@ export const routes: Routes = [
         path: "",
         component: Home,
         canMatch: [authGuard],
+        title: "Overview"
     },
     {
         path: "projects",
         component: Projects,
         canMatch: [authGuard],
+        title: "Projects",
         children: [
             {
                 path: "",

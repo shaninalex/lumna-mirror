@@ -4,6 +4,7 @@ import { projectEvents, ProjectStore } from '@entities/project';
 import { Dispatcher, Events } from '@ngrx/signals/events';
 import { ProjectEditModel } from './model/project-edit.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {Title} from '@angular/platform-browser';
 
 @Component({
     selector: 'app-project-edit-feature',
@@ -48,18 +49,21 @@ export class ProjectEditFeature {
     private readonly events = inject(Events)
     loading = signal(false)
     project = computed(() => this.store.entities().find(p => p.id === this.projectId));
+    private titleService = inject(Title);
+
 
     projectFormModel = signal<ProjectEditModel>({
         name: '',
     });
     errors = signal<string[]>([]);
     readonly dispatcher = inject(Dispatcher)
-    
+
     constructor() {
         effect(() => {
             const p = this.project();
             if (p) {
                 this.projectFormModel.set({ name: p.name });
+                this.titleService.setTitle(`Edit Project: ${p.name}`)
             }
         });
 

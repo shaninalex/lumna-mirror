@@ -7,13 +7,16 @@ export const routes: Routes = [
     {
         path: "auth/login",
         component: Login,
+        title: "Auth Login"
     },
     {
         path: "auth/confirm",
         component: Confirm,
+        title: "Auth Confirm"
     },
     {
         path: "auth/restore",
         component: Restore,
+        title: "Auth Restore"
     }
 ]
