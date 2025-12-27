@@ -6,6 +6,7 @@ import {ProjectEdit} from './projects/project-edit/project-edit';
 import {authGuard} from '@root/src/app/pages/app/auth.guard';
 import { ProjectDetail } from "./projects/project-detail/project-detail";
 import { ProjectList } from "./projects/project-list/project-list";
+import {projectResolver} from '@root/src/app/pages/app/projects/project.resolver';
 
 export const routes: Routes = [
     {
@@ -18,7 +19,6 @@ export const routes: Routes = [
         path: "projects",
         component: Projects,
         canMatch: [authGuard],
-        title: "Projects",
         children: [
             {
                 path: "",
@@ -29,11 +29,17 @@ export const routes: Routes = [
                 path: ":id",
                 component: ProjectDetail,
                 canMatch: [authGuard],
+                resolve: {
+                    project: projectResolver
+                }
             },
             {
                 path: ":id/edit",
                 component: ProjectEdit,
                 canMatch: [authGuard],
+                resolve: {
+                    project: projectResolver
+                }
             }
         ]
     }
