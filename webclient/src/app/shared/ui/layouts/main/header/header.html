@@ -1,5 +1,5 @@
 <header class="header">
-    <div class="font-medium">{{ title }}</div>
+    <div class="font-medium">{{ title() }}</div>
     @if(user()) {
         <button [cdkMenuTriggerFor]="menu">
             <div class="flex items-center gap-3">
