@@ -1,11 +1,12 @@
 import {Component, computed, inject} from '@angular/core';
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { ProjectStore } from '@entities/project';
+import {BoardsList} from '@entities/board/ui/boards-list/boards-list';
 
 
 @Component({
     selector: 'app-project-detail',
-    imports: [RouterLink],
+    imports: [RouterLink, BoardsList],
     template: `
         <div class="bg-lime-200 card">
             <nav class="flex flex-wrap gap-4">
@@ -18,14 +19,7 @@ import { ProjectStore } from '@entities/project';
             </nav>
         </div>
 
-        <div class="bg-gray-200 card">
-            <h2 class="font-medium text-lg mb-4">Boards</h2>
-            <nav class="flex flex-wrap gap-4">
-                <button class="btn btn-primary">Development</button>
-                <button class="btn btn-primary">Design</button>
-                <button class="btn btn-primary">Marketing/SEO</button>
-            </nav>
-        </div>
+        <app-boards-list [projectId]="projectId" />
 
         <div class="bg-amber-100 card">
             <a class="font-medium text-lg mb-4 hover:underline">Calendar</a>

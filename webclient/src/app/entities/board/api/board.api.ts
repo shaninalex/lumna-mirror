@@ -23,21 +23,15 @@ export class BoardApi {
         )
     }
 
-    // CreateProject(payload: ProjectPayload): Observable<ProjectModel> {
-    //     return this.http.post<APIResponse<ProjectModel>>(`${env.API_ROOT}/api/v1/projects`, payload, {withCredentials: true}).pipe(
-    //         map(response => response.data)
-    //     )
-    // }
-    //
-    // DeleteProject(projectId: number): Observable<void> {
-    //     return this.http.delete<APIResponse<void>>(`${env.API_ROOT}/api/v1/project/${projectId}`, {withCredentials: true}).pipe(
-    //         map(response => response.data)
-    //     )
-    // }
-    //
-    // Patch(projectId: number, payload: ProjectEditModel): Observable<ProjectModel> {
-    //     return this.http.patch<APIResponse<ProjectModel>>(`${env.API_ROOT}/api/v1/project/${projectId}`, payload, {withCredentials: true}).pipe(
-    //         map(response => response.data)
-    //     )
-    // }
+    DeleteProject(boardId: number): Observable<void> {
+        return this.http.delete<APIResponse<void>>(`${env.API_ROOT}/api/v1/board/${boardId}`, {withCredentials: true}).pipe(
+            map(response => response.data)
+        )
+    }
+
+    Patch(boardId: number, payload: BoardPayloadModel): Observable<BoardModel> {
+        return this.http.patch<APIResponse<BoardModel>>(`${env.API_ROOT}/api/v1/board/${boardId}`, payload, {withCredentials: true}).pipe(
+            map(response => response.data)
+        )
+    }
 }
