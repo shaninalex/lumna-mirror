@@ -17,8 +17,8 @@ export class BoardApi {
         )
     }
 
-    Create(projectId: number, payload: BoardPayloadModel): Observable<BoardModel[]> {
-        return this.http.post<APIResponse<BoardModel[]>>(`${env.API_ROOT}/api/v1/project/${projectId}/boards`, payload, { withCredentials: true }).pipe(
+    Create(projectId: number, payload: BoardPayloadModel): Observable<BoardModel> {
+        return this.http.post<APIResponse<BoardModel>>(`${env.API_ROOT}/api/v1/project/${projectId}/boards`, payload, { withCredentials: true }).pipe(
             map(response => response.data)
         )
     }

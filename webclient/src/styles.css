@@ -25,6 +25,10 @@
     @apply bg-red-500
 }
 
+.btn.btn-secondary {
+    @apply bg-gray-300 text-black hover:bg-gray-400
+}
+
 .card {
     @apply p-4 rounded-xl mb-4;
 }

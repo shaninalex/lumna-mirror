@@ -1,9 +1,12 @@
-import {Component, computed, inject, Input, signal} from '@angular/core';
-import {BoardModel, BoardStore} from '@entities/board';
+import {Component, computed, inject, Input} from '@angular/core';
+import {BoardStore} from '@entities/board';
+import {BoardCreateFeature} from '@features/board-create';
 
 @Component({
     selector: 'app-boards-list',
-    imports: [],
+    imports: [
+        BoardCreateFeature
+    ],
     template: `
         <div class="bg-gray-200 card">
             <h2 class="font-medium text-lg mb-4">Boards</h2>
@@ -12,6 +15,7 @@ import {BoardModel, BoardStore} from '@entities/board';
                     @for (board of boards; track board.id) {
                         <button class="btn btn-primary">{{ board.name }}</button>
                     }
+                    <app-board-create-feature [projectId]="projectId" />
                 </nav>
             }
         </div>
@@ -20,5 +24,5 @@ import {BoardModel, BoardStore} from '@entities/board';
 export class BoardsList {
     @Input() projectId: number
     private readonly boardStore = inject(BoardStore);
-    boards = computed(() => this.boardStore.entities().filter(p => p.id === this.projectId));
+    boards = computed(() => this.boardStore.projectBoards(this.projectId));
 }
