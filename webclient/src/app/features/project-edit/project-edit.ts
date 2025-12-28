@@ -53,7 +53,7 @@ export class ProjectEditFeature {
         name: '',
     });
     errors = signal<string[]>([]);
-    readonly dispatcher = inject(Dispatcher)
+    readonly dispatcher = inject(Dispatcher);
 
     constructor() {
         effect(() => {

@@ -1,19 +1,25 @@
 import {ActivatedRouteSnapshot, ResolveFn, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {inject} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
-import {filter, firstValueFrom, map} from 'rxjs';
+import {filter, firstValueFrom, map, tap} from 'rxjs';
 import {BoardModel, BoardStore} from '@entities/board';
+import {Dispatcher} from '@ngrx/signals/events';
+import {listEvents} from '@entities/list/model/list.events';
 
 export const boardResolver: ResolveFn<BoardModel | UrlTree> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 )=> {
     const store = inject(BoardStore);
+    const dispatcher = inject(Dispatcher);
     const boardId = parseInt(route.paramMap.get('boardId')!);
     return firstValueFrom(
         toObservable(store.entities).pipe(
-            filter(projects => projects.some(p => p.id === boardId)),
-            map(projects => projects.find(p => p.id === boardId)!),
+            filter(boards => boards.some(p => p.id === boardId)),
+            map(boards => boards.find(p => p.id === boardId)!),
+            tap(board => {
+                dispatcher.dispatch(listEvents.getLists(board.id))
+            })
         )
     );
 }
