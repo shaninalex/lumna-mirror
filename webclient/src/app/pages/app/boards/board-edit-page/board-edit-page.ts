@@ -12,17 +12,21 @@ import {BoardDeleteFeature, BoardEditFeature} from '@root/src/app/features';
     template: `
         <h1>Board "{{ board()?.name }}" Edit</h1>
         <app-board-edit-feature [board]="board()"/>
-        <div class="my-4 border-b border-gray-300"></div>
-        <app-board-delete-feature [board]="board()"/>
+        <div class="my-4 border-b border-gray-200"></div>
+        <app-board-delete-feature [board]="board()" [projectId]="projectId"/>
     `,
 })
 export class BoardEditPage {
     route = inject(ActivatedRoute);
     board = signal<BoardModel | undefined>(undefined);
+    projectId: number;
 
     constructor() {
         this.route.data.subscribe(data => {
             this.board.set(data['board'])
+        })
+        this.route.params.subscribe(params => {
+            this.projectId = parseInt(params['id'])
         })
     }
 }

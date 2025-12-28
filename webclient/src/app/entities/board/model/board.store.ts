@@ -1,5 +1,5 @@
 import {patchState, signalStore, withHooks, withMethods} from '@ngrx/signals';
-import {addEntities, addEntity, withEntities} from '@ngrx/signals/entities';
+import {addEntities, addEntity, removeEntity, withEntities} from '@ngrx/signals/entities';
 import {Events, withEventHandlers} from '@ngrx/signals/events';
 import {inject} from '@angular/core';
 import {BoardApi} from '@entities/board/api/board.api';
@@ -67,6 +67,26 @@ export const BoardStore = signalStore(
                         })
                     )
                 )
+            ),
+
+        actionDeleteBoard$: events
+            .on(boardEvents.delete)
+            .pipe(
+                tap(() => console.log(boardEvents.delete.type)),
+                switchMap(e =>
+                    boardApi.Delete(e.payload).pipe(
+                        mapResponse({
+                            next: () => boardEvents._deleteSuccess(e.payload),
+                            error: error => boardEvents.failed(error)
+                        })
+                    )
+                )
+            ),
+
+        _deleteBoard$: events
+            .on(boardEvents._deleteSuccess)
+            .pipe(
+                tap(e => patchState(store, removeEntity(e.payload)))
             ),
 
         _setBoard$: events

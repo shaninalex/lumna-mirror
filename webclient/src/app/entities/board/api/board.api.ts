@@ -23,7 +23,7 @@ export class BoardApi {
         )
     }
 
-    DeleteProject(boardId: number): Observable<void> {
+    Delete(boardId: number): Observable<void> {
         return this.http.delete<APIResponse<void>>(`${env.API_ROOT}/api/v1/board/${boardId}`, {withCredentials: true}).pipe(
             map(response => response.data)
         )
