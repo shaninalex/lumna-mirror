@@ -10,7 +10,7 @@
 }
 
 .btn {
-    @apply text-white rounded-lg px-4 py-2 cursor-pointer inline-block;
+    @apply text-white rounded-lg px-4 py-2 cursor-pointer inline-block disabled:opacity-75 disabled:pointer-events-none;
 }
 
 .btn.btn-sm {
@@ -23,6 +23,10 @@
 
 .btn.btn-danger {
     @apply bg-red-500
+}
+
+.btn.btn-secondary {
+    @apply bg-gray-300 text-black hover:bg-gray-400
 }
 
 .card {

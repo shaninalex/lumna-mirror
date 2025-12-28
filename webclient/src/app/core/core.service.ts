@@ -4,6 +4,7 @@ import {sessionEvents} from '@core/store/session.store';
 import {tap} from 'rxjs';
 import {projectEvents, ProjectStore} from '@entities/project';
 import {UserStore} from '@entities/user';
+import {BoardStore} from '@entities/board';
 
 @Injectable({
     providedIn: 'root',
@@ -15,6 +16,7 @@ export class CoreService {
     // Init stores
     readonly userStore = inject(UserStore)
     readonly projectStore = inject(ProjectStore)
+    readonly boardStore = inject(BoardStore)
 
     constructor() {
         this.events

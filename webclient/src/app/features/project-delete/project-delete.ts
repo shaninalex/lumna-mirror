@@ -13,7 +13,6 @@ import { Dispatcher, Events } from '@ngrx/signals/events';
         <div class="border-b border-gray-200 mb-4"></div>
         <h2 class="mb-4">Danger</h2>
         <button class="btn btn-danger" (click)="openDialog()">Delete</button>
-
     `,
 })
 export class ProjectDeleteFeature {
@@ -35,7 +34,7 @@ export class ProjectDeleteFeature {
     }
 
     openDialog(): void {
-        const dialogRef = this.dialog.open<boolean>(CdkDialogOverviewExampleDialog, { data: this.project()?.name });
+        const dialogRef = this.dialog.open<boolean>(DeleteProjectDialog, { data: this.project()?.name });
 
         dialogRef.closed.subscribe(result => {
             if (result) this.dispatcher.dispatch(projectEvents.deleteProject(this.projectId))
@@ -57,7 +56,7 @@ export class ProjectDeleteFeature {
     imports: [FormsModule],
     host: { 'class': 'modal' }
 })
-export class CdkDialogOverviewExampleDialog {
+export class DeleteProjectDialog {
     dialogRef = inject<DialogRef<boolean>>(DialogRef<boolean>);
     projectName = inject(DIALOG_DATA);
 

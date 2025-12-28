@@ -12,6 +12,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/web/middlewares"
 
 	authApp "gitlab.com/shaninalex/lumna/app/web/api/auth"
+	boardApp "gitlab.com/shaninalex/lumna/app/web/api/board"
 	projectApp "gitlab.com/shaninalex/lumna/app/web/api/project"
 	tokenApp "gitlab.com/shaninalex/lumna/app/web/api/token"
 	userApp "gitlab.com/shaninalex/lumna/app/web/api/user"
@@ -61,7 +62,8 @@ func RunWebServer(cmd *cobra.Command, args []string) {
 	router.Use(middlewares.NewTokenMiddleware().Wrap)
 	userApp.RegisterUserController(router)       // /api/v1/user/...
 	tokenApp.RegisterTokenController(router)     // /api/v1/token/...
-	projectApp.RegisterProjectController(router) // /api/v1/projects
+	projectApp.RegisterProjectController(router) // /api/v1/projects/...
+	boardApp.RegisterBoardController(router)     // /api/v1/board/...
 
 	if err := router.Run(c.Config().Serve.Port); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		panic(fmt.Errorf("server error: %v", err))

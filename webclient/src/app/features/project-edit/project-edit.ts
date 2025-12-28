@@ -4,7 +4,7 @@ import { projectEvents, ProjectStore } from '@entities/project';
 import { Dispatcher, Events } from '@ngrx/signals/events';
 import { ProjectEditModel } from './model/project-edit.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {Title} from '@angular/platform-browser';
+
 
 @Component({
     selector: 'app-project-edit-feature',
@@ -40,7 +40,6 @@ import {Title} from '@angular/platform-browser';
                 </button>
             </div>
         </form>
-
     `,
 })
 export class ProjectEditFeature {
@@ -72,12 +71,12 @@ export class ProjectEditFeature {
     }
 
     projectForm = form(this.projectFormModel, (schemaPath) => {
-        required(schemaPath.name, {message: 'Name is required'});
+        required(schemaPath.name, { message: 'Name is required' });
     });
 
     submit(event: Event): void {
         event.preventDefault()
         this.loading.set(true)
-        this.dispatcher.dispatch(projectEvents.patch({ id: this.projectId, data: this.projectFormModel()}))
+        this.dispatcher.dispatch(projectEvents.patch({ id: this.projectId, data: this.projectFormModel() }))
     }
 }
