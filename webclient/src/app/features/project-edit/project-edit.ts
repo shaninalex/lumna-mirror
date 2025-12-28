@@ -40,7 +40,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                 </button>
             </div>
         </form>
-
     `,
 })
 export class ProjectEditFeature {

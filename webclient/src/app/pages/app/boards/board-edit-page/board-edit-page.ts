@@ -12,7 +12,7 @@ import {BoardDeleteFeature, BoardEditFeature} from '@root/src/app/features';
     template: `
         <h1>Board "{{ board()?.name }}" Edit</h1>
         <app-board-edit-feature [board]="board()"/>
-        <div class="mb-4"></div>
+        <div class="my-4 border-b border-gray-300"></div>
         <app-board-delete-feature [board]="board()"/>
     `,
 })

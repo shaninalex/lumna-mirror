@@ -7,7 +7,7 @@ export const boardEvents = eventGroup({
     events: {
         getList: type<number>(),
         create: type<BoardPayloadModel>(),
-        patch: type<{projectId: number, data: BoardPayloadModel}>(),
+        patch: type<{boardId: number, data: BoardPayloadModel}>(),
         delete: type<number>(),
 
         setList: type<BoardModel[]>(),

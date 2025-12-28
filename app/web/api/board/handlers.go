@@ -31,7 +31,12 @@ func (s *BoardHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	utils.Success(w, nil, "Updated")
+	board, err := s.boardService.GetBoard(r.Context(), uint(id))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(w, board, "Updated")
 }
 
 func (s *BoardHandler) Delete(w http.ResponseWriter, r *http.Request) {

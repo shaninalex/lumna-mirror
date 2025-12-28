@@ -55,6 +55,20 @@ export const BoardStore = signalStore(
                 )
             ),
 
+        actionPatchBoard$: events
+            .on(boardEvents.patch)
+            .pipe(
+                tap(() => console.log(boardEvents.patch.type)),
+                switchMap(e =>
+                    boardApi.Patch(e.payload.boardId, e.payload.data).pipe(
+                        mapResponse({
+                            next: board => boardEvents.set(board),
+                            error: error => boardEvents.failed(error)
+                        })
+                    )
+                )
+            ),
+
         _setBoard$: events
             .on(boardEvents.set)
             .pipe(
