@@ -38,6 +38,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
             <button class="btn btn-secondary" (click)="this.openedForm.set(true)">Create new column</button>
         }
     `,
+    host: {class: 'flex-shrink-0'}
 })
 export class NewColumnForm {
     readonly dispatcher = inject(Dispatcher);

@@ -9,9 +9,9 @@ import {NewColumnForm} from '@features/kanban-board/components';
         NewColumnForm
     ],
     template: `
-        <div class="flex items-start gap-4">
+        <div class="flex items-start gap-4 overflow-x-scroll w-full">
             @for (l of lists(); track l.id) {
-                <div class="card bg-gray-100 w-[280px]">
+                <div class="card bg-gray-100 w-[280px] flex-shrink-0">
                     <div class="flex items-center justify-between">
                         <div class="text-lg font-medium">{{ l.name }}</div>
                         <div>
