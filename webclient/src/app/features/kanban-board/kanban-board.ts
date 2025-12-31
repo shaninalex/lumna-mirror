@@ -3,7 +3,7 @@ import {BoardModel} from '@entities/board';
 import {ListStore} from '@entities/list';
 import {NewColumnForm} from '@features/kanban-board/components';
 import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';
-import {ListDeleteFeature} from '@root/src/app/features';
+import {ListDeleteFeature, ListEditNameFeature} from '@root/src/app/features';
 
 @Component({
     selector: 'app-kanban-board-feature',
@@ -11,14 +11,15 @@ import {ListDeleteFeature} from '@root/src/app/features';
         NewColumnForm,
         CdkMenu,
         CdkMenuTrigger,
-        ListDeleteFeature
+        ListDeleteFeature,
+        ListEditNameFeature
     ],
     template: `
         <div class="flex items-start gap-4 overflow-x-scroll w-full">
             @for (l of lists(); track l.id) {
                 <div class="card bg-gray-100 w-[280px] flex-shrink-0">
-                    <div class="flex items-center justify-between">
-                        <div class="text-lg font-medium">{{ l.name }}</div>
+                    <div class="flex items-center justify-between gap-2">
+                        <app-list-edit-name-feature [list]="l" />
                         <div>
                             <button [cdkMenuTriggerFor]="menu"  class="cursor-pointer">
                                 <i class="fa-solid fa-ellipsis"></i>

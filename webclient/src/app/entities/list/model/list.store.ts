@@ -1,5 +1,5 @@
 import {patchState, signalStore, withHooks, withMethods} from '@ngrx/signals';
-import {addEntities, addEntity, removeEntity, withEntities} from '@ngrx/signals/entities';
+import {addEntities, addEntity, removeEntity, updateEntity, withEntities} from '@ngrx/signals/entities';
 import {Events, withEventHandlers} from '@ngrx/signals/events';
 import {inject} from '@angular/core';
 import {switchMap, tap} from 'rxjs';
@@ -59,9 +59,9 @@ export const ListStore = signalStore(
             .pipe(
                 tap(() => console.log(listEvents.patch.type)),
                 switchMap(e =>
-                    listApi.Patch(e.payload.boardId, e.payload.data).pipe(
+                    listApi.Patch(e.payload.listId, e.payload.data).pipe(
                         mapResponse({
-                            next: list => listEvents.setList(list),
+                            next: list => listEvents._patchSuccess(list),
                             error: error => listEvents.failed(error)
                         })
                     )
@@ -86,6 +86,15 @@ export const ListStore = signalStore(
             .on(listEvents._deleteSuccess)
             .pipe(
                 tap(e => patchState(store, removeEntity(e.payload)))
+            ),
+
+        _patchSuccess$: events
+            .on(listEvents._patchSuccess)
+            .pipe(
+                tap(e => patchState(store, updateEntity({
+                    id: e.payload.id,
+                    changes: e.payload,
+                })))
             ),
 
         _setList$: events

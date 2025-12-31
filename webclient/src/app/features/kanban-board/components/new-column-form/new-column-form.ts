@@ -63,6 +63,10 @@ export class NewColumnForm {
             .subscribe(() => {
                 this.loading.set(false)
                 this.openedForm.set(false)
+                this.listForm().value.set({
+                    name: '',
+                    order: 0,
+                })
             })
 
         this.events.on(listEvents.failed)
