@@ -101,7 +101,14 @@ func (s *BoardHandler) ListsPatch(w http.ResponseWriter, r *http.Request) {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	utils.Success(w, nil, "Updated")
+
+	list, err := s.boardService.ListGet(r.Context(), uint(id))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.Success(w, list, "Updated")
 }
 
 func (s *BoardHandler) ListsDelete(w http.ResponseWriter, r *http.Request) {

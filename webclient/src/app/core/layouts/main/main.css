@@ -1,11 +1,10 @@
 .main {
     height: 100vh;
-    overflow: hidden;
     display: flex;
 }
 
 .content {
-    width: 100%;
+    width: calc(100% - 185px);
     position: relative;
     padding-top: 3.2rem;
 }

@@ -46,7 +46,7 @@ import {boardEvents} from '@entities/board/model/board.events';
 export class BoardEditFeature {
     board = input<BoardModel>();
     boardId: number
-    readonly dispatcher = inject(Dispatcher)
+    private readonly dispatcher = inject(Dispatcher)
     private readonly events = inject(Events)
     boardFormModel = signal<BoardPayloadModel>({
         project_id: 0,

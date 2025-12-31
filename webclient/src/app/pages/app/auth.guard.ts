@@ -4,7 +4,7 @@ import {userEvents} from '@entities/user';
 import {Dispatcher} from '@ngrx/signals/events';
 import {SessionStore} from '@core/store/session.store';
 import {toObservable} from '@angular/core/rxjs-interop';
-import {filter, map, take, tap} from 'rxjs';
+import {filter, map, take} from 'rxjs';
 
 export const authGuard: CanMatchFn = () => {
     const dispatcher = inject(Dispatcher);
