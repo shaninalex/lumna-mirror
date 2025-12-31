@@ -27,7 +27,6 @@ import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';
                         <a [routerLink]="['/projects', project.id, 'edit']">Edit</a>
                     </div>
                 </ng-template>
-
             </div>
         </div>
     `,
