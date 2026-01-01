@@ -23,7 +23,7 @@ var _ Repository[models.Task] = (*TaskRepository)(nil)
 func (s *TaskRepository) Get(ctx context.Context, id uint) (*models.Task, error) {
 	task := &models.Task{}
 	row := db.FromContext(ctx).QueryRow(`
-		SELECT id, board_id, list_id, name, done, order, created_at, updated_at FROM tasks WHERE id = ?
+		SELECT id, board_id, list_id, name, done, list_order, created_at, updated_at FROM tasks WHERE id = ?
 	`, id)
 	err := row.Scan(
 		&task.Id,
@@ -65,7 +65,7 @@ func (s *TaskRepository) Delete(ctx context.Context, id uint) error {
 
 func (s *TaskRepository) Create(ctx context.Context, entry *models.Task) error {
 	query := `
-		INSERT INTO tasks (board_id, list_id, name, order, created_at, updated_at)
+		INSERT INTO tasks (board_id, list_id, name, list_order, created_at, updated_at)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
 
@@ -97,7 +97,7 @@ func (s *TaskRepository) List(ctx context.Context, opts db.Expr) ([]*models.Task
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
-		`SELECT id, board_id, list_id, name, order, created_at, updated_at FROM tasks %s`,
+		`SELECT id, board_id, list_id, name, list_order, created_at, updated_at FROM tasks %s`,
 		where,
 	)
 
