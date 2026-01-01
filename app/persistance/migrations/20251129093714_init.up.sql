@@ -60,10 +60,11 @@ CREATE TABLE tasks
     list_id    INTEGER  NOT NULL,
     name       TEXT     NOT NULL,
     done       BOOLEAN  NOT NULL DEFAULT 0,
+    order      INTEGER  NOT NULL DEFAULT 0,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
     FOREIGN KEY (board_id) REFERENCES boards (id) ON DELETE CASCADE,
-    FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE SET NULL
+    FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE
 );
 
 -- Optional index

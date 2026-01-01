@@ -4,9 +4,11 @@ import "time"
 
 type Task struct {
 	Id        uint
-	Name      string
+	BoardId   uint
 	ListId    uint
+	Name      string
 	Done      bool
+	Order     uint
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
