@@ -27,6 +27,10 @@ func SharedDatabase() *sql.DB {
 			panic(err)
 		}
 		db.ApplyMigrations(sqlDB)
+
+		if _, err = sqlDB.Exec("PRAGMA foreign_keys = ON"); err != nil {
+			panic(err)
+		}
 	})
 
 	return sqlDB

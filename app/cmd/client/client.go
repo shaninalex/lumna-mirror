@@ -34,6 +34,9 @@ func (s *Client) DBConnect() *sql.DB {
 	if err != nil {
 		panic(err)
 	}
+	if _, err = conn.Exec("PRAGMA foreign_keys = ON"); err != nil {
+		panic(err)
+	}
 
 	s.ctx = context.WithValue(s.ctx, global.ContextDB, conn)
 	return conn

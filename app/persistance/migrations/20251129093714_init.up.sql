@@ -1,5 +1,4 @@
-PRAGMA foreign_keys =
-ON;
+PRAGMA foreign_keys = ON;
 
 -------------------------
 -- USERS
@@ -64,7 +63,7 @@ CREATE TABLE tasks
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
     FOREIGN KEY (board_id) REFERENCES boards (id) ON DELETE CASCADE,
-    FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE
+    FOREIGN KEY (list_id) REFERENCES board_lists (id) ON DELETE CASCADE
 );
 
 -- Optional index

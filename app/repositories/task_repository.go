@@ -97,7 +97,7 @@ func (s *TaskRepository) List(ctx context.Context, opts db.Expr) ([]*models.Task
 	where, args := db.Where(opts)
 
 	query := fmt.Sprintf(
-		`SELECT id, board_id, list_id, name, list_order, created_at, updated_at FROM tasks %s`,
+		`SELECT id, board_id, list_id, name, list_order, done, created_at, updated_at FROM tasks %s`,
 		where,
 	)
 
@@ -115,8 +115,8 @@ func (s *TaskRepository) List(ctx context.Context, opts db.Expr) ([]*models.Task
 			&task.BoardId,
 			&task.ListId,
 			&task.Name,
-			&task.Done,
 			&task.Order,
+			&task.Done,
 			&task.CreatedAt,
 			&task.UpdatedAt,
 		); err != nil {

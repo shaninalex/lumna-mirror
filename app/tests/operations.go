@@ -40,3 +40,14 @@ func CreateBoardList(ctx context.Context, boardId uint, name string) *models.Boa
 	_ = repo.Create(ctx, &entry)
 	return &entry
 }
+
+func CreateTask(ctx context.Context, boardId, listId uint, name string) *models.Task {
+	repo := repositories.NewTaskRepository()
+	task := &models.Task{
+		BoardId: boardId,
+		ListId:  listId,
+		Name:    name,
+	}
+	_ = repo.Create(ctx, task)
+	return task
+}
