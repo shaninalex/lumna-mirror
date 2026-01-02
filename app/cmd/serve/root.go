@@ -14,6 +14,7 @@ import (
 	authApp "gitlab.com/shaninalex/lumna/app/web/api/auth"
 	boardApp "gitlab.com/shaninalex/lumna/app/web/api/board"
 	projectApp "gitlab.com/shaninalex/lumna/app/web/api/project"
+	taskApp "gitlab.com/shaninalex/lumna/app/web/api/task"
 	tokenApp "gitlab.com/shaninalex/lumna/app/web/api/token"
 	userApp "gitlab.com/shaninalex/lumna/app/web/api/user"
 )
@@ -64,6 +65,7 @@ func RunWebServer(cmd *cobra.Command, args []string) {
 	tokenApp.RegisterTokenController(router)     // /api/v1/token/...
 	projectApp.RegisterProjectController(router) // /api/v1/projects/...
 	boardApp.RegisterBoardController(router)     // /api/v1/board/...
+	taskApp.RegisterTaskController(router)       // /api/v1/task/...
 
 	if err := router.Run(c.Config().Serve.Port); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		panic(fmt.Errorf("server error: %v", err))

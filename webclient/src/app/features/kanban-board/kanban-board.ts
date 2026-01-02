@@ -4,6 +4,7 @@ import {ListStore} from '@entities/list';
 import {NewColumnForm} from '@features/kanban-board/components';
 import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';
 import {ListDeleteFeature, ListEditNameFeature} from '@root/src/app/features';
+import {KanbanApi} from '@features/kanban-board/api/kanban.api';
 
 @Component({
     selector: 'app-kanban-board-feature',
@@ -36,9 +37,11 @@ import {ListDeleteFeature, ListEditNameFeature} from '@root/src/app/features';
             <app-new-column-form [board]="board()" />
         </div>
     `,
+    providers: [KanbanApi]
 })
 export class KanbanBoardFeature {
     private readonly listStore = inject(ListStore);
+    private api = inject(KanbanApi);
 
     board = input<BoardModel>()
     lists = computed(() => {
