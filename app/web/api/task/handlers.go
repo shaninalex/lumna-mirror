@@ -31,7 +31,7 @@ func (s *TaskHandler) Patch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = s.tasksService.Patch(r.Context(), uint(taskId), db.Set(
-		db.Field("name", payload.Name),
+		db.Field("name", payload.Name), // NOTE: this is bad
 		db.Field("list_id", payload.ListId),
 	)); err != nil {
 		utils.Error(w, http.StatusBadRequest, err)
