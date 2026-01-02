@@ -5,6 +5,8 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
+	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/web/adapters"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -127,5 +129,26 @@ func (s *BoardHandler) TasksGet(w http.ResponseWriter, r *http.Request) {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	utils.Success(w, tasks)
+	utils.Success(w, adapters.ToTasksDTO(tasks))
+}
+
+func (s *BoardHandler) TasksCreate(w http.ResponseWriter, r *http.Request) {
+	boardId := utils.UrlNumericParam(w, r, "id")
+	payload, err := utils.BodyParser[services.TaskPayloadModel](r)
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	task := models.Task{
+		Name:    payload.Name,
+		BoardId: uint(boardId),
+		ListId:  payload.ListId,
+	}
+
+	if err = s.tasksService.Create(r.Context(), &task); err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(w, adapters.ToTaskDTO(&task), "Task created")
 }

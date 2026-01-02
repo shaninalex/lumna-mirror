@@ -17,20 +17,26 @@ export class TaskService {
         )
     }
 
-    Create(payload: TaskPayloadModel): Observable<TaskModel> {
-        return this.http.post<APIResponse<TaskModel>>(`${env.API_ROOT}/api/v1/tasks`, payload, {withCredentials: true}).pipe(
+    Create(boardId: number, payload: TaskPayloadModel): Observable<TaskModel> {
+        return this.http.post<APIResponse<TaskModel>>(`${env.API_ROOT}/api/v1/task/${boardId}/tasks`, payload, {withCredentials: true}).pipe(
+            map(response => response.data)
+        )
+    }
+
+    Get(taskId: number): Observable<TaskModel> {
+        return this.http.delete<APIResponse<TaskModel>>(`${env.API_ROOT}/api/v1/task/${taskId}`, {withCredentials: true}).pipe(
             map(response => response.data)
         )
     }
 
     Delete(taskId: number): Observable<void> {
-        return this.http.delete<APIResponse<void>>(`${env.API_ROOT}/api/v1/tasks/${taskId}`, {withCredentials: true}).pipe(
+        return this.http.delete<APIResponse<void>>(`${env.API_ROOT}/api/v1/task/${taskId}`, {withCredentials: true}).pipe(
             map(response => response.data)
         )
     }
 
     Patch(taskId: number, payload: TaskPayloadModel): Observable<TaskModel> {
-        return this.http.patch<APIResponse<TaskModel>>(`${env.API_ROOT}/api/v1/tasks/${taskId}`, payload, {withCredentials: true}).pipe(
+        return this.http.patch<APIResponse<TaskModel>>(`${env.API_ROOT}/api/v1/task/${taskId}`, payload, {withCredentials: true}).pipe(
             map(response => response.data)
         )
     }

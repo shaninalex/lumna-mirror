@@ -175,3 +175,26 @@ func Test_ApiBoardController_TasksGet(t *testing.T) {
 	assert.Contains(t, rr.Body.String(), ttA.Name)
 	assert.Contains(t, rr.Body.String(), ttB.Name)
 }
+
+func Test_ApiBoardController_TasksCreate(t *testing.T) {
+	ctx := tests.Context()
+	router := tests.NewTestRouter(ctx)
+
+	pr := tests.CreateProject(ctx)
+	br := tests.CreateBoard(ctx, pr.GetId(), "A")
+	ls := tests.CreateBoardList(ctx, pr.GetId(), "A")
+
+	board.RegisterBoardController(router)
+
+	url := fmt.Sprintf("/api/v1/board/%d/tasks", br.GetId())
+	name := "task name"
+	reqBody := fmt.Sprintf("{\"name\":\"%s\", \"list_id\": %d}", name, ls.GetId())
+
+	req := httptest.NewRequest(http.MethodPost, url, bytes.NewBufferString(reqBody))
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+	assert.Equal(t, http.StatusOK, rr.Code, "Should return status: \"200 OK\"")
+	assert.Contains(t, rr.Body.String(), name)
+	assert.Contains(t, rr.Body.String(), "\"id\":1")
+}

@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"gitlab.com/shaninalex/lumna/app/pkg/db"
+	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/web/adapters"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -14,17 +16,12 @@ func (s *TaskHandler) Get(w http.ResponseWriter, r *http.Request) {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	utils.Success(w, task)
-}
-
-type taskPayloadModel struct {
-	Name   string `json:"name"`
-	ListId uint   `json:"list_id"`
+	utils.Success(w, adapters.ToTaskDTO(task))
 }
 
 func (s *TaskHandler) Patch(w http.ResponseWriter, r *http.Request) {
 	taskId := utils.UrlNumericParam(w, r, "id")
-	payload, err := utils.BodyParser[taskPayloadModel](r)
+	payload, err := utils.BodyParser[services.TaskPayloadModel](r)
 	if err != nil {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
@@ -43,7 +40,7 @@ func (s *TaskHandler) Patch(w http.ResponseWriter, r *http.Request) {
 		utils.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	utils.Success(w, task)
+	utils.Success(w, adapters.ToTaskDTO(task))
 }
 
 func (s *TaskHandler) Delete(w http.ResponseWriter, r *http.Request) {

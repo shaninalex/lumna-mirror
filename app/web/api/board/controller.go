@@ -32,4 +32,5 @@ func RegisterBoardController(router *web.Router) {
 
 	// Board tasks
 	router.GET("/api/v1/board/{id}/tasks", h.TasksGet)
+	router.POST("/api/v1/board/{id}/tasks", h.TasksCreate)
 }

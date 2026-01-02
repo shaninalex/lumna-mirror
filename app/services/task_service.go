@@ -47,3 +47,8 @@ func (s *TaskService) Delete(ctx context.Context, taskId uint) error {
 func (s *TaskService) Patch(ctx context.Context, id uint, opts db.SetExpr) error {
 	return s.taskRepository.Update(ctx, id, opts)
 }
+
+type TaskPayloadModel struct {
+	Name   string `json:"name"`
+	ListId uint   `json:"list_id"`
+}
