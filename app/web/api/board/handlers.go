@@ -121,7 +121,7 @@ func (s *BoardHandler) ListsDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *BoardHandler) TasksGet(w http.ResponseWriter, r *http.Request) {
-	id := utils.UrlNumericParam(w, r, "listId")
+	id := utils.UrlNumericParam(w, r, "id")
 	tasks, err := s.tasksService.BoardTasks(r.Context(), uint(id))
 	if err != nil {
 		utils.Error(w, http.StatusBadRequest, err)

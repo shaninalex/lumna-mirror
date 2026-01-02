@@ -153,3 +153,25 @@ func Test_ApiBoardController_ListsDelete(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, dbBoardList)
 }
+
+func Test_ApiBoardController_TasksGet(t *testing.T) {
+	ctx := tests.Context()
+	router := tests.NewTestRouter(ctx)
+
+	pr := tests.CreateProject(ctx)
+	br := tests.CreateBoard(ctx, pr.GetId(), "A")
+	ls := tests.CreateBoardList(ctx, pr.GetId(), "A")
+	ttA := tests.CreateTask(ctx, br.GetId(), ls.GetId(), "A")
+	ttB := tests.CreateTask(ctx, br.GetId(), ls.GetId(), "B")
+
+	board.RegisterBoardController(router)
+
+	url := fmt.Sprintf("/api/v1/board/%d/tasks", br.GetId())
+	req := httptest.NewRequest(http.MethodGet, url, nil)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+	assert.Equal(t, http.StatusOK, rr.Code, "Should return status: \"200 OK\"")
+	assert.Contains(t, rr.Body.String(), ttA.Name)
+	assert.Contains(t, rr.Body.String(), ttB.Name)
+}
