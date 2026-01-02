@@ -1,0 +1,36 @@
+import {Component, input} from '@angular/core';
+import {TaskModel} from '@entities/task';
+import {DatePipe} from '@angular/common';
+
+@Component({
+    selector: 'app-task-card',
+    imports: [DatePipe],
+    template: `
+        <div class="rounded-xl p-4 bg-white">
+            <div class="flex justify-between items-center">
+                <div class="cursor-pointer mb-1 font-medium">{{ task().name }}</div>
+
+                <button class="cursor-pointer">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
+            </div>
+
+            <div class="text-sm text-gray-400 mb-2">Short description</div>
+
+            <div class="border-b border-gray-200 mb-2"></div>
+            <div class="flex justify-between items-center text-xs text-gray-400">
+                <button class="cursor-pointer flex justify-between items-center gap-1">
+                    <img src="img/7.png" alt="" class="rounded-full size-5">
+                    <div>John Doe</div>
+                </button>
+                <div>
+                    <i class="fa-regular fa-calendar"></i>
+                    {{ task().created_at | date: "d MMM" }}
+                </div>
+            </div>
+        </div>
+    `,
+})
+export class TaskCard {
+    task = input.required<TaskModel>()
+}

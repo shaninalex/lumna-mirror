@@ -1,7 +1,7 @@
-import {patchState, signalStore, withHooks, withMethods} from '@ngrx/signals';
+import {patchState, signalStore, withComputed, withHooks, withMethods} from '@ngrx/signals';
 import {addEntities, addEntity, removeEntity, updateEntity, withEntities} from '@ngrx/signals/entities';
 import {Events, withEventHandlers} from '@ngrx/signals/events';
-import {inject} from '@angular/core';
+import {computed, inject} from '@angular/core';
 import {switchMap, tap} from 'rxjs';
 import {mapResponse} from '@ngrx/operators';
 import {ListModel} from './list.model';

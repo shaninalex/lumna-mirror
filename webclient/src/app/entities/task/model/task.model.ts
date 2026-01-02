@@ -1,9 +1,10 @@
 export interface TaskModel {
     id: number
-    name: string
+    board_id: number
     list_id: number
-    done: boolean
+    name: string
     order: number
+    done: boolean
     created_at: Date
     updated_at: Date
 }

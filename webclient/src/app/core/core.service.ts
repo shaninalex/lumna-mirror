@@ -6,6 +6,7 @@ import {projectEvents, ProjectStore} from '@entities/project';
 import {UserStore} from '@entities/user';
 import {BoardStore} from '@entities/board';
 import {ListStore} from '@entities/list';
+import {TaskStore} from '@entities/task/model/task.store';
 
 @Injectable({
     providedIn: 'root',
@@ -19,6 +20,7 @@ export class CoreService {
     readonly projectStore = inject(ProjectStore)
     readonly boardStore = inject(BoardStore)
     readonly listStore = inject(ListStore)
+    readonly taskStore = inject(TaskStore)
 
     constructor() {
         this.events

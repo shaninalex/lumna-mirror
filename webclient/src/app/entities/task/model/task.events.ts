@@ -6,8 +6,8 @@ export const taskEvents = eventGroup({
     source: 'Task',
     events: {
         getTasks: type<{ board_id: number }>(),
-        create: type<{ data: TaskPayloadModel }>(),
-        patch: type<{ data: TaskPayloadModel }>(),
+        create: type<{ board_id: number, data: TaskPayloadModel }>(),
+        patch: type<{ task_id: number, data: TaskPayloadModel }>(),
         delete: type<{ task_id: number }>(),
 
         setTasks: type<TaskModel[]>(),

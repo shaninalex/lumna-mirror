@@ -8,7 +8,7 @@ import {TaskModel, TaskPayloadModel} from '@entities/task';
 @Injectable({
     providedIn: 'root',
 })
-export class TaskService {
+export class TaskApi {
     http = inject(HttpClient)
 
     List(boardId: number): Observable<TaskModel[]> {

@@ -5,6 +5,7 @@ import {filter, firstValueFrom, map, tap} from 'rxjs';
 import {BoardModel, BoardStore} from '@entities/board';
 import {Dispatcher} from '@ngrx/signals/events';
 import {listEvents} from '@entities/list/model/list.events';
+import {taskEvents} from '@entities/task/model/task.events';
 
 export const boardResolver: ResolveFn<BoardModel | UrlTree> = (
     route: ActivatedRouteSnapshot,
@@ -19,6 +20,7 @@ export const boardResolver: ResolveFn<BoardModel | UrlTree> = (
             map(boards => boards.find(p => p.id === boardId)!),
             tap(board => {
                 dispatcher.dispatch(listEvents.getLists(board.id))
+                dispatcher.dispatch(taskEvents.getTasks({ board_id: board.id}))
             })
         )
     );
