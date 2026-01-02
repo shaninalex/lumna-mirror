@@ -33,48 +33,51 @@ import { KanbanModel } from './model/kanban.model';
         CdkDragHandle,
     ],
     template: `
-        <div cdkDropList
-            cdkDropListOrientation="horizontal"
-            [cdkDropListData]="kanban()"
-            (cdkDropListDropped)="dropList($event)">
+        @if (kanban(); as kanban) {
+            <div cdkDropList
+                cdkDropListOrientation="horizontal"
+                [cdkDropListData]="kanban"
+                (cdkDropListDropped)="dropList($event)">
 
-            <div cdkDropListGroup 
-                class="flex items-start gap-4 overflow-x-scroll w-full">
-                @for (l of kanban(); track l.list.id) {
-                    <div cdkDrag class="card bg-gray-100 w-[280px] flex-shrink-0">
-                        <div class="flex items-center justify-between gap-2 mb-4">
-                            <app-list-edit-name-feature [list]="l.list" />
-                            <div>
-                                <button cdkDragHandle class="cursor-pointer text-gray-400">
-                                    <i class="fa-regular fa-hand"></i>
-                                </button>
-                                <button [cdkMenuTriggerFor]="menu" class="cursor-pointer">
-                                    <i class="fa-solid fa-ellipsis"></i>
-                                </button>
-                                <ng-template #menu>
-                                    <div class="bg-white border border-gray-200 rounded-xl p-4" cdkMenu>
-                                        <app-list-delete-feature [listId]="l.list.id" [listName]="l.list.name" />
-                                    </div>
-                                </ng-template>
-                            </div>
-                        </div>
-
-                        <div cdkDropList
-                                [cdkDropListData]="l.tasks"
-                                class="min-h-[100px]"
-                                (cdkDropListDropped)="dropTask($event)">
-                            @for (task of l.tasks; track task.id) {
-                                <div cdkDrag>
-                                    <app-task-card [task]="task" />
+                <div cdkDropListGroup
+                    class="flex items-start gap-4 overflow-x-scroll w-full">
+                    @for (l of kanban; track l.list.id) {
+                        <div cdkDrag class="card bg-gray-100 w-[280px] flex-shrink-0">
+                            <div class="flex items-center justify-between gap-2 mb-4">
+                                <app-list-edit-name-feature [list]="l.list" />
+                                <div>
+                                    <button cdkDragHandle class="cursor-pointer text-gray-400">
+                                        <i class="fa-regular fa-hand"></i>
+                                    </button>
+                                    <button [cdkMenuTriggerFor]="menu" class="cursor-pointer">
+                                        <i class="fa-solid fa-ellipsis"></i>
+                                    </button>
+                                    <ng-template #menu>
+                                        <div class="bg-white border border-gray-200 rounded-xl p-4" cdkMenu>
+                                            <app-list-delete-feature [listId]="l.list.id" [listName]="l.list.name" />
+                                        </div>
+                                    </ng-template>
                                 </div>
-                            }
-                        </div>
+                            </div>
 
-                    </div>
-                }
-                <app-new-column-form [board]="board()" />
+                            <div class="min-h-[100px]" 
+                                cdkDropList
+                                [cdkDropListData]="l.tasks"
+                                (cdkDropListDropped)="dropTask($event)">
+                                @for (task of l.tasks; track task.id) {
+                                    <div cdkDrag>
+                                        <app-task-card [task]="task" />
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    }
+                    <app-new-column-form [board]="board()" />
+                </div>
+
             </div>
-        </div>
+        }
     `,
 })
 export class KanbanBoardFeature {
@@ -106,7 +109,7 @@ export class KanbanBoardFeature {
         console.log(event)
     }
 
-    dropList(event: CdkDragDrop<any>) {
+    dropList(event: CdkDragDrop<KanbanModel[]>) {
         console.log(event)
         // moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
         // this.updateListOrders();
