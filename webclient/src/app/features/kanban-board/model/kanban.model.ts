@@ -1,8 +1,7 @@
+import { ListModel } from '@entities/list';
 import {TaskModel} from '@entities/task';
  
 export interface KanbanModel {
-    id: number
-    title: string
-    order: number
+    list: ListModel
     tasks: TaskModel[]
 }

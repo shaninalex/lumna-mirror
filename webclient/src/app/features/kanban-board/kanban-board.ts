@@ -5,7 +5,7 @@ import { NewColumnForm } from '@features/kanban-board/components';
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ListDeleteFeature, ListEditNameFeature } from '@root/src/app/features';
 import { KanbanApi } from '@features/kanban-board/api/kanban.api';
-import { TaskStore } from '@entities/task';
+import { TaskModel, TaskStore } from '@entities/task';
 import { TaskCard } from '@entities/task/ui/task-card/task-card';
 import {
     CdkDrag,
@@ -16,7 +16,7 @@ import {
     moveItemInArray,
     transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { JsonPipe } from '@angular/common';
+import { KanbanModel } from './model/kanban.model';
 
 @Component({
     selector: 'app-kanban-board-feature',
@@ -27,16 +27,28 @@ import { JsonPipe } from '@angular/common';
         ListDeleteFeature,
         ListEditNameFeature,
         TaskCard,
+        CdkDropListGroup, 
+        CdkDropList,
+        CdkDrag, 
+        CdkDragHandle,
     ],
     template: `
-        <div>
-            <div class="flex items-start gap-4 overflow-x-scroll w-full">
+        <div cdkDropList
+            cdkDropListOrientation="horizontal"
+            [cdkDropListData]="kanban()"
+            (cdkDropListDropped)="dropList($event)">
+
+            <div cdkDropListGroup 
+                class="flex items-start gap-4 overflow-x-scroll w-full">
                 @for (l of kanban(); track l.list.id) {
-                    <div class="card bg-gray-100 w-[280px] flex-shrink-0">
+                    <div cdkDrag class="card bg-gray-100 w-[280px] flex-shrink-0">
                         <div class="flex items-center justify-between gap-2 mb-4">
                             <app-list-edit-name-feature [list]="l.list" />
                             <div>
-                                <button [cdkMenuTriggerFor]="menu"  class="cursor-pointer">
+                                <button cdkDragHandle class="cursor-pointer text-gray-400">
+                                    <i class="fa-regular fa-hand"></i>
+                                </button>
+                                <button [cdkMenuTriggerFor]="menu" class="cursor-pointer">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <ng-template #menu>
@@ -47,11 +59,17 @@ import { JsonPipe } from '@angular/common';
                             </div>
                         </div>
 
-                        @for (task of l.tasks; track task.id) {
-                            @if (task.list_id === l.list.id) {
-                                <app-task-card [task]="task" />
+                        <div cdkDropList
+                                [cdkDropListData]="l.tasks"
+                                class="min-h-[100px]"
+                                (cdkDropListDropped)="dropTask($event)">
+                            @for (task of l.tasks; track task.id) {
+                                <div cdkDrag>
+                                    <app-task-card [task]="task" />
+                                </div>
                             }
-                        }
+                        </div>
+
                     </div>
                 }
                 <app-new-column-form [board]="board()" />
@@ -83,4 +101,18 @@ export class KanbanBoardFeature {
                     .sort((a, b) => a.order - b.order),
             }));
     });
+
+    dropTask(event: CdkDragDrop<TaskModel[]>) {
+        console.log(event)
+    }
+
+    dropList(event: CdkDragDrop<any>) {
+        console.log(event)
+        // moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
+        // this.updateListOrders();
+
+        // this.logPayload({
+        //     lists: this.lists.map(list => ({ id: list.id, order: list.order }))
+        // });
+    }
 }
