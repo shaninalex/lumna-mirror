@@ -75,6 +75,13 @@ func Test_RepositoryTask_List(t *testing.T) {
 	_ = tests.CreateTask(ctx, br.GetId(), ls.GetId(), "B")
 	_ = tests.CreateTask(ctx, br.GetId(), ls.GetId(), "C")
 
+	pr = tests.CreateProject(ctx)
+	br = tests.CreateBoard(ctx, pr.GetId(), "A2")
+	ls = tests.CreateBoardList(ctx, pr.GetId(), "A2")
+	_ = tests.CreateTask(ctx, br.GetId(), ls.GetId(), "E")
+	_ = tests.CreateTask(ctx, br.GetId(), ls.GetId(), "F")
+	_ = tests.CreateTask(ctx, br.GetId(), ls.GetId(), "G")
+
 	repo := repositories.NewTaskRepository()
 	tasks, err := repo.List(ctx, db.Eq("board_id", br.GetId()))
 	assert.Nil(t, err)
@@ -82,9 +89,33 @@ func Test_RepositoryTask_List(t *testing.T) {
 }
 
 func Test_RepositoryTask_Count(t *testing.T) {
+	ctx := tests.TestContext()
+	pr := tests.CreateProject(ctx)
+	br := tests.CreateBoard(ctx, pr.GetId(), "A")
+	ls := tests.CreateBoardList(ctx, pr.GetId(), "A")
+	_ = tests.CreateTask(ctx, br.GetId(), ls.GetId(), "A")
+	_ = tests.CreateTask(ctx, br.GetId(), ls.GetId(), "B")
+	_ = tests.CreateTask(ctx, br.GetId(), ls.GetId(), "C")
 
+	repo := repositories.NewTaskRepository()
+	count, err := repo.Count(ctx, db.Eq("board_id", br.GetId()))
+	assert.Nil(t, err)
+	assert.Equal(t, 3, count)
 }
 
 func Test_RepositoryTask_Update(t *testing.T) {
+	ctx := tests.TestContext()
+	pr := tests.CreateProject(ctx)
+	br := tests.CreateBoard(ctx, pr.GetId(), "A")
+	ls := tests.CreateBoardList(ctx, pr.GetId(), "A")
+	task := tests.CreateTask(ctx, br.GetId(), ls.GetId(), "A")
 
+	repo := repositories.NewTaskRepository()
+	err := repo.Update(ctx, task.GetId(), db.Set(
+		db.Field("name", "B"),
+	))
+
+	task, _ = repo.Get(ctx, task.GetId())
+	assert.Nil(t, err)
+	assert.Equal(t, "B", task.Name)
 }
