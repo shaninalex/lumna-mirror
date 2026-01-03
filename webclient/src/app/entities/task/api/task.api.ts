@@ -18,7 +18,7 @@ export class TaskApi {
     }
 
     Create(boardId: number, payload: TaskPayloadModel): Observable<TaskModel> {
-        return this.http.post<APIResponse<TaskModel>>(`${env.API_ROOT}/api/v1/task/${boardId}/tasks`, payload, {withCredentials: true}).pipe(
+        return this.http.post<APIResponse<TaskModel>>(`${env.API_ROOT}/api/v1/board/${boardId}/tasks`, payload, {withCredentials: true}).pipe(
             map(response => response.data)
         )
     }

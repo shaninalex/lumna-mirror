@@ -53,7 +53,7 @@ export const TaskStore = signalStore(
         _setTasks$: events
             .on(taskEvents.setTasks)
             .pipe(
-                tap(e => patchState(store, addEntities(e.payload)))
+                tap(e => patchState(store, addEntities(e.payload ? e.payload : [])))
             ),
 
         _setTask$: events

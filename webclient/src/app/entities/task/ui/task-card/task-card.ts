@@ -8,7 +8,7 @@ import {DatePipe} from '@angular/common';
     template: `
         <div class="rounded-xl p-4 bg-white">
             <div class="flex justify-between items-center">
-                <div class="cursor-pointer mb-1 font-medium">{{ task().name }}</div>
+                <div class="cursor-pointer mb-1 font-medium">{{ task().name }} [{{task().id}}]</div>
 
                 <button class="cursor-pointer">
                     <i class="fa-solid fa-ellipsis"></i>

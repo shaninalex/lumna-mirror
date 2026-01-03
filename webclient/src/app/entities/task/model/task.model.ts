@@ -12,4 +12,5 @@ export interface TaskModel {
 export interface TaskPayloadModel {
     name: string
     list_id: number
+    order: number
 }

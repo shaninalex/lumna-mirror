@@ -44,6 +44,7 @@ export class NewColumnForm {
     readonly dispatcher = inject(Dispatcher);
     readonly events = inject(Events);
     board = input<BoardModel>()
+    lists_length = input.required<number>()
 
     openedForm = signal<boolean>(false)
     loading = signal(false)
@@ -85,6 +86,7 @@ export class NewColumnForm {
         if (!formData.name) return
         if (!b) return
 
+        formData.order = this.lists_length() ? this.lists_length() : 0
         this.dispatcher.dispatch(listEvents.create({
             boardId: b.id,
             data: formData

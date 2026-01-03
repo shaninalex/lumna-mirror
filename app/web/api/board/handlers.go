@@ -144,6 +144,7 @@ func (s *BoardHandler) TasksCreate(w http.ResponseWriter, r *http.Request) {
 		Name:    payload.Name,
 		BoardId: uint(boardId),
 		ListId:  payload.ListId,
+		Order:   payload.Order,
 	}
 
 	if err = s.tasksService.Create(r.Context(), &task); err != nil {

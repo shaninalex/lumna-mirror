@@ -40,11 +40,11 @@ func (p *BoardListRepository) Count(ctx context.Context, opts db.Expr) (int, err
 // Create implements Repository.
 func (p *BoardListRepository) Create(ctx context.Context, entry *models.BoardList) error {
 	query := `
-		INSERT INTO board_lists (name, board_id)
-		VALUES (?, ?)
+		INSERT INTO board_lists (name, board_id, list_order)
+		VALUES (?, ?, ?)
 	`
 
-	result, err := db.FromContext(ctx).ExecContext(ctx, query, entry.Name, entry.BoardId)
+	result, err := db.FromContext(ctx).ExecContext(ctx, query, entry.Name, entry.BoardId, entry.Order)
 	if err != nil {
 		return err
 	}
