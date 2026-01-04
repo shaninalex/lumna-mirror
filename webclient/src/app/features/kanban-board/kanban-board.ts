@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, input, signal} from '@angular/core';
+import {Component, effect, inject, input, signal} from '@angular/core';
 import { BoardModel } from '@entities/board';
 import {ListModel, ListStore} from '@entities/list';
 import { NewColumnForm } from '@features/kanban-board/components';
@@ -112,6 +112,8 @@ export class KanbanBoardFeature {
                 tasks: this._buildTasksPayload(event.container.data)
             });
         } else {
+            const toList = this._findListByTasks(event.container.data);
+
             transferArrayItem(
                 event.previousContainer.data,
                 event.container.data,
@@ -121,7 +123,7 @@ export class KanbanBoardFeature {
             this._updateTaskOrders(event.previousContainer.data);
             this._updateTaskOrders(event.container.data);
 
-            const toList = this._findListByTasks(event.container.data);
+            console.log(event)
             console.log({
                 lists: [
                     { id: event.item.data.list_id, tasks: this._buildTasksPayload(event.previousContainer.data) },
@@ -131,7 +133,12 @@ export class KanbanBoardFeature {
         }
     }
 
-    dropList(event: CdkDragDrop<ListModel[]>) {}
+    dropList(event: CdkDragDrop<ListModel[]>) {
+        moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
+        this.lists().forEach((list, index) => list.order = index);
+
+        console.log(this.lists().map(list => ({ id: list.id, order: list.order })))
+    }
 
     private _updateTaskOrders(tasks: TaskModel[]): void {
         tasks.forEach((task, index) => task.order = index);
@@ -146,4 +153,6 @@ export class KanbanBoardFeature {
     private _buildTasksPayload(tasks: TaskModel[]): { id: number; order: number }[] {
         return tasks.map(task => ({ id: task.id, order: task.order }));
     }
+
+
 }
