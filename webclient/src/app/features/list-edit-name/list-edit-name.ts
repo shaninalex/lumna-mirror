@@ -38,7 +38,7 @@ import {ClickOutsideDirective} from '@shared/directives';
                 </div>
             </form>
         } @else {
-            <div class="text-lg font-medium" (click)="formOpen.set(true)">{{ list().name }}</div>
+            <div class="text-lg font-medium" (click)="formOpen.set(true)">{{ list().name }} [{{ list().id }}]</div>
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

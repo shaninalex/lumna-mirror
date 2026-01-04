@@ -61,7 +61,7 @@ import {
                         <div class="min-h-[100px] flex flex-col gap-2 mb-4"
                             cdkDropList
                             [cdkDropListData]="listTasks(l.id)"
-                            (cdkDropListDropped)="dropTask($event)">
+                            (cdkDropListDropped)="dropTask($event, l)">
                             @for (task of listTasks(l.id); track task.id) {
                                 <div cdkDrag [cdkDragData]="task">
                                     <app-task-card [task]="task" />
@@ -100,20 +100,16 @@ export class KanbanBoardFeature {
         return this.tasks().filter(t => t.list_id === list_id)
     }
 
-    dropTask(event: CdkDragDrop<TaskModel[]>) {
+    dropTask(event: CdkDragDrop<TaskModel[]>, l: ListModel) {
         const isSameList = event.previousContainer === event.container;
         if (isSameList) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             this._updateTaskOrders(event.previousContainer.data);
-
-            const list = this._findListByTasks(event.container.data);
             console.log({
-                listId: list?.id,
+                listId: l.id,
                 tasks: this._buildTasksPayload(event.container.data)
             });
         } else {
-            const toList = this._findListByTasks(event.container.data);
-
             transferArrayItem(
                 event.previousContainer.data,
                 event.container.data,
@@ -123,11 +119,10 @@ export class KanbanBoardFeature {
             this._updateTaskOrders(event.previousContainer.data);
             this._updateTaskOrders(event.container.data);
 
-            console.log(event)
             console.log({
                 lists: [
                     { id: event.item.data.list_id, tasks: this._buildTasksPayload(event.previousContainer.data) },
-                    { id: toList?.id, tasks: this._buildTasksPayload(event.container.data) }
+                    { id: l.id, tasks: this._buildTasksPayload(event.container.data) }
                 ]
             });
         }
@@ -144,15 +139,7 @@ export class KanbanBoardFeature {
         tasks.forEach((task, index) => task.order = index);
     }
 
-    private _findListByTasks(tasks: TaskModel[]): ListModel | undefined {
-        if (!tasks.length) return undefined
-
-        return this.lists().find(list => list.id === tasks[0].list_id);
-    }
-
     private _buildTasksPayload(tasks: TaskModel[]): { id: number; order: number }[] {
         return tasks.map(task => ({ id: task.id, order: task.order }));
     }
-
-
 }
