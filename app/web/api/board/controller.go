@@ -24,6 +24,9 @@ func RegisterBoardController(router *web.Router) {
 	router.PATCH("/api/v1/board/{id}", h.Patch)
 	router.DELETE("/api/v1/board/{id}", h.Delete)
 
+	// Change order of lists or tasks
+	router.PATCH("/api/v1/board/{id}/order", h.PatchOrder)
+
 	// Manage board lists
 	router.GET("/api/v1/board/{id}/lists", h.ListsGet)
 	router.POST("/api/v1/board/{id}/lists", h.ListsCreate)

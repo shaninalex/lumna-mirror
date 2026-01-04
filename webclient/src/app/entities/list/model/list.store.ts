@@ -18,7 +18,9 @@ export const ListStore = signalStore(
     }),
     withMethods((store) => ({
         boardLists(boardId: number): ListModel[] {
-            return store.entities().filter(p => p.board_id === boardId)
+            return store.entities()
+                .filter(p => p.board_id === boardId)
+                .sort((a, b) => a.order - b.order)
         }
     })),
     withEventHandlers((

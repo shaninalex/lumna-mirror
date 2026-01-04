@@ -72,3 +72,27 @@ func (s *BoardService) ListDelete(ctx context.Context, id uint) error {
 func (s *BoardService) ListGet(ctx context.Context, id uint) (*models.BoardList, error) {
 	return s.boardListRepository.Get(ctx, id)
 }
+
+type Tasks struct {
+	ID    uint `json:"id"`
+	Order uint `json:"order"`
+}
+
+type List struct {
+	ID    uint    `json:"id"`
+	Order *uint   `json:"order"`
+	Tasks []Tasks `json:"tasks"`
+}
+
+type ChangeOrderPayload struct {
+	Lists []List `json:"lists"`
+}
+
+func (s *BoardService) ChangeOrder(ctx context.Context, boardId uint, payload *ChangeOrderPayload) error {
+	for _, list := range payload.Lists {
+		s.boardListRepository.Update(ctx, list.ID, db.Set(
+			db.Field("list_order", list.Order),
+		))
+	}
+	return nil
+}

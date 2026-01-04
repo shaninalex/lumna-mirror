@@ -1,1 +1,1 @@
-export { KanbanBoardService } from './kanban-board.service'
+export { KanbanApi } from './api/kanban.api'

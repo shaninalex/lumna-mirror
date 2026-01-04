@@ -15,6 +15,7 @@ import {
     moveItemInArray,
     transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { KanbanApi } from './api/kanban.api';
 
 @Component({
     selector: 'app-kanban-board-feature',
@@ -76,10 +77,12 @@ import {
             </div>
         </div>
     `,
+    providers: [KanbanApi]
 })
 export class KanbanBoardFeature {
     private readonly listStore = inject(ListStore);
     private readonly taskStore = inject(TaskStore);
+    private service = inject(KanbanApi);
 
     lists_length: number;
     lists = signal<ListModel[]>([]);
@@ -102,6 +105,9 @@ export class KanbanBoardFeature {
 
     dropTask(event: CdkDragDrop<TaskModel[]>, l: ListModel) {
         const isSameList = event.previousContainer === event.container;
+        const board = this.board();
+        if (!board) return;
+
         if (isSameList) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             this._updateTaskOrders(event.previousContainer.data);
@@ -119,12 +125,12 @@ export class KanbanBoardFeature {
             this._updateTaskOrders(event.previousContainer.data);
             this._updateTaskOrders(event.container.data);
 
-            console.log({
+            this.service.Patch(board.id, {
                 lists: [
                     { id: event.item.data.list_id, tasks: this._buildTasksPayload(event.previousContainer.data) },
                     { id: l.id, tasks: this._buildTasksPayload(event.container.data) }
                 ]
-            });
+            }).subscribe();
         }
     }
 
@@ -132,7 +138,12 @@ export class KanbanBoardFeature {
         moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
         this.lists().forEach((list, index) => list.order = index);
 
-        console.log(this.lists().map(list => ({ id: list.id, order: list.order })))
+        const board = this.board();
+        if (!board) return;
+
+        this.service.Patch(board.id, {
+            lists: this.lists().map(list => ({ id: list.id, order: list.order }))
+        }).subscribe()
     }
 
     private _updateTaskOrders(tasks: TaskModel[]): void {

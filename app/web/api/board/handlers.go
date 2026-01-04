@@ -153,3 +153,17 @@ func (s *BoardHandler) TasksCreate(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.Success(w, adapters.ToTaskDTO(&task), "Task created")
 }
+
+func (s *BoardHandler) PatchOrder(w http.ResponseWriter, r *http.Request) {
+	boardId := utils.UrlNumericParam(w, r, "id")
+	payload, err := utils.BodyParser[services.ChangeOrderPayload](r)
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	if err = s.boardService.ChangeOrder(r.Context(), uint(boardId), payload); err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(w, nil, "Order changed")
+}
