@@ -1,12 +1,12 @@
-import {patchState, signalStore, withComputed, withHooks, withMethods} from '@ngrx/signals';
-import {addEntities, addEntity, removeEntity, updateEntity, withEntities} from '@ngrx/signals/entities';
-import {Events, withEventHandlers} from '@ngrx/signals/events';
-import {computed, inject} from '@angular/core';
-import {switchMap, tap} from 'rxjs';
-import {mapResponse} from '@ngrx/operators';
-import {ListModel} from './list.model';
-import {ListApi} from '../api/list.api';
-import {listEvents} from './list.events';
+import { patchState, signalStore, withComputed, withHooks, withMethods } from '@ngrx/signals';
+import { addEntities, addEntity, removeEntity, updateEntities, updateEntity, withEntities } from '@ngrx/signals/entities';
+import { Events, withEventHandlers } from '@ngrx/signals/events';
+import { computed, inject } from '@angular/core';
+import { map, switchMap, tap } from 'rxjs';
+import { mapResponse } from '@ngrx/operators';
+import { ListModel } from './list.model';
+import { ListApi } from '../api/list.api';
+import { listEvents } from './list.events';
 
 export const ListStore = signalStore(
     { providedIn: 'root' },
@@ -82,6 +82,16 @@ export const ListStore = signalStore(
                         })
                     )
                 )
+            ),
+
+        changeOrder$: events
+            .on(listEvents.changeOrder)
+            .pipe(
+                tap(() => console.log(listEvents.changeOrder.type)),
+                map(data => patchState(store, updateEntities({
+                    ids: data.payload.lists.map(l => l.id),
+                    changes: (data) => ({ order: data.order }),
+                }))),
             ),
 
         _deleteList$: events

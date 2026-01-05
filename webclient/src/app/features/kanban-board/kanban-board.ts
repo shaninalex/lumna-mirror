@@ -4,7 +4,7 @@ import {ListModel, ListStore} from '@entities/list';
 import { NewColumnForm } from '@features/kanban-board/components';
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import {ListDeleteFeature, ListEditNameFeature, TaskFastFormFeature} from '@root/src/app/features';
-import { TaskModel, TaskStore } from '@entities/task';
+import { taskEvents, TaskModel, TaskStore } from '@entities/task';
 import { TaskCard } from '@entities/task/ui/task-card/task-card';
 import {
     CdkDrag,
@@ -16,6 +16,8 @@ import {
     transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { KanbanApi } from './api/kanban.api';
+import { listEvents } from '@entities/list/model/list.events';
+import { Dispatcher } from '@ngrx/signals/events';
 
 @Component({
     selector: 'app-kanban-board-feature',
@@ -80,6 +82,7 @@ import { KanbanApi } from './api/kanban.api';
     providers: [KanbanApi]
 })
 export class KanbanBoardFeature {
+    private readonly dispatcher = inject(Dispatcher);
     private readonly listStore = inject(ListStore);
     private readonly taskStore = inject(TaskStore);
     private service = inject(KanbanApi);
@@ -111,10 +114,11 @@ export class KanbanBoardFeature {
         if (isSameList) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             this._updateTaskOrders(event.previousContainer.data);
-            console.log({
+            const p = {
                 listId: l.id,
                 tasks: this._buildTasksPayload(event.container.data)
-            });
+            }
+            this.service.Patch(board.id, p).subscribe(() => this.dispatcher.dispatch(taskEvents.changeOrder(p)));
         } else {
             transferArrayItem(
                 event.previousContainer.data,
@@ -125,12 +129,13 @@ export class KanbanBoardFeature {
             this._updateTaskOrders(event.previousContainer.data);
             this._updateTaskOrders(event.container.data);
 
-            this.service.Patch(board.id, {
+            const p = {
                 lists: [
                     { id: event.item.data.list_id, tasks: this._buildTasksPayload(event.previousContainer.data) },
                     { id: l.id, tasks: this._buildTasksPayload(event.container.data) }
                 ]
-            }).subscribe();
+            }
+            this.service.Patch(board.id, p).subscribe(() => this.dispatcher.dispatch(taskEvents.changeOrder(p)));
         }
     }
 
@@ -141,9 +146,10 @@ export class KanbanBoardFeature {
         const board = this.board();
         if (!board) return;
 
-        this.service.Patch(board.id, {
+        const p = {
             lists: this.lists().map(list => ({ id: list.id, order: list.order }))
-        }).subscribe()
+        }
+        this.service.Patch(board.id, p).subscribe(() => this.dispatcher.dispatch(listEvents.changeOrder(p)))
     }
 
     private _updateTaskOrders(tasks: TaskModel[]): void {

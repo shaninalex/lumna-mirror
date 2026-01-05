@@ -1,6 +1,7 @@
 import { eventGroup } from '@ngrx/signals/events';
 import { type } from '@ngrx/signals';
 import { TaskModel, TaskPayloadModel } from '@entities/task';
+import { KanbanBoardChangeOrderPayload } from '@features/kanban-board/model/kanban.model';
 
 export const taskEvents = eventGroup({
     source: 'Task',
@@ -8,6 +9,8 @@ export const taskEvents = eventGroup({
         getTasks: type<{ board_id: number }>(),
         create: type<{ board_id: number, data: TaskPayloadModel }>(),
         patch: type<{ task_id: number, data: TaskPayloadModel }>(),
+        changeOrder: type<KanbanBoardChangeOrderPayload>(),
+        
         delete: type<{ task_id: number }>(),
 
         setTasks: type<TaskModel[]>(),

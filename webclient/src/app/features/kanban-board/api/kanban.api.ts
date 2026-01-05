@@ -12,7 +12,6 @@ export class KanbanApi {
 
     public Patch(boardId: number, payload: KanbanBoardChangeOrderPayload): Observable<any> {
         return this.http.patch<APIResponse<any>>(`${env.API_ROOT}/api/v1/board/${boardId}/order`, payload, {withCredentials: true}).pipe(
-            tap(data => console.log(data)),
             map(response => response.data)
         )
     }

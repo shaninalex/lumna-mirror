@@ -8,6 +8,7 @@ export const listEvents = eventGroup({
         getLists: type<number>(),
         create: type<{boardId: number, data: ListPayloadModel}>(),
         patch: type<{listId: number, data: ListPayloadModel}>(),
+        changeOrder: type<{ lists: Array<{id: number, order: number}>}>(),
         delete: type<number>(),
 
         setLists: type<ListModel[]>(),
