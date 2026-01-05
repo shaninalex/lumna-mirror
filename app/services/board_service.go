@@ -90,6 +90,7 @@ type ChangeOrderPayload struct {
 
 func (s *BoardService) ChangeOrder(ctx context.Context, boardId uint, payload *ChangeOrderPayload) error {
 	for _, list := range payload.Lists {
+		// TODO: this is bad. Create single query.
 		s.boardListRepository.Update(ctx, list.ID, db.Set(
 			db.Field("list_order", list.Order),
 		))
