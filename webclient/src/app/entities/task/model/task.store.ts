@@ -1,11 +1,11 @@
 import { inject } from '@angular/core'
 import {patchState, signalStore, withMethods} from "@ngrx/signals";
-import {addEntities, addEntity, withEntities} from "@ngrx/signals/entities";
+import {addEntities, addEntity, updateEntities, withEntities} from "@ngrx/signals/entities";
 import { TaskModel } from "./task.model";
 import { Events, withEventHandlers } from "@ngrx/signals/events";
 import { taskEvents } from './task.events';
 import {TaskApi} from '@entities/task/api/task.api';
-import {switchMap, tap} from 'rxjs';
+import {map, switchMap, tap} from 'rxjs';
 import {mapResponse} from '@ngrx/operators';
 import {ListModel} from '@entities/list';
 
@@ -49,6 +49,32 @@ export const TaskStore = signalStore(
                     )
                 )
             ),
+
+        actionChangeOrder$: events
+            .on(taskEvents.changeOrder)
+            .pipe(
+                tap(() => console.log(taskEvents.changeOrder.type)),
+                map(data => {
+                    // same list
+                    if (data.payload.listId && data.payload.tasks) {
+                        return patchState(store, updateEntities({
+                            ids: data.payload.tasks.map(t => t.id),
+                            changes: (task) => {
+                                const tasks = data.payload.tasks
+                                if (!tasks) return {}
+                                const t = tasks.find(t => t.id === task.id)
+                                if (!t) return {}
+                                return {
+                                    order: t.order
+                                }
+                            }
+                        }))
+                    } else {
+
+                    }
+                })
+            ),
+
 
         _setTasks$: events
             .on(taskEvents.setTasks)

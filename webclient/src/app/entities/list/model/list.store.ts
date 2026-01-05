@@ -90,7 +90,14 @@ export const ListStore = signalStore(
                 tap(() => console.log(listEvents.changeOrder.type)),
                 map(data => patchState(store, updateEntities({
                     ids: data.payload.lists.map(l => l.id),
-                    changes: (data) => ({ order: data.order }),
+                    changes: (list) => { 
+                        const lists = data.payload.lists
+                        const l = lists.find(l => l.id === list.id)
+                        if (!l) return {}
+                        return {
+                            order: l.order
+                        } 
+                    },  
                 }))),
             ),
 

@@ -113,7 +113,7 @@ export class KanbanBoardFeature {
 
         if (isSameList) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-            this._updateTaskOrders(event.previousContainer.data);
+            // this._updateTaskOrders(event.previousContainer.data);
             const p = {
                 listId: l.id,
                 tasks: this._buildTasksPayload(event.container.data)
