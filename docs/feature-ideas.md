@@ -21,10 +21,6 @@ Register webhooks and send request.
 
 ### Emails and custom email templates
 
-### Multiple boards per project
-
-Technically it's working now but UI is not support that feature for now
-
 ### add background image like in trello (?)
 
 Background image, color or gradient
@@ -40,15 +36,31 @@ full cli mode without any web related things - sockets and http routers. Should 
 
 ### Calendar
 
-Calendar for fast task/reminder assignments
+Calendar for fast task/reminder assignments. Also import or sync google/outlook calendars
 
 ### documentation
 
 add `man-like` documentation page. Big documentation text with all commands. Should gather that information from
-different packages and embed ( or not ) into binary.
+different packages and embed ( or not ) into binary. That's need's for terminal mode
 
+### TUI
+
+Terminal ui
+
+### Application Delivery
+
+localhost/docker/self-hosted/windows
 
 ### different migrations for different database
 
-Well the Kratos approach is to use sufixes like `*.sqlite.sql` or `*.postgres.sql` for different databases.
+Ory Kratos approach is to use sufixes like `*.sqlite.sql` or `*.postgres.sql` for different databases.
 This solve the issue with specific sql syntax and logic for different databases.
+
+### OAuth2.0 integration/roles/permissions
+
+### simple chat
+
+### Plugins
+
+Not sure what is that exactly... I like modularity that plugin architecture provide. New features just includes with
+new plugins that can be developed separately and load at start-time.
