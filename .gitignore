@@ -8,8 +8,8 @@ var/
 frontend/node_modules
 
 config/config.dev.yaml
-app/web/embed/*
-!app/web/embed/.gitkeep
+app2/web/embed/*
+!app2/web/embed/.gitkeep
 
 *.db
 bin/
