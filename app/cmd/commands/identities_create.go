@@ -32,8 +32,7 @@ func NewIdentitiesCreateRootCmd() *cobra.Command {
 				Active:   false,
 			}
 
-			result := db.Create(&user)
-			if result.Error != nil {
+			if result := db.Create(&user); result.Error != nil {
 				log.Fatal(result.Error)
 			}
 
@@ -44,8 +43,8 @@ func NewIdentitiesCreateRootCmd() *cobra.Command {
 				Email:          &user.Email,
 				PasswordHash:   utils.Pointer[string](""),
 			}
-			result = db.Create(&credential)
-			if result.Error != nil {
+
+			if result := db.Create(&credential); result.Error != nil {
 				log.Fatal(result.Error)
 			}
 

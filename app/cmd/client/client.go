@@ -46,7 +46,6 @@ func NewClient(cmd *cobra.Command) (*Client, error) {
 	}
 
 	cnf := config.ReadConfig(configPath)
-
 	ctx := context.WithValue(cmd.Context(), global.ContextConfig, cnf)
 	ctx = context.WithValue(ctx, global.ContextDB, db.Connect(cnf.Database.Url))
 
