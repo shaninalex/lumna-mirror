@@ -87,7 +87,6 @@ export const SessionStore = signalStore(
                     .on(sessionEvents.refreshSucceeded)
                     .pipe(
                         tap(() => patchState(store, {status: 'authenticated'})),
-                        map(() => userEvents.clear())
                     ),
 
             bootstrap$:
