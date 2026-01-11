@@ -9,6 +9,9 @@ that can make too much code to maintain, subtle security and performance issues,
 issue fixes and features delivery. Not sure about migrations. It's good for big project
 with tons of data... But for this type application? Not sure. I'll have 15-20 tables...
 
+With orm we do not need repositories any more since amount of code is much decreased.
+Need only services.
+
 ### Web router
 
 I make my own simple router, but it can be a little too grounded - no validations,
@@ -22,6 +25,14 @@ simpler, need to easy implement new ways of authorization ( login with Google/Gi
 ### Services/Repositories
 
 I think I'm doing it wrong. There are some architectural error I can't spot.
+
+### Config
+
+Store too little configuration variables. It should be single source of ANY configuration.
+
+### UUID for all ids
+
+I do not like number based id's
 
 # Any good things so far?
 
