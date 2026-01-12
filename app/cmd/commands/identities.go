@@ -10,8 +10,9 @@ func NewIdentitiesRootCmd() *cobra.Command {
 		Short: "Manage identities",
 	}
 
-	cmd.AddCommand(NewIdentitiesCreateRootCmd())
-	cmd.AddCommand(NewIdentitiesGetRootCmd())
+	cmd.AddCommand(NewIdentitiesCreateCmd())
+	cmd.AddCommand(NewIdentitiesDeleteCmd())
+	cmd.AddCommand(NewIdentitiesGetCmd())
 
 	return cmd
 }

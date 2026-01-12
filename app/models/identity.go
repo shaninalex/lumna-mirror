@@ -8,7 +8,7 @@ import (
 )
 
 type Identity struct {
-	ID        uuid.UUID `gorm:"type:text;primaryKey" json:"id"`
+	ID        uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
 	FullName  string    `json:"full_name"`
 	Email     string    `gorm:"unique" json:"email"`
 	Active    bool      `json:"active"`
