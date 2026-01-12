@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/pkg/config"
-	"gitlab.com/shaninalex/lumna/app/pkg/db"
-	"gitlab.com/shaninalex/lumna/app/pkg/global"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/global"
 	"gorm.io/gorm"
 )
 

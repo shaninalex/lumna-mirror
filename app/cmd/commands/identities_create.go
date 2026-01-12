@@ -6,8 +6,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/cmd/client"
+	"gitlab.com/shaninalex/lumna/app/internal/utils"
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 )
 
 func NewIdentitiesCreateRootCmd() *cobra.Command {

@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.com/shaninalex/lumna/app/pkg/config"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
 )
 
 func NewController(conf *config.Config, router *gin.Engine) {
