@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/spf13/cobra"
+	"gitlab.com/shaninalex/lumna/app/internal"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/internal/db"
-	"gitlab.com/shaninalex/lumna/app/internal/global"
 	"gorm.io/gorm"
 )
 
@@ -19,7 +19,7 @@ func (s *Client) Context() context.Context {
 }
 
 func (s *Client) Config() *config.Config {
-	cnf, ok := s.ctx.Value(global.ContextConfig).(*config.Config)
+	cnf, ok := s.ctx.Value(internal.ContextConfig).(*config.Config)
 	if !ok {
 		panic("config not found in context")
 	}
@@ -27,7 +27,7 @@ func (s *Client) Config() *config.Config {
 }
 
 func (s *Client) DB() *gorm.DB {
-	conn, ok := s.ctx.Value(global.ContextDB).(*gorm.DB)
+	conn, ok := s.ctx.Value(internal.ContextDB).(*gorm.DB)
 	if !ok {
 		panic("db not found in context")
 	}
@@ -36,7 +36,7 @@ func (s *Client) DB() *gorm.DB {
 
 func (s *Client) initDB() {
 	cnf := s.Config()
-	s.ctx = context.WithValue(s.ctx, global.ContextDB, db.Connect(cnf.Database.Url))
+	s.ctx = context.WithValue(s.ctx, internal.ContextDB, db.Connect(cnf.Database.Url))
 }
 
 func NewClient(cmd *cobra.Command) (*Client, error) {
@@ -46,8 +46,8 @@ func NewClient(cmd *cobra.Command) (*Client, error) {
 	}
 
 	cnf := config.ReadConfig(configPath)
-	ctx := context.WithValue(cmd.Context(), global.ContextConfig, cnf)
-	ctx = context.WithValue(ctx, global.ContextDB, db.Connect(cnf.Database.Url))
+	ctx := context.WithValue(cmd.Context(), internal.ContextConfig, cnf)
+	ctx = context.WithValue(ctx, internal.ContextDB, db.Connect(cnf.Database.Url))
 
 	client := &Client{
 		ctx: ctx,

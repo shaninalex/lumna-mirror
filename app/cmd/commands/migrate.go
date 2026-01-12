@@ -20,7 +20,11 @@ func NewMigrateRootCmd() *cobra.Command {
 			}
 			db := c.DB()
 
-			if err = db.AutoMigrate(&models.Identity{}, &models.Credential{}); err != nil {
+			if err = db.AutoMigrate(
+				&models.Identity{},
+				&models.Credential{},
+				&models.RefreshToken{},
+			); err != nil {
 				log.Fatal(err)
 			}
 
