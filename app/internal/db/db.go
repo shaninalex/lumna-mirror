@@ -1,6 +1,9 @@
 package db
 
 import (
+	"context"
+
+	"gitlab.com/shaninalex/lumna/app/internal"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -16,4 +19,12 @@ func Connect(connectionString string) *gorm.DB {
 	}
 
 	return db
+}
+
+func GetDB(ctx context.Context) *gorm.DB {
+	conn, ok := ctx.Value(internal.ContextDB).(*gorm.DB)
+	if !ok {
+		panic("db not found in context")
+	}
+	return conn
 }

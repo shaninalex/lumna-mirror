@@ -1,9 +1,11 @@
 package config
 
 import (
+	"context"
 	"io"
 	"os"
 
+	"gitlab.com/shaninalex/lumna/app/internal"
 	"gopkg.in/yaml.v3"
 )
 
@@ -47,4 +49,12 @@ func ReadConfig(path string) *Config {
 	}
 
 	return &config
+}
+
+func GetConfig(ctx context.Context) *Config {
+	cnf, ok := ctx.Value(internal.ContextConfig).(*Config)
+	if !ok {
+		panic("config not found in context")
+	}
+	return cnf
 }

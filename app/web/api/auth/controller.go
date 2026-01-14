@@ -2,16 +2,34 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 )
 
 func NewController(conf *config.Config, router *gin.Engine) {
-	router.POST("/auth/register", nil)
-	router.POST("/auth/login", nil)
-	router.POST("/auth/logout", nil)
-	router.POST("/auth/refresh", nil)
-	router.GET("/auth/oauth/github", nil)
-	router.GET("/auth/oauth/github/callback", nil)
-	router.GET("/auth/oauth/google", nil)
-	router.GET("/auth/oauth/google/callback", nil)
+
+	controller := &AuthController{}
+
+	// router.POST("/auth/register", nil)
+	router.POST("/api/v1/auth/login", controller.HandleAuthLogin)
+	router.POST("/api/v1/auth/logout", nil)
+	router.POST("/api/v1/auth/refresh", nil)
+
+	router.GET("/api/v1/auth/oauth/github", nil)
+	router.GET("/api/v1/auth/oauth/github/callback", nil)
+
+	router.GET("/api/v1/auth/oauth/google", nil)
+	router.GET("/api/v1/auth/oauth/google/callback", nil)
+}
+
+type AuthController struct {
+	localProvider *local.LocalAuthProvider
+}
+
+func NewAuthContoller() *AuthController {
+	s := &AuthController{
+		localProvider: local.NewLocalAuthProvider(),
+	}
+
+	return s
 }

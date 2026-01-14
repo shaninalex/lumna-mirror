@@ -27,11 +27,7 @@ func (s *Client) Config() *config.Config {
 }
 
 func (s *Client) DB() *gorm.DB {
-	conn, ok := s.ctx.Value(internal.ContextDB).(*gorm.DB)
-	if !ok {
-		panic("db not found in context")
-	}
-	return conn
+	return db.GetDB(s.ctx)
 }
 
 func (s *Client) initDB() {
