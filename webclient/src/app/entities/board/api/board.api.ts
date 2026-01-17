@@ -9,29 +9,35 @@ import { BoardModel, BoardPayloadModel } from '../model/board.model';
     providedIn: 'root',
 })
 export class BoardApi {
-    http = inject(HttpClient)
+    http = inject(HttpClient);
 
     List(projectId: number): Observable<BoardModel[]> {
-        return this.http.get<APIResponse<BoardModel[]>>(`${env.API_ROOT}/api/v1/project/${projectId}/boards`, { withCredentials: true }).pipe(
-            map(response => response.data)
-        )
+        return this.http
+            .get<
+                APIResponse<BoardModel[]>
+            >(`/api/v1/project/${projectId}/boards`, { withCredentials: true })
+            .pipe(map((response) => response.data));
     }
 
     Create(projectId: number, payload: BoardPayloadModel): Observable<BoardModel> {
-        return this.http.post<APIResponse<BoardModel>>(`${env.API_ROOT}/api/v1/project/${projectId}/boards`, payload, { withCredentials: true }).pipe(
-            map(response => response.data)
-        )
+        return this.http
+            .post<
+                APIResponse<BoardModel>
+            >(`/api/v1/project/${projectId}/boards`, payload, { withCredentials: true })
+            .pipe(map((response) => response.data));
     }
 
     Delete(boardId: number): Observable<void> {
-        return this.http.delete<APIResponse<void>>(`${env.API_ROOT}/api/v1/board/${boardId}`, {withCredentials: true}).pipe(
-            map(response => response.data)
-        )
+        return this.http
+            .delete<APIResponse<void>>(`/api/v1/board/${boardId}`, { withCredentials: true })
+            .pipe(map((response) => response.data));
     }
 
     Patch(boardId: number, payload: BoardPayloadModel): Observable<BoardModel> {
-        return this.http.patch<APIResponse<BoardModel>>(`${env.API_ROOT}/api/v1/board/${boardId}`, payload, {withCredentials: true}).pipe(
-            map(response => response.data)
-        )
+        return this.http
+            .patch<
+                APIResponse<BoardModel>
+            >(`/api/v1/board/${boardId}`, payload, { withCredentials: true })
+            .pipe(map((response) => response.data));
     }
 }

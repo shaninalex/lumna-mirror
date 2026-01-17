@@ -3,7 +3,6 @@ package web
 import (
 	"context"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal"
@@ -11,6 +10,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/web/api/auth"
 	"gitlab.com/shaninalex/lumna/app/web/api/user"
 	"gitlab.com/shaninalex/lumna/app/web/middlewares"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
 func NewWebApplication(ctx context.Context) *gin.Engine {
@@ -23,9 +23,9 @@ func NewWebApplication(ctx context.Context) *gin.Engine {
 
 	// Middlewares
 	// router.Use(middlewares.Logger())
-	router.Use(cors.Default())
+	router.Use(middlewares.CorsMiddleware())
 	router.Use(middlewares.ClientMiddleware(ctx))
-	router.Use(sessions.Sessions("session", NewCookieStore(conf)))
+	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
 
 	// Controllers
 	public := router.Group("/")

@@ -6,25 +6,26 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
 func (s *AuthController) HandleAuthLogin(c *gin.Context) {
 	// get post payload
 	payload := local.PasswordCredentials{}
 	if err := c.ShouldBindBodyWithJSON(&payload); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errror": err.Error()})
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := payload.Validate(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errror": err.Error()})
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
 	// call authenticate
 	authResult, err := s.localProvider.Authenticate(c.Request.Context(), &payload)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errror": err.Error()})
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
@@ -33,10 +34,9 @@ func (s *AuthController) HandleAuthLogin(c *gin.Context) {
 	session.Set("provider", authResult.Provider)
 
 	if err := session.Save(); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	// return identity
-	c.JSON(http.StatusOK, authResult.Identity)
+	utils.Success(c, authResult.Identity)
 }

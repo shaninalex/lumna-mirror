@@ -1,4 +1,4 @@
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { UserModel } from '@entities/user';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';

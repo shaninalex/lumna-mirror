@@ -1,4 +1,4 @@
-package web
+package utils
 
 import (
 	"net/http"
@@ -15,7 +15,7 @@ func NewCookieStore(conf *config.Config) cookie.Store {
 		MaxAge:   7 * 24 * 60 * 60, // TODO: from comfig ( 7 days  )
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
-		// Secure: true, // enable in HTTPS TODO: from comfig
+		Secure:   false, // enable in HTTPS TODO: from comfig
 	})
 	return store
 }

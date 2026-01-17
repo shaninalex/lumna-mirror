@@ -22,13 +22,6 @@ export class LoginService {
             .pipe(map((response) => response.data));
     }
 
-    public Refresh(): Observable<void> {
-        return this.http.get(`/api/v1/auth/refresh`, { withCredentials: true }).pipe(
-            map(() => void 0),
-            catchError((err) => throwError(() => err)),
-        );
-    }
-
     public Logout(): Observable<void> {
         return this.http.get(`/api/v1/user/logout`, { withCredentials: true }).pipe(
             map(() => void 0),

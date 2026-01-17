@@ -1,26 +1,23 @@
-import {Routes} from "@angular/router";
+import { Routes } from '@angular/router';
 
-import {Home} from "./home/home";
-import {Projects} from './projects/projects';
+import { Home } from './home/home';
+import { Projects } from './projects/projects';
 
-import {authGuard} from './auth.guard';
-import {projectsRoutes} from './projects/projects.routes';
-import {boardRoutes} from './boards/boards.routes';
+import { authGuard } from './auth.guard';
+import { projectsRoutes } from './projects/projects.routes';
+import { boardRoutes } from './boards/boards.routes';
 
 export const routes: Routes = [
     {
-        path: "",
+        path: '',
         component: Home,
         canMatch: [authGuard],
-        title: "Overview"
+        title: 'Overview',
     },
     {
-        path: "projects",
+        path: 'projects',
         component: Projects,
         canMatch: [authGuard],
-        children: [
-            ...projectsRoutes,
-            ...boardRoutes,
-        ]
-    }
-]
+        children: [...projectsRoutes, ...boardRoutes],
+    },
+];

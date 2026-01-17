@@ -1,9 +1,7 @@
-import {Component, inject} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {SessionStore} from '@core/store/session.store';
-import {toObservable} from '@angular/core/rxjs-interop';
-import {tap} from 'rxjs';
-import {CoreService} from '@core/core.service';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { SessionStore } from '@core/store/session.store';
+import { CoreService } from '@core/core.service';
 
 @Component({
     selector: 'app-root',
@@ -16,8 +14,8 @@ export class App {
     readonly sessionStore = inject(SessionStore);
 
     constructor() {
-        toObservable(this.sessionStore.status)
-            .pipe(tap(status => console.log('App: SessionStatus', status)))
-            .subscribe();
+        // toObservable(this.sessionStore.status)
+        //     .pipe(tap(status => console.log('App: SessionStatus', status)))
+        //     .subscribe();
     }
 }

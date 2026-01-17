@@ -5,6 +5,18 @@ import (
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
 )
 
+type AuthController struct {
+	localProvider *local.LocalAuthProvider
+}
+
+func NewAuthContoller() *AuthController {
+	s := &AuthController{
+		localProvider: local.NewLocalAuthProvider(),
+	}
+
+	return s
+}
+
 func NewController(router *gin.RouterGroup) {
 
 	controller := &AuthController{}
@@ -19,16 +31,4 @@ func NewController(router *gin.RouterGroup) {
 
 	router.GET("/api/v1/auth/oauth/google", nil)
 	router.GET("/api/v1/auth/oauth/google/callback", nil)
-}
-
-type AuthController struct {
-	localProvider *local.LocalAuthProvider
-}
-
-func NewAuthContoller() *AuthController {
-	s := &AuthController{
-		localProvider: local.NewLocalAuthProvider(),
-	}
-
-	return s
 }

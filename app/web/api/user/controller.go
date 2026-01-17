@@ -1,15 +1,25 @@
 package user
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/services"
 )
 
 func NewController(router *gin.RouterGroup) {
-	router.GET("/api/v1/user/me", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"email": "test@test.com",
-		})
-	})
+	controller := NewUserContoller()
+
+	router.GET("/api/v1/user/me", controller.Me)
+	router.GET("/api/v1/user/logout", controller.Logout)
+}
+
+type UserController struct {
+	userService *services.UserService
+}
+
+func NewUserContoller() *UserController {
+	s := &UserController{
+		userService: &services.UserService{},
+	}
+
+	return s
 }
