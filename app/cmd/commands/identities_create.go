@@ -17,7 +17,7 @@ func NewIdentitiesCreateCmd() *cobra.Command {
 		Use:   "create [email] [fullname] [password] [active]",
 		Short: "Create identities",
 		Long:  "Require 2 arguments - first: email, second: password. For example:\nlumna identities create test@test.com password",
-		Args:  cobra.MinimumNArgs(2),
+		Args:  cobra.MinimumNArgs(4),
 		Run: func(cmd *cobra.Command, args []string) {
 			c, err := client.NewClient(cmd)
 			if err != nil {
