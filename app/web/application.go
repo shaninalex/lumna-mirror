@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/web/api"
 	"gitlab.com/shaninalex/lumna/app/web/api/auth"
 	"gitlab.com/shaninalex/lumna/app/web/api/user"
 	"gitlab.com/shaninalex/lumna/app/web/middlewares"
@@ -29,6 +30,7 @@ func NewWebApplication(ctx context.Context) *gin.Engine {
 
 	// Controllers
 	public := router.Group("/")
+	public.GET("/_health", api.HealthRoute)
 	auth.NewController(public)
 
 	private := router.Group("/")
