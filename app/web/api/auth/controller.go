@@ -3,10 +3,9 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
-	"gitlab.com/shaninalex/lumna/app/internal/config"
 )
 
-func NewController(conf *config.Config, router *gin.Engine) {
+func NewController(router *gin.RouterGroup) {
 
 	controller := &AuthController{}
 

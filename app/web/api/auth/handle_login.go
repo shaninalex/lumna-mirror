@@ -1,9 +1,9 @@
 package auth
 
 import (
-	"log"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
 )
@@ -28,8 +28,15 @@ func (s *AuthController) HandleAuthLogin(c *gin.Context) {
 		return
 	}
 
-	// set session
-	log.Println("set session with authResult:", authResult)
+	session := sessions.Default(c)
+	session.Set("user_id", authResult.Identity.ID.String())
+	session.Set("provider", authResult.Provider)
 
-	// response
+	if err := session.Save(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	// return identity
+	c.JSON(http.StatusOK, authResult.Identity)
 }

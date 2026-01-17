@@ -30,11 +30,6 @@ func (s *Client) DB() *gorm.DB {
 	return db.GetDB(s.ctx)
 }
 
-func (s *Client) initDB() {
-	cnf := s.Config()
-	s.ctx = context.WithValue(s.ctx, internal.ContextDB, db.Connect(cnf.Database.Url))
-}
-
 func NewClient(cmd *cobra.Command) (*Client, error) {
 	configPath, err := cmd.Flags().GetString("config")
 	if err != nil {

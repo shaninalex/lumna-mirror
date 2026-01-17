@@ -1,10 +1,15 @@
 package user
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
-	"gitlab.com/shaninalex/lumna/app/internal/config"
 )
 
-func NewController(conf *config.Config, router *gin.Engine) {
-	router.GET("/user/me", nil)
+func NewController(router *gin.RouterGroup) {
+	router.GET("/api/v1/user/me", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"email": "test@test.com",
+		})
+	})
 }
