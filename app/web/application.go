@@ -2,6 +2,8 @@ package web
 
 import (
 	"context"
+	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -31,17 +33,7 @@ func NewWebApplication(ctx context.Context) *gin.Engine {
 	router.Use(middlewares.ClientMiddleware(ctx))
 	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
 
-	// Controllers
-	if staticFS := static.GetStaticFS(); staticFS != nil {
-		router.NoRoute(func(c *gin.Context) {
-			if strings.HasPrefix(c.Request.URL.Path, "/api") {
-				c.JSON(http.StatusNotFound, gin.H{"error": "not found"})
-				return
-			}
-			static.SPAHandler(staticFS)(c)
-		})
-	}
-
+	// API Controllers
 	apiRoutes := router.Group("/api")
 	{
 		auth.NewController(apiRoutes)
@@ -52,6 +44,19 @@ func NewWebApplication(ctx context.Context) *gin.Engine {
 	privateApiRoutes.Use(middlewares.AuthRequired())
 	{
 		user.NewController(privateApiRoutes)
+	}
+
+	// Conditionally apply embedded web client build
+	if staticFS := static.GetStaticFS(); staticFS != nil {
+		log.Println("[Lumna] embedd static files")
+		spaHandler := static.SPAHandler(staticFS)
+		router.NoRoute(func(c *gin.Context) {
+			if strings.HasPrefix(c.Request.URL.Path, "/api") {
+				utils.Error(c, http.StatusNotFound, fmt.Errorf("not found"))
+				return
+			}
+			spaHandler(c)
+		})
 	}
 
 	return router
