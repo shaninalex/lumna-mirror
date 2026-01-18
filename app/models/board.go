@@ -34,5 +34,5 @@ func (s *Board) BeforeUpdate(tx *gorm.DB) (err error) {
 }
 
 func (s *Board) String() string {
-	return fmt.Sprintf("<Board title=\"%s\" owner_id=\"%s\">", s.Title, s.ProjectID.String())
+	return fmt.Sprintf("Board id=%s title=%s project=%s", s.ID.String(), s.Title, s.ProjectID.String())
 }

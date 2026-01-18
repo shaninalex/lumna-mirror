@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/cmd/client"
+	"gitlab.com/shaninalex/lumna/app/internal/client"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
@@ -17,7 +17,7 @@ func NewBoardsCreateCmd() *cobra.Command {
 		Long:  "Require 2 arguments - first: project id, second: board title. For example:\nlumna boards create <project UUID> test_board_name",
 		Args:  cobra.MinimumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			c, err := client.NewClient(cmd)
+			c, err := client.NewClientForCLI(cmd)
 			if err != nil {
 				log.Fatal(err)
 			}

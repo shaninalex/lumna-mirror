@@ -9,6 +9,7 @@ func NewProjectsRootCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(NewProjectsCreateCommand())
+	cmd.AddCommand(NewProjectsListCommand())
 
 	return cmd
 }

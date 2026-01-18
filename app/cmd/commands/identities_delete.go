@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/cmd/client"
+	"gitlab.com/shaninalex/lumna/app/internal/client"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
@@ -16,7 +16,7 @@ func NewIdentitiesDeleteCmd() *cobra.Command {
 		Long:  "Require 1 arguments - Identity Id to delete. For example:\nlumna identities delete <uuid>",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			c, err := client.NewClient(cmd)
+			c, err := client.NewClientForCLI(cmd)
 			if err != nil {
 				log.Fatal(err)
 			}

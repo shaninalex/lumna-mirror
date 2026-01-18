@@ -6,8 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/cmd/client"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
+	"gitlab.com/shaninalex/lumna/app/internal/client"
 	"gitlab.com/shaninalex/lumna/app/internal/utils"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
@@ -19,7 +19,7 @@ func NewIdentitiesCreateCmd() *cobra.Command {
 		Long:  "Require 2 arguments - first: email, second: password. For example:\nlumna identities create test@test.com password",
 		Args:  cobra.MinimumNArgs(4),
 		Run: func(cmd *cobra.Command, args []string) {
-			c, err := client.NewClient(cmd)
+			c, err := client.NewClientForCLI(cmd)
 			if err != nil {
 				log.Fatal(err)
 			}

@@ -30,7 +30,7 @@ func (s *Client) DB() *gorm.DB {
 	return db.GetDB(s.ctx)
 }
 
-func NewClient(cmd *cobra.Command) (*Client, error) {
+func NewClientForCLI(cmd *cobra.Command) (*Client, error) {
 	configPath, err := cmd.Flags().GetString("config")
 	if err != nil {
 		return nil, err

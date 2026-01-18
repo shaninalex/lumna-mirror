@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/cmd/client"
+	"gitlab.com/shaninalex/lumna/app/internal/client"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
@@ -14,7 +14,7 @@ func NewMigrateRootCmd() *cobra.Command {
 		Short: "Apply migrations",
 		Args:  cobra.ArbitraryArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			c, err := client.NewClient(cmd)
+			c, err := client.NewClientForCLI(cmd)
 			if err != nil {
 				log.Fatal(err)
 			}
