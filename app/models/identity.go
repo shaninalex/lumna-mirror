@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -29,4 +30,8 @@ func (u *Identity) BeforeCreate(tx *gorm.DB) error {
 func (u *Identity) BeforeUpdate(tx *gorm.DB) (err error) {
 	u.UpdatedAt = time.Now()
 	return nil
+}
+
+func (s *Identity) String() string {
+	return fmt.Sprintf("Identity id=%s title=%s", s.ID.String(), s.Email)
 }

@@ -1,14 +1,10 @@
-import {Component} from '@angular/core';
-import {MainLayout} from '@core/layouts';
+import { Component } from '@angular/core';
+import { MainLayout } from '@core/layouts';
 
 @Component({
     selector: 'app-home',
-    imports: [
-        MainLayout
-    ],
+    imports: [MainLayout],
     templateUrl: './home.html',
     styleUrl: './home.css',
 })
-export class Home {
-
-}
+export class Home {}

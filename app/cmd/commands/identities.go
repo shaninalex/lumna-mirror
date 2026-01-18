@@ -12,7 +12,7 @@ func NewIdentitiesRootCmd() *cobra.Command {
 
 	cmd.AddCommand(NewIdentitiesCreateCmd())
 	cmd.AddCommand(NewIdentitiesDeleteCmd())
-	cmd.AddCommand(NewIdentitiesGetCmd())
+	cmd.AddCommand(NewIdentitiesListCmd())
 
 	return cmd
 }

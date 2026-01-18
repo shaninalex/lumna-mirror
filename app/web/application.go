@@ -14,6 +14,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/static"
 	"gitlab.com/shaninalex/lumna/app/web/api"
 	"gitlab.com/shaninalex/lumna/app/web/api/auth"
+	"gitlab.com/shaninalex/lumna/app/web/api/projects"
 	"gitlab.com/shaninalex/lumna/app/web/api/user"
 	"gitlab.com/shaninalex/lumna/app/web/middlewares"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
@@ -40,10 +41,11 @@ func NewWebApplication(ctx context.Context) *gin.Engine {
 		apiRoutes.GET("/_health", api.HealthRoute)
 	}
 
-	privateApiRoutes := router.Group("/api")
+	privateApiRoutes := router.Group("/api/v1")
 	privateApiRoutes.Use(middlewares.AuthRequired())
 	{
 		user.NewController(privateApiRoutes)
+		projects.NewController(privateApiRoutes)
 	}
 
 	// Conditionally apply embedded web client build

@@ -1,27 +1,27 @@
-import {Routes} from '@angular/router';
-import {projectResolver} from '../resolvers/project.resolver';
+import { Routes } from '@angular/router';
+import { projectResolver } from '../resolvers/project.resolver';
 
-import {ProjectList} from './project-list/project-list';
-import {ProjectDetail} from './project-detail/project-detail';
-import {ProjectEdit} from './project-edit/project-edit';
+import { ProjectList } from './project-list/project-list';
+import { ProjectDetail } from './project-detail/project-detail';
+import { ProjectEdit } from './project-edit/project-edit';
 
 export const projectsRoutes: Routes = [
     {
-        path: "",
+        path: '',
         component: ProjectList,
     },
     {
-        path: ":id",
+        path: ':id',
         component: ProjectDetail,
         resolve: {
-            project: projectResolver
-        }
+            project: projectResolver,
+        },
     },
     {
-        path: ":id/edit",
+        path: ':id/edit',
         component: ProjectEdit,
         resolve: {
-            project: projectResolver
-        }
+            project: projectResolver,
+        },
     },
-]
+];
