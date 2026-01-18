@@ -1,22 +1,33 @@
-import { Component } from '@angular/core';
-import { AuthLayout } from '@core/layouts'
-import {RouterLink} from '@angular/router';
-import {LoginFormFeature} from '@features/auth';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { SessionStore } from '@core/store/session.store';
+import { UserStore } from '@entities/user';
+import { AuthService } from '../api/auth.service';
+import { AuthLayout } from '@core/layouts';
 
 @Component({
     selector: 'app-login',
-    imports: [AuthLayout, RouterLink, LoginFormFeature],
-    template: `
-        <app-auth-layout [hasLogo]="true">
-            <app-login-form-feature />
-            <hr class="my-4 border-gray-300">
-            <div class=" text-center">
-                <a routerLink="/auth/restore" class="text-gray-500 underline">Restore login</a>
-            </div>
-        </app-auth-layout>
-    `,
+    imports: [FormsModule, AuthLayout],
+    templateUrl: './login.html',
     styleUrl: './login.css',
 })
 export class Login {
+    private authService = inject(AuthService);
+    private sessionStore = inject(SessionStore);
+    private userStore = inject(UserStore);
+    private router = inject(Router);
 
+    email = '';
+    password = '';
+
+    onSubmit(): void {
+        this.authService.login(this.email, this.password).subscribe({
+            next: (user) => {
+                this.sessionStore.setAuthenticated(true);
+                this.userStore.setUser(user);
+                this.router.navigate(['/']);
+            },
+        });
+    }
 }

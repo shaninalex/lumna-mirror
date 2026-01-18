@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SessionStore } from '@core/store/session.store';
 import { CoreService } from '@core/core.service';
 
 @Component({
@@ -11,11 +10,4 @@ import { CoreService } from '@core/core.service';
 })
 export class App {
     readonly coreService = inject(CoreService);
-    readonly sessionStore = inject(SessionStore);
-
-    constructor() {
-        // toObservable(this.sessionStore.status)
-        //     .pipe(tap(status => console.log('App: SessionStatus', status)))
-        //     .subscribe();
-    }
 }

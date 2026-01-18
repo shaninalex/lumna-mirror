@@ -1,33 +1,20 @@
-import { patchState, signalStore, withHooks, withState } from '@ngrx/signals';
+import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { UserModel } from './user.model';
-import { Events, withEventHandlers } from '@ngrx/signals/events';
-import { inject } from '@angular/core';
-import { userEvents } from '@entities/user';
-import { tap } from 'rxjs';
 
 type UserState = {
-    user: UserModel | undefined;
+    user: UserModel | null;
 };
 
 const initialState: UserState = {
-    user: undefined,
+    user: null,
 };
 
 export const UserStore = signalStore(
     { providedIn: 'root' },
-    withHooks({
-        onInit() {},
-    }),
     withState(initialState),
-    withEventHandlers((store, events = inject(Events)) => ({
-        setUser$: events.on(userEvents.setUser).pipe(
-            tap((eventData) =>
-                patchState(store, {
-                    user: eventData.payload,
-                }),
-            ),
-        ),
-
-        clear$: events.on(userEvents.clear).pipe(tap(() => patchState(store, { user: undefined }))),
+    withMethods((store) => ({
+        setUser(user: UserModel | null): void {
+            patchState(store, { user });
+        },
     })),
 );

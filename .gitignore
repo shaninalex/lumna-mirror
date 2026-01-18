@@ -18,3 +18,5 @@ bin/*
 
 __debug_*
 cover.out
+
+.claude

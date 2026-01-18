@@ -1,5 +1,4 @@
-import {Component, Input} from '@angular/core';
-
+import { Component, Input } from '@angular/core';
 @Component({
     selector: 'app-auth-layout',
     imports: [],
@@ -9,11 +8,10 @@ import {Component, Input} from '@angular/core';
                 @if (hasLogo) {
                     <img src="img/logo.svg" class="mb-8 w-48 mx-auto" alt="Lumna" />
                 }
-                <ng-content/>
+                <ng-content />
             </div>
         </div>
     `,
-    styleUrl: './auth.css',
 })
 export class AuthLayout {
     @Input() hasLogo: boolean;
