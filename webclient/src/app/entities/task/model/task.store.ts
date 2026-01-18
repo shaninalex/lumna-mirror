@@ -12,7 +12,7 @@ export const TaskStore = signalStore(
     { providedIn: 'root' },
     withEntities<TaskModel>(),
     withMethods((store) => ({
-        boardTasks(boardId: number): TaskModel[] {
+        boardTasks(boardId: string): TaskModel[] {
             return store.entities().filter((p) => p.board_id === boardId);
         },
     })),

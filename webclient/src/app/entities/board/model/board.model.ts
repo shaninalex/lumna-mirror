@@ -1,11 +1,10 @@
 export interface BoardModel {
-    id: number
-    name: string
-    project_id: number
+    id: string;
+    title: string;
+    project_id: string;
 }
 
 export interface BoardPayloadModel {
-    name: string
-    project_id: number
+    title: string;
+    project_id: string;
 }
-

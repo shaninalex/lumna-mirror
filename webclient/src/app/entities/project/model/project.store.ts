@@ -22,7 +22,7 @@ export const ProjectStore = signalStore(
         onInit() {},
     }),
     withMethods((store) => ({
-        byId(id: number): ProjectModel | undefined {
+        byId(id: string): ProjectModel | undefined {
             return store.entities().find((p) => p.id === id);
         },
     })),

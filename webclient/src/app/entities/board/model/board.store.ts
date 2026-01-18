@@ -15,7 +15,7 @@ export const BoardStore = signalStore(
         onInit() {},
     }),
     withMethods((store) => ({
-        projectBoards(projectId: number): BoardModel[] {
+        projectBoards(projectId: string): BoardModel[] {
             return store.entities().filter((p) => p.project_id === projectId);
         },
     })),

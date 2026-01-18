@@ -5,7 +5,6 @@ import { Dispatcher, Events } from '@ngrx/signals/events';
 import { ProjectEditModel } from './model/project-edit.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-
 @Component({
     selector: 'app-project-edit-feature',
     imports: [Field],
@@ -32,7 +31,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
             <div>
                 <button type="submit" class="btn btn-primary">
-                    @if(loading()) {
+                    @if (loading()) {
                         Processing...
                     } @else {
                         Save
@@ -43,11 +42,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     `,
 })
 export class ProjectEditFeature {
-    @Input() projectId: number;
+    @Input() projectId: string;
     private readonly store = inject(ProjectStore);
-    private readonly events = inject(Events)
-    loading = signal(false)
-    project = computed(() => this.store.entities().find(p => p.id === this.projectId));
+    private readonly events = inject(Events);
+    loading = signal(false);
+    project = computed(() => this.store.entities().find((p) => p.id === this.projectId));
 
     projectFormModel = signal<ProjectEditModel>({
         name: '',
@@ -59,7 +58,7 @@ export class ProjectEditFeature {
         effect(() => {
             const p = this.project();
             if (p) {
-                this.projectFormModel.set({ name: p.name });
+                this.projectFormModel.set({ name: p.title });
             }
         });
 
@@ -67,7 +66,6 @@ export class ProjectEditFeature {
             .on(projectEvents.updateProject)
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.loading.set(false));
-
     }
 
     projectForm = form(this.projectFormModel, (schemaPath) => {
@@ -75,8 +73,10 @@ export class ProjectEditFeature {
     });
 
     submit(event: Event): void {
-        event.preventDefault()
-        this.loading.set(true)
-        this.dispatcher.dispatch(projectEvents.patch({ id: this.projectId, data: this.projectFormModel() }))
+        event.preventDefault();
+        this.loading.set(true);
+        this.dispatcher.dispatch(
+            projectEvents.patch({ id: this.projectId, data: this.projectFormModel() }),
+        );
     }
 }

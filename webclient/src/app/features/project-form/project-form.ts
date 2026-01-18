@@ -1,7 +1,7 @@
-import {Component, inject, signal} from '@angular/core';
-import {DialogRef} from '@angular/cdk/dialog';
-import {ProjectPayload} from '@entities/project';
-import {Field, form, required, validate} from '@angular/forms/signals';
+import { Component, inject, signal } from '@angular/core';
+import { DialogRef } from '@angular/cdk/dialog';
+import { ProjectPayload } from '@entities/project';
+import { Field, form, required, validate } from '@angular/forms/signals';
 
 @Component({
     selector: 'app-project-form',
@@ -13,28 +13,28 @@ export class ProjectForm {
     dialogRef = inject<DialogRef<ProjectPayload>>(DialogRef<ProjectPayload>);
 
     projectFormModel = signal<ProjectPayload>({
-        name: '',
+        title: '',
     });
 
     projectForm = form(this.projectFormModel, (schemaPath) => {
-        required(schemaPath.name, {message: 'Name is required'});
-        validate(schemaPath.name, ({value}) => {
+        required(schemaPath.title, { message: 'Name is required' });
+        validate(schemaPath.title, ({ value }) => {
             if (value().trim().length === 0) {
                 return {
                     kind: 'string',
-                    message: 'Name should not be empty string'
-                }
+                    message: 'Name should not be empty string',
+                };
             }
-            return null
-        })
+            return null;
+        });
     });
 
     submit(event: Event): void {
-        event.preventDefault()
-        this.dialogRef.close(this.projectFormModel())
+        event.preventDefault();
+        this.dialogRef.close(this.projectFormModel());
     }
 
     cancel(): void {
-        this.dialogRef.close()
+        this.dialogRef.close();
     }
 }

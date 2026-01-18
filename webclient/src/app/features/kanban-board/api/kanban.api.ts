@@ -9,7 +9,7 @@ import { KanbanBoardChangeOrderPayload } from '../model/kanban.model';
 export class KanbanApi {
     http = inject(HttpClient);
 
-    public Patch(boardId: number, payload: KanbanBoardChangeOrderPayload): Observable<any> {
+    public Patch(boardId: string, payload: KanbanBoardChangeOrderPayload): Observable<any> {
         return this.http
             .patch<
                 APIResponse<any>

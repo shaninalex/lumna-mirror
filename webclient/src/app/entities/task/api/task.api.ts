@@ -11,7 +11,7 @@ import { TaskModel, TaskPayloadModel } from '@entities/task';
 export class TaskApi {
     http = inject(HttpClient);
 
-    List(boardId: number): Observable<TaskModel[]> {
+    List(boardId: string): Observable<TaskModel[]> {
         return this.http
             .get<
                 APIResponse<TaskModel[]>
@@ -19,7 +19,7 @@ export class TaskApi {
             .pipe(map((response) => response.data));
     }
 
-    Create(boardId: number, payload: TaskPayloadModel): Observable<TaskModel> {
+    Create(boardId: string, payload: TaskPayloadModel): Observable<TaskModel> {
         return this.http
             .post<
                 APIResponse<TaskModel>
@@ -27,19 +27,19 @@ export class TaskApi {
             .pipe(map((response) => response.data));
     }
 
-    Get(taskId: number): Observable<TaskModel> {
+    Get(taskId: string): Observable<TaskModel> {
         return this.http
             .delete<APIResponse<TaskModel>>(`/api/v1/task/${taskId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
-    Delete(taskId: number): Observable<void> {
+    Delete(taskId: string): Observable<void> {
         return this.http
             .delete<APIResponse<void>>(`/api/v1/task/${taskId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
-    Patch(taskId: number, payload: TaskPayloadModel): Observable<TaskModel> {
+    Patch(taskId: string, payload: TaskPayloadModel): Observable<TaskModel> {
         return this.http
             .patch<
                 APIResponse<TaskModel>

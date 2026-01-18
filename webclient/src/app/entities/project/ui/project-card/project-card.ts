@@ -1,21 +1,20 @@
-import {Component, Input} from '@angular/core';
-import {ProjectModel} from '@entities/project';
-import {RouterLink} from '@angular/router';
-import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';
+import { Component, Input } from '@angular/core';
+import { ProjectModel } from '@entities/project';
+import { RouterLink } from '@angular/router';
+import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 
 @Component({
     selector: 'app-project-card',
-    imports: [
-        RouterLink,
-        CdkMenu,
-        CdkMenuTrigger
-    ],
+    imports: [RouterLink, CdkMenu, CdkMenuTrigger],
     template: `
         <div class="bg-gray-100 rounded-xl p-4 block">
             <div class="flex justify-between">
-                <a [routerLink]="['/projects', project.id]" class="flex justify-between items-center">
+                <a
+                    [routerLink]="['/projects', project.id]"
+                    class="flex justify-between items-center"
+                >
                     <i class="fa-regular fa-calendar-days"></i>
-                    <div>{{ project.name }}</div>
+                    <div>{{ project.title }}</div>
                 </a>
 
                 <button [cdkMenuTriggerFor]="menu">
@@ -32,5 +31,5 @@ import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';
     `,
 })
 export class ProjectCard {
-    @Input() project: ProjectModel
+    @Input() project: ProjectModel;
 }

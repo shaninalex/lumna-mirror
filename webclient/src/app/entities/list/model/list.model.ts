@@ -1,11 +1,11 @@
 export interface ListModel {
-    id: number
-    name: string
-    order: number
-    board_id: number
+    id: string;
+    title: string;
+    order: number;
+    board_id: string;
 }
 
 export interface ListPayloadModel {
-    name: string
-    order: number
+    title: string;
+    order: number;
 }

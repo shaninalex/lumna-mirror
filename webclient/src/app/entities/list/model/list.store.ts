@@ -22,7 +22,7 @@ export const ListStore = signalStore(
         onInit() {},
     }),
     withMethods((store) => ({
-        boardLists(boardId: number): ListModel[] {
+        boardLists(boardId: string): ListModel[] {
             return store
                 .entities()
                 .filter((p) => p.board_id === boardId)

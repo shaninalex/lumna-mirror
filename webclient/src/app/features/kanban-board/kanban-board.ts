@@ -1,9 +1,13 @@
-import {Component, effect, inject, input, signal} from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { BoardModel } from '@entities/board';
-import {ListModel, ListStore} from '@entities/list';
+import { ListModel, ListStore } from '@entities/list';
 import { NewColumnForm } from '@features/kanban-board/components';
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
-import {ListDeleteFeature, ListEditNameFeature, TaskFastFormFeature} from '@root/src/app/features';
+import {
+    ListDeleteFeature,
+    ListEditNameFeature,
+    TaskFastFormFeature,
+} from '@root/src/app/features';
 import { taskEvents, TaskModel, TaskStore } from '@entities/task';
 import { TaskCard } from '@entities/task/ui/task-card/task-card';
 import {
@@ -35,13 +39,13 @@ import { Dispatcher } from '@ngrx/signals/events';
         TaskFastFormFeature,
     ],
     template: `
-        <div cdkDropList
+        <div
+            cdkDropList
             cdkDropListOrientation="horizontal"
             [cdkDropListData]="lists()"
-            (cdkDropListDropped)="dropList($event)">
-
-            <div cdkDropListGroup
-                class="flex items-start gap-4 overflow-x-scroll w-full">
+            (cdkDropListDropped)="dropList($event)"
+        >
+            <div cdkDropListGroup class="flex items-start gap-4 overflow-x-scroll w-full">
                 @for (l of lists(); track l.id) {
                     <div cdkDrag class="card bg-gray-100 w-[280px] flex-shrink-0">
                         <div class="flex items-center justify-between gap-2 mb-4">
@@ -54,17 +58,25 @@ import { Dispatcher } from '@ngrx/signals/events';
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <ng-template #menu>
-                                    <div class="bg-white border border-gray-200 rounded-xl p-4" cdkMenu>
-                                        <app-list-delete-feature [listId]="l.id" [listName]="l.name" />
+                                    <div
+                                        class="bg-white border border-gray-200 rounded-xl p-4"
+                                        cdkMenu
+                                    >
+                                        <app-list-delete-feature
+                                            [listId]="l.id"
+                                            [listName]="l.title"
+                                        />
                                     </div>
                                 </ng-template>
                             </div>
                         </div>
 
-                        <div class="min-h-[100px] flex flex-col gap-2 mb-4"
+                        <div
+                            class="min-h-[100px] flex flex-col gap-2 mb-4"
                             cdkDropList
                             [cdkDropListData]="listTasks(l.id)"
-                            (cdkDropListDropped)="dropTask($event, l)">
+                            (cdkDropListDropped)="dropTask($event, l)"
+                        >
                             @for (task of listTasks(l.id); track task.id) {
                                 <div cdkDrag [cdkDragData]="task">
                                     <app-task-card [task]="task" />
@@ -72,14 +84,17 @@ import { Dispatcher } from '@ngrx/signals/events';
                             }
                         </div>
 
-                        <app-task-fast-form-feature [list]="l" [task_count]="listTasks(l.id).length" />
+                        <app-task-fast-form-feature
+                            [list]="l"
+                            [task_count]="listTasks(l.id).length"
+                        />
                     </div>
                 }
                 <app-new-column-form [board]="board()" [lists_length]="lists_length" />
             </div>
         </div>
     `,
-    providers: [KanbanApi]
+    providers: [KanbanApi],
 })
 export class KanbanBoardFeature {
     private readonly dispatcher = inject(Dispatcher);
@@ -97,13 +112,13 @@ export class KanbanBoardFeature {
             if (!board) return;
             this.lists.set(this.listStore.boardLists(board.id));
             this.tasks.set(this.taskStore.boardTasks(board.id));
-        })
+        });
     }
 
     board = input<BoardModel>();
 
-    listTasks(list_id: number): TaskModel[] {
-        return this.tasks().filter(t => t.list_id === list_id)
+    listTasks(list_id: string): TaskModel[] {
+        return this.tasks().filter((t) => t.list_id === list_id);
     }
 
     dropTask(event: CdkDragDrop<TaskModel[]>, l: ListModel) {
@@ -113,12 +128,13 @@ export class KanbanBoardFeature {
 
         if (isSameList) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-            // this._updateTaskOrders(event.previousContainer.data);
             const p = {
                 listId: l.id,
-                tasks: this._buildTasksPayload(event.container.data)
-            }
-            this.service.Patch(board.id, p).subscribe(() => this.dispatcher.dispatch(taskEvents.changeOrder(p)));
+                tasks: this._buildTasksPayload(event.container.data),
+            };
+            this.service
+                .Patch(board.id, p)
+                .subscribe(() => this.dispatcher.dispatch(taskEvents.changeOrder(p)));
         } else {
             transferArrayItem(
                 event.previousContainer.data,
@@ -131,32 +147,39 @@ export class KanbanBoardFeature {
 
             const p = {
                 lists: [
-                    { id: event.item.data.list_id, tasks: this._buildTasksPayload(event.previousContainer.data) },
-                    { id: l.id, tasks: this._buildTasksPayload(event.container.data) }
-                ]
-            }
-            this.service.Patch(board.id, p).subscribe(() => this.dispatcher.dispatch(taskEvents.changeOrder(p)));
+                    {
+                        id: event.item.data.list_id,
+                        tasks: this._buildTasksPayload(event.previousContainer.data),
+                    },
+                    { id: l.id, tasks: this._buildTasksPayload(event.container.data) },
+                ],
+            };
+            this.service
+                .Patch(board.id, p)
+                .subscribe(() => this.dispatcher.dispatch(taskEvents.changeOrder(p)));
         }
     }
 
     dropList(event: CdkDragDrop<ListModel[]>) {
         moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
-        this.lists().forEach((list, index) => list.order = index);
+        this.lists().forEach((list, index) => (list.order = index));
 
         const board = this.board();
         if (!board) return;
 
         const p = {
-            lists: this.lists().map(list => ({ id: list.id, order: list.order }))
-        }
-        this.service.Patch(board.id, p).subscribe(() => this.dispatcher.dispatch(listEvents.changeOrder(p)))
+            lists: this.lists().map((list) => ({ id: list.id, order: list.order })),
+        };
+        this.service
+            .Patch(board.id, p)
+            .subscribe(() => this.dispatcher.dispatch(listEvents.changeOrder(p)));
     }
 
     private _updateTaskOrders(tasks: TaskModel[]): void {
-        tasks.forEach((task, index) => task.order = index);
+        tasks.forEach((task, index) => (task.order = index));
     }
 
-    private _buildTasksPayload(tasks: TaskModel[]): { id: number; order: number }[] {
-        return tasks.map(task => ({ id: task.id, order: task.order }));
+    private _buildTasksPayload(tasks: TaskModel[]): { id: string; order: number }[] {
+        return tasks.map((task) => ({ id: task.id, order: task.order }));
     }
 }

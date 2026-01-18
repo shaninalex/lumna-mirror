@@ -1,14 +1,14 @@
-import {eventGroup} from '@ngrx/signals/events';
-import {type} from '@ngrx/signals';
-import {BoardModel, BoardPayloadModel} from '@entities/board';
+import { eventGroup } from '@ngrx/signals/events';
+import { type } from '@ngrx/signals';
+import { BoardModel, BoardPayloadModel } from '@entities/board';
 
 export const boardEvents = eventGroup({
     source: 'Board',
     events: {
-        getList: type<number>(),
+        getList: type<string>(),
         create: type<BoardPayloadModel>(),
-        patch: type<{boardId: number, data: BoardPayloadModel}>(),
-        delete: type<number>(),
+        patch: type<{ boardId: string; data: BoardPayloadModel }>(),
+        delete: type<string>(),
 
         setList: type<BoardModel[]>(),
         set: type<BoardModel>(),
@@ -17,6 +17,6 @@ export const boardEvents = eventGroup({
 
         // internal, do not used in components
         _patchSuccess: type<BoardModel>(),
-        _deleteSuccess: type<number>(),
+        _deleteSuccess: type<string>(),
     },
 });

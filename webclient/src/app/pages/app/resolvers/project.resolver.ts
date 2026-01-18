@@ -15,7 +15,7 @@ export const projectResolver: ResolveFn<ProjectModel> = (
     const store = inject(ProjectStore);
 
     const ui = inject(UiService);
-    const id = parseInt(route.paramMap.get('id')!);
+    const id = route.paramMap.get('id')!;
 
     let prefix = '';
     if (route.url.find((u) => u.path.includes('edit'))) {
@@ -28,7 +28,7 @@ export const projectResolver: ResolveFn<ProjectModel> = (
             map((projects) => projects.find((p) => p.id === id)!),
             tap((project) => {
                 dispatcher.dispatch(boardEvents.getList(project.id));
-                ui.setPageTitle(`${prefix}${project.name}`);
+                ui.setPageTitle(`${prefix}${project.title}`);
             }),
         ),
     );

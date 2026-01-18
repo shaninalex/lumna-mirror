@@ -1,13 +1,17 @@
-<form (submit)="submit($event)" class="flex flex-col gap-2 ">
+<form (submit)="submit($event)" class="flex flex-col gap-2">
     <div>
-        <input class="border block w-full rounded-lg px-2 py-1 border-gray-400"
-               type="text" placeholder="Project name" [field]="projectForm.name" />
-        @if (projectForm.name().touched()) {
-            <ul class="error-list">
-                @for (error of projectForm.name().errors(); track error) {
-                    <li class="text-red-500 text-sm">{{ error.message }}</li>
-                }
-            </ul>
+        <input
+            class="border block w-full rounded-lg px-2 py-1 border-gray-400"
+            type="text"
+            placeholder="Project title"
+            [field]="projectForm.title"
+        />
+        @if (projectForm.title().touched()) {
+        <ul class="error-list">
+            @for (error of projectForm.title().errors(); track error) {
+            <li class="text-red-500 text-sm">{{ error.message }}</li>
+            }
+        </ul>
         }
     </div>
 
@@ -20,8 +24,11 @@
             Create
         </button>
 
-        <button type="button" (click)="cancel()"
-                class="bg-gray-200 text-white rounded-lg px-2 py-1 cursor-pointer text-sm">
+        <button
+            type="button"
+            (click)="cancel()"
+            class="bg-gray-200 text-white rounded-lg px-2 py-1 cursor-pointer text-sm"
+        >
             Cancel
         </button>
     </div>

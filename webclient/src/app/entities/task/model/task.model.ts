@@ -1,16 +1,16 @@
 export interface TaskModel {
-    id: number
-    board_id: number
-    list_id: number
-    name: string
-    order: number
-    done: boolean
-    created_at: Date
-    updated_at: Date
+    id: string;
+    board_id: string;
+    list_id: string;
+    title: string;
+    order: number;
+    done: boolean;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface TaskPayloadModel {
-    name: string
-    list_id: number
-    order: number
+    title: string;
+    list_id: string;
+    order: number;
 }

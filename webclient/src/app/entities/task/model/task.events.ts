@@ -6,12 +6,12 @@ import { KanbanBoardChangeOrderPayload } from '@features/kanban-board/model/kanb
 export const taskEvents = eventGroup({
     source: 'Task',
     events: {
-        getTasks: type<{ board_id: number }>(),
-        create: type<{ board_id: number, data: TaskPayloadModel }>(),
-        patch: type<{ task_id: number, data: TaskPayloadModel }>(),
+        getTasks: type<{ board_id: string }>(),
+        create: type<{ board_id: string; data: TaskPayloadModel }>(),
+        patch: type<{ task_id: string; data: TaskPayloadModel }>(),
         changeOrder: type<KanbanBoardChangeOrderPayload>(),
-        
-        delete: type<{ task_id: number }>(),
+
+        delete: type<{ task_id: string }>(),
 
         setTasks: type<TaskModel[]>(),
         setTask: type<TaskModel>(),
@@ -19,6 +19,6 @@ export const taskEvents = eventGroup({
         failed: type<any>(),
 
         _patchSuccess: type<TaskModel>(),
-        _deleteSuccess: type<{ task_id: number }>(),
+        _deleteSuccess: type<{ task_id: string }>(),
     },
 });

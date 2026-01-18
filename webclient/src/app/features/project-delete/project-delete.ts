@@ -17,31 +17,32 @@ import { Dispatcher, Events } from '@ngrx/signals/events';
 })
 export class ProjectDeleteFeature {
     dialog = inject(Dialog);
-    @Input() projectId: number
+    @Input() projectId: string;
 
-    private readonly dispatcher = inject(Dispatcher)
+    private readonly dispatcher = inject(Dispatcher);
     private readonly store = inject(ProjectStore);
-    private readonly events = inject(Events)
-    private router = inject(Router)
+    private readonly events = inject(Events);
+    private router = inject(Router);
 
-    project = computed(() => this.store.entities().find(p => p.id === this.projectId));
+    project = computed(() => this.store.entities().find((p) => p.id === this.projectId));
 
     constructor() {
         this.events
             .on(projectEvents._deleteProjectSuccess)
             .pipe(takeUntilDestroyed())
-            .subscribe(() => this.router.navigate(["/projects"]));
+            .subscribe(() => this.router.navigate(['/projects']));
     }
 
     openDialog(): void {
-        const dialogRef = this.dialog.open<boolean>(DeleteProjectDialog, { data: this.project()?.name });
+        const dialogRef = this.dialog.open<boolean>(DeleteProjectDialog, {
+            data: this.project()?.title,
+        });
 
-        dialogRef.closed.subscribe(result => {
-            if (result) this.dispatcher.dispatch(projectEvents.deleteProject(this.projectId))
+        dialogRef.closed.subscribe((result) => {
+            if (result) this.dispatcher.dispatch(projectEvents.deleteProject(this.projectId));
         });
     }
 }
-
 
 @Component({
     selector: 'app-project-delete-feature-dialog',
@@ -49,17 +50,31 @@ export class ProjectDeleteFeature {
         <h1 class="text-lg font-bold">Are you sure want to delete project {{ projectName }}?</h1>
         <p class="mb-2">All data related to that project will be deleted</p>
         <div class="flex gap-2">
-            <button (click)="confirm()" class="bg-red-500 text-white rounded-lg px-2 py-1 cursor-pointer">delete</button>
-            <button (click)="cancel()" class="bg-gray-400 text-white rounded-lg px-2 py-1 cursor-pointer">Cancel</button>
+            <button
+                (click)="confirm()"
+                class="bg-red-500 text-white rounded-lg px-2 py-1 cursor-pointer"
+            >
+                delete
+            </button>
+            <button
+                (click)="cancel()"
+                class="bg-gray-400 text-white rounded-lg px-2 py-1 cursor-pointer"
+            >
+                Cancel
+            </button>
         </div>
     `,
     imports: [FormsModule],
-    host: { 'class': 'modal' }
+    host: { class: 'modal' },
 })
 export class DeleteProjectDialog {
     dialogRef = inject<DialogRef<boolean>>(DialogRef<boolean>);
     projectName = inject(DIALOG_DATA);
 
-    confirm(): void { this.dialogRef.close(true) }
-    cancel(): void { this.dialogRef.close(false) }
+    confirm(): void {
+        this.dialogRef.close(true);
+    }
+    cancel(): void {
+        this.dialogRef.close(false);
+    }
 }

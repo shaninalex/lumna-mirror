@@ -12,10 +12,10 @@ export const projectEvents = eventGroup({
         createProject: type<ProjectPayload>(),
         setProject: type<ProjectModel>(),
 
-        deleteProject: type<number>(),
-        _deleteProjectSuccess: type<number>(),
+        deleteProject: type<string>(),
+        _deleteProjectSuccess: type<string>(),
 
-        patch: type<{id: number, data: ProjectEditModel}>(),
+        patch: type<{ id: string; data: ProjectEditModel }>(),
 
         updateProject: type<ProjectModel>(),
 
