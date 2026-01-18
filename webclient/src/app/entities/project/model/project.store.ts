@@ -1,6 +1,6 @@
 import { ProjectModel } from './project.model';
 import { patchState, signalStore, withHooks, withMethods } from '@ngrx/signals';
-import { Events, withEventHandlers } from '@ngrx/signals/events';
+import { Dispatcher, Events, withEventHandlers } from '@ngrx/signals/events';
 import { inject } from '@angular/core';
 import { filter, switchMap, tap } from 'rxjs';
 import { mapResponse } from '@ngrx/operators';
@@ -14,6 +14,7 @@ import {
     withEntities,
 } from '@ngrx/signals/entities';
 import { coreEvents } from '@core/store/core.store';
+import { boardEvents } from '@entities/board/model/board.events';
 
 export const ProjectStore = signalStore(
     { providedIn: 'root' },
@@ -27,12 +28,22 @@ export const ProjectStore = signalStore(
         },
     })),
     withEventHandlers(
-        (store, events = inject(Events), projectService = inject(ProjectService)) => ({
+        (
+            store,
+            events = inject(Events),
+            projectService = inject(ProjectService),
+            dispatcher = inject(Dispatcher),
+        ) => ({
             actionGetProjects$: events.on(projectEvents.getProjects).pipe(
                 switchMap(() =>
                     projectService.GetProjects().pipe(
                         mapResponse({
-                            next: (projects) => projectEvents.setProjects(projects),
+                            next: (projects) => {
+                                projects.forEach((project) => {
+                                    dispatcher.dispatch(boardEvents.setList(project.boards));
+                                });
+                                return projectEvents.setProjects(projects);
+                            },
                             error: (error) => coreEvents.dataRequestFailed(String(error)),
                         }),
                     ),

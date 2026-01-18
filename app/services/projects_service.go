@@ -17,7 +17,7 @@ func NewProjectService() *ProjectService {
 func (s *ProjectService) List(ctx context.Context) ([]models.Project, error) {
 	database := db.GetDB(ctx)
 	projects := []models.Project{}
-	if result := database.Find(&projects); result.Error != nil {
+	if result := database.Preload("Boards").Find(&projects); result.Error != nil {
 		return nil, result.Error
 	}
 	return projects, nil

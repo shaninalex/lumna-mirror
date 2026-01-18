@@ -13,9 +13,9 @@ type Project struct {
 	Title string    `json:"title"`
 
 	OwnerID uuid.UUID `gorm:"type:uuid;not null;index" json:"owner_id"`
-	Owner   Identity  `gorm:"foreignKey:OwnerID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Owner   Identity  `gorm:"foreignKey:OwnerID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"-"`
 
-	Boards []Board
+	Boards []Board `json:"boards"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

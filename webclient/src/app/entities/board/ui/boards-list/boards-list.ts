@@ -25,5 +25,10 @@ import { RouterLink } from '@angular/router';
 export class BoardsList {
     @Input() projectId: string;
     private readonly boardStore = inject(BoardStore);
+
     boards = computed(() => this.boardStore.projectBoards(this.projectId));
+
+    constructor() {
+        this.boardStore.projectBoards(this.projectId);
+    }
 }
