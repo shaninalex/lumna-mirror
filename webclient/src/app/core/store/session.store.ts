@@ -84,7 +84,6 @@ export const SessionStore = signalStore(
             ),
 
             unauthenticated$: events.on(sessionEvents.sessionFailed).pipe(
-                tap(() => router.navigate(['/auth/login'])),
                 tap(() => patchState(store, { status: 'unauthenticated' })),
             ),
         }),

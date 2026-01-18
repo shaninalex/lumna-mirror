@@ -8,11 +8,13 @@ var/
 frontend/node_modules
 
 config/config.dev.yaml
-app2/web/embed/*
-!app2/web/embed/.gitkeep
+app/static/resources/*
+!app/static/resources/.gitkeep
+
+bin/*
+!bin/.gitkeep
 
 *.db
-bin/
 
 __debug_*
 cover.out

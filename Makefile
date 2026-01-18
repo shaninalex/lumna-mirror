@@ -15,12 +15,16 @@ migrate_down:
 		-database "sqlite3://lumna.db" \
 		-verbose down $(N)
 
-build:
-	cd app/frontend && \
+build_frontend:
+	cd webclient && \
 	yarn build && \
-	cd ../../ && \
-	go build -tags embed -o bin/lumna ./app/cmd/web/
+	cd ../
 
+build:
+	go build -o bin/lumna ./app
+
+build_embed:
+	go build -tags embed -o bin/lumna_embed ./app
 
 dir_clear:
 	rm -rf ~/.local/share/lumna/

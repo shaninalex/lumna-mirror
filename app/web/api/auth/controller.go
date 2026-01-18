@@ -22,13 +22,13 @@ func NewController(router *gin.RouterGroup) {
 	controller := &AuthController{}
 
 	// router.POST("/auth/register", nil)
-	router.POST("/api/v1/auth/login", controller.HandleAuthLogin)
-	router.POST("/api/v1/auth/logout", nil)
-	router.POST("/api/v1/auth/refresh", nil)
+	router.POST("/v1/auth/login", controller.HandleAuthLogin)
+	// router.POST("/api/v1/auth/logout", nil)
+	// router.POST("/api/v1/auth/refresh", nil)
 
-	router.GET("/api/v1/auth/oauth/github", nil)
-	router.GET("/api/v1/auth/oauth/github/callback", nil)
+	// router.GET("/api/v1/auth/oauth/github", nil)
+	// router.GET("/api/v1/auth/oauth/github/callback", nil)
 
-	router.GET("/api/v1/auth/oauth/google", nil)
-	router.GET("/api/v1/auth/oauth/google/callback", nil)
+	// router.GET("/api/v1/auth/oauth/google", nil)
+	// router.GET("/api/v1/auth/oauth/google/callback", nil)
 }

@@ -8,8 +8,8 @@ import (
 func NewController(router *gin.RouterGroup) {
 	controller := NewUserContoller()
 
-	router.GET("/api/v1/user/me", controller.Me)
-	router.GET("/api/v1/user/logout", controller.Logout)
+	router.GET("/v1/user/me", controller.Me)
+	router.GET("/v1/user/logout", controller.Logout)
 }
 
 type UserController struct {

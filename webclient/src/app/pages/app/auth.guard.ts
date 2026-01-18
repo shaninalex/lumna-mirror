@@ -1,4 +1,4 @@
-import { CanMatchFn } from '@angular/router';
+import { CanMatchFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { userEvents } from '@entities/user';
 import { Dispatcher } from '@ngrx/signals/events';
@@ -9,10 +9,13 @@ import { filter, map, take } from 'rxjs';
 export const authGuard: CanMatchFn = () => {
     const dispatcher = inject(Dispatcher);
     const sessionStore = inject(SessionStore);
+    const router = inject(Router);
     const status = sessionStore.status();
 
     if (status === 'authenticated') return true;
-    if (status === 'unauthenticated') return false;
+    if (status === 'unauthenticated') {
+        return router.createUrlTree(['/auth/login']);
+    }
 
     // Trigger bootstrap if idle
     if (status === 'idle') {
@@ -23,6 +26,6 @@ export const authGuard: CanMatchFn = () => {
     return toObservable(sessionStore.status).pipe(
         filter((s) => s === 'authenticated' || s === 'unauthenticated'),
         take(1),
-        map((s) => s === 'authenticated'),
+        map((s) => s === 'authenticated' ? true : router.createUrlTree(['/auth/login'])),
     );
 };

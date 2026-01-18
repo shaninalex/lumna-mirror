@@ -2,11 +2,14 @@ package web
 
 import (
 	"context"
+	"net/http"
+	"strings"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/static"
 	"gitlab.com/shaninalex/lumna/app/web/api"
 	"gitlab.com/shaninalex/lumna/app/web/api/auth"
 	"gitlab.com/shaninalex/lumna/app/web/api/user"
@@ -29,13 +32,27 @@ func NewWebApplication(ctx context.Context) *gin.Engine {
 	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
 
 	// Controllers
-	public := router.Group("/")
-	public.GET("/_health", api.HealthRoute)
-	auth.NewController(public)
+	if staticFS := static.GetStaticFS(); staticFS != nil {
+		router.NoRoute(func(c *gin.Context) {
+			if strings.HasPrefix(c.Request.URL.Path, "/api") {
+				c.JSON(http.StatusNotFound, gin.H{"error": "not found"})
+				return
+			}
+			static.SPAHandler(staticFS)(c)
+		})
+	}
 
-	private := router.Group("/")
-	private.Use(middlewares.AuthRequired())
-	user.NewController(private)
+	apiRoutes := router.Group("/api")
+	{
+		auth.NewController(apiRoutes)
+		apiRoutes.GET("/_health", api.HealthRoute)
+	}
+
+	privateApiRoutes := router.Group("/api")
+	privateApiRoutes.Use(middlewares.AuthRequired())
+	{
+		user.NewController(privateApiRoutes)
+	}
 
 	return router
 }
