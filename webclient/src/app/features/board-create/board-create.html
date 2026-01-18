@@ -1,0 +1,36 @@
+<h3 class="font-medium">Create new board</h3>
+<form (submit)="submit($event)" class="flex flex-col gap-2">
+    <div>
+        <input
+            class="border block w-full rounded-lg px-2 py-1 border-gray-400"
+            type="text"
+            placeholder="Board title"
+            [field]="boardForm.title"
+        />
+        @if (boardForm.title().touched() && boardForm.title().errors()) {
+        <ul class="error-list">
+            @for (error of boardForm.title().errors(); track error) {
+            <li class="text-red-500 text-sm">{{ error.message }}</li>
+            }
+        </ul>
+        }
+    </div>
+
+    <div class="flex items-center gap-4">
+        <button
+            type="submit"
+            class="bg-teal-500 text-white rounded-lg px-2 py-1 cursor-pointer text-sm disabled:opacity-50"
+            [disabled]="boardForm().invalid()"
+        >
+            Create
+        </button>
+
+        <button
+            type="button"
+            (pointerdown)="cancel()"
+            class="bg-gray-200 text-white rounded-lg px-2 py-1 cursor-pointer text-sm"
+        >
+            Cancel
+        </button>
+    </div>
+</form>

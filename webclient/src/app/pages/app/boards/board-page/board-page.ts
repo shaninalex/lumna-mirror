@@ -1,21 +1,16 @@
-import {Component, inject, signal} from '@angular/core';
-import {BoardModel} from '@entities/board';
-import {ActivatedRoute, RouterLink} from '@angular/router';
-import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';
-import {KanbanBoardFeature} from '@features/kanban-board/kanban-board';
+import { Component, inject, signal } from '@angular/core';
+import { BoardModel } from '@entities/board';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
+import { KanbanBoardFeature } from '@features/kanban-board/kanban-board';
 
 @Component({
     selector: 'app-board-page',
-    imports: [
-        CdkMenu,
-        CdkMenuTrigger,
-        RouterLink,
-        KanbanBoardFeature
-    ],
+    imports: [CdkMenu, CdkMenuTrigger, RouterLink, KanbanBoardFeature],
     template: `
         <div class="card bg-lime-200 flex items-top justify-between mb-4">
             <div>
-                <div class="font-medium">{{ board()?.name }}</div>
+                <div class="font-medium">{{ board()?.title }}</div>
             </div>
 
             <div>
@@ -39,8 +34,8 @@ export class BoardPage {
     board = signal<BoardModel | undefined>(undefined);
 
     constructor() {
-        this.route.data.subscribe(data => {
-            this.board.set(data['board'])
-        })
+        this.route.data.subscribe((data) => {
+            this.board.set(data['board']);
+        });
     }
 }

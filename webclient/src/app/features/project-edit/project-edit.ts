@@ -11,10 +11,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     template: `
         <form (submit)="submit($event)">
             <div class="mb-2">
-                <input class="input" placeholder="Project name" [field]="projectForm.name" />
-                @if (projectForm.name().touched()) {
+                <input class="input" placeholder="Project name" [field]="projectForm.title" />
+                @if (projectForm.title().touched()) {
                     <ul class="error-list">
-                        @for (error of projectForm.name().errors(); track error) {
+                        @for (error of projectForm.title().errors(); track error) {
                             <li class="text-red-500 text-sm">{{ error.message }}</li>
                         }
                     </ul>
@@ -49,7 +49,7 @@ export class ProjectEditFeature {
     project = computed(() => this.store.entities().find((p) => p.id === this.projectId));
 
     projectFormModel = signal<ProjectEditModel>({
-        name: '',
+        title: '',
     });
     errors = signal<string[]>([]);
     readonly dispatcher = inject(Dispatcher);
@@ -58,7 +58,7 @@ export class ProjectEditFeature {
         effect(() => {
             const p = this.project();
             if (p) {
-                this.projectFormModel.set({ name: p.title });
+                this.projectFormModel.set({ title: p.title });
             }
         });
 
@@ -69,7 +69,7 @@ export class ProjectEditFeature {
     }
 
     projectForm = form(this.projectFormModel, (schemaPath) => {
-        required(schemaPath.name, { message: 'Name is required' });
+        required(schemaPath.title, { message: 'Title is required' });
     });
 
     submit(event: Event): void {

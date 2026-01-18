@@ -1,8 +1,7 @@
-import { Component, computed, inject, Input, input } from '@angular/core';
+import { Component, inject, Input, input } from '@angular/core';
 import { BoardModel } from '@entities/board';
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Dispatcher, Events } from '@ngrx/signals/events';
-import { projectEvents, ProjectStore } from '@entities/project';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -17,7 +16,7 @@ import { boardEvents } from '@entities/board/model/board.events';
     `,
 })
 export class BoardDeleteFeature {
-    @Input() projectId: number;
+    @Input() projectId: string;
     dialog = inject(Dialog);
     board = input<BoardModel>();
 

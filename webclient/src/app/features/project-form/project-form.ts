@@ -17,12 +17,12 @@ export class ProjectForm {
     });
 
     projectForm = form(this.projectFormModel, (schemaPath) => {
-        required(schemaPath.title, { message: 'Name is required' });
+        required(schemaPath.title, { message: 'Title is required' });
         validate(schemaPath.title, ({ value }) => {
             if (value().trim().length === 0) {
                 return {
                     kind: 'string',
-                    message: 'Name should not be empty string',
+                    message: 'Title should not be empty string',
                 };
             }
             return null;

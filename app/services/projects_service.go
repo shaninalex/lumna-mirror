@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/internal/db"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
@@ -21,4 +22,42 @@ func (s *ProjectService) List(ctx context.Context) ([]models.Project, error) {
 		return nil, result.Error
 	}
 	return projects, nil
+}
+
+func (s *ProjectService) Create(ctx context.Context, title string, userID uuid.UUID) (*models.Project, error) {
+	project := models.Project{
+		Title:   title,
+		OwnerID: userID,
+	}
+	database := db.GetDB(ctx)
+	if result := database.Create(&project); result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &project, nil
+}
+
+func (s *ProjectService) Update(ctx context.Context, projectID uuid.UUID, title string) (*models.Project, error) {
+	database := db.GetDB(ctx)
+	project := models.Project{}
+	if result := database.Where("id = ?", projectID).First(&project); result.Error != nil {
+		return nil, result.Error
+	}
+
+	project.Title = title
+
+	if result := database.Save(&project); result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &project, nil
+}
+
+func (s *ProjectService) Delete(ctx context.Context, id uuid.UUID) error {
+	database := db.GetDB(ctx)
+	if result := database.Where("id = ?", id).Delete(&models.Project{}); result.Error != nil {
+		return result.Error
+	}
+	return nil
+
 }

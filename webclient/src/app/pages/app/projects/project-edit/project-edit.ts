@@ -4,10 +4,7 @@ import { ProjectEditFeature, ProjectDeleteFeature } from '@features/index';
 
 @Component({
     selector: 'app-project-edit',
-    imports: [
-        ProjectEditFeature,
-        ProjectDeleteFeature
-    ],
+    imports: [ProjectEditFeature, ProjectDeleteFeature],
     template: `
         <h1>Project Edit</h1>
         <app-project-edit-feature [projectId]="projectId" />
@@ -16,17 +13,17 @@ import { ProjectEditFeature, ProjectDeleteFeature } from '@features/index';
     `,
 })
 export class ProjectEdit {
-    projectId: number
+    projectId: string;
     private activatedRoute = inject(ActivatedRoute);
 
     constructor() {
         // Access route parameters
         this.activatedRoute.params.subscribe((params) => {
             try {
-                const id = parseInt(params['id'])
+                const id = params['id'];
                 this.projectId = id;
             } catch {
-                alert("Invalid project id")
+                alert('Invalid project id');
             }
         });
     }

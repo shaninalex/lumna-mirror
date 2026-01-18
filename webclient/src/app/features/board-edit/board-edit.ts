@@ -9,38 +9,7 @@ import { boardEvents } from '@entities/board/model/board.events';
 @Component({
     selector: 'app-board-edit-feature',
     imports: [Field],
-    template: `
-        <form (submit)="submit($event)">
-            <div class="mb-2">
-                <input class="input" placeholder="Project name" [field]="boardForm.name" />
-                @if (boardForm.name().touched()) {
-                    <ul class="error-list">
-                        @for (error of boardForm.name().errors(); track error) {
-                            <li class="text-red-500 text-sm">{{ error.message }}</li>
-                        }
-                    </ul>
-                }
-            </div>
-
-            @if (errors()) {
-                <ul class="mb-2">
-                    @for (error of errors(); track error) {
-                        <li class="text-red-500 text-sm">{{ error }}</li>
-                    }
-                </ul>
-            }
-
-            <div>
-                <button type="submit" class="btn btn-primary" [disabled]="boardForm().invalid()">
-                    @if (loading()) {
-                        Processing...
-                    } @else {
-                        Save
-                    }
-                </button>
-            </div>
-        </form>
-    `,
+    templateUrl: './board-edit.html',
 })
 export class BoardEditFeature {
     board = input<BoardModel>();

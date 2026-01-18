@@ -20,5 +20,8 @@ func NewProjectsController() *ProjectsController {
 func NewController(router *gin.RouterGroup) {
 	controller := NewProjectsController()
 
-	router.GET("/projects", controller.GetProjects)
+	router.GET("/projects", controller.List)
+	router.POST("/projects", controller.Create)
+	router.PATCH("/project/:id", controller.Patch)
+	router.DELETE("/project/:id", controller.Delete)
 }

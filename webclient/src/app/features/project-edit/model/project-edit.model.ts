@@ -1,3 +1,3 @@
 export interface ProjectEditModel {
-    name: string
+    title: string;
 }
