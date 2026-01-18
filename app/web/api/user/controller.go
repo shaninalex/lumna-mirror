@@ -1,18 +1,25 @@
 package user
 
 import (
-	"gitlab.com/shaninalex/lumna/app/web"
+	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-func RegisterUserController(router *web.Router) {
-	h := NewUserHandler()
+func NewController(router *gin.RouterGroup) {
+	controller := NewUserContoller()
 
-	// fetch current user info
-	router.GET("/api/v1/user/me", h.HandleGetUser)
+	router.GET("/user/me", controller.Me)
+	router.GET("/user/logout", controller.Logout)
+}
 
-	// update user settings
-	// router.POST("/api/v1/user/settings", h.HandleUpdateSettings)
+type UserController struct {
+	userService *services.UserService
+}
 
-	// logout user
-	router.GET("/api/v1/user/logout", h.HandleLogout)
+func NewUserContoller() *UserController {
+	s := &UserController{
+		userService: &services.UserService{},
+	}
+
+	return s
 }

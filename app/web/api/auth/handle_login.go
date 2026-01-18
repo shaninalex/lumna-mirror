@@ -1,63 +1,42 @@
 package auth
 
 import (
-	"errors"
 	"net/http"
 
-	"gitlab.com/shaninalex/lumna/app/pkg/token"
-	"gitlab.com/shaninalex/lumna/app/web/adapters"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
-type loginPayload struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
+func (s *AuthController) HandleAuthLogin(c *gin.Context) {
+	// get post payload
+	payload := local.PasswordCredentials{}
+	if err := c.ShouldBindBodyWithJSON(&payload); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
 
-func (s *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	payload, err := utils.BodyParser[loginPayload](r)
+	if err := payload.Validate(); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	// call authenticate
+	authResult, err := s.localProvider.Authenticate(c.Request.Context(), &payload)
 	if err != nil {
-		utils.Error(w, http.StatusBadRequest, err)
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	user, err := s.userService.GetUserByEmail(ctx, payload.Email)
-	if err != nil {
-		utils.Error(w, http.StatusBadRequest, err)
+	session := sessions.Default(c)
+	session.Set("user_id", authResult.Identity.ID.String())
+	session.Set("provider", authResult.Provider)
+
+	if err := session.Save(); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	if err := s.userService.CheckPassword(ctx, user.GetId(), payload.Password); err != nil {
-		utils.Error(w, http.StatusBadRequest, errors.New("invalid password"))
-		return
-	}
-
-	accessToken, refreshToken, err := s.authService.Login(ctx, user.GetId())
-	if err != nil {
-		utils.Error(w, http.StatusBadRequest, err)
-		return
-	}
-
-	http.SetCookie(w, &http.Cookie{
-		Name:     token.AccessTokenCookieName,
-		Value:    accessToken.Token,
-		HttpOnly: true,
-		Secure:   true,
-		Path:     "/",
-		SameSite: http.SameSiteLaxMode,
-		MaxAge:   token.NumericAccessTokenLifeTime,
-	})
-
-	http.SetCookie(w, &http.Cookie{
-		Name:     token.RefreshTokenCookieName,
-		Value:    refreshToken.Token,
-		HttpOnly: true,
-		Secure:   true,
-		Path:     "/",
-		SameSite: http.SameSiteStrictMode,
-		MaxAge:   token.NumericRefreshTokenLifeTime,
-	})
-
-	utils.Success(w, adapters.ToUserDto(user), "Login Successful")
+	utils.Success(c, authResult.Identity)
 }

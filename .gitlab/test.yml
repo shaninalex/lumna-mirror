@@ -16,9 +16,7 @@ test:
     - git fetch --all
     - git checkout main || true
     - go version
-    - mkdir -p app/cmd/standalone/web/browser
-    - touch app/cmd/standalone/web/browser/.keep
 
   script:
     - go mod tidy
-    - go test -tags noembed ./app/... -v
+    - go test -v -coverprofile cover.out ./app/...

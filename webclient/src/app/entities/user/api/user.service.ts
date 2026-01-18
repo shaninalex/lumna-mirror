@@ -1,19 +1,24 @@
-import {map, Observable} from 'rxjs';
-import {UserModel} from '@entities/user';
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment as env} from '@environments/environment.development';
-import {APIResponse} from '@shared/models';
+import { inject, Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+import { UserModel } from '../model/user.model';
+import { APIResponse } from '@shared/models';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
-export class UserApi {
-    http = inject(HttpClient)
+export class UserService {
+    http = inject(HttpClient);
 
-    public GetUser(): Observable<UserModel> {
-        return this.http.get<APIResponse<UserModel>>(`${env.API_ROOT}/api/v1/user/me`, {withCredentials: true}).pipe(
-            map(response => response.data)
-        )
+    getMe(): Observable<UserModel> {
+        return this.http
+            .get<APIResponse<UserModel>>(`/api/v1/user/me`, { withCredentials: true })
+            .pipe(map((response) => response.data));
+    }
+
+    logout(): Observable<void> {
+        return this.http
+            .get<APIResponse<void>>(`/api/v1/user/logout`, { withCredentials: true })
+            .pipe(map((response) => response.data));
     }
 }

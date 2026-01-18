@@ -8,9 +8,16 @@ var/
 frontend/node_modules
 
 config/config.dev.yaml
-app/web/embed/
+app/static/resources/*
+!app/static/resources/.gitkeep
+
+bin/*
+!bin/.gitkeep
+!bin/*.sh
+
 *.db
-bin/
 
 __debug_*
 cover.out
+
+.claude

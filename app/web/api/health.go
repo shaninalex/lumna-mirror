@@ -1,19 +1,15 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna"
-	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
-func HealthRoute(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(map[string]any{
+func HealthRoute(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
 		"status":  "ok",
-		"name":    utils.GetAppName(r),
 		"version": lumna.Version,
 	})
 }

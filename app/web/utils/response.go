@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"encoding/json"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // APIResponse standard response structure
@@ -22,8 +23,18 @@ func NewAPIResponse[T any](data T) *APIResponse[T] {
 	}
 }
 
+// Success is a shorthand for 200 OK
+func Success(c *gin.Context, data any, params ...any) {
+	ReturnJSON(c, http.StatusOK, data, params...)
+}
+
+// Error is a shorthand for error responses
+func Error(c *gin.Context, status int, err error) {
+	ReturnJSON(c, status, nil, err)
+}
+
 // ReturnJSON writes JSON response
-func ReturnJSON(w http.ResponseWriter, status int, data any, params ...any) {
+func ReturnJSON(c *gin.Context, status int, data any, params ...any) {
 	resp := NewAPIResponse(data)
 	if status >= 400 {
 		resp.Status = false
@@ -38,17 +49,5 @@ func ReturnJSON(w http.ResponseWriter, status int, data any, params ...any) {
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	_ = json.NewEncoder(w).Encode(resp)
-}
-
-// Success is a shorthand for 200 OK
-func Success(w http.ResponseWriter, data any, params ...any) {
-	ReturnJSON(w, http.StatusOK, data, params...)
-}
-
-// Error is a shorthand for error responses
-func Error(w http.ResponseWriter, status int, err error) {
-	ReturnJSON(w, status, nil, err)
+	c.JSON(status, resp)
 }
