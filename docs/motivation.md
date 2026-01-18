@@ -1,5 +1,5 @@
-I want to create simple fast and easy to manage project tracking system.
-Simple UI, fast and free. Jira ends subscription, Clickup too slow and have too many features and complex ui, Notion also slow, Trello very limited, require additional subscription.
+I want to create simple fast and easy to manage self hosted project tracking and note taking app.
+Simple UI, fast and free. Why? Jira ends subscription, Clickup too slow and have too many features and complex ui, Notion also slow, Trello very limited, require additional subscription.
 
 So this is my attempt.
 

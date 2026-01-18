@@ -1,3 +1,5 @@
+//go:build embed
+
 package static
 
 import (
@@ -7,11 +9,11 @@ import (
 )
 
 //go:embed all:resources
-var ResourcesFS embed.FS
+var resourcesFS embed.FS
 
-// GetStaticFS embedded static files
+// GetStaticFS returns embedded static files when built with -tags embed
 func GetStaticFS() fs.FS {
-	sub, err := fs.Sub(ResourcesFS, "resources/frontend/browser")
+	sub, err := fs.Sub(resourcesFS, "resources/frontend/browser")
 	if err != nil {
 		log.Printf("warning: failed to load embedded static files: %v", err)
 		return nil

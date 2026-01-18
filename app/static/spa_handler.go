@@ -23,6 +23,12 @@ func init() {
 }
 
 func SPAHandler(staticFS fs.FS) gin.HandlerFunc {
+	// Pre-read index.html for SPA fallback (avoids http.FileServer redirect issues)
+	indexHTML, err := fs.ReadFile(staticFS, "index.html")
+	if err != nil {
+		panic("failed to read index.html from embedded files: " + err.Error())
+	}
+
 	httpFS := http.FS(staticFS)
 
 	return func(c *gin.Context) {
@@ -33,18 +39,21 @@ func SPAHandler(staticFS fs.FS) gin.HandlerFunc {
 			filePath = "index.html"
 		}
 
-		// Try to serve the exact file if it exists
+		// Try to serve the exact file if it exists and is not a directory
 		if f, err := staticFS.Open(filePath); err == nil {
+			stat, statErr := f.Stat()
 			f.Close()
-			// Set Content-Type explicitly for JS files (ES modules require correct MIME)
-			if ext := path.Ext(filePath); ext == ".js" || ext == ".mjs" {
-				c.Header("Content-Type", "application/javascript")
+			if statErr == nil && !stat.IsDir() {
+				// Set Content-Type explicitly for JS files (ES modules require correct MIME)
+				if ext := path.Ext(filePath); ext == ".js" || ext == ".mjs" {
+					c.Header("Content-Type", "application/javascript")
+				}
+				c.FileFromFS(reqPath, httpFS)
+				return
 			}
-			c.FileFromFS(reqPath, httpFS)
-			return
 		}
 
-		// SPA fallback: serve index.html for client-side routing
-		c.FileFromFS("index.html", httpFS)
+		// SPA fallback: serve index.html directly for client-side routing
+		c.Data(http.StatusOK, "text/html; charset=utf-8", indexHTML)
 	}
 }

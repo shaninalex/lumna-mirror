@@ -13,6 +13,7 @@ app/static/resources/*
 
 bin/*
 !bin/.gitkeep
+!bin/*.sh
 
 *.db
 

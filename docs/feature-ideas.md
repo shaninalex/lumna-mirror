@@ -32,7 +32,7 @@ Also may be OS notifications? There should be std utilities for windows and linu
 
 ### Cli mode
 
-full cli mode without any web related things - sockets and http routers. Should looks like LazyGit
+Terminal ui, full cli mode without any web related things - sockets and http routers. Should looks like LazyGit
 
 ### Calendar
 
@@ -43,18 +43,9 @@ Calendar for fast task/reminder assignments. Also import or sync google/outlook 
 add `man-like` documentation page. Big documentation text with all commands. Should gather that information from
 different packages and embed ( or not ) into binary. That's need's for terminal mode
 
-### TUI
-
-Terminal ui
-
 ### Application Delivery
 
 localhost/docker/self-hosted/windows
-
-### different migrations for different database
-
-Ory Kratos approach is to use sufixes like `*.sqlite.sql` or `*.postgres.sql` for different databases.
-This solve the issue with specific sql syntax and logic for different databases.
 
 ### OAuth2.0 integration/roles/permissions
 
