@@ -2,21 +2,17 @@ package web
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"net/http"
-	"strings"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
-	"gitlab.com/shaninalex/lumna/app/static"
 	"gitlab.com/shaninalex/lumna/app/web/api"
 	"gitlab.com/shaninalex/lumna/app/web/api/auth"
 	"gitlab.com/shaninalex/lumna/app/web/api/projects"
 	"gitlab.com/shaninalex/lumna/app/web/api/user"
 	"gitlab.com/shaninalex/lumna/app/web/middlewares"
+	"gitlab.com/shaninalex/lumna/app/web/pages"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -49,17 +45,23 @@ func NewWebApplication(ctx context.Context) *gin.Engine {
 	}
 
 	// Conditionally apply embedded web client build
-	if staticFS := static.GetStaticFS(); staticFS != nil {
-		log.Println("[Lumna] embedd static files")
-		spaHandler := static.SPAHandler(staticFS)
-		router.NoRoute(func(c *gin.Context) {
-			if strings.HasPrefix(c.Request.URL.Path, "/api") {
-				utils.Error(c, http.StatusNotFound, fmt.Errorf("not found"))
-				return
-			}
-			spaHandler(c)
-		})
+	// if staticFS := static.GetStaticFS(); staticFS != nil {
+	// 	log.Println("[Lumna] embedd static files")
+	// 	spaHandler := static.SPAHandler(staticFS)
+	// 	router.NoRoute(func(c *gin.Context) {
+	// 		if strings.HasPrefix(c.Request.URL.Path, "/api") {
+	// 			utils.Error(c, http.StatusNotFound, fmt.Errorf("not found"))
+	// 			return
+	// 		}
+	// 		spaHandler(c)
+	// 	})
+	// } else {
+	templRoutes := router.Group("/")
+	{
+		pages.NewPageRouter(templRoutes)
 	}
+	//
+	// }
 
 	return router
 }

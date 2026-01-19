@@ -58,4 +58,6 @@ new plugins that can be developed separately and load at start-time.
 
 ### Templ based frontend?
 
-It's will be simpler then Angular+signals+NGRX signal store. For such application may be it's too much?
+Templ+HTMX can do a lot of thibgs. It's will be simpler then Angular+signals+NGRX signal store. For such application may be it's too much?
+
+### PyQT6 desktop app
