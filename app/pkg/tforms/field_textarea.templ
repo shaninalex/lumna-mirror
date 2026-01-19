@@ -1,0 +1,19 @@
+package tforms
+
+templ UITextAreaField(field IHTMLInput) {
+	<div class="mb-3">
+	    if len(field.Label()) > 0 {
+	    	<label for={ field.ID() } class="form-label">{ field.Label() }</label>
+		}
+		<textarea
+            class={ "form-control", templ.KV("is-invalid", field.HasError()) }
+            name={ field.Name() }
+            id={ field.ID() }
+            placeholder={ field.Placeholder() }
+            required?={field.Required()}
+		>{ field.HTMLValue() }</textarea>
+		if field.HasError() {
+			<div class="invalid-feedback">{ field.Error() }</div>
+		}
+	</div>
+}
