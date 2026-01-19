@@ -6,6 +6,7 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
 	"gitlab.com/shaninalex/lumna/app/static"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
 )
@@ -22,6 +23,7 @@ func NewPageRouter(router *gin.RouterGroup) {
 	router.StaticFS("/assets", http.FS(staticFiles))
 	router.GET("/", controller.handleIndex)
 	router.GET("/auth/login", controller.handleLogin)
+	router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFiles))
 }
 
 func (s *PageController) handleIndex(ctx *gin.Context) {
@@ -31,7 +33,24 @@ func (s *PageController) handleIndex(ctx *gin.Context) {
 }
 
 func (s *PageController) handleLogin(ctx *gin.Context) {
-	component := templates.LoginPage()
+	form := newLoginForm()
+	component := templates.LoginPage(form)
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
+}
+
+func newLoginForm() tforms.IForm {
+	form := tforms.NewForm(
+		"/auth/login",
+		false,
+		tforms.NewHiddenField("_csrf", "csrf-token-string", true),
+		tforms.NewInputField("email", tforms.TextInputEmail, true).
+			SetPlaceholder("example@mail.com").
+			SetLabel("Email"),
+		tforms.NewInputField("password", tforms.TextInputPassword, true).
+			SetPlaceholder("Password").
+			SetLabel("Password"),
+	)
+
+	return form
 }

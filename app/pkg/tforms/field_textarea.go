@@ -2,13 +2,11 @@ package tforms
 
 import (
 	"fmt"
-	validation "github.com/go-ozzo/ozzo-validation"
 )
 
 // TextArea represents a multi-line text input.
 type TextArea struct {
 	*BaseInput
-	Rules []validation.Rule
 }
 
 func NewTextArea(name string, required bool) *TextArea {

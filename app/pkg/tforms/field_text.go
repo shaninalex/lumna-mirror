@@ -2,13 +2,11 @@ package tforms
 
 import (
 	"fmt"
-	validation "github.com/go-ozzo/ozzo-validation"
 )
 
 // InputField represents text-based input fields.
 type InputField struct {
 	*BaseInput
-	Rules []validation.Rule
 }
 
 // NewInputField creates a new text-based input field.

@@ -1,6 +1,8 @@
 package templates
 
-templ LoginPage() {
+import "gitlab.com/shaninalex/lumna/app/pkg/tforms"
+
+templ LoginPage(form tforms.IForm) {
 	@Base("Login") {
 		<div class="vw-100 vh-100 d-flex align-items-center justify-content-center">
 			<div style="width: 320px">
@@ -9,7 +11,7 @@ templ LoginPage() {
 				</div>
 				<div class="card">
 					<div class="card-body">
-						Login form goes here
+						@tforms.UIForm(form)
 					</div>
 				</div>
 			</div>
