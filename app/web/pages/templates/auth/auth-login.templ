@@ -1,9 +1,10 @@
-package templates
+package auth
 
 import "gitlab.com/shaninalex/lumna/app/pkg/tforms"
+import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
 
 templ LoginPage(form tforms.IForm) {
-	@Base("Login") {
+	@templates.Base("Login") {
 		<div class="vw-100 vh-100 d-flex align-items-center justify-content-center">
 			<div style="width: 320px">
 				<div class="text-center mb-3">

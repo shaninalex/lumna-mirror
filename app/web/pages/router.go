@@ -12,7 +12,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/services"
 	"gitlab.com/shaninalex/lumna/app/static"
 	"gitlab.com/shaninalex/lumna/app/web/middlewares"
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/root"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -48,7 +48,7 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 }
 
 func (s *PageController) handleIndex(ctx *gin.Context) {
-	component := templates.Index()
+	component := root.Home()
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }

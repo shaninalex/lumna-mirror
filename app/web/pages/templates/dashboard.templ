@@ -1,0 +1,17 @@
+package templates
+
+import "gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
+
+templ Dashboard(title string) {
+	@Base(title) {
+		<div class="dashboard">
+			@partials.DashboardSidebar()
+			<div>
+				@partials.DashboardHeader()
+				<div>
+					{ children... }
+				</div>
+			</div>
+		</div>
+	}
+}

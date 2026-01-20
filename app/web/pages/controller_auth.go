@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
 	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/auth"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -37,7 +37,7 @@ func (s *AuthController) handleLogin(c *gin.Context) {
 	}
 
 	form := newLoginForm(utils.GetToken(c))
-	component := templates.LoginPage(form)
+	component := auth.LoginPage(form)
 	c.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(c.Writer, c.Request)
 }
