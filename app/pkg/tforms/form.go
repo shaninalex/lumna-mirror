@@ -32,9 +32,7 @@ func NewForm(action string, multipart bool, controls ...IBaseFormControl) IForm 
 		inputs:    make([]IBaseFormControl, len(controls)),
 	}
 
-	for idx, input := range controls {
-		form.inputs[idx] = input
-	}
+	copy(form.inputs, controls)
 
 	return form
 }

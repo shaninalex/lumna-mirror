@@ -3,10 +3,13 @@ module gitlab.com/shaninalex/lumna
 go 1.24.2
 
 require (
+	github.com/a-h/templ v0.3.977
+	github.com/dchest/uniuri v1.2.0
 	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-contrib/sessions v1.0.4
 	github.com/gin-gonic/gin v1.11.0
 	github.com/google/uuid v1.6.0
+	github.com/gorilla/csrf v1.7.3
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/crypto v0.46.0
@@ -16,7 +19,6 @@ require (
 )
 
 require (
-	github.com/a-h/templ v0.3.977 // indirect
 	github.com/bytedance/gopkg v0.1.3 // indirect
 	github.com/bytedance/sonic v1.14.2 // indirect
 	github.com/bytedance/sonic/loader v0.4.0 // indirect

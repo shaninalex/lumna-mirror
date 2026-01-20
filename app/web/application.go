@@ -58,7 +58,7 @@ func NewWebApplication(ctx context.Context) *gin.Engine {
 	// } else {
 	templRoutes := router.Group("/")
 	{
-		pages.NewPageRouter(templRoutes)
+		pages.NewPageRouter(templRoutes, conf)
 	}
 	//
 	// }

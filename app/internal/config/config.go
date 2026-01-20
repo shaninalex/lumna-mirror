@@ -24,6 +24,7 @@ type Database struct {
 	Url string `yaml:"url"`
 }
 
+// TODO: secure config from changing
 type Config struct {
 	Env       Environment `yaml:"env"`
 	Serve     Serve       `yaml:"serve"`

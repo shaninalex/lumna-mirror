@@ -2,13 +2,11 @@ package middlewares
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/internal"
-	"gitlab.com/shaninalex/lumna/app/web/utils"
 
 	"net/http"
 )
@@ -18,7 +16,7 @@ func AuthRequired() gin.HandlerFunc {
 		session := sessions.Default(c)
 		userID := session.Get("user_id")
 		if userID == nil {
-			utils.Error(c, http.StatusUnauthorized, fmt.Errorf("unauthorized"))
+			c.Redirect(http.StatusMovedPermanently, "/auth/login")
 			c.Abort()
 			return
 		}
@@ -26,7 +24,6 @@ func AuthRequired() gin.HandlerFunc {
 		ctx := c.Request.Context()
 		ctx = context.WithValue(ctx, internal.ContextUserID, uuid.MustParse(userID.(string)))
 		c.Request = c.Request.WithContext(ctx)
-
 		c.Next()
 	}
 }

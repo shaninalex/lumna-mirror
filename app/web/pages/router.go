@@ -1,56 +1,55 @@
 package pages
 
 import (
+	"fmt"
 	"io/fs"
 	"net/http"
 
 	"github.com/a-h/templ"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
+	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/static"
+	"gitlab.com/shaninalex/lumna/app/web/middlewares"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
 type PageController struct {
+	localProvider *local.LocalAuthProvider
 }
 
-func NewPageRouter(router *gin.RouterGroup) {
-	controller := &PageController{}
+func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
+	controller := &PageController{
+		localProvider: local.NewLocalAuthProvider(),
+	}
 	staticFiles, err := fs.Sub(static.GetStaticFS(), "assets")
 	if err != nil {
 		panic(err)
 	}
+
+	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
+	router.Use(utils.CSRFMiddleware(utils.Options{
+		Secret: conf.SecretKey,
+		ErrorFunc: func(c *gin.Context) {
+			utils.Error(c, http.StatusForbidden, fmt.Errorf("CSRF token mismatch"))
+			c.Abort()
+		},
+	}))
 	router.StaticFS("/assets", http.FS(staticFiles))
-	router.GET("/", controller.handleIndex)
 	router.GET("/auth/login", controller.handleLogin)
+	router.POST("/auth/login", controller.handleLoginSubmission)
 	router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFiles))
+
+	router.Use(middlewares.AuthRequired())
+	{
+		router.GET("/", controller.handleIndex)
+	}
 }
 
 func (s *PageController) handleIndex(ctx *gin.Context) {
 	component := templates.Index()
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
-}
-
-func (s *PageController) handleLogin(ctx *gin.Context) {
-	form := newLoginForm()
-	component := templates.LoginPage(form)
-	ctx.Status(http.StatusOK)
-	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
-}
-
-func newLoginForm() tforms.IForm {
-	form := tforms.NewForm(
-		"/auth/login",
-		false,
-		tforms.NewHiddenField("_csrf", "csrf-token-string", true),
-		tforms.NewInputField("email", tforms.TextInputEmail, true).
-			SetPlaceholder("example@mail.com").
-			SetLabel("Email"),
-		tforms.NewInputField("password", tforms.TextInputPassword, true).
-			SetPlaceholder("Password").
-			SetLabel("Password"),
-	)
-
-	return form
 }
