@@ -46,3 +46,7 @@ commands
 It's okay, in my opinion. Balance between FSD approach and my own way of organizing files.
 Signals is good, kanban board is good, ui is stupidly simple ( no Material design or
 any other ui frameworks. Simple tailwind. )
+
+### Templ for frontend
+
+Use go templ for templates instead of angular.
