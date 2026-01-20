@@ -13,8 +13,8 @@ import (
 // var _ auth.AuthProvider = (*LocalAuthProvider)(nil)
 
 type PasswordCredentials struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
 }
 
 func (s *PasswordCredentials) Validate() error {

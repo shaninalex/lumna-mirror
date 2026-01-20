@@ -1,0 +1,36 @@
+package tforms
+
+templ UIForm(form IForm) {
+	if form != nil {
+		<form method={ string(form.GetMethod()) }
+		      enctype={ string(form.GetType()) }
+		      action={ templ.URL(form.GetActionUrl()) }
+		      class="needs-validation" novalidate>
+			for _, input := range form.GetInputs() {
+				switch input.Base().Type() {
+				    case InputTypeHidden:
+						@UIHiddenField(input.Base())
+					case InputTypeText:
+						@UITextField(input.Base())
+					case InputTypeSelect:
+						@UISelectField(input.Base())
+					case InputTypeCheckbox:
+                        @UICheckboxField(input.Base())
+					case InputTypeRadio:
+						@UICheckboxField(input.Base())
+					case InputTypeTextArea:
+						@UITextAreaField(input.Base())
+					default:
+						<div class="mb-3">
+							<div class="alert alert-warning p-2">Unknown input type</div>
+						</div>
+				}
+			}
+			<div>
+				<button class="btn btn-success" type="submit">Save</button>
+			</div>
+		</form>
+	} else {
+		<div class="alert alert-danger">Form is not defined</div>
+	}
+}

@@ -1,3 +1,63 @@
+## 0.23.0 (2026-01-20)
+
+### Feat
+
+- **pages**: csrf + login
+- **pages**: index + login
+- **ui**: get board lists
+- list projects
+- **build**: fs resource folder, change spa logic to work with fs.Sub
+- **build**: embed/no-embed builds
+- **models**: projects and boards
+- **api**: health
+- **auth**: session login/logout
+- **auth**: providers
+- **api**: define web application structure
+- define account tables, cli, web docs
+- change list order (#57)
+- **api**: update lists order (#57)
+- **ui**: build board change payload (#57)
+- **ui**: create drop paylaod (#57)
+- **ui**: drag tasks (#57)
+- **ui**: kanban ui
+- **api**: task api (#57)
+- **api**: task (#57)
+- **ui**: kanban board service (#66)
+- **ui**: patch list (#56)
+- **ui**: delete list (#56)
+- **ui**: create list (#56)
+- **ui**: model + api list (#56)
+- **ui**: delete board (#55)
+- **ui**: patch board (#55)
+- **ui**: board pages (#55)
+- **ui**: create board (#55)
+- **ui**: project boards store + get boards event (#55)
+- **ui**: redirect authenticated users away from auth pages #61
+- **ui**: change page title (#60)
+- upate + delete project #54
+- **ui**: delete project (#54)
+- **ui**: create project form (#54)
+- **ui**: project list view mode
+- **ui**: project card (#54)
+- **ui**: load and display projects grid (#54)
+
+### Fix
+
+- **ui**: change entity field types and names
+- **web**: create spahandler once, instead of recreating it every time
+- **cli**: identity delete ( fix foreign keys )
+- **ui**: refresh token
+- **db**: change task order column name
+- **build**: keep embed folder
+- **ui**: minor issues #65
+- **auth**: user logout
+- **auth**: token refresh
+
+### Refactor
+
+- **ui**: rewrite auth
+- packages
+
 ## 0.22.0 (2025-12-25)
 
 ### Feat

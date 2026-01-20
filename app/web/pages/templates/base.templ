@@ -1,0 +1,15 @@
+package templates
+
+import "gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
+
+templ Base(title string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		@partials.Head(title)
+		<body>
+			{ children... }
+
+			@partials.FooterIncludes()
+		</body>
+	</html>
+}

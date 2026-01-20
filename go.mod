@@ -3,6 +3,8 @@ module gitlab.com/shaninalex/lumna
 go 1.24.2
 
 require (
+	github.com/a-h/templ v0.3.977
+	github.com/dchest/uniuri v1.2.0
 	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-contrib/sessions v1.0.4
 	github.com/gin-gonic/gin v1.11.0

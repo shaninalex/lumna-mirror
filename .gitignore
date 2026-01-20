@@ -10,6 +10,7 @@ frontend/node_modules
 config/config.dev.yaml
 app/static/resources/*
 !app/static/resources/.gitkeep
+!app/static/resources/assets
 
 bin/*
 !bin/.gitkeep

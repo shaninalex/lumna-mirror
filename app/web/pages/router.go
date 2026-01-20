@@ -1,0 +1,54 @@
+package pages
+
+import (
+	"io/fs"
+	"net/http"
+
+	"github.com/a-h/templ"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/static"
+	"gitlab.com/shaninalex/lumna/app/web/middlewares"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
+)
+
+type PageController struct {
+	localProvider *local.LocalAuthProvider
+	userService   *services.UserService
+}
+
+func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
+	controller := &PageController{
+		localProvider: local.NewLocalAuthProvider(),
+		userService:   &services.UserService{},
+	}
+	staticFilesFS := static.GetStaticFS()
+	if staticFilesFS != nil {
+		staticFiles, err := fs.Sub(staticFilesFS, "assets")
+		if err != nil {
+			panic(err)
+		}
+		router.StaticFS("/assets", http.FS(staticFiles))
+		router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFiles))
+	}
+
+	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
+	router.Use(middlewares.CsrfMiddleware(conf.SecretKey))
+
+	ApplyAuthRoutes(router)
+
+	router.Use(middlewares.AuthRequired())
+	{
+		router.GET("/", controller.handleIndex)
+	}
+}
+
+func (s *PageController) handleIndex(ctx *gin.Context) {
+	component := templates.Index()
+	ctx.Status(http.StatusOK)
+	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
+}
