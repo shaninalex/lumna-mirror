@@ -29,24 +29,3 @@ I think I'm doing it wrong. There are some architectural error I can't spot.
 ### Config
 
 Store too little configuration variables. It should be single source of ANY configuration.
-
-### UUID for all ids
-
-I do not like number based id's
-
-# Any good things so far?
-
-### cmd
-
-I like how it's done. Completely separate thing that init application and run different
-commands
-
-### Frontend
-
-It's okay, in my opinion. Balance between FSD approach and my own way of organizing files.
-Signals is good, kanban board is good, ui is stupidly simple ( no Material design or
-any other ui frameworks. Simple tailwind. )
-
-### Templ for frontend
-
-Use go templ for templates instead of angular.

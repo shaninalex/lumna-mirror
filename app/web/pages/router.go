@@ -1,7 +1,6 @@
 package pages
 
 import (
-	"fmt"
 	"io/fs"
 	"net/http"
 
@@ -27,24 +26,20 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 		localProvider: local.NewLocalAuthProvider(),
 		userService:   &services.UserService{},
 	}
-	staticFiles, err := fs.Sub(static.GetStaticFS(), "assets")
-	if err != nil {
-		panic(err)
+	staticFilesFS := static.GetStaticFS()
+	if staticFilesFS != nil {
+		staticFiles, err := fs.Sub(staticFilesFS, "assets")
+		if err != nil {
+			panic(err)
+		}
+		router.StaticFS("/assets", http.FS(staticFiles))
+		router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFiles))
 	}
 
 	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
-	router.Use(utils.CSRFMiddleware(utils.Options{
-		Secret: conf.SecretKey,
-		ErrorFunc: func(c *gin.Context) {
-			utils.Error(c, http.StatusForbidden, fmt.Errorf("CSRF token mismatch"))
-			c.Abort()
-		},
-	}))
-	router.StaticFS("/assets", http.FS(staticFiles))
+	router.Use(middlewares.CsrfMiddleware(conf.SecretKey))
 
-	router.GET("/auth/login", controller.handleLogin)
-	router.POST("/auth/login", controller.handleLoginSubmission)
-	router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFiles))
+	ApplyAuthRoutes(router)
 
 	router.Use(middlewares.AuthRequired())
 	{

@@ -12,7 +12,23 @@ import (
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
-func (s *PageController) handleLogin(c *gin.Context) {
+type AuthController struct {
+	localProvider *local.LocalAuthProvider
+}
+
+func NewAuthController() *AuthController {
+	return &AuthController{
+		localProvider: local.NewLocalAuthProvider(),
+	}
+}
+
+func ApplyAuthRoutes(router *gin.RouterGroup) {
+	auth := NewAuthController()
+	router.GET("/auth/login", auth.handleLogin)
+	router.POST("/auth/login", auth.handleLoginSubmission)
+}
+
+func (s *AuthController) handleLogin(c *gin.Context) {
 	session := sessions.Default(c)
 	userID := session.Get("user_id")
 	if userID != nil {
@@ -26,7 +42,7 @@ func (s *PageController) handleLogin(c *gin.Context) {
 	templ.Handler(component).ServeHTTP(c.Writer, c.Request)
 }
 
-func (s *PageController) handleLoginSubmission(c *gin.Context) {
+func (s *AuthController) handleLoginSubmission(c *gin.Context) {
 	payload := local.PasswordCredentials{}
 
 	// Bind form data to struct
