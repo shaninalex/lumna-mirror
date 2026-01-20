@@ -2,14 +2,16 @@ package web
 
 import (
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
 func NewRouter() *gin.Engine {
 	router := gin.Default()
 
-	// Disable automatic redirects to allow SPA fallback routing
 	router.RedirectTrailingSlash = false
 	router.RedirectFixedPath = false
+
+	router.GET("/_health", utils.HealthRoute)
 
 	return router
 }

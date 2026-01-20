@@ -24,12 +24,22 @@ type Database struct {
 	Url string `yaml:"url"`
 }
 
+type Api struct {
+	Enabled bool `yaml:"enabled"`
+}
+
+type Html struct {
+	Enabled bool `yaml:"enabled"`
+}
+
 // TODO: secure config from changing
 type Config struct {
 	Env       Environment `yaml:"env"`
 	Serve     Serve       `yaml:"serve"`
 	Database  Database    `yaml:"database"`
 	SecretKey string      `yaml:"secret_key"`
+	API       Api         `yaml:"api"`
+	Html      Html        `yaml:"html"`
 }
 
 func ReadConfig(path string) *Config {
