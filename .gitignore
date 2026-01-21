@@ -7,7 +7,7 @@
 var/
 frontend/node_modules
 
-config/config.dev.yaml
+config/config.yaml
 app/static/resources/*
 !app/static/resources/.gitkeep
 !app/static/resources/assets
