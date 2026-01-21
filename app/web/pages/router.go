@@ -53,7 +53,7 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 }
 
 func (s *PageController) handleIndex(ctx *gin.Context) {
-	component := root.Home()
+	component := root.Home(ctx.Request.Context())
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }

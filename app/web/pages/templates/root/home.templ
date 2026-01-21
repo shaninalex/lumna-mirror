@@ -1,10 +1,10 @@
 package root
 
-
+import "context"
 import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
 
-templ Home() {
-	@templates.Dashboard("Home") {
+templ Home(ctx context.Context) {
+	@templates.Dashboard(ctx, "Home") {
 		<div>
 			Home
 			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>

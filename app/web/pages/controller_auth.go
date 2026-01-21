@@ -38,7 +38,7 @@ func (s *AuthController) handleLogin(c *gin.Context) {
 	}
 
 	form := newLoginForm(utils.GetToken(c))
-	component := auth.LoginPage(form)
+	component := auth.LoginPage(c.Request.Context(), form)
 	c.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(c.Writer, c.Request)
 }

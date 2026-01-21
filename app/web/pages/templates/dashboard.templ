@@ -1,13 +1,14 @@
 package templates
 
+import "context"
 import "gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
 
-templ Dashboard(title string) {
-	@Base(title) {
+templ Dashboard(ctx context.Context, title string) {
+	@Base(ctx, title) {
 		<div class="dashboard">
 			@partials.DashboardSidebar()
 			<div class="dashboard-main">
-				@partials.DashboardHeader()
+				@partials.DashboardHeader(ctx)
 				<main class="dashboard-content">
 					{ children... }
 				</main>

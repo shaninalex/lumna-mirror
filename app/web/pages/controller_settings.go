@@ -23,19 +23,19 @@ func ApplySettingsRoutes(router *gin.RouterGroup) {
 }
 
 func (c *SettingsController) handleIndex(ctx *gin.Context) {
-	component := settings.Index()
+	component := settings.Index(ctx.Request.Context())
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }
 
 func (c *SettingsController) handleAccount(ctx *gin.Context) {
-	component := settings.Account()
+	component := settings.Account(ctx.Request.Context())
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }
 
 func (c *SettingsController) handleSecurity(ctx *gin.Context) {
-	component := settings.Security()
+	component := settings.Security(ctx.Request.Context())
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }

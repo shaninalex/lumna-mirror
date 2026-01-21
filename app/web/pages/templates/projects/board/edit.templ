@@ -1,9 +1,10 @@
 package board
 
+import "context"
 import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
 
-templ Edit(projectID, boardID string) {
-	@templates.Dashboard("Edit Board") {
+templ Edit(ctx context.Context, projectID, boardID string) {
+	@templates.Dashboard(ctx, "Edit Board") {
 		<div class="board-edit">
 			<h1>Edit Kanban Board</h1>
 		</div>

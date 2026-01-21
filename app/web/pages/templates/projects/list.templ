@@ -1,9 +1,10 @@
 package projects
 
+import "context"
 import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
 
-templ List() {
-	@templates.Dashboard("Projects") {
+templ List(ctx context.Context) {
+	@templates.Dashboard(ctx, "Projects") {
 		<div class="projects-list">
 			<h1>Projects</h1>
 
