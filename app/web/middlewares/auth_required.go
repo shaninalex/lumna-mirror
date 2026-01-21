@@ -16,7 +16,7 @@ func AuthRequired() gin.HandlerFunc {
 		session := sessions.Default(c)
 		userID := session.Get("user_id")
 		if userID == nil {
-			c.Redirect(http.StatusMovedPermanently, "/auth/login")
+			c.Redirect(http.StatusFound, "/auth/login")
 			c.Abort()
 			return
 		}

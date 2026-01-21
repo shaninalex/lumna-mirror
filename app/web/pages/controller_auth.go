@@ -26,13 +26,14 @@ func ApplyAuthRoutes(router *gin.RouterGroup) {
 	auth := NewAuthController()
 	router.GET("/auth/login", auth.handleLogin)
 	router.POST("/auth/login", auth.handleLoginSubmission)
+	router.GET("/auth/logout", auth.handleLogoutSubmission)
 }
 
 func (s *AuthController) handleLogin(c *gin.Context) {
 	session := sessions.Default(c)
 	userID := session.Get("user_id")
 	if userID != nil {
-		c.Redirect(http.StatusMovedPermanently, "/")
+		c.Redirect(http.StatusFound, "/")
 		return
 	}
 
@@ -40,6 +41,14 @@ func (s *AuthController) handleLogin(c *gin.Context) {
 	component := auth.LoginPage(form)
 	c.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(c.Writer, c.Request)
+}
+
+func (s *AuthController) handleLogoutSubmission(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Clear()
+	session.Options(sessions.Options{Path: "/", MaxAge: -1})
+	_ = session.Save()
+	c.Redirect(http.StatusFound, "/auth/login")
 }
 
 func (s *AuthController) handleLoginSubmission(c *gin.Context) {
@@ -72,7 +81,7 @@ func (s *AuthController) handleLoginSubmission(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusMovedPermanently, "/")
+	c.Redirect(http.StatusFound, "/")
 }
 
 func newLoginForm(csrfToken string) tforms.IForm {
