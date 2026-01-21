@@ -1,3 +1,7 @@
+:root {
+    --lm-layout-padding: 1rem;
+}
+
 img {
     max-width: 100%;
 }
@@ -14,7 +18,7 @@ img {
     border-right: 1px solid #dcdcdc;
     width: 200px;
     flex-shrink: 0;
-    padding: 1rem;
+    padding: var(--lm-layout-padding);
 }
 
 .dashboard-main {
@@ -31,10 +35,10 @@ img {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem;
+    padding: var(--lm-layout-padding);
 }
 
 .dashboard-content {
     overflow: auto;
-    padding: 1rem;
+    padding: var(--lm-layout-padding);
 }
