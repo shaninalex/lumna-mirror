@@ -19,6 +19,9 @@ img {
     width: 200px;
     flex-shrink: 0;
     padding: var(--lm-layout-padding);
+    display: flex;
+    gap: var(--lm-layout-padding);
+    flex-direction: column;
 }
 
 .dashboard-main {
