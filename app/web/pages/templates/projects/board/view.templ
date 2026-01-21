@@ -1,0 +1,11 @@
+package board
+
+import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
+
+templ View(projectID, boardID string) {
+	@templates.Dashboard("Board") {
+		<div class="board-view">
+			<h1>Kanban Board</h1>
+		</div>
+	}
+}

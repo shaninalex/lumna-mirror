@@ -1,0 +1,13 @@
+package settings
+
+import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
+
+templ Index() {
+	@templates.Dashboard("Settings") {
+		<div class="settings">
+			<h1>Settings</h1>
+		</div>
+
+		<a href={ templ.SafeURL("/settings/account") }>Account</a>
+	}
+}

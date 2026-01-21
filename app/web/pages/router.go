@@ -34,6 +34,9 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 		}
 		router.StaticFS("/assets", http.FS(staticFiles))
 		router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFiles))
+	} else {
+		router.Static("/assets", "app/static/resources/assets")
+		router.StaticFile("/favicon.ico", "app/static/resources/assets/favicon.ico")
 	}
 
 	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
@@ -44,6 +47,8 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 	router.Use(middlewares.AuthRequired())
 	{
 		router.GET("/", controller.handleIndex)
+		ApplyProjectRoutes(router)
+		ApplySettingsRoutes(router)
 	}
 }
 

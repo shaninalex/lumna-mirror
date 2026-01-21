@@ -1,0 +1,12 @@
+package projects
+
+import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
+
+templ Overview(projectID string) {
+	@templates.Dashboard("Project Overview") {
+		<div class="project-overview">
+			<h1>Project Overview</h1>
+		</div>
+		<a class="btn btn-default" href={templ.SafeURL("/projects/first/edit")} >Edit</a>
+	}
+}

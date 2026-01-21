@@ -8,11 +8,11 @@ templ DashboardSidebar() {
 
 		<div class="d-flex flex-column flex-grow-1">
 			<nav class="nav flex-column flex-grow-1">
-			  <a class="nav-link active" aria-current="page" href="#">Home</a>
-			  <a class="nav-link" href="#">Projects</a>
+			  <a class="nav-link active" aria-current="page" href={templ.SafeURL("/")}>Home</a>
+			  <a class="nav-link" href={templ.SafeURL("/projects")}>Projects</a>
 			</nav>
 			<nav class="nav flex-column">
-				<a class="nav-link active" href="#">Settings</a>
+				<a class="nav-link active" href={templ.SafeURL("/settings")}>Settings</a>
 			</nav>
 		</div>
 	</div>

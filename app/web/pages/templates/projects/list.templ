@@ -1,0 +1,26 @@
+package projects
+
+import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
+
+templ List() {
+	@templates.Dashboard("Projects") {
+		<div class="projects-list">
+			<h1>Projects</h1>
+
+			<div class="list-group">
+				<a href={templ.SafeURL("/projects/first")} class="list-group-item list-group-item-action" aria-current="true">
+					A first link item
+				</a>
+				<a href={templ.SafeURL("/projects/second")} class="list-group-item list-group-item-action">
+					A second link item
+				</a>
+				<a href={templ.SafeURL("/projects/third")} class="list-group-item list-group-item-action">
+					A third link item
+				</a>
+				<a href={templ.SafeURL("/projects/fourth")} class="list-group-item list-group-item-action">
+					A fourth link item
+				</a>
+			</div>
+		</div>
+	}
+}
