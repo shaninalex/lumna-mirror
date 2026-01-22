@@ -15,6 +15,15 @@ func NewProjectService() *ProjectService {
 	return &ProjectService{}
 }
 
+func (s *ProjectService) Get(ctx context.Context, id uuid.UUID) (*models.Project, error) {
+	database := db.GetDB(ctx)
+	project := &models.Project{}
+	if result := database.Preload("Boards").Where("id = ?", id.String()).First(&project); result.Error != nil {
+		return nil, result.Error
+	}
+	return project, nil
+}
+
 func (s *ProjectService) List(ctx context.Context) ([]models.Project, error) {
 	database := db.GetDB(ctx)
 	projects := []models.Project{}

@@ -1,6 +1,7 @@
 package projects
 
 import (
+	"fmt"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
@@ -19,7 +20,7 @@ templ ProjectsList(page ProjectsPageData) {
 				<div class="col-md-4">
 					<div class="card">
 						<div class="card-header">
-							<a href="">{ p.Title }</a>
+							<a href={ templ.SafeURL(fmt.Sprintf("/projects/%s", p.ID.String())) }>{ p.Title }</a>
 						</div>
 						<div class="card-body">
 							Last edited: { p.UpdatedAt.Format(time.RFC850) }
