@@ -1,6 +1,6 @@
-package templates
+package utils
 
-type PageContext struct {
+type BasePage struct {
 	Title string
 	User  *PageUser
 }

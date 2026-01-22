@@ -22,7 +22,7 @@ func NewAuthController() *AuthController {
 	}
 }
 
-func ApplyAuthRoutes(router *gin.RouterGroup) {
+func RegisterAuthPages(router *gin.RouterGroup) {
 	auth := NewAuthController()
 	router.GET("/auth/login", auth.handleLogin)
 	router.POST("/auth/login", auth.handleLoginSubmission)

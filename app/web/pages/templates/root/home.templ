@@ -1,38 +1,18 @@
 package root
 
+import (
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
+)
 
-import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
+type HomePageData struct {
+	utils.BasePage
+	// Add page-specific fields here, e.g.:
+	// RecentComments []models.Comments
+}
 
-templ Home() {
-	@templates.Dashboard("Home") {
-		<div>
-			Home
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-			<p>lorem dsakfljldsfkjdsl kfjdsl fkjsd f lksd fl sdf</p>
-		</div>
+templ Home(page HomePageData) {
+	@templates.Dashboard(page.BasePage) {
+		<div>Home page</div>
 	}
 }

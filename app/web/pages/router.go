@@ -4,7 +4,6 @@ import (
 	"io/fs"
 	"net/http"
 
-	"github.com/a-h/templ"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
@@ -42,19 +41,18 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
 	router.Use(middlewares.CsrfMiddleware(conf.SecretKey))
 
-	ApplyAuthRoutes(router)
+	RegisterAuthPages(router)
 
 	router.Use(middlewares.AuthRequired())
 	router.Use(middlewares.IdentityMiddleware(controller.userService))
 	{
 		router.GET("/", controller.handleIndex)
-		ApplyProjectRoutes(router)
-		ApplySettingsRoutes(router)
 	}
 }
 
 func (s *PageController) handleIndex(ctx *gin.Context) {
-	component := root.Home()
-	ctx.Status(http.StatusOK)
-	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
+	page := root.HomePageData{
+		BasePage: utils.GetBasePage(ctx.Request.Context()),
+	}
+	utils.RenderTemplate(ctx, http.StatusOK, root.Home(page))
 }

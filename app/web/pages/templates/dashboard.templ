@@ -1,13 +1,16 @@
 package templates
 
-import "gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
+import (
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
+)
 
-templ Dashboard(title string) {
-	@Base(title) {
+templ Dashboard(page utils.BasePage) {
+	@Base(page.Title) {
 		<div class="dashboard">
 			@partials.DashboardSidebar()
 			<div class="dashboard-main">
-				@partials.DashboardHeader()
+				@partials.DashboardHeader(page)
 				<main class="dashboard-content">
 					{ children... }
 				</main>

@@ -32,7 +32,6 @@ func NewWebApplication(ctx context.Context) *gin.Engine {
 			pages.NewPageRouter(templRoutes, conf)
 		}
 	}
-
 	if conf.API.Enabled {
 		apiRoutes := router.Group("/api/v1")
 		{
