@@ -14,13 +14,12 @@ type ProjectsPageData struct {
 
 templ ProjectsList(page ProjectsPageData) {
 	@templates.Dashboard(page.BasePage) {
-		<div>Projects</div>
 		<div class="row">
 			for _, p := range page.Projects {
 				<div class="col-md-4">
 					<div class="card">
 						<div class="card-header">
-							{ p.Title }
+							<a href="">{ p.Title }</a>
 						</div>
 						<div class="card-body">
 							Last edited: { p.UpdatedAt.Format(time.RFC850) }

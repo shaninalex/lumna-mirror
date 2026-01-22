@@ -48,6 +48,7 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 	{
 		router.GET("/", controller.handleIndex)
 		RegisterProjectPages(router)
+		RegisterSettingsPages(router)
 	}
 }
 

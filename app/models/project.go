@@ -28,6 +28,9 @@ func (s *Project) BeforeCreate(tx *gorm.DB) error {
 	if s.CreatedAt.IsZero() {
 		s.CreatedAt = time.Now()
 	}
+	if s.Title == "" {
+		s.Title = "Untitled project"
+	}
 	return nil
 }
 
