@@ -5,6 +5,7 @@
 img {
     max-width: 100%;
 }
+
 .dashboard {
     display: flex;
     align-items: start;
@@ -15,7 +16,7 @@ img {
 
 .dashboard-sidebar {
     height: 100%;
-    border-right: 1px solid #dcdcdc;
+    border-right: 1px solid var(--bs-border-color);
     width: 200px;
     flex-shrink: 0;
     padding: var(--lm-layout-padding);
@@ -32,7 +33,7 @@ img {
 }
 
 .dashboard-header {
-    border-bottom: 1px solid #dcdcdc;
+    border-bottom: 1px solid var(--bs-border-color);
     height: 55px;
     flex-shrink: 0;
     display: flex;
@@ -44,4 +45,14 @@ img {
 .dashboard-content {
     overflow: auto;
     padding: var(--lm-layout-padding);
+}
+
+/* Theme switcher styles */
+[data-bs-theme-value].active .bi-check2 {
+    display: inline-block !important;
+}
+
+#bd-theme .theme-icon-active {
+    width: 1em;
+    height: 1em;
 }

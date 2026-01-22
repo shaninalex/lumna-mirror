@@ -1,0 +1,33 @@
+package projects
+
+import (
+	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
+	"time"
+)
+
+type ProjectsPageData struct {
+	utils.BasePage
+	Projects []models.Project
+}
+
+templ ProjectsList(page ProjectsPageData) {
+	@templates.Dashboard(page.BasePage) {
+		<div>Projects</div>
+		<div class="row">
+			for _, p := range page.Projects {
+				<div class="col-md-4">
+					<div class="card">
+						<div class="card-header">
+							{ p.Title }
+						</div>
+						<div class="card-body">
+							Last edited: { p.UpdatedAt.Format(time.RFC850) }
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	}
+}

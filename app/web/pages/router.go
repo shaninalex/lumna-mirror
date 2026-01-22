@@ -34,8 +34,8 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 		router.StaticFS("/assets", http.FS(staticFiles))
 		router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFiles))
 	} else {
-		router.Static("/assets", "app/static/resources/assets")
-		router.StaticFile("/favicon.ico", "app/static/resources/assets/favicon.ico")
+		router.Static("/assets", "app/static/resources/assets")                      // TODO: use assets base path from config
+		router.StaticFile("/favicon.ico", "app/static/resources/assets/favicon.ico") // TODO: use assets base path from config
 	}
 
 	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
@@ -47,12 +47,15 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 	router.Use(middlewares.IdentityMiddleware(controller.userService))
 	{
 		router.GET("/", controller.handleIndex)
+		RegisterProjectPages(router)
 	}
 }
 
 func (s *PageController) handleIndex(ctx *gin.Context) {
+	base := utils.GetBasePage(ctx.Request.Context())
+	base.Title = "Home page"
 	page := root.HomePageData{
-		BasePage: utils.GetBasePage(ctx.Request.Context()),
+		BasePage: base,
 	}
 	utils.RenderTemplate(ctx, http.StatusOK, root.Home(page))
 }
