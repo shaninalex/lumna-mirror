@@ -1,10 +1,10 @@
 package settings
 
-import "context"
+
 import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
 
-templ Account(ctx context.Context) {
-	@templates.Dashboard(ctx, "Account Settings") {
+templ Account() {
+	@templates.Dashboard("Account Settings") {
 		<div class="settings-account">
 			<h1>Account Settings</h1>
 		</div>

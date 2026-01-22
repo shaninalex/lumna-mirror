@@ -1,10 +1,10 @@
 package projects
 
-import "context"
+
 import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
 
-templ Edit(ctx context.Context, projectID string) {
-	@templates.Dashboard(ctx, "Edit Project") {
+templ Edit(projectID string) {
+	@templates.Dashboard("Edit Project") {
 		<div class="project-edit">
 			<h1>Edit Project</h1>
 		</div>

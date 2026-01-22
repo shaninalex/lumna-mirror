@@ -45,6 +45,7 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 	ApplyAuthRoutes(router)
 
 	router.Use(middlewares.AuthRequired())
+	router.Use(middlewares.IdentityMiddleware(controller.userService))
 	{
 		router.GET("/", controller.handleIndex)
 		ApplyProjectRoutes(router)
@@ -53,7 +54,7 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 }
 
 func (s *PageController) handleIndex(ctx *gin.Context) {
-	component := root.Home(ctx.Request.Context())
+	component := root.Home()
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }

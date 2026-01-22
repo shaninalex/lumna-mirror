@@ -1,10 +1,10 @@
 package settings
 
-import "context"
+
 import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
 
-templ Index(ctx context.Context) {
-	@templates.Dashboard(ctx, "Settings") {
+templ Index() {
+	@templates.Dashboard("Settings") {
 		<div class="settings">
 			<h1>Settings</h1>
 		</div>

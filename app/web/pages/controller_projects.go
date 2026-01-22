@@ -26,21 +26,21 @@ func ApplyProjectRoutes(router *gin.RouterGroup) {
 }
 
 func (c *ProjectsController) handleList(ctx *gin.Context) {
-	component := projects.List(ctx.Request.Context())
+	component := projects.List()
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }
 
 func (c *ProjectsController) handleOverview(ctx *gin.Context) {
 	projectID := ctx.Param("id")
-	component := projects.Overview(ctx.Request.Context(), projectID)
+	component := projects.Overview(projectID)
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }
 
 func (c *ProjectsController) handleEdit(ctx *gin.Context) {
 	projectID := ctx.Param("id")
-	component := projects.Edit(ctx.Request.Context(), projectID)
+	component := projects.Edit(projectID)
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }
@@ -48,7 +48,7 @@ func (c *ProjectsController) handleEdit(ctx *gin.Context) {
 func (c *ProjectsController) handleBoardView(ctx *gin.Context) {
 	projectID := ctx.Param("id")
 	boardID := ctx.Param("board_id")
-	component := board.View(ctx.Request.Context(), projectID, boardID)
+	component := board.View(projectID, boardID)
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }
@@ -56,7 +56,7 @@ func (c *ProjectsController) handleBoardView(ctx *gin.Context) {
 func (c *ProjectsController) handleBoardEdit(ctx *gin.Context) {
 	projectID := ctx.Param("id")
 	boardID := ctx.Param("board_id")
-	component := board.Edit(ctx.Request.Context(), projectID, boardID)
+	component := board.Edit(projectID, boardID)
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }

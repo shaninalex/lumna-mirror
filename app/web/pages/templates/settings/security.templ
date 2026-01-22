@@ -1,12 +1,12 @@
 package settings
 
-import "context"
 import "gitlab.com/shaninalex/lumna/app/web/pages/templates"
 
-templ Security(ctx context.Context) {
-	@templates.Dashboard(ctx, "Security Settings") {
+templ Security(c templates.PageContext) {
+	@templates.Dashboard("Security Settings") {
 		<div class="settings-security">
 			<h1>Security Settings</h1>
+			<p>{ c.User.Email }</p>
 		</div>
 	}
 }

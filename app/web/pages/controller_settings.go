@@ -5,6 +5,7 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/settings"
 )
 
@@ -23,19 +24,19 @@ func ApplySettingsRoutes(router *gin.RouterGroup) {
 }
 
 func (c *SettingsController) handleIndex(ctx *gin.Context) {
-	component := settings.Index(ctx.Request.Context())
+	component := settings.Index()
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }
 
 func (c *SettingsController) handleAccount(ctx *gin.Context) {
-	component := settings.Account(ctx.Request.Context())
+	component := settings.Account()
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }
 
 func (c *SettingsController) handleSecurity(ctx *gin.Context) {
-	component := settings.Security(ctx.Request.Context())
+	component := templates.InitTemplate(ctx.Request.Context(), settings.Security)
 	ctx.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
 }

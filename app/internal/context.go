@@ -14,4 +14,7 @@ const (
 	ContextAppName ContextKey = "app_name"
 
 	ContextConfig ContextKey = "config"
+
+	// ContextIdentity - user id
+	ContextIdentity ContextKey = "identity"
 )
