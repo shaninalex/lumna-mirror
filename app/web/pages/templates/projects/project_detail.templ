@@ -1,6 +1,7 @@
 package projects
 
 import (
+	"fmt"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
@@ -37,6 +38,12 @@ templ ProjectDetail(page ProjectDetailPageData) {
 				</div>
 			</div>
 		</nav>
-		<h4>Project detail</h4>
+		<nav>
+			for _, board := range page.Project.Boards {
+				<a class="btn btn-default" href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s", page.Project.ID.String(), board.ID.String())) }>
+					{ board.Title }
+				</a>
+			}
+		</nav>
 	}
 }
