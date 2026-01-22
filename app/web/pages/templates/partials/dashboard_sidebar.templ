@@ -1,19 +1,23 @@
 package partials
 
+import "gitlab.com/shaninalex/lumna"
+
 templ DashboardSidebar() {
 	<div class="dashboard-sidebar">
-		<a href={templ.SafeURL("/")}>
-			<img src="/assets/img/logo-h.svg" />
+		<a href={ templ.SafeURL("/") }>
+			<img src="/assets/img/logo-h.svg"/>
 		</a>
-
 		<div class="d-flex flex-column flex-grow-1">
 			<nav class="nav flex-column flex-grow-1">
-			  <a class="nav-link active" aria-current="page" href={templ.SafeURL("/")}>Home</a>
-			  <a class="nav-link" href={templ.SafeURL("/projects")}>Projects</a>
+				<a class="nav-link active" aria-current="page" href={ templ.SafeURL("/") }>Home</a>
+				<a class="nav-link" href={ templ.SafeURL("/projects") }>Projects</a>
 			</nav>
-			<nav class="nav flex-column">
-				<a class="nav-link active" href={templ.SafeURL("/settings")}>Settings</a>
-			</nav>
+			<div>
+				<nav class="nav flex-column">
+					<a class="nav-link active" href={ templ.SafeURL("/settings") }>Settings</a>
+				</nav>
+				<small class="text-secondary">v{ lumna.Version }</small>
+			</div>
 		</div>
 	</div>
 }

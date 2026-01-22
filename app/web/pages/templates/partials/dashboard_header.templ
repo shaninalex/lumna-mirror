@@ -10,10 +10,11 @@ templ DashboardHeader(page utils.BasePage) {
 		<div class="d-flex gap-2 align-items-center">
 			@ThemeSwitcher()
 			<div class="dropdown">
-				<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-					{ page.User.Email }
+				<button class="btn btn-default dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<span>{ page.User.Email }</span>
+					<img src={ page.User.Icon } class="rounded-circle" style="width: 2rem"/>
 				</button>
-				<ul class="dropdown-menu">
+				<ul class="dropdown-menu dropdown-menu-end">
 					<li><a class="dropdown-item" href={ templ.SafeURL("/auth/logout") }>Logout</a></li>
 				</ul>
 			</div>
