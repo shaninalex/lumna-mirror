@@ -4,22 +4,44 @@ import "gitlab.com/shaninalex/lumna/app/web/utils"
 
 templ DashboardHeader(page utils.BasePage) {
 	<div class="dashboard-header">
-		<div>
-			{ page.Title }
-		</div>
-		<div class="d-flex gap-2 align-items-center">
-			@ThemeSwitcher()
-			<div class="dropdown">
-				<button class="btn btn-default dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-					<span>{ page.User.Email }</span>
-					<img src={ page.User.Icon } class="rounded-circle" style="width: 2rem"/>
+		<nav class="navbar navbar-expand-lg bg-body-tertiary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">{ page.Title }</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
 				</button>
-				<ul class="dropdown-menu dropdown-menu-end">
-					<li><a class="dropdown-item" href={ templ.SafeURL("/settings") }>Settings</a></li>
-					<li><hr class="dropdown-divider"/></li>
-					<li><a class="dropdown-item" href={ templ.SafeURL("/auth/logout") }>Logout</a></li>
-				</ul>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					// <ul class="navbar-nav me-auto">
+					// 	<li class="nav-item">
+					// 		<a class="nav-link active" aria-current="page" href="#">Home</a>
+					// 	</li>
+					// 	<li class="nav-item">
+					// 		<a class="nav-link" href="#">Features</a>
+					// 	</li>
+					// 	<li class="nav-item">
+					// 		<a class="nav-link disabled" aria-disabled="true">Disabled</a>
+					// 	</li>
+					// </ul>
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							@ThemeSwitcher()
+						</li>
+						<li class="nav-item">
+							<div class="dropdown">
+								<button class="btn btn-default dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+									<span>{ page.User.Email }</span>
+									<img src={ page.User.Icon } class="rounded-circle" style="width: 2rem"/>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-end">
+									<li><a class="dropdown-item" href={ templ.SafeURL("/settings") }>Settings</a></li>
+									<li><hr class="dropdown-divider"/></li>
+									<li><a class="dropdown-item" href={ templ.SafeURL("/auth/logout") }>Logout</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</div>
+		</nav>
 	</div>
 }

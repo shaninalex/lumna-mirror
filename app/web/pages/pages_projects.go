@@ -73,8 +73,9 @@ func (s *ProjectsController) projectBoard(c *gin.Context) {
 	}
 	var b *models.Board
 	for _, _board := range project.Boards {
-		if b.ID == boardID {
+		if _board.ID == boardID {
 			b = &_board
+			break
 		}
 	}
 	if b == nil {
@@ -85,14 +86,13 @@ func (s *ProjectsController) projectBoard(c *gin.Context) {
 		BasePage: base,
 		Board:    *b,
 	}
-	utils.RenderTemplate(c, http.StatusOK, board.BoardEdit(pageData))
+	utils.RenderTemplate(c, http.StatusOK, board.BoardDetail(pageData))
 }
 
 func (s *ProjectsController) projectBoardEdit(c *gin.Context) {
 	ID := uuid.MustParse(c.Param("project_id"))
 	boardID := uuid.MustParse(c.Param("board_id"))
 	base := utils.GetBasePage(c.Request.Context())
-	base.Title = base.Title
 
 	project, err := s.projectService.Get(c.Request.Context(), ID)
 	if err != nil {
@@ -101,13 +101,14 @@ func (s *ProjectsController) projectBoardEdit(c *gin.Context) {
 	}
 	var b *models.Board
 	for _, _board := range project.Boards {
-		if b.ID == boardID {
+		if _board.ID == boardID {
 			b = &_board
 		}
 	}
 	if b == nil {
 		panic(fmt.Errorf("board not found"))
 	}
+	base.Title = b.Title
 	pageData := board.BoardPageData{
 		BasePage: base,
 		Board:    *b,

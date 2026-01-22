@@ -7,6 +7,9 @@ import (
 
 templ BoardDetail(page BoardPageData) {
 	@templates.Dashboard(page.BasePage) {
+		<a href={ templ.SafeURL(fmt.Sprintf("/projects/%s", page.Board.ProjectID.String())) }>
+			<i class="bi bi-chevron-left"></i> Back
+		</a>
 		<div class="d-flex align-items-center justify-content-between">
 			<div>Board { page.Board.Title } detail page</div>
 			<a href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s/edit", page.Board.ProjectID.String(), page.Board.ID.String())) }>
