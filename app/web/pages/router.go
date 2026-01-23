@@ -1,15 +1,14 @@
 package pages
 
 import (
-	"io/fs"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/services"
-	"gitlab.com/shaninalex/lumna/app/static"
 	"gitlab.com/shaninalex/lumna/app/web/middlewares"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/root"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
@@ -25,17 +24,13 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 		localProvider: local.NewLocalAuthProvider(),
 		userService:   &services.UserService{},
 	}
-	staticFilesFS := static.GetStaticFS()
-	if staticFilesFS != nil {
-		staticFiles, err := fs.Sub(staticFilesFS, "assets")
-		if err != nil {
-			panic(err)
-		}
-		router.StaticFS("/assets", http.FS(staticFiles))
-		router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFiles))
+	staticFS := lumna.StaticFS()
+	if staticFS != nil {
+		router.StaticFS("/assets", http.FS(staticFS))
+		router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFS))
 	} else {
-		router.Static("/assets", "app/static/resources/assets")                      // TODO: use assets base path from config
-		router.StaticFile("/favicon.ico", "app/static/resources/assets/favicon.ico") // TODO: use assets base path from config
+		router.Static("/assets", "assets")                      // TODO: use assets base path from config
+		router.StaticFile("/favicon.ico", "assets/favicon.ico") // TODO: use assets base path from config
 	}
 
 	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))

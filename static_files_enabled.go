@@ -1,6 +1,6 @@
 //go:build embed
 
-package static
+package lumna
 
 import (
 	"embed"
@@ -8,12 +8,12 @@ import (
 	"log"
 )
 
-//go:embed all:resources
+//go:embed all:assets
 var resourcesFS embed.FS
 
-// GetStaticFS returns embedded static files when built with -tags embed
-func GetStaticFS() fs.FS {
-	sub, err := fs.Sub(resourcesFS, "resources")
+// StaticFS returns embedded static files when built with -tags embed
+func StaticFS() fs.FS {
+	sub, err := fs.Sub(resourcesFS, "assets")
 	if err != nil {
 		log.Printf("warning: failed to load embedded static files: %v", err)
 		return nil

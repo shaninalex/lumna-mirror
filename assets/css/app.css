@@ -56,3 +56,7 @@ img {
 .kanban-column {
     width: 20rem;
 }
+
+.cursor-handle {
+    cursor: grab;
+}

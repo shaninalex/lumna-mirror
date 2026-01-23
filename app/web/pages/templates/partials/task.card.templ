@@ -5,7 +5,15 @@ import "gitlab.com/shaninalex/lumna/app/models"
 templ TaskCard(task models.Task) {
 	<div class="card">
 		<div class="card-body">
-			{ task.Title }
+			<a href=""><h6>{ task.Title }</h6></a>
+			<div class="d-flex align-items-center justify-content-between">
+				<div class="text-secondary">
+					<small>{ task.CreatedAt.Format("15:04 02.01") }</small>
+				</div>
+				<div>
+					<img src="/assets/img/5.png" class="rounded-circle" style="width: 1.5rem"/>
+				</div>
+			</div>
 		</div>
 	</div>
 }
