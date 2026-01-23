@@ -8,19 +8,20 @@ import (
 	"gorm.io/gorm"
 )
 
-type Board struct {
+type List struct {
 	ID    uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
 	Title string    `gorm:"not null" json:"title"`
+	Order uint      `json:"order"`
 
-	ProjectID uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
+	BoardID uuid.UUID `gorm:"type:uuid;not null;index" json:"board_id"`
 
-	Lists []List
+	Tasks []Task
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (s *Board) BeforeCreate(tx *gorm.DB) error {
+func (s *List) BeforeCreate(tx *gorm.DB) error {
 	if s.ID == uuid.Nil {
 		s.ID = uuid.New()
 	}
@@ -30,11 +31,11 @@ func (s *Board) BeforeCreate(tx *gorm.DB) error {
 	return nil
 }
 
-func (s *Board) BeforeUpdate(tx *gorm.DB) (err error) {
+func (s *List) BeforeUpdate(tx *gorm.DB) (err error) {
 	s.UpdatedAt = time.Now()
 	return nil
 }
 
-func (s *Board) String() string {
-	return fmt.Sprintf("Board id=%s title=%s project=%s", s.ID.String(), s.Title, s.ProjectID.String())
+func (s *List) String() string {
+	return fmt.Sprintf("List id=%s title=%s", s.ID.String(), s.Title)
 }

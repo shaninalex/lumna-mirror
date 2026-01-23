@@ -10,12 +10,13 @@ import (
 
 type Project struct {
 	ID    uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
-	Title string    `json:"title"`
+	Title string    `gorm:"not null" json:"title"`
 
 	OwnerID uuid.UUID `gorm:"type:uuid;not null;index" json:"owner_id"`
 	Owner   Identity  `gorm:"foreignKey:OwnerID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"-"`
 
 	Boards []Board `json:"boards"`
+	Tasks  []Task  `json:"tasks"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -28,9 +29,7 @@ func (s *Project) BeforeCreate(tx *gorm.DB) error {
 	if s.CreatedAt.IsZero() {
 		s.CreatedAt = time.Now()
 	}
-	if s.Title == "" {
-		s.Title = "Untitled project"
-	}
+
 	return nil
 }
 
