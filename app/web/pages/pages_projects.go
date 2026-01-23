@@ -1,6 +1,7 @@
 package pages
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -48,11 +49,10 @@ func (s *ProjectsController) projectDetail(c *gin.Context) {
 	ID := uuid.MustParse(c.Param("project_id"))
 	project, err := s.projectService.Get(c.Request.Context(), ID)
 	if err != nil {
-		// TODO: error page
 		panic(err)
 	}
 	base := utils.GetBasePage(c.Request.Context())
-	base.Title = project.Title
+	base.Title = fmt.Sprintf("Project: %s", project.Title)
 	pageData := projects.ProjectDetailPageData{
 		BasePage: base,
 		Project:  *project,

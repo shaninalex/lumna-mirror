@@ -5,9 +5,10 @@ import "fmt"
 
 templ BoardEdit(page BoardPageData) {
 	@templates.Dashboard(page.BasePage) {
-		<a href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s", page.Board.ProjectID.String(), page.Board.ID.String())) }>
+		<a class="btn btn-sm btn-outline-secondary mb-2" href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s", page.Board.ProjectID.String(), page.Board.ID.String())) }>
 			<i class="bi bi-chevron-left"></i> Back
 		</a>
+		<br/>
 		<div>Board { page.Board.Title } edit page</div>
 	}
 }

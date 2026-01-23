@@ -31,7 +31,7 @@ func BoardListColumn(list models.BoardList) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"card kanban-column\"><div class=\"card-header d-flex justify-content-between\"><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"card kanban-column\"><div class=\"card-header d-flex align-items-center justify-content-between\"><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -44,7 +44,7 @@ func BoardListColumn(list models.BoardList) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><div class=\"dropdown\"><button class=\"btn btn-default btn-sm dropdown-toggle\" type=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"bi bi-three-dots\"></i></button><ul class=\"dropdown-menu dropdown-menu-end\"><li><a class=\"dropdown-item\" href=\"#\">Edit</a></li><li><a class=\"dropdown-item text-danger\" href=\"#\">Delete</a></li></ul></div></div><div class=\"card-body d-flex flex-column gap-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><div class=\"dropdown\"><button class=\"btn btn-default btn-sm\" type=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"bi bi-three-dots\"></i></button><ul class=\"dropdown-menu dropdown-menu-end\"><li><a class=\"dropdown-item\" href=\"#\">Edit</a></li><li><a class=\"dropdown-item text-danger\" href=\"#\">Delete</a></li></ul></div></div><div class=\"card-body d-flex flex-column gap-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

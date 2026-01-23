@@ -4,10 +4,10 @@ import "gitlab.com/shaninalex/lumna/app/models"
 
 templ BoardListColumn(list models.BoardList) {
 	<div class="card kanban-column">
-		<div class="card-header d-flex justify-content-between">
+		<div class="card-header d-flex align-items-center justify-content-between">
 			<div>{ list.Title }</div>
 			<div class="dropdown">
-				<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				<button class="btn btn-default btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 					<i class="bi bi-three-dots"></i>
 				</button>
 				<ul class="dropdown-menu dropdown-menu-end">
