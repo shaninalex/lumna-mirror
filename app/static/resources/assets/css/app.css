@@ -52,3 +52,7 @@ img {
     width: 1em;
     height: 1em;
 }
+
+.kanban-column {
+    width: 20rem;
+}

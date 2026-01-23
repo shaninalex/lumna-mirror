@@ -1,0 +1,11 @@
+package partials
+
+import "gitlab.com/shaninalex/lumna/app/models"
+
+templ TaskCard(task models.Task) {
+	<div class="card">
+		<div class="card-body">
+			{ task.Title }
+		</div>
+	</div>
+}

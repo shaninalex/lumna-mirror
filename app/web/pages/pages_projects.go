@@ -1,12 +1,10 @@
 package pages
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/services"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/projects"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/projects/board"
@@ -63,23 +61,11 @@ func (s *ProjectsController) projectDetail(c *gin.Context) {
 }
 
 func (s *ProjectsController) projectBoard(c *gin.Context) {
-	ID := uuid.MustParse(c.Param("project_id"))
 	boardID := uuid.MustParse(c.Param("board_id"))
 	base := utils.GetBasePage(c.Request.Context())
-	project, err := s.projectService.Get(c.Request.Context(), ID)
+	b, err := s.projectService.GetBoard(c.Request.Context(), boardID)
 	if err != nil {
-		// TODO: error page
 		panic(err)
-	}
-	var b *models.Board
-	for _, _board := range project.Boards {
-		if _board.ID == boardID {
-			b = &_board
-			break
-		}
-	}
-	if b == nil {
-		panic(fmt.Errorf("board not found"))
 	}
 	base.Title = b.Title
 	pageData := board.BoardPageData{
@@ -90,23 +76,11 @@ func (s *ProjectsController) projectBoard(c *gin.Context) {
 }
 
 func (s *ProjectsController) projectBoardEdit(c *gin.Context) {
-	ID := uuid.MustParse(c.Param("project_id"))
 	boardID := uuid.MustParse(c.Param("board_id"))
 	base := utils.GetBasePage(c.Request.Context())
-
-	project, err := s.projectService.Get(c.Request.Context(), ID)
+	b, err := s.projectService.GetBoard(c.Request.Context(), boardID)
 	if err != nil {
-		// TODO: error page
 		panic(err)
-	}
-	var b *models.Board
-	for _, _board := range project.Boards {
-		if _board.ID == boardID {
-			b = &_board
-		}
-	}
-	if b == nil {
-		panic(fmt.Errorf("board not found"))
 	}
 	base.Title = b.Title
 	pageData := board.BoardPageData{
