@@ -12,9 +12,6 @@ type Project struct {
 	ID    uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
 	Title string    `gorm:"not null" json:"title"`
 
-	OwnerID uuid.UUID `gorm:"type:uuid;not null;index" json:"owner_id"`
-	Owner   Identity  `gorm:"foreignKey:OwnerID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"-"`
-
 	Boards []Board `json:"boards"`
 	Tasks  []Task  `json:"tasks"`
 
@@ -39,5 +36,5 @@ func (s *Project) BeforeUpdate(tx *gorm.DB) (err error) {
 }
 
 func (s *Project) String() string {
-	return fmt.Sprintf("Project id=%s title=%s owner=%s", s.ID.String(), s.Title, s.OwnerID.String())
+	return fmt.Sprintf("Project id=%s title=%s", s.ID.String(), s.Title)
 }

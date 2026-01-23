@@ -35,8 +35,7 @@ func (s *ProjectService) List(ctx context.Context) ([]models.Project, error) {
 
 func (s *ProjectService) Create(ctx context.Context, title string, userID uuid.UUID) (*models.Project, error) {
 	project := models.Project{
-		Title:   title,
-		OwnerID: userID,
+		Title: title,
 	}
 	database := db.GetDB(ctx)
 	if result := database.Create(&project); result.Error != nil {

@@ -1,0 +1,84 @@
+{
+    "identities": [
+        {
+            "id": "7423a2b2-3bb3-49b9-be46-8ef69860f154",
+            "full_name": "John Doe",
+            "email": "test@test.com",
+            "credentials": [
+                {
+                    "provider": "local",
+                    "password": "111"
+                }
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "title": "Lumna",
+            "boards": [
+                {
+                    "title": "development",
+                    "lists": [
+                        {
+                            "title": "TODO",
+                            "order": 0,
+                            "tasks": [
+                                {
+                                    "title": "Create mock db cli command",
+                                    "order": 0
+                                },
+                                {
+                                    "title": "custom UI",
+                                    "order": 1
+                                }
+                            ]
+                        },
+                        {
+                            "title": "IN PROGRESS",
+                            "order": 0,
+                            "tasks": [
+                                {
+                                    "title": "create mock database",
+                                    "order": 0
+                                }
+                            ]
+                        },
+                        {
+                            "title": "DONE",
+                            "order": 0,
+                            "tasks": [
+                                {
+                                    "title": "remove angular frontend",
+                                    "order": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "marketing",
+                    "lists": [
+                        {
+                            "title": "TODO",
+                            "order": 0,
+                            "tasks": [
+                                {
+                                    "title": "Open gitlab repository",
+                                    "order": 0
+                                },
+                                {
+                                    "title": "public website",
+                                    "order": 1
+                                },
+                                {
+                                    "title": "buy a domain",
+                                    "order": 2
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

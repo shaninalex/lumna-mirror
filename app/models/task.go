@@ -14,8 +14,8 @@ type Task struct {
 	Order uint      `json:"order"`
 	Done  bool      `json:"done"`
 
-	ProjectID uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
-	ListID    uuid.UUID `gorm:"type:uuid;not null;index" json:"list_id"`
+	ProjectID   uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
+	BoardListID uuid.UUID `gorm:"type:uuid;not null;index" json:"board_list_id"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

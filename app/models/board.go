@@ -9,12 +9,12 @@ import (
 )
 
 type Board struct {
-	ID    uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
-	Title string    `gorm:"not null" json:"title"`
-
+	ID        uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
+	Title     string    `gorm:"not null" json:"title"`
+	Order     uint
 	ProjectID uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
 
-	Lists []List
+	Lists []BoardList
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -36,5 +36,5 @@ func (s *Board) BeforeUpdate(tx *gorm.DB) (err error) {
 }
 
 func (s *Board) String() string {
-	return fmt.Sprintf("Board id=%s title=%s project=%s", s.ID.String(), s.Title, s.ProjectID.String())
+	return fmt.Sprintf("Board id=%s title=%s", s.ID.String(), s.Title)
 }
