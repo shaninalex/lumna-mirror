@@ -7,3 +7,5 @@ cz bump
 TAG=$(git describe --tags)
 
 sed -i "s/const Version = \".*\"/const Version = \"v${TAG}\"/" ./version.go
+
+git commit --amend
