@@ -80,5 +80,13 @@ func (s *ProjectService) Delete(ctx context.Context, id uuid.UUID) error {
 		return result.Error
 	}
 	return nil
+}
 
+func (s *ProjectService) GetTask(ctx context.Context, taskID uuid.UUID) (*models.Task, error) {
+	database := db.GetDB(ctx)
+	task := &models.Task{}
+	if result := database.Where("id = ?", taskID).First(&task); result.Error != nil {
+		return nil, result.Error
+	}
+	return task, nil
 }

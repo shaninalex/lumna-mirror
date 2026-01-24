@@ -2,6 +2,11 @@
     --lm-layout-padding: 1rem;
 }
 
+body,
+html {
+    font-size: 0.9rem;
+}
+
 img {
     max-width: 100%;
 }

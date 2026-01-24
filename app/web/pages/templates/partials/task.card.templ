@@ -1,11 +1,22 @@
 package partials
 
 import "gitlab.com/shaninalex/lumna/app/models"
+import "fmt"
 
 templ TaskCard(task models.Task) {
 	<div class="card">
 		<div class="card-body">
-			<a href=""><h6>{ task.Title }</h6></a>
+			<button
+				type="button"
+				class="btn p-0"
+				hx-get={ fmt.Sprintf("/hx/tasks/%s/modal", task.ID.String()) }
+				hx-target="#taskModalBody"
+				hx-trigger="click"
+				data-bs-toggle="modal"
+				data-bs-target="#taskModal"
+			>
+				{ task.Title }
+			</button>
 			<div class="d-flex align-items-center justify-content-between">
 				<div class="text-secondary">
 					<small>{ task.CreatedAt.Format("15:04 02.01") }</small>
