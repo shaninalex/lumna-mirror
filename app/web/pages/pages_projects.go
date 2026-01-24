@@ -6,6 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
 	"gitlab.com/shaninalex/lumna/app/services"
 	"gitlab.com/shaninalex/lumna/app/web/adapters"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
@@ -28,6 +30,8 @@ func RegisterProjectPages(router *gin.RouterGroup) {
 
 	router.GET("/projects", controller.projectsIndex)
 	router.GET("/projects/:projectID", controller.projectDetail)
+	router.GET("/projects/:projectID/edit", controller.projectEdit)
+	router.POST("/projects/:projectID/edit", controller.projectEditSubmit)
 	router.GET("/projects/:projectID/board/:boardID", controller.projectBoard)
 	router.GET("/projects/:projectID/board/:boardID/edit", controller.projectBoardEdit)
 	router.GET("/hx/tasks/:taskID/modal", controller.taskDetail)
@@ -60,6 +64,39 @@ func (s *ProjectsController) projectDetail(c *gin.Context) {
 		Project:  *project,
 	}
 	utils.RenderTemplate(c, http.StatusOK, projects.ProjectDetail(pageData))
+}
+
+func (s *ProjectsController) projectEdit(c *gin.Context) {
+	ID := uuid.MustParse(c.Param("projectID"))
+	project, err := s.projectService.Get(c.Request.Context(), ID)
+	if err != nil {
+		panic(err)
+	}
+	pageData := projects.ProjectEditPageData{
+		BasePage: utils.BasePageData(c, fmt.Sprintf("Project: %s", project.Title)),
+		Project:  *project,
+	}
+	form := newProjectForm(project, pageData.CsrfToken)
+	pageData.Form = form
+	utils.RenderTemplate(c, http.StatusOK, projects.ProjectEdit(pageData))
+}
+
+func (s *ProjectsController) projectEditSubmit(c *gin.Context) {
+	ID := uuid.MustParse(c.Param("projectID"))
+	project, err := s.projectService.Get(c.Request.Context(), ID)
+	if err != nil {
+		panic(err)
+	}
+	payload := struct {
+		Title string `form:"title"`
+	}{}
+	if err := c.ShouldBind(&payload); err != nil {
+		panic(err)
+	}
+	if err := s.projectService.UpdateProject(c.Request.Context(), project.ID, payload.Title); err != nil {
+		panic(err)
+	}
+	utils.RenderTemplate(c, http.StatusOK, partials.ProjectUpdated(payload.Title))
 }
 
 func (s *ProjectsController) projectBoard(c *gin.Context) {
@@ -133,4 +170,18 @@ func (s *ProjectsController) reorderList(c *gin.Context) {
 		return
 	}
 	utils.Success(c, nil)
+}
+
+func newProjectForm(project *models.Project, csrfToken string) tforms.IForm {
+	form := tforms.NewForm(
+		fmt.Sprintf("/projects/%s/edit", project.ID.String()),
+		false,
+		tforms.NewHiddenField("_csrf", csrfToken, true),
+		tforms.NewInputField("title", tforms.TextInputText, true).
+			SetPlaceholder("Project title").
+			SetValue(project.Title).
+			SetLabel("Project title"),
+	)
+
+	return form
 }

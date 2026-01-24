@@ -1,0 +1,47 @@
+package projects
+
+import (
+	"fmt"
+	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
+)
+
+type ProjectEditPageData struct {
+	utils.BasePage
+	Project models.Project
+	Form    tforms.IForm
+}
+
+templ ProjectEdit(page ProjectEditPageData) {
+	@templates.Dashboard(page.BasePage) {
+		<div class="d-flex align-items-start justify-content-between mb-4">
+			<div>
+				<a
+					class="btn btn-sm btn-outline-secondary"
+					href={ templ.SafeURL("/projects") }
+					area-label="Back to project details"
+				>
+					<i class="bi bi-chevron-left"></i> Back
+				</a>
+			</div>
+		</div>
+		<div>
+			<div id="result"></div>
+			<form
+				hx-post={ templ.SafeURL(fmt.Sprintf("/projects/%s/edit", page.Project.ID.String())) }
+				hx-target="#result"
+			>
+				<input type="hidden" value={ page.CsrfToken } name="_csrf"/>
+				<div class="mb-3">
+					<label for="form_title" class="form-label">Project title</label>
+					<input type="text" class="form-control" name="title" id="form_title" value={ page.Project.Title } placeholder="Project title" required=""/>
+				</div>
+				<div>
+					<button class="btn btn-success" type="submit" role="button">Save</button>
+				</div>
+			</form>
+		</div>
+	}
+}

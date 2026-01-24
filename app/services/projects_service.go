@@ -112,3 +112,10 @@ func (s *ProjectService) ReorderList(ctx context.Context, listID uuid.UUID, orde
 		Where("id = ?", listID).
 		Update("order", order).Error
 }
+
+func (s *ProjectService) UpdateProject(ctx context.Context, projectID uuid.UUID, title string) error {
+	database := db.GetDB(ctx)
+	return database.Model(&models.Project{}).
+		Where("id = ?", projectID.String()).
+		Update("title", title).Error
+}
