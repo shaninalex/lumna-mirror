@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"gitlab.com/shaninalex/lumna/app/pkg/csrf"
 	"gitlab.com/shaninalex/lumna/app/services"
 	"gitlab.com/shaninalex/lumna/app/web/adapters"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
@@ -39,6 +40,7 @@ func RegisterProjectPages(router *gin.RouterGroup) {
 	router.PATCH("/hx/projects/lists/:id/reorder", controller.reorderList)
 	router.DELETE("/hx/projects/:projectID/board/:boardID", controller.projectBoardDelete)
 
+	router.GET("/hx/projects/board-list/modal", controller.boardListModal)
 }
 
 func (s *ProjectsController) projectsIndex(c *gin.Context) {
@@ -189,7 +191,7 @@ func (s *ProjectsController) projectBoardAddFormSubmition(c *gin.Context) {
 	}
 
 	c.Header("HX-Trigger", "board:created")
-	utils.RenderTemplate(c, http.StatusOK, partials.BoardListItem(board.ID.String(), ID.String(), board.Title))
+	utils.RenderTemplate(c, http.StatusOK, partials.BoardItem(board.ID.String(), ID.String(), board.Title))
 }
 
 func (s *ProjectsController) projectBoardDelete(c *gin.Context) {
@@ -202,4 +204,11 @@ func (s *ProjectsController) projectBoardDelete(c *gin.Context) {
 	redirectURL := fmt.Sprintf("/projects/%s", projectID)
 	c.Header("HX-Trigger", "board:deleted")
 	c.Writer.Header().Set("HX-Redirect", redirectURL)
+}
+
+func (s *ProjectsController) boardListModal(c *gin.Context) {
+	utils.RenderTemplate(c, http.StatusOK, partials.BoardListForm(
+		csrf.GetToken(c),
+		false,
+	))
 }

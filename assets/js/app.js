@@ -103,3 +103,9 @@ document.addEventListener(EVENT_BOARD_CREATED, async (e) => {
 document.addEventListener(EVENT_BOARD_DELETED, async (e) => {
     console.log(e);
 });
+
+function closeModal(id) {
+    const modal = document.querySelector(id);
+    if (!modal) return;
+    modal.remove();
+}

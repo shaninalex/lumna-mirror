@@ -39,7 +39,7 @@ templ ProjectDetail(page ProjectDetailPageData) {
 			</div>
 			<nav class="d-flex gap-4" id="projectBoardList">
 				for _, board := range page.Project.Boards {
-					@partials.BoardListItem(board.ID.String(), page.Project.ID.String(), board.Title)
+					@partials.BoardItem(board.ID.String(), page.Project.ID.String(), board.Title)
 				}
 			</nav>
 		</div>

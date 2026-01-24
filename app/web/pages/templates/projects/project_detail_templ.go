@@ -93,7 +93,7 @@ func ProjectDetail(page ProjectDetailPageData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			for _, board := range page.Project.Boards {
-				templ_7745c5c3_Err = partials.BoardListItem(board.ID.String(), page.Project.ID.String(), board.Title).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = partials.BoardItem(board.ID.String(), page.Project.ID.String(), board.Title).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
