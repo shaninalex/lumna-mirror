@@ -10,13 +10,17 @@ templ BoardDetail(page BoardPageData) {
 	@templates.Dashboard(page.BasePage) {
 		<div class="d-flex align-items-start justify-content-between mb-4">
 			<div>
-				<a class="btn btn-sm btn-outline-secondary mb-2" href={ templ.SafeURL(fmt.Sprintf("/projects/%s", page.Board.ProjectID.String())) }>
+				<a
+					class="btn btn-sm btn-outline-secondary"
+					href={ templ.SafeURL(fmt.Sprintf("/projects/%s", page.Board.ProjectID.String())) }
+				>
 					<i class="bi bi-chevron-left"></i> Back
 				</a>
-				<br/>
-				Board { page.Board.Title } detail page
 			</div>
-			<a class="btn btn-sm btn-outline-secondary" href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s/edit", page.Board.ProjectID.String(), page.Board.ID.String())) }>
+			<a
+				class="btn btn-sm btn-outline-secondary"
+				href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s/edit", page.Board.ProjectID.String(), page.Board.ID.String())) }
+			>
 				<i class="bi bi-pencil-square"></i> Edit
 			</a>
 		</div>

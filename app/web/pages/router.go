@@ -32,7 +32,6 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 		router.Static("/assets", "assets")                      // TODO: use assets base path from config
 		router.StaticFile("/favicon.ico", "assets/favicon.ico") // TODO: use assets base path from config
 	}
-
 	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
 	router.Use(middlewares.CsrfMiddleware(conf.SecretKey))
 

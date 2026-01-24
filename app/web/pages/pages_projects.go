@@ -69,7 +69,7 @@ func (s *ProjectsController) projectBoard(c *gin.Context) {
 		panic(err)
 	}
 	pageData := board.BoardPageData{
-		BasePage: utils.BasePageData(c, b.Title),
+		BasePage: utils.BasePageData(c, fmt.Sprintf("Board: %s", b.Title)),
 		Board:    *b,
 	}
 	utils.RenderTemplate(c, http.StatusOK, board.BoardDetail(pageData))
@@ -82,7 +82,7 @@ func (s *ProjectsController) projectBoardEdit(c *gin.Context) {
 		panic(err)
 	}
 	pageData := board.BoardPageData{
-		BasePage: utils.BasePageData(c, b.Title),
+		BasePage: utils.BasePageData(c, fmt.Sprintf("Edit board: %s", b.Title)),
 		Board:    *b,
 	}
 	utils.RenderTemplate(c, http.StatusOK, board.BoardEdit(pageData))

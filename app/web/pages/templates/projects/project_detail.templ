@@ -14,7 +14,19 @@ type ProjectDetailPageData struct {
 
 templ ProjectDetail(page ProjectDetailPageData) {
 	@templates.Dashboard(page.BasePage) {
-		<h5>Boards:</h5>
+		<div class="d-flex align-items-start justify-content-between mb-4">
+			<div>
+				<a class="btn btn-sm btn-outline-secondary" href={ templ.SafeURL("/projects") }>
+					<i class="bi bi-chevron-left"></i> Back
+				</a>
+			</div>
+			<a
+				class="btn btn-sm btn-outline-secondary"
+				href={ templ.SafeURL(fmt.Sprintf("/projects/%s/edit", page.Project.ID.String())) }
+			>
+				<i class="bi bi-pencil-square"></i> Edit
+			</a>
+		</div>
 		<nav class="d-flex gap-4">
 			for _, board := range page.Project.Boards {
 				<a class="btn btn-secondary" href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s", page.Project.ID.String(), board.ID.String())) }>
