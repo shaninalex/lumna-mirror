@@ -3,7 +3,7 @@ package partials
 import "gitlab.com/shaninalex/lumna/app/models"
 
 templ BoardListColumn(list models.BoardList) {
-	<div class="card kanban-column">
+	<div class="card kanban-column" id={ list.ID.String() }>
 		<div class="card-header d-flex align-items-center justify-content-between cursor-handle">
 			<div>{ list.Title }</div>
 			<div class="dropdown">
@@ -16,7 +16,7 @@ templ BoardListColumn(list models.BoardList) {
 				</ul>
 			</div>
 		</div>
-		<div class="card-body d-flex flex-column gap-2">
+		<div class="card-body d-flex flex-column gap-2" data-column={ list.ID.String() }>
 			for _, task := range list.Tasks {
 				@TaskCard(task)
 			}

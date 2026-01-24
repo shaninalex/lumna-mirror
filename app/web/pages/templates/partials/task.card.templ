@@ -4,7 +4,10 @@ import "gitlab.com/shaninalex/lumna/app/models"
 import "fmt"
 
 templ TaskCard(task models.Task) {
-	<div class="card">
+	<div
+		class="card"
+		id={ task.ID.String() }
+	>
 		<div class="card-body">
 			<button
 				type="button"
