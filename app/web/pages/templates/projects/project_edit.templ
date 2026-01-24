@@ -2,25 +2,16 @@ package projects
 
 import (
 	"fmt"
-	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
-	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
-type ProjectEditPageData struct {
-	utils.BasePage
-	Project models.Project
-	Form    tforms.IForm
-}
-
-templ ProjectEdit(page ProjectEditPageData) {
+templ ProjectEdit(page ProjectDetailPageData) {
 	@templates.Dashboard(page.BasePage) {
 		<div class="d-flex align-items-start justify-content-between mb-4">
 			<div>
 				<a
 					class="btn btn-sm btn-outline-secondary"
-					href={ templ.SafeURL("/projects") }
+					href={ templ.SafeURL(fmt.Sprintf("/projects/%s", page.Project.ID.String())) }
 					area-label="Back to project details"
 				>
 					<i class="bi bi-chevron-left"></i> Back

@@ -6,8 +6,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
 	"gitlab.com/shaninalex/lumna/app/services"
 	"gitlab.com/shaninalex/lumna/app/web/adapters"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
@@ -34,7 +32,9 @@ func RegisterProjectPages(router *gin.RouterGroup) {
 	router.POST("/projects/:projectID/edit", controller.projectEditSubmit)
 	router.GET("/projects/:projectID/board/:boardID", controller.projectBoard)
 	router.GET("/projects/:projectID/board/:boardID/edit", controller.projectBoardEdit)
+
 	router.GET("/hx/tasks/:taskID/modal", controller.taskDetail)
+	router.POST("/hx/projects/:projectID/board/form", controller.projectBoardAddFormSubmition)
 	router.PATCH("/hx/projects/tasks/:id/reorder", controller.reorderTask)
 	router.PATCH("/hx/projects/lists/:id/reorder", controller.reorderList)
 
@@ -72,12 +72,10 @@ func (s *ProjectsController) projectEdit(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	pageData := projects.ProjectEditPageData{
+	pageData := projects.ProjectDetailPageData{
 		BasePage: utils.BasePageData(c, fmt.Sprintf("Project: %s", project.Title)),
 		Project:  *project,
 	}
-	form := newProjectForm(project, pageData.CsrfToken)
-	pageData.Form = form
 	utils.RenderTemplate(c, http.StatusOK, projects.ProjectEdit(pageData))
 }
 
@@ -172,16 +170,22 @@ func (s *ProjectsController) reorderList(c *gin.Context) {
 	utils.Success(c, nil)
 }
 
-func newProjectForm(project *models.Project, csrfToken string) tforms.IForm {
-	form := tforms.NewForm(
-		fmt.Sprintf("/projects/%s/edit", project.ID.String()),
-		false,
-		tforms.NewHiddenField("_csrf", csrfToken, true),
-		tforms.NewInputField("title", tforms.TextInputText, true).
-			SetPlaceholder("Project title").
-			SetValue(project.Title).
-			SetLabel("Project title"),
-	)
+func (s *ProjectsController) projectBoardAddFormSubmition(c *gin.Context) {
+	ID := uuid.MustParse(c.Param("projectID"))
+	payload := struct {
+		Title string `form:"title"`
+	}{}
 
-	return form
+	if err := c.ShouldBind(&payload); err != nil {
+		utils.RenderTemplate(c, http.StatusBadRequest, partials.Alert(err.Error(), &partials.AlertTypeDanger))
+		return
+	}
+
+	board, err := s.projectService.BoardCreate(c.Request.Context(), ID, payload.Title)
+	if err != nil {
+		utils.RenderTemplate(c, http.StatusBadRequest, partials.Alert(err.Error(), &partials.AlertTypeDanger))
+		return
+	}
+
+	utils.RenderTemplate(c, http.StatusOK, partials.BoardListItem(board.ID.String(), ID.String(), board.Title))
 }

@@ -9,12 +9,11 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
-func LoginPage(page utils.BasePage, form tforms.IForm) templ.Component {
+func LoginPage(page utils.BasePage) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -47,15 +46,20 @@ func LoginPage(page utils.BasePage, form tforms.IForm) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"vw-100 vh-100 d-flex align-items-center justify-content-center\"><div style=\"width: 320px\"><div class=\"text-center mb-3\"><img src=\"/assets/img/logo.svg\" width=\"150px\"></div><div class=\"card\"><div class=\"card-body\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"vw-100 vh-100 d-flex align-items-center justify-content-center\"><div style=\"width: 320px\"><div class=\"text-center mb-3\"><img src=\"/assets/img/logo.svg\" width=\"150px\"></div><div class=\"card\"><div class=\"card-body\"><form hx-post=\"/auth/login\" hx-target=\"#result\"><input type=\"hidden\" value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = tforms.UIForm(form).Render(ctx, templ_7745c5c3_Buffer)
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(page.CsrfToken)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/auth/auth-login.templ`, Line: 18, Col: 50}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" name=\"_csrf\"><div id=\"result\"></div><div class=\"mb-3\"><label for=\"form_email\" class=\"form-label\">Email</label> <input type=\"email\" class=\"form-control\" name=\"email\" id=\"form_email\" value=\"\" placeholder=\"example@mail.com\" required></div><div class=\"mb-3\"><label for=\"form_password\" class=\"form-label\">Password</label> <input type=\"password\" class=\"form-control\" name=\"password\" id=\"form_password\" value=\"\" placeholder=\"Password\" required></div><div><button class=\"btn btn-success\" type=\"submit\" role=\"button\">Save</button></div></form></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

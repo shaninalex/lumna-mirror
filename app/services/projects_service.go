@@ -119,3 +119,14 @@ func (s *ProjectService) UpdateProject(ctx context.Context, projectID uuid.UUID,
 		Where("id = ?", projectID.String()).
 		Update("title", title).Error
 }
+
+func (s *ProjectService) BoardCreate(ctx context.Context, projectID uuid.UUID, title string) (*models.Board, error) {
+	board := models.Board{
+		ProjectID: projectID,
+		Title:     title,
+	}
+	if result := db.GetDB(ctx).Create(&board); result.Error != nil {
+		return nil, result.Error
+	}
+	return &board, nil
+}

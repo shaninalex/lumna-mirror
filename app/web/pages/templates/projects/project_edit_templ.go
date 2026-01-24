@@ -10,19 +10,10 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
-	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
-	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
-type ProjectEditPageData struct {
-	utils.BasePage
-	Project models.Project
-	Form    tforms.IForm
-}
-
-func ProjectEdit(page ProjectEditPageData) templ.Component {
+func ProjectEdit(page ProjectDetailPageData) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -60,9 +51,9 @@ func ProjectEdit(page ProjectEditPageData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 templ.SafeURL
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/projects"))
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(fmt.Sprintf("/projects/%s", page.Project.ID.String())))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/projects/project_edit.templ`, Line: 23, Col: 38}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/projects/project_edit.templ`, Line: 14, Col: 80}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -75,7 +66,7 @@ func ProjectEdit(page ProjectEditPageData) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.SafeURL(fmt.Sprintf("/projects/%s/edit", page.Project.ID.String())))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/projects/project_edit.templ`, Line: 33, Col: 87}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/projects/project_edit.templ`, Line: 24, Col: 87}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -88,7 +79,7 @@ func ProjectEdit(page ProjectEditPageData) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(page.CsrfToken)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/projects/project_edit.templ`, Line: 36, Col: 47}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/projects/project_edit.templ`, Line: 27, Col: 47}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -101,7 +92,7 @@ func ProjectEdit(page ProjectEditPageData) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(page.Project.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/projects/project_edit.templ`, Line: 39, Col: 100}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/projects/project_edit.templ`, Line: 30, Col: 100}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {

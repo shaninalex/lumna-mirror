@@ -73,14 +73,14 @@ func BoardDetail(page BoardPageData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><i class=\"bi bi-pencil-square\"></i> Edit</a></div><div class=\"d-flex align-items-start flex-wrap-none gap-4\" data-board=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><i class=\"bi bi-pencil-square\"></i> Edit</a></div><div class=\"d-flex align-items-start flex-nowrap gap-4\" data-board=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("board-%s", page.Board.ID.String()))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/projects/board/board_detail.templ`, Line: 27, Col: 121}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/projects/board/board_detail.templ`, Line: 29, Col: 63}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {

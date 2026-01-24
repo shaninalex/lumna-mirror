@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -32,11 +33,12 @@ templ ProjectDetail(page ProjectDetailPageData) {
 				<i class="bi bi-pencil-square"></i>
 			</a>
 		</div>
-		<nav class="d-flex gap-4">
+		<div class="mb-4">
+			@partials.BoardForm(page.Project.ID.String(), page.CsrfToken)
+		</div>
+		<nav class="d-flex gap-4" id="projectBoardList">
 			for _, board := range page.Project.Boards {
-				<a class="btn btn-secondary" href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s", page.Project.ID.String(), board.ID.String())) }>
-					{ board.Title }
-				</a>
+				@partials.BoardListItem(board.ID.String(), page.Project.ID.String(), board.Title)
 			}
 		</nav>
 	}

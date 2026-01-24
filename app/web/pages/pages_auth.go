@@ -7,8 +7,8 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
-	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/auth"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -37,9 +37,7 @@ func (s *AuthController) handleLogin(c *gin.Context) {
 		return
 	}
 	page := utils.BasePageData(c, "Login")
-	form := newLoginForm(page.CsrfToken)
-	component := auth.LoginPage(page, form)
-	c.Status(http.StatusOK)
+	component := auth.LoginPage(page)
 	templ.Handler(component).ServeHTTP(c.Writer, c.Request)
 }
 
@@ -56,19 +54,19 @@ func (s *AuthController) handleLoginSubmission(c *gin.Context) {
 
 	// Bind form data to struct
 	if err := c.ShouldBind(&payload); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.RenderTemplate(c, http.StatusOK, partials.Alert(err.Error(), &partials.AlertTypeDanger))
 		return
 	}
 
 	if err := payload.Validate(); err != nil {
-		utils.Error(c, http.StatusBadRequest, err)
+		utils.RenderTemplate(c, http.StatusOK, partials.Alert(err.Error(), &partials.AlertTypeDanger))
 		return
 	}
 
 	// call authenticate
 	authResult, err := s.localProvider.Authenticate(c.Request.Context(), &payload)
 	if err != nil {
-		utils.Error(c, http.StatusBadRequest, err)
+		utils.RenderTemplate(c, http.StatusOK, partials.Alert(err.Error(), &partials.AlertTypeDanger))
 		return
 	}
 
@@ -77,25 +75,10 @@ func (s *AuthController) handleLoginSubmission(c *gin.Context) {
 	session.Set("provider", authResult.Provider)
 
 	if err := session.Save(); err != nil {
-		utils.Error(c, http.StatusBadRequest, err)
+		utils.RenderTemplate(c, http.StatusOK, partials.Alert(err.Error(), &partials.AlertTypeDanger))
 		return
 	}
 
-	c.Redirect(http.StatusFound, "/")
-}
-
-func newLoginForm(csrfToken string) tforms.IForm {
-	form := tforms.NewForm(
-		"/auth/login",
-		false,
-		tforms.NewHiddenField("_csrf", csrfToken, true),
-		tforms.NewInputField("email", tforms.TextInputEmail, true).
-			SetPlaceholder("example@mail.com").
-			SetLabel("Email"),
-		tforms.NewInputField("password", tforms.TextInputPassword, true).
-			SetPlaceholder("Password").
-			SetLabel("Password"),
-	)
-
-	return form
+	// redirect to home page
+	c.Writer.Header().Set("HX-Redirect", "/")
 }
