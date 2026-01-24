@@ -1,11 +1,14 @@
 package templates
 
-import "gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
+import (
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
+)
 
-templ Base(title string) {
+templ Base(page utils.BasePage) {
 	<!DOCTYPE html>
 	<html lang="en">
-		@partials.Head(title)
+		@partials.Head(page)
 		<body>
 			{ children... }
 

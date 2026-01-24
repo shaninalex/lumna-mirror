@@ -1,0 +1,136 @@
+package pages
+
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/web/adapters"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/projects"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/projects/board"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
+)
+
+type ProjectsController struct {
+	projectService *services.ProjectService
+}
+
+func NewProjectsController() *ProjectsController {
+	return &ProjectsController{
+		projectService: services.NewProjectService(),
+	}
+}
+func RegisterProjectPages(router *gin.RouterGroup) {
+	controller := NewProjectsController()
+
+	router.GET("/projects", controller.projectsIndex)
+	router.GET("/projects/:projectID", controller.projectDetail)
+	router.GET("/projects/:projectID/board/:boardID", controller.projectBoard)
+	router.GET("/projects/:projectID/board/:boardID/edit", controller.projectBoardEdit)
+	router.GET("/hx/tasks/:taskID/modal", controller.taskDetail)
+	router.PATCH("/hx/projects/tasks/:id/reorder", controller.reorderTask)
+	router.PATCH("/hx/projects/lists/:id/reorder", controller.reorderList)
+
+}
+
+func (s *ProjectsController) projectsIndex(c *gin.Context) {
+	projectsList, err := s.projectService.List(c.Request.Context())
+	if err != nil {
+		// TODO: error page
+		panic(err)
+	}
+	pageData := projects.ProjectsPageData{
+		BasePage: utils.BasePageData(c, "Projects"),
+		Projects: projectsList,
+	}
+	utils.RenderTemplate(c, http.StatusOK, projects.ProjectsList(pageData))
+}
+
+func (s *ProjectsController) projectDetail(c *gin.Context) {
+	ID := uuid.MustParse(c.Param("projectID"))
+	project, err := s.projectService.Get(c.Request.Context(), ID)
+	if err != nil {
+		panic(err)
+	}
+	pageData := projects.ProjectDetailPageData{
+		BasePage: utils.BasePageData(c, fmt.Sprintf("Project: %s", project.Title)),
+		Project:  *project,
+	}
+	utils.RenderTemplate(c, http.StatusOK, projects.ProjectDetail(pageData))
+}
+
+func (s *ProjectsController) projectBoard(c *gin.Context) {
+	boardID := uuid.MustParse(c.Param("boardID"))
+	b, err := s.projectService.GetBoard(c.Request.Context(), boardID)
+	if err != nil {
+		panic(err)
+	}
+	pageData := board.BoardPageData{
+		BasePage: utils.BasePageData(c, b.Title),
+		Board:    *b,
+	}
+	utils.RenderTemplate(c, http.StatusOK, board.BoardDetail(pageData))
+}
+
+func (s *ProjectsController) projectBoardEdit(c *gin.Context) {
+	boardID := uuid.MustParse(c.Param("boardID"))
+	b, err := s.projectService.GetBoard(c.Request.Context(), boardID)
+	if err != nil {
+		panic(err)
+	}
+	pageData := board.BoardPageData{
+		BasePage: utils.BasePageData(c, b.Title),
+		Board:    *b,
+	}
+	utils.RenderTemplate(c, http.StatusOK, board.BoardEdit(pageData))
+}
+
+func (s *ProjectsController) taskDetail(c *gin.Context) {
+	taskID := uuid.MustParse(c.Param("taskID"))
+	task, err := s.projectService.GetTask(c.Request.Context(), taskID)
+	if err != nil {
+		panic(err)
+	}
+	utils.RenderTemplate(c, http.StatusOK, partials.TaskModal(&adapters.HtmlTask{Task: task}))
+}
+
+func (s *ProjectsController) reorderTask(c *gin.Context) {
+	payload := struct {
+		BoardListID string `json:"boardListId"`
+		Order       uint   `json:"order"`
+	}{}
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	taskID := uuid.MustParse(c.Param("id"))
+	boardListID := uuid.MustParse(payload.BoardListID)
+
+	if err := s.projectService.ReorderTask(c.Request.Context(), taskID, boardListID, payload.Order); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(c, nil)
+}
+
+func (s *ProjectsController) reorderList(c *gin.Context) {
+	payload := struct {
+		Order uint `json:"order"`
+	}{}
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	listID := uuid.MustParse(c.Param("id"))
+
+	if err := s.projectService.ReorderList(c.Request.Context(), listID, payload.Order); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(c, nil)
+}

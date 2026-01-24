@@ -1,15 +1,23 @@
-env: testing
+# Application working mode:
+# development - additional logging, things can work in mock or local way
+# production - more
+# testing - most of the things working in mocking way
+env: development
 
 serve:
   # port of the server
-  port: 8001
+  port: 8000
 
 database:
   # database connection path
   # if it's SQLite3 file - use absolute system path
-  url: ":memory:"
-
+  url: "lumna.db?cache=shared&mode=rwc"
 
 # for jwt signing and verification
 secret_key: "a-string-secret-at-least-256-bits-long"
 
+api:
+  enabled: false
+
+html:
+  enabled: true

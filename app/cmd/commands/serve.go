@@ -2,6 +2,7 @@ package commands
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -27,10 +28,11 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 
 			router := web.NewWebApplication(c.Context())
 			srv := &http.Server{
-				Addr:    ":8000",
+				Addr:    fmt.Sprintf(":%d", c.Config().Serve.Port),
 				Handler: router,
 			}
 
+			log.Printf("Run server on :%d\n", c.Config().Serve.Port)
 			go func() {
 				if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 					log.Fatalf("listen: %s\n", err)
@@ -54,6 +56,5 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 		},
 	}
 
-	cmd.Flags().Bool("embed", false, "Embed web client static files")
 	return cmd
 }

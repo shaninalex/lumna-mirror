@@ -1,18 +1,16 @@
 package pages
 
 import (
-	"io/fs"
 	"net/http"
 
-	"github.com/a-h/templ"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/services"
-	"gitlab.com/shaninalex/lumna/app/static"
 	"gitlab.com/shaninalex/lumna/app/web/middlewares"
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/root"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -26,29 +24,32 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 		localProvider: local.NewLocalAuthProvider(),
 		userService:   &services.UserService{},
 	}
-	staticFilesFS := static.GetStaticFS()
-	if staticFilesFS != nil {
-		staticFiles, err := fs.Sub(staticFilesFS, "assets")
-		if err != nil {
-			panic(err)
-		}
-		router.StaticFS("/assets", http.FS(staticFiles))
-		router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFiles))
+	staticFS := lumna.StaticFS()
+	if staticFS != nil {
+		router.StaticFS("/assets", http.FS(staticFS))
+		router.StaticFileFS("/favicon.ico", "favicon.ico", http.FS(staticFS))
+	} else {
+		router.Static("/assets", "assets")                      // TODO: use assets base path from config
+		router.StaticFile("/favicon.ico", "assets/favicon.ico") // TODO: use assets base path from config
 	}
 
 	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
 	router.Use(middlewares.CsrfMiddleware(conf.SecretKey))
 
-	ApplyAuthRoutes(router)
+	RegisterAuthPages(router)
 
 	router.Use(middlewares.AuthRequired())
+	router.Use(middlewares.IdentityMiddleware(controller.userService))
 	{
 		router.GET("/", controller.handleIndex)
+		RegisterProjectPages(router)
+		RegisterSettingsPages(router)
 	}
 }
 
 func (s *PageController) handleIndex(ctx *gin.Context) {
-	component := templates.Index()
-	ctx.Status(http.StatusOK)
-	templ.Handler(component).ServeHTTP(ctx.Writer, ctx.Request)
+	page := root.HomePageData{
+		BasePage: utils.BasePageData(ctx, "Home page"),
+	}
+	utils.RenderTemplate(ctx, http.StatusOK, root.Home(page))
 }

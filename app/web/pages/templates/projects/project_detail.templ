@@ -1,0 +1,26 @@
+package projects
+
+import (
+	"fmt"
+	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
+)
+
+type ProjectDetailPageData struct {
+	utils.BasePage
+	Project models.Project
+}
+
+templ ProjectDetail(page ProjectDetailPageData) {
+	@templates.Dashboard(page.BasePage) {
+		<h5>Boards:</h5>
+		<nav class="d-flex gap-4">
+			for _, board := range page.Project.Boards {
+				<a class="btn btn-secondary" href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s", page.Project.ID.String(), board.ID.String())) }>
+					{ board.Title }
+				</a>
+			}
+		</nav>
+	}
+}

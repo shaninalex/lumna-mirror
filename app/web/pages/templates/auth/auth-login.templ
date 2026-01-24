@@ -1,0 +1,24 @@
+package auth
+
+import (
+	"gitlab.com/shaninalex/lumna/app/pkg/tforms"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/utils"
+)
+
+templ LoginPage(page utils.BasePage, form tforms.IForm) {
+	@templates.Base(page) {
+		<div class="vw-100 vh-100 d-flex align-items-center justify-content-center">
+			<div style="width: 320px">
+				<div class="text-center mb-3">
+					<img src="/assets/img/logo.svg" width="150px"/>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						@tforms.UIForm(form)
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
