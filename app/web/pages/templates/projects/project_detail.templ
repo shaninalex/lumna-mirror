@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -14,13 +15,33 @@ type ProjectDetailPageData struct {
 
 templ ProjectDetail(page ProjectDetailPageData) {
 	@templates.Dashboard(page.BasePage) {
-		<h5>Boards:</h5>
-		<nav class="d-flex gap-4">
-			for _, board := range page.Project.Boards {
-				<a class="btn btn-secondary" href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s", page.Project.ID.String(), board.ID.String())) }>
-					{ board.Title }
+		<div class="d-flex align-items-start justify-content-between mb-4">
+			<div>
+				<a
+					class="btn btn-sm btn-outline-secondary"
+					href={ templ.SafeURL("/projects") }
+					aria-label="Back to projects page"
+				>
+					<i class="bi bi-chevron-left"></i> Back
 				</a>
-			}
-		</nav>
+			</div>
+			<a
+				class="btn btn-sm btn-outline-secondary"
+				href={ templ.SafeURL(fmt.Sprintf("/projects/%s/edit", page.Project.ID.String())) }
+				aria-label="Edit project"
+			>
+				<i class="bi bi-pencil-square"></i>
+			</a>
+		</div>
+		<div class="card p-4 bg-body-tertiary">
+			<div class="mb-4">
+				@partials.BoardForm(page.Project.ID.String(), page.CsrfToken)
+			</div>
+			<nav class="d-flex gap-4" id="projectBoardList">
+				for _, board := range page.Project.Boards {
+					@partials.BoardItem(board.ID.String(), page.Project.ID.String(), board.Title)
+				}
+			</nav>
+		</div>
 	}
 }

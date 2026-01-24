@@ -3,7 +3,7 @@ package partials
 templ ThemeSwitcher() {
 	<div class="dropdown">
 		<button
-			class="btn btn-link nav-link py-2 px-0 px-lg-2 dropdown-toggle d-flex align-items-center"
+			class="btn btn-link nav-link py-2 px-0 px-lg-2 d-flex align-items-center"
 			id="bd-theme"
 			type="button"
 			aria-expanded="false"
@@ -23,7 +23,7 @@ templ ThemeSwitcher() {
 					data-bs-theme-label="Light"
 					aria-pressed="false"
 				>
-					<i class="bi bi-sun-fill me-2 opacity-50"></i>
+					<i class="bi bi-sun-fill"></i>
 					Light
 					<i class="bi bi-check2 ms-auto d-none"></i>
 				</button>
@@ -36,7 +36,7 @@ templ ThemeSwitcher() {
 					data-bs-theme-label="Dark"
 					aria-pressed="false"
 				>
-					<i class="bi bi-moon-stars-fill me-2 opacity-50"></i>
+					<i class="bi bi-moon-stars-fill"></i>
 					Dark
 					<i class="bi bi-check2 ms-auto d-none"></i>
 				</button>
@@ -49,7 +49,7 @@ templ ThemeSwitcher() {
 					data-bs-theme-label="Auto"
 					aria-pressed="true"
 				>
-					<i class="bi bi-circle-half me-2 opacity-50"></i>
+					<i class="bi bi-circle-half"></i>
 					Auto
 					<i class="bi bi-check2 ms-auto d-none"></i>
 				</button>

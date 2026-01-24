@@ -2,6 +2,7 @@ package local
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/mail"
 
@@ -41,19 +42,22 @@ func (s *LocalAuthProvider) Name() string {
 	return "local"
 }
 
+var UserNotFoundError = errors.New("user not found")
+
 func (s *LocalAuthProvider) Authenticate(ctx context.Context, payload *PasswordCredentials) (*auth.AuthResult, error) {
-	// find user credentials by Credential.Email
 	database := db.GetDB(ctx)
 	credentials := models.Credential{}
 	if result := database.Preload("Identity").First(&credentials, "email = ?", payload.Email); result.Error != nil {
+		if result.Error.Error() == "record not found" {
+			return nil, UserNotFoundError
+		}
 		return nil, result.Error
 	}
 
 	if credentials.PasswordHash == nil {
-		return nil, fmt.Errorf("password not set")
+		return nil, fmt.Errorf("invalid credentials")
 	}
 
-	// validate password
 	if err := ValidatePassword(*credentials.PasswordHash, payload.Password); err != nil {
 		return nil, err
 	}

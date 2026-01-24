@@ -1,0 +1,18 @@
+package partials
+
+import "fmt"
+
+templ ProjectUpdated(title string) {
+	<!-- 0. Alert renders in #result -->
+	@Alert(
+		fmt.Sprintf("Project \"%s\" updated", title),
+		&AlertTypeSuccess,
+	)
+	<!-- 1. Updates page title -->
+	<div
+		id="dashboard-title"
+		hx-swap-oob="innerHTML"
+	>
+		Project: { title }
+	</div>
+}

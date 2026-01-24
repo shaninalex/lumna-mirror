@@ -1,6 +1,7 @@
 package partials
 
 import "gitlab.com/shaninalex/lumna/app/models"
+import "gitlab.com/shaninalex/lumna/app/web/adapters"
 import "fmt"
 
 templ TaskCard(task models.Task) {
@@ -13,10 +14,8 @@ templ TaskCard(task models.Task) {
 				type="button"
 				class="btn p-0"
 				hx-get={ fmt.Sprintf("/hx/tasks/%s/modal", task.ID.String()) }
-				hx-target="#taskModalBody"
-				hx-trigger="click"
-				data-bs-toggle="modal"
-				data-bs-target="#taskModal"
+				hx-target="body"
+				hx-swap="beforeend"
 			>
 				{ task.Title }
 			</button>
@@ -30,4 +29,27 @@ templ TaskCard(task models.Task) {
 			</div>
 		</div>
 	</div>
+}
+
+templ TaskModal(task *adapters.HtmlTask) {
+	@Modal("taskDetailModal") {
+		<div class="modal-content">
+			<div class="d-flex align-items-center justify-content-between">
+				<h1 class="modal-title fs-5">{ task.Title }</h1>
+				<button type="button" class="btn-close" onclick="closeModal('#taskDetailModal')"></button>
+			</div>
+			<div class="modal-body">
+				@templ.Raw(task.Body())
+			</div>
+			<div class="modal-footer">
+				<button
+					type="button"
+					class="btn btn-secondary"
+					onclick="closeModal('#taskDetailModal')"
+				>
+					Close
+				</button>
+			</div>
+		</div>
+	}
 }

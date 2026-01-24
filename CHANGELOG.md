@@ -1,3 +1,16 @@
+## 0.26.0 (2026-01-25)
+
+### Feat
+
+- **web**: delete board action
+- **web**: add board form
+- **web**: update project form
+- **web**: updates
+
+### Refactor
+
+- **web**: modals
+
 ## 0.25.0 (2026-01-24)
 
 ### Feat

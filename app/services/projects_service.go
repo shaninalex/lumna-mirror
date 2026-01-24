@@ -112,3 +112,28 @@ func (s *ProjectService) ReorderList(ctx context.Context, listID uuid.UUID, orde
 		Where("id = ?", listID).
 		Update("order", order).Error
 }
+
+func (s *ProjectService) UpdateProject(ctx context.Context, projectID uuid.UUID, title string) error {
+	database := db.GetDB(ctx)
+	return database.Model(&models.Project{}).
+		Where("id = ?", projectID.String()).
+		Update("title", title).Error
+}
+
+func (s *ProjectService) BoardCreate(ctx context.Context, projectID uuid.UUID, title string) (*models.Board, error) {
+	board := models.Board{
+		ProjectID: projectID,
+		Title:     title,
+	}
+	if result := db.GetDB(ctx).Create(&board); result.Error != nil {
+		return nil, result.Error
+	}
+	return &board, nil
+}
+
+func (s *ProjectService) BoardDelete(ctx context.Context, boardID uuid.UUID) error {
+	if result := db.GetDB(ctx).Where("id = ?", boardID).Delete(&models.Board{}); result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
