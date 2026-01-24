@@ -11,6 +11,7 @@ columns.forEach(function (column) {
     new Sortable(column, {
         animation: 150,
         group: "shared",
+        // TODO: on before drop and revert if error ?
         onEnd: function (e) {
             document.dispatchEvent(
                 new CustomEvent(EVENT_BOARD_TASK_MOVED, {
@@ -29,6 +30,7 @@ const board = document.querySelector("[data-board]");
 if (board) {
     new Sortable(board, {
         animation: 150,
+        // TODO: on before drop and revert if error ?
         onEnd: function (e) {
             document.dispatchEvent(
                 new CustomEvent(EVENT_BOARD_COLUMN_MOVED, {
