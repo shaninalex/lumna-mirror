@@ -1,3 +1,31 @@
+## 0.24.0 (2026-01-24)
+
+### Feat
+
+- **web**: task modal size
+- **web**: persist drag-n-drop events
+- **web**: drag n drop
+- **web**: task detail modal
+- **web**: assets
+- **web**: templates
+- **web**: components
+- **db**: board list + task
+- **web**: templates
+- **web**: project detail
+- **web**: settings
+- **web**: color schema
+- **pages**: context, data, templates
+- **web**: apply context
+- **fs**: static files
+- **ui**: sidebar
+- **ui**: update interface
+- **ui**: manage templates
+- **web**: login redirects + clear repo
+
+### Fix
+
+- **web**: logout redirects
+
 ## 0.23.0 (2026-01-20)
 
 ### Feat
