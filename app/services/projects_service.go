@@ -130,3 +130,10 @@ func (s *ProjectService) BoardCreate(ctx context.Context, projectID uuid.UUID, t
 	}
 	return &board, nil
 }
+
+func (s *ProjectService) BoardDelete(ctx context.Context, boardID uuid.UUID) error {
+	if result := db.GetDB(ctx).Where("id = ?", boardID).Delete(&models.Board{}); result.Error != nil {
+		return result.Error
+	}
+	return nil
+}

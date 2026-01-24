@@ -1,5 +1,7 @@
 const EVENT_BOARD_COLUMN_MOVED = "board:column-moved";
 const EVENT_BOARD_TASK_MOVED = "board:task-moved";
+const EVENT_BOARD_CREATED = "board:created";
+const EVENT_BOARD_DELETED = "board:deleted";
 
 function getCsrfToken() {
     const meta = document.querySelector('meta[name="csrf-token"]');
@@ -87,4 +89,17 @@ document.addEventListener(EVENT_BOARD_TASK_MOVED, async (e) => {
         console.error("Failed to reorder task:", err);
         alert(err); // show toast instead
     }
+});
+
+document.addEventListener(EVENT_BOARD_CREATED, async (e) => {
+    const boardAddFormModal = document.querySelector("#boardAddFormModal");
+    if (!boardAddFormModal) return;
+
+    boardAddFormModal.querySelector("form").reset();
+    const modal = bootstrap.Modal.getInstance(boardAddFormModal);
+    if (modal) modal.hide();
+});
+
+document.addEventListener(EVENT_BOARD_DELETED, async (e) => {
+    console.log(e);
 });

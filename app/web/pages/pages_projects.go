@@ -37,6 +37,7 @@ func RegisterProjectPages(router *gin.RouterGroup) {
 	router.POST("/hx/projects/:projectID/board/form", controller.projectBoardAddFormSubmition)
 	router.PATCH("/hx/projects/tasks/:id/reorder", controller.reorderTask)
 	router.PATCH("/hx/projects/lists/:id/reorder", controller.reorderList)
+	router.DELETE("/hx/projects/:projectID/board/:boardID", controller.projectBoardDelete)
 
 }
 
@@ -187,5 +188,18 @@ func (s *ProjectsController) projectBoardAddFormSubmition(c *gin.Context) {
 		return
 	}
 
+	c.Header("HX-Trigger", "board:created")
 	utils.RenderTemplate(c, http.StatusOK, partials.BoardListItem(board.ID.String(), ID.String(), board.Title))
+}
+
+func (s *ProjectsController) projectBoardDelete(c *gin.Context) {
+	projectID := uuid.MustParse(c.Param("projectID"))
+	boardID := uuid.MustParse(c.Param("boardID"))
+	if err := s.projectService.BoardDelete(c.Request.Context(), boardID); err != nil {
+		utils.RenderTemplate(c, http.StatusBadRequest, partials.Alert(err.Error(), &partials.AlertTypeDanger))
+		return
+	}
+	redirectURL := fmt.Sprintf("/projects/%s", projectID)
+	c.Header("HX-Trigger", "board:deleted")
+	c.Writer.Header().Set("HX-Redirect", redirectURL)
 }

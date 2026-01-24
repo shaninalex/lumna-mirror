@@ -65,11 +65,15 @@ func BoardEdit(page BoardPageData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><i class=\"bi bi-chevron-left\"></i> Back</a>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><i class=\"bi bi-chevron-left\"></i> Back</a><hr class=\"my-4\"><div class=\"card\" style=\"background-color: var(--bs-danger-bg-subtle)\"><div class=\"card-body\"><h3 class=\"text-danger mb-2\">Danger zode</h3>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = partials.EmptyPage(boardUrl(page.Board)).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = partials.BoardDelete(page.Board.ProjectID.String(), page.Board.ID.String(), page.CsrfToken).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -3,10 +3,10 @@ package partials
 import "fmt"
 
 templ BoardForm(projectId, _csrf string) {
-	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#boardAddFormModal">
 		Add board
 	</button>
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="boardAddFormModal" tabindex="-1" aria-labelledby="boardAddFormLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<form
 				class="modal-content"
@@ -15,7 +15,7 @@ templ BoardForm(projectId, _csrf string) {
 				hx-target="#projectBoardList"
 			>
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+					<h1 class="modal-title fs-5" id="boardAddFormLabel">Board create</h1>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">

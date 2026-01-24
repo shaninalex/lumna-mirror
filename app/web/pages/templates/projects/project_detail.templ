@@ -33,13 +33,15 @@ templ ProjectDetail(page ProjectDetailPageData) {
 				<i class="bi bi-pencil-square"></i>
 			</a>
 		</div>
-		<div class="mb-4">
-			@partials.BoardForm(page.Project.ID.String(), page.CsrfToken)
+		<div class="card p-4 bg-body-tertiary">
+			<div class="mb-4">
+				@partials.BoardForm(page.Project.ID.String(), page.CsrfToken)
+			</div>
+			<nav class="d-flex gap-4" id="projectBoardList">
+				for _, board := range page.Project.Boards {
+					@partials.BoardListItem(board.ID.String(), page.Project.ID.String(), board.Title)
+				}
+			</nav>
 		</div>
-		<nav class="d-flex gap-4" id="projectBoardList">
-			for _, board := range page.Project.Boards {
-				@partials.BoardListItem(board.ID.String(), page.Project.ID.String(), board.Title)
-			}
-		</nav>
 	}
 }
