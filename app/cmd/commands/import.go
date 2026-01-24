@@ -2,6 +2,7 @@ package commands
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 
@@ -33,16 +34,17 @@ type MockDbDataSchema struct {
 				Tasks []struct {
 					Title string `json:"title"`
 					Order int    `json:"order"`
+					Body  string `json:"body"`
 				} `json:"tasks"`
 			} `json:"lists"`
 		} `json:"boards"`
 	} `json:"projects"`
 }
 
-func NewMockDBRootCmd() *cobra.Command {
+func NewImportRootCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "mockdb [path_to_file]",
-		Short: "Create mock data",
+		Use:   "import [path_to_file]",
+		Short: "Import db",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			c, err := client.NewClientForCLI(cmd)
@@ -60,7 +62,7 @@ func NewMockDBRootCmd() *cobra.Command {
 			}
 
 			// create identity+credential
-			for _, idn := range payload.Identities {
+			for idx, idn := range payload.Identities {
 				identity := models.Identity{
 					ID:       uuid.MustParse(idn.ID),
 					Email:    idn.Email,
@@ -69,7 +71,8 @@ func NewMockDBRootCmd() *cobra.Command {
 				if result := c.DB().Create(&identity); result.Error != nil {
 					panic(result.Error)
 				}
-				for _, crd := range idn.Credentials {
+				fmt.Printf("%d. Identity: %s\n", idx, identity.Email)
+				for cidx, crd := range idn.Credentials {
 					pwd, _ := local.CreatePasswordHash(crd.Password)
 					credential := models.Credential{
 						IdentityID:   identity.ID,
@@ -80,15 +83,17 @@ func NewMockDBRootCmd() *cobra.Command {
 					if result := c.DB().Create(&credential); result.Error != nil {
 						panic(result.Error)
 					}
+					fmt.Printf("\t%d. credential for: %s\n", cidx, identity.Email)
 				}
 			}
 
 			// create projects
-			for _, _project := range payload.Projects {
+			for pidx, _project := range payload.Projects {
 				project := models.Project{Title: _project.Title}
 				if result := c.DB().Create(&project); result.Error != nil {
 					panic(result.Error)
 				}
+				fmt.Printf("%d. Project: %s\n", pidx, project.Title)
 				for bi, _board := range _project.Boards {
 					board := models.Board{
 						Title:     _board.Title,
@@ -98,7 +103,7 @@ func NewMockDBRootCmd() *cobra.Command {
 					if result := c.DB().Create(&board); result.Error != nil {
 						panic(result.Error)
 					}
-
+					fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
 					for li, _list := range _board.Lists {
 						boardList := models.BoardList{
 							Title:   _list.Title,
@@ -108,16 +113,19 @@ func NewMockDBRootCmd() *cobra.Command {
 						if result := c.DB().Create(&boardList); result.Error != nil {
 							panic(result.Error)
 						}
+						fmt.Printf("\t\t%d. List: %s\n", li, boardList.Title)
 						for ti, _task := range _list.Tasks {
 							task := models.Task{
 								Title:       _task.Title,
 								BoardListID: boardList.ID,
 								Order:       uint(ti),
 								ProjectID:   project.ID,
+								Body:        _task.Body,
 							}
 							if result := c.DB().Create(&task); result.Error != nil {
 								panic(result.Error)
 							}
+							fmt.Printf("\t\t\t%d. Task: %s\n", ti, task.Title)
 						}
 					}
 				}

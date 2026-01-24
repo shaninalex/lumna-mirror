@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/web/adapters"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/projects"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/projects/board"
@@ -93,7 +94,7 @@ func (s *ProjectsController) taskDetail(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	utils.RenderTemplate(c, http.StatusOK, partials.TaskModal(task))
+	utils.RenderTemplate(c, http.StatusOK, partials.TaskModal(&adapters.HtmlTask{Task: task}))
 }
 
 func (s *ProjectsController) reorderTask(c *gin.Context) {

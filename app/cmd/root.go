@@ -18,7 +18,7 @@ func NewRootCmd() (cmd *cobra.Command) {
 	cmd.AddCommand(commands.NewProjectsRootCmd())
 	cmd.AddCommand(commands.NewBoardsRootCmd())
 	cmd.AddCommand(commands.NewBoardListsRootCmd())
-	cmd.AddCommand(commands.NewMockDBRootCmd())
+	cmd.AddCommand(commands.NewImportRootCmd())
 
 	cmd.PersistentFlags().String("config", "", "Configuration path. Required.")
 	_ = cmd.MarkPersistentFlagRequired("config")

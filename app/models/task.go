@@ -13,6 +13,7 @@ type Task struct {
 	Title string    `gorm:"not null" json:"title"`
 	Order uint      `json:"order"`
 	Done  bool      `json:"done"`
+	Body  string    `json:"body"`
 
 	ProjectID   uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
 	BoardListID uuid.UUID `gorm:"type:uuid;not null;index" json:"board_list_id"`

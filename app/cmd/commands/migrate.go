@@ -29,11 +29,12 @@ func NewMigrateRootCmd() *cobra.Command {
 				&models.Board{},
 				&models.BoardList{},
 				&models.Task{},
+				&models.Note{},
 			); err != nil {
 				log.Fatal(err)
 			}
 
-			log.Println("Database migrated")
+			log.Printf("Database migrated in %s\n", c.Config().Database.Url)
 		},
 	}
 
