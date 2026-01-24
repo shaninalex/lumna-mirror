@@ -48,10 +48,8 @@ func NewPageRouter(router *gin.RouterGroup, conf *config.Config) {
 }
 
 func (s *PageController) handleIndex(ctx *gin.Context) {
-	base := utils.GetBasePage(ctx.Request.Context())
-	base.Title = "Home page"
 	page := root.HomePageData{
-		BasePage: base,
+		BasePage: utils.BasePageData(ctx, "Home page"),
 	}
 	utils.RenderTemplate(ctx, http.StatusOK, root.Home(page))
 }

@@ -36,9 +36,9 @@ func (s *AuthController) handleLogin(c *gin.Context) {
 		c.Redirect(http.StatusFound, "/")
 		return
 	}
-
-	form := newLoginForm(utils.GetToken(c))
-	component := auth.LoginPage(form)
+	page := utils.BasePageData(c, "Login")
+	form := newLoginForm(page.CsrfToken)
+	component := auth.LoginPage(page, form)
 	c.Status(http.StatusOK)
 	templ.Handler(component).ServeHTTP(c.Writer, c.Request)
 }

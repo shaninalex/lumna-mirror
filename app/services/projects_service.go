@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/internal/db"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gorm.io/gorm"
 )
 
 type ProjectService struct {
@@ -28,8 +29,12 @@ func (s *ProjectService) GetBoard(ctx context.Context, boardID uuid.UUID) (*mode
 	database := db.GetDB(ctx)
 	board := &models.Board{}
 	if result := database.
-		Preload("Lists").
-		Preload("Lists.Tasks").
+		Preload("Lists", func(tx *gorm.DB) *gorm.DB {
+			return tx.Order("\"order\" ASC")
+		}).
+		Preload("Lists.Tasks", func(tx *gorm.DB) *gorm.DB {
+			return tx.Order("\"order\" ASC")
+		}).
 		Where("id = ?", boardID.String()).
 		First(&board); result.Error != nil {
 		return nil, result.Error
@@ -89,4 +94,21 @@ func (s *ProjectService) GetTask(ctx context.Context, taskID uuid.UUID) (*models
 		return nil, result.Error
 	}
 	return task, nil
+}
+
+func (s *ProjectService) ReorderTask(ctx context.Context, taskID uuid.UUID, boardListID uuid.UUID, order uint) error {
+	database := db.GetDB(ctx)
+	return database.Model(&models.Task{}).
+		Where("id = ?", taskID).
+		Updates(map[string]any{
+			"board_list_id": boardListID,
+			"order":         order,
+		}).Error
+}
+
+func (s *ProjectService) ReorderList(ctx context.Context, listID uuid.UUID, order uint) error {
+	database := db.GetDB(ctx)
+	return database.Model(&models.BoardList{}).
+		Where("id = ?", listID).
+		Update("order", order).Error
 }

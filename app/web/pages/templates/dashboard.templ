@@ -6,7 +6,7 @@ import (
 )
 
 templ Dashboard(page utils.BasePage) {
-	@Base(page.Title) {
+	@Base(page) {
 		<div class="dashboard">
 			@partials.DashboardSidebar()
 			<div class="dashboard-main">

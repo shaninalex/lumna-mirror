@@ -21,10 +21,8 @@ func RegisterSettingsPages(router *gin.RouterGroup) {
 }
 
 func (s *SettingsController) settingsIndex(c *gin.Context) {
-	base := utils.GetBasePage(c.Request.Context())
-	base.Title = "Settings"
 	pageData := settings.SettingsPageData{
-		BasePage: base,
+		BasePage: utils.BasePageData(c, "Settings"),
 	}
 	utils.RenderTemplate(c, http.StatusOK, settings.Index(pageData))
 }

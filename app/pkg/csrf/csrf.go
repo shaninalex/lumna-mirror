@@ -1,10 +1,11 @@
-package utils
+package csrf
 
 import (
 	"crypto/sha1"
 	"encoding/base64"
 	"errors"
 	"io"
+	"slices"
 
 	"github.com/dchest/uniuri"
 	"github.com/gin-contrib/sessions"
@@ -56,14 +57,14 @@ func tokenize(secret, salt string) string {
 }
 
 func inArray(arr []string, value string) bool {
-	inarr := false
-
-	for _, v := range arr {
-		if v == value {
-			inarr = true
-			break
-		}
-	}
+	inarr := slices.Contains(arr, value)
+	// inarr := false
+	// for _, v := range arr {
+	// 	if v == value {
+	// 		inarr = true
+	// 		break
+	// 	}
+	// }
 
 	return inarr
 }

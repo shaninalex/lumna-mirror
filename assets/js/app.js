@@ -1,20 +1,22 @@
 const EVENT_BOARD_COLUMN_MOVED = "board:column-moved";
 const EVENT_BOARD_TASK_MOVED = "board:task-moved";
 
+function getCsrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.getAttribute("content") : "";
+}
+
 const columns = document.querySelectorAll("[data-column]");
 columns.forEach(function (column) {
     new Sortable(column, {
         animation: 150,
         group: "shared",
         onEnd: function (e) {
-            console.log(e);
             document.dispatchEvent(
                 new CustomEvent(EVENT_BOARD_TASK_MOVED, {
                     detail: {
                         taskId: e.item.id,
-                        fromColumnId: e.from.dataset.column,
                         toColumnId: e.to.dataset.column,
-                        oldIndex: e.oldIndex,
                         newIndex: e.newIndex,
                     },
                 }),
@@ -32,7 +34,6 @@ if (board) {
                 new CustomEvent(EVENT_BOARD_COLUMN_MOVED, {
                     detail: {
                         columnId: e.item.id,
-                        oldIndex: e.oldIndex,
                         newIndex: e.newIndex,
                     },
                 }),
@@ -41,7 +42,47 @@ if (board) {
     });
 }
 
-document.addEventListener(EVENT_BOARD_COLUMN_MOVED, (e) =>
-    console.log(e.detail),
-);
-document.addEventListener(EVENT_BOARD_TASK_MOVED, (e) => console.log(e.detail));
+document.addEventListener(EVENT_BOARD_COLUMN_MOVED, async (e) => {
+    const { columnId, newIndex } = e.detail;
+    try {
+        const response = await fetch(`/hx/projects/lists/${columnId}/reorder`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": getCsrfToken(),
+            },
+            body: JSON.stringify({ order: newIndex }),
+        });
+        if (!response.ok) {
+            console.error("Failed to reorder column");
+            alert(err); // show toast instead
+        }
+    } catch (err) {
+        console.error("Failed to reorder column:", err);
+        alert(err); // show toast instead
+    }
+});
+
+document.addEventListener(EVENT_BOARD_TASK_MOVED, async (e) => {
+    const { taskId, toColumnId, newIndex } = e.detail;
+    try {
+        const response = await fetch(`/hx/projects/tasks/${taskId}/reorder`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": getCsrfToken(),
+            },
+            body: JSON.stringify({
+                boardListId: toColumnId,
+                order: newIndex,
+            }),
+        });
+        if (!response.ok) {
+            console.error("Failed to reorder task");
+            alert(err); // show toast instead
+        }
+    } catch (err) {
+        console.error("Failed to reorder task:", err);
+        alert(err); // show toast instead
+    }
+});

@@ -30,6 +30,8 @@ func RegisterProjectPages(router *gin.RouterGroup) {
 	router.GET("/projects/:projectID/board/:boardID", controller.projectBoard)
 	router.GET("/projects/:projectID/board/:boardID/edit", controller.projectBoardEdit)
 	router.GET("/hx/tasks/:taskID/modal", controller.taskDetail)
+	router.PATCH("/hx/projects/tasks/:id/reorder", controller.reorderTask)
+	router.PATCH("/hx/projects/lists/:id/reorder", controller.reorderList)
 
 }
 
@@ -39,10 +41,8 @@ func (s *ProjectsController) projectsIndex(c *gin.Context) {
 		// TODO: error page
 		panic(err)
 	}
-	base := utils.GetBasePage(c.Request.Context())
-	base.Title = "Projects"
 	pageData := projects.ProjectsPageData{
-		BasePage: base,
+		BasePage: utils.BasePageData(c, "Projects"),
 		Projects: projectsList,
 	}
 	utils.RenderTemplate(c, http.StatusOK, projects.ProjectsList(pageData))
@@ -54,10 +54,8 @@ func (s *ProjectsController) projectDetail(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	base := utils.GetBasePage(c.Request.Context())
-	base.Title = fmt.Sprintf("Project: %s", project.Title)
 	pageData := projects.ProjectDetailPageData{
-		BasePage: base,
+		BasePage: utils.BasePageData(c, fmt.Sprintf("Project: %s", project.Title)),
 		Project:  *project,
 	}
 	utils.RenderTemplate(c, http.StatusOK, projects.ProjectDetail(pageData))
@@ -65,14 +63,12 @@ func (s *ProjectsController) projectDetail(c *gin.Context) {
 
 func (s *ProjectsController) projectBoard(c *gin.Context) {
 	boardID := uuid.MustParse(c.Param("boardID"))
-	base := utils.GetBasePage(c.Request.Context())
 	b, err := s.projectService.GetBoard(c.Request.Context(), boardID)
 	if err != nil {
 		panic(err)
 	}
-	base.Title = b.Title
 	pageData := board.BoardPageData{
-		BasePage: base,
+		BasePage: utils.BasePageData(c, b.Title),
 		Board:    *b,
 	}
 	utils.RenderTemplate(c, http.StatusOK, board.BoardDetail(pageData))
@@ -80,14 +76,12 @@ func (s *ProjectsController) projectBoard(c *gin.Context) {
 
 func (s *ProjectsController) projectBoardEdit(c *gin.Context) {
 	boardID := uuid.MustParse(c.Param("boardID"))
-	base := utils.GetBasePage(c.Request.Context())
 	b, err := s.projectService.GetBoard(c.Request.Context(), boardID)
 	if err != nil {
 		panic(err)
 	}
-	base.Title = b.Title
 	pageData := board.BoardPageData{
-		BasePage: base,
+		BasePage: utils.BasePageData(c, b.Title),
 		Board:    *b,
 	}
 	utils.RenderTemplate(c, http.StatusOK, board.BoardEdit(pageData))
@@ -100,4 +94,42 @@ func (s *ProjectsController) taskDetail(c *gin.Context) {
 		panic(err)
 	}
 	utils.RenderTemplate(c, http.StatusOK, partials.TaskModal(task))
+}
+
+func (s *ProjectsController) reorderTask(c *gin.Context) {
+	payload := struct {
+		BoardListID string `json:"boardListId"`
+		Order       uint   `json:"order"`
+	}{}
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	taskID := uuid.MustParse(c.Param("id"))
+	boardListID := uuid.MustParse(payload.BoardListID)
+
+	if err := s.projectService.ReorderTask(c.Request.Context(), taskID, boardListID, payload.Order); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(c, nil)
+}
+
+func (s *ProjectsController) reorderList(c *gin.Context) {
+	payload := struct {
+		Order uint `json:"order"`
+	}{}
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	listID := uuid.MustParse(c.Param("id"))
+
+	if err := s.projectService.ReorderList(c.Request.Context(), listID, payload.Order); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(c, nil)
 }

@@ -1,8 +1,9 @@
 package utils
 
 type BasePage struct {
-	Title string
-	User  *PageUser
+	Title     string
+	User      *PageUser
+	CsrfToken string
 }
 
 type PageUser struct {
