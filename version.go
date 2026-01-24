@@ -1,3 +1,3 @@
 package lumna
 
-const Version = "v0.24.4"
+const Version = "v0.25.0"

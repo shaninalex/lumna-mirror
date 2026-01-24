@@ -1,3 +1,9 @@
+## 0.25.0 (2026-01-24)
+
+### Feat
+
+- **web**: render task markdown content
+
 ## 0.24.4 (2026-01-24)
 
 ### Fix
