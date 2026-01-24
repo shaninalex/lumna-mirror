@@ -22,3 +22,5 @@ __debug_*
 cover.out
 
 .claude
+
+!.git/hooks/post-tag

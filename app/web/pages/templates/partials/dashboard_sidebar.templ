@@ -16,7 +16,7 @@ templ DashboardSidebar() {
 				<nav class="nav flex-column">
 					<a class="nav-link active" href={ templ.SafeURL("/settings") }>Settings</a>
 				</nav>
-				<small class="text-secondary">v{ lumna.Version }</small>
+				<small class="text-secondary">{ lumna.Version() }</small>
 			</div>
 		</div>
 	</div>
