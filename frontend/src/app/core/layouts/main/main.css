@@ -1,0 +1,17 @@
+.main {
+    height: 100vh;
+    display: flex;
+}
+
+.content {
+    width: calc(100% - 185px);
+    position: relative;
+    padding-top: 3.2rem;
+}
+
+.page-content {
+    padding: 1rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+}
