@@ -21,9 +21,3 @@ api:
 
 html:
   enabled: false
-
-clients:
-  - name: "Main"
-    client_id: ""
-    client_secret: ""
-    client_url: "http://localhost:4200"

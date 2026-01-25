@@ -3,12 +3,9 @@ module gitlab.com/shaninalex/lumna
 go 1.24.2
 
 require (
-	github.com/a-h/templ v0.3.977
-	github.com/dchest/uniuri v1.2.0
-	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-contrib/sessions v1.0.4
 	github.com/gin-gonic/gin v1.11.0
-	github.com/gomarkdown/markdown v0.0.0-20250810172220-2e2c11897d1a
+	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/google/uuid v1.6.0
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1

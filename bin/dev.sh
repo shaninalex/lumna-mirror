@@ -1,4 +1,4 @@
 #!/bin/bash
 
-templ generate
+# templ generate
 go run ./app serve --config=./config/config.yaml
