@@ -1,9 +1,0 @@
-package partials
-
-import "fmt"
-
-templ BoardItem(boardID, projectID, title string) {
-	<a class="btn btn-primary" href={ templ.SafeURL(fmt.Sprintf("/projects/%s/board/%s", projectID, boardID)) }>
-		{ title }
-	</a>
-}

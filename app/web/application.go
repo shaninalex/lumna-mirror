@@ -1,42 +1,24 @@
 package web
 
 import (
-	"context"
-
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"gitlab.com/shaninalex/lumna/app/internal"
-	"gitlab.com/shaninalex/lumna/app/internal/config"
-	"gitlab.com/shaninalex/lumna/app/web/api"
-	"gitlab.com/shaninalex/lumna/app/web/middlewares"
-	"gitlab.com/shaninalex/lumna/app/web/pages"
-	"gitlab.com/shaninalex/lumna/app/web/utils"
+	"gitlab.com/shaninalex/lumna/app/api"
+	"gitlab.com/shaninalex/lumna/app/api/middlewares"
+	"gitlab.com/shaninalex/lumna/app/internal/client"
 )
 
-func NewWebApplication(ctx context.Context) *gin.Engine {
-	conf, ok := ctx.Value(internal.ContextConfig).(*config.Config)
-	if !ok {
-		panic("config not found in context")
-	}
-
+func NewWebApplication(client *client.Client) *gin.Engine {
 	router := NewRouter()
 
-	// Middlewares
-	router.Use(middlewares.CorsMiddleware())
-	router.Use(middlewares.ClientMiddleware(ctx))
-	router.Use(sessions.Sessions("session", utils.NewCookieStore(conf)))
+	// Share application context to gin
+	router.Use(func(c *gin.Context) {
+		c.Request = c.Request.WithContext(client.Context())
+		c.Next()
+	})
+	router.Use(middlewares.CORSMiddleware())
 
-	if conf.Html.Enabled {
-		templRoutes := router.Group("/")
-		{
-			pages.NewPageRouter(templRoutes, conf)
-		}
-	}
-	if conf.API.Enabled {
-		apiRoutes := router.Group("/api/v1")
-		{
-			api.NewApiRoutes(apiRoutes)
-		}
+	if client.Config().API.Enabled {
+		api.RegisterApiV1Routes(client, router)
 	}
 
 	return router

@@ -21,18 +21,18 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 		Short: "Run webserver",
 		Args:  cobra.ArbitraryArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			c, err := client.NewClientForCLI(cmd)
+			client, err := client.NewClientForCLI(cmd)
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			router := web.NewWebApplication(c.Context())
+			router := web.NewWebApplication(client)
 			srv := &http.Server{
-				Addr:    fmt.Sprintf(":%d", c.Config().Serve.Port),
+				Addr:    fmt.Sprintf(":%d", client.Config().Serve.Port),
 				Handler: router,
 			}
 
-			log.Printf("Run server on :%d\n", c.Config().Serve.Port)
+			log.Printf("Run server on :%d\n", client.Config().Serve.Port)
 			go func() {
 				if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 					log.Fatalf("listen: %s\n", err)

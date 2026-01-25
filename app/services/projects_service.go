@@ -25,7 +25,7 @@ func (s *ProjectService) Get(ctx context.Context, id uuid.UUID) (*models.Project
 	return project, nil
 }
 
-func (s *ProjectService) GetBoard(ctx context.Context, boardID uuid.UUID) (*models.Board, error) {
+func (s *ProjectService) BoardGet(ctx context.Context, boardID uuid.UUID) (*models.Board, error) {
 	database := db.GetDB(ctx)
 	board := &models.Board{}
 	if result := database.
@@ -136,4 +136,19 @@ func (s *ProjectService) BoardDelete(ctx context.Context, boardID uuid.UUID) err
 		return result.Error
 	}
 	return nil
+}
+
+func (s *ProjectService) BoardUpdate(ctx context.Context, projectID, boardID uuid.UUID, title string) error {
+	database := db.GetDB(ctx)
+	return database.Model(&models.Board{}).
+		Where("id = ? AND project_id = ?", boardID.String(), projectID.String()).
+		Update("title", title).Error
+}
+
+func (s *ProjectService) BoardListGet(ctx context.Context, boardListID uuid.UUID) (*models.BoardList, error) {
+	var boardList models.BoardList
+	if result := db.GetDB(ctx).Where("id = ?", boardListID).First(&boardList); result.Error != nil {
+		return nil, result.Error
+	}
+	return &boardList, nil
 }
