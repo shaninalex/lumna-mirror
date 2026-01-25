@@ -2,6 +2,12 @@ package partials
 
 import "fmt"
 
+templ BoardFormBtn(projectId, _csrf string) {
+	<button type="button" class="btn btn-outline-secondary">
+		Add board
+	</button>
+}
+
 templ BoardForm(projectId, _csrf string) {
 	<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#boardAddFormModal">
 		Add board

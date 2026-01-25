@@ -17,7 +17,7 @@ var (
 
 func alertCssClass(alertType *AlertType) string {
 	if alertType != nil {
-		return fmt.Sprintf("alert alert-%s", string(*alertType))
+		return fmt.Sprintf("alert alert-dismissible alert-%s", string(*alertType))
 	}
 	return "alert"
 }
@@ -25,5 +25,6 @@ func alertCssClass(alertType *AlertType) string {
 templ Alert(msg string, alertType *AlertType) {
 	<div class={ alertCssClass(alertType) } role="alert">
 		{ msg }
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 	</div>
 }

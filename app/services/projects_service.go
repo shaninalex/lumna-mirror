@@ -137,3 +137,10 @@ func (s *ProjectService) BoardDelete(ctx context.Context, boardID uuid.UUID) err
 	}
 	return nil
 }
+
+func (s *ProjectService) BoardUpdate(ctx context.Context, projectID, boardID uuid.UUID, title string) error {
+	database := db.GetDB(ctx)
+	return database.Model(&models.Board{}).
+		Where("id = ? AND project_id = ?", boardID.String(), projectID.String()).
+		Update("title", title).Error
+}

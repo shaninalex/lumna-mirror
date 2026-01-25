@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "fmt"
 
-func BoardForm(projectId, _csrf string) templ.Component {
+func BoardFormBtn(projectId, _csrf string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,33 +31,62 @@ func BoardForm(projectId, _csrf string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<button type=\"button\" class=\"btn btn-outline-secondary\" data-bs-toggle=\"modal\" data-bs-target=\"#boardAddFormModal\">Add board</button><div class=\"modal fade\" id=\"boardAddFormModal\" tabindex=\"-1\" aria-labelledby=\"boardAddFormLabel\" aria-hidden=\"true\"><div class=\"modal-dialog\"><form class=\"modal-content\" hx-post=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<button type=\"button\" class=\"btn btn-outline-secondary\">Add board</button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(templ.SafeURL(fmt.Sprintf("/hx/projects/%s/board/form", projectId)))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/partials/board-form.templ`, Line: 13, Col: 81}
+		return nil
+	})
+}
+
+func BoardForm(projectId, _csrf string) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" hx-swap=\"beforeend\" hx-target=\"#projectBoardList\"><div class=\"modal-header\"><h1 class=\"modal-title fs-5\" id=\"boardAddFormLabel\">Board create</h1><button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button></div><div class=\"modal-body\"><input type=\"hidden\" value=\"")
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var2 == nil {
+			templ_7745c5c3_Var2 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<button type=\"button\" class=\"btn btn-outline-secondary\" data-bs-toggle=\"modal\" data-bs-target=\"#boardAddFormModal\">Add board</button><div class=\"modal fade\" id=\"boardAddFormModal\" tabindex=\"-1\" aria-labelledby=\"boardAddFormLabel\" aria-hidden=\"true\"><div class=\"modal-dialog\"><form class=\"modal-content\" hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(_csrf)
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(templ.SafeURL(fmt.Sprintf("/hx/projects/%s/board/form", projectId)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/partials/board-form.templ`, Line: 22, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/partials/board-form.templ`, Line: 19, Col: 81}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" name=\"_csrf\"><div id=\"boardFormResult\"></div><div class=\"mb-3\"><label for=\"form_title\" class=\"form-label\">Board title</label> <input type=\"text\" class=\"form-control\" name=\"title\" id=\"form_title\" placeholder=\"Board title\" required></div></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Close</button> <button type=\"submit\" class=\"btn btn-primary\">Add</button></div></form></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" hx-swap=\"beforeend\" hx-target=\"#projectBoardList\"><div class=\"modal-header\"><h1 class=\"modal-title fs-5\" id=\"boardAddFormLabel\">Board create</h1><button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button></div><div class=\"modal-body\"><input type=\"hidden\" value=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var4 string
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(_csrf)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/pages/templates/partials/board-form.templ`, Line: 28, Col: 39}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" name=\"_csrf\"><div id=\"boardFormResult\"></div><div class=\"mb-3\"><label for=\"form_title\" class=\"form-label\">Board title</label> <input type=\"text\" class=\"form-control\" name=\"title\" id=\"form_title\" placeholder=\"Board title\" required></div></div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Close</button> <button type=\"submit\" class=\"btn btn-primary\">Add</button></div></form></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

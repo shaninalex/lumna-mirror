@@ -25,7 +25,7 @@ var (
 
 func alertCssClass(alertType *AlertType) string {
 	if alertType != nil {
-		return fmt.Sprintf("alert alert-%s", string(*alertType))
+		return fmt.Sprintf("alert alert-dismissible alert-%s", string(*alertType))
 	}
 	return "alert"
 }
@@ -82,7 +82,7 @@ func Alert(msg string, alertType *AlertType) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, " <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
