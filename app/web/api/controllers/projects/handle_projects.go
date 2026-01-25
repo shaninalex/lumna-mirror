@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/internal"
-	"gitlab.com/shaninalex/lumna/app/web/utils"
+	"gitlab.com/shaninalex/lumna/app/web/api/utils"
 )
 
 func (s *ProjectsController) List(c *gin.Context) {

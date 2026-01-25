@@ -1,9 +1,10 @@
 package web
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
-	"gitlab.com/shaninalex/lumna/app/web/middlewares"
-	"gitlab.com/shaninalex/lumna/app/web/utils"
+	"gitlab.com/shaninalex/lumna"
 )
 
 func NewRouter() *gin.Engine {
@@ -12,8 +13,14 @@ func NewRouter() *gin.Engine {
 	router.RedirectTrailingSlash = false
 	router.RedirectFixedPath = false
 
-	router.GET("/_health", utils.HealthRoute)
-	router.Use(middlewares.CorsMiddleware())
+	router.GET("/_health", HealthRoute)
 
 	return router
+}
+
+func HealthRoute(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "ok",
+		"version": lumna.Version,
+	})
 }

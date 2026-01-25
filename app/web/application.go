@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/client"
 	"gitlab.com/shaninalex/lumna/app/web/api"
-	"gitlab.com/shaninalex/lumna/app/web/middlewares"
 )
 
 func NewWebApplication(client *client.Client) *gin.Engine {
@@ -12,7 +11,10 @@ func NewWebApplication(client *client.Client) *gin.Engine {
 	router := NewRouter()
 
 	// Share application context to gin
-	router.Use(middlewares.ClientMiddleware(client.Context()))
+	router.Use(func(c *gin.Context) {
+		c.Request = c.Request.WithContext(client.Context())
+		c.Next()
+	})
 
 	if conf.API.Enabled {
 		api.RegisterApiV1Routes(conf, router)

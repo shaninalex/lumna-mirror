@@ -3,9 +3,9 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
-	"gitlab.com/shaninalex/lumna/app/web/api/auth"
-	"gitlab.com/shaninalex/lumna/app/web/api/projects"
-	"gitlab.com/shaninalex/lumna/app/web/api/user"
+	"gitlab.com/shaninalex/lumna/app/web/api/controllers/auth"
+	"gitlab.com/shaninalex/lumna/app/web/api/controllers/projects"
+	"gitlab.com/shaninalex/lumna/app/web/api/controllers/user"
 )
 
 func RegisterApiV1Routes(conf *config.Config, baseRouter *gin.Engine) {

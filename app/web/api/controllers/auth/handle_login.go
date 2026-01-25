@@ -6,7 +6,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
-	"gitlab.com/shaninalex/lumna/app/web/utils"
+	"gitlab.com/shaninalex/lumna/app/web/api/utils"
 )
 
 func (s *AuthController) HandleAuthLogin(c *gin.Context) {
