@@ -3,14 +3,13 @@ package auth
 import (
 	"net/http"
 
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
+	"gitlab.com/shaninalex/lumna/app/internal/jwt"
 )
 
 func (s *AuthController) HandleAuthLogin(c *gin.Context) {
-	// get post payload
 	payload := local.PasswordCredentials{}
 	if err := c.ShouldBindBodyWithJSON(&payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
@@ -22,21 +21,19 @@ func (s *AuthController) HandleAuthLogin(c *gin.Context) {
 		return
 	}
 
-	// call authenticate
-	authResult, err := s.localProvider.Authenticate(c.Request.Context(), &payload)
+	identity, err := s.localProvider.Authenticate(c.Request.Context(), &payload)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	session := sessions.Default(c)
-	session.Set("user_id", authResult.Identity.ID.String())
-	session.Set("provider", authResult.Provider)
-
-	if err := session.Save(); err != nil {
+	token, err := jwt.GenerateLoginToken(identity.ID.String())
+	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	utils.Success(c, authResult.Identity)
+	utils.Success(c, map[string]string{
+		"login_token": token,
+	})
 }

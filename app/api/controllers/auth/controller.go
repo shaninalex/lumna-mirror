@@ -21,7 +21,6 @@ func NewController(router *gin.RouterGroup) {
 
 	controller := &AuthController{}
 
-	// router.POST("/auth/register", nil)
 	router.POST("/auth/login", controller.HandleAuthLogin)
 	// router.POST("/api/v1/auth/logout", nil)
 	// router.POST("/api/v1/auth/refresh", nil)

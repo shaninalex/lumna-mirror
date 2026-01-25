@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/mail"
 
-	"gitlab.com/shaninalex/lumna/app/internal/auth"
 	"gitlab.com/shaninalex/lumna/app/internal/db"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
@@ -14,8 +13,8 @@ import (
 // var _ auth.AuthProvider = (*LocalAuthProvider)(nil)
 
 type PasswordCredentials struct {
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (s *PasswordCredentials) Validate() error {
@@ -44,7 +43,7 @@ func (s *LocalAuthProvider) Name() string {
 
 var UserNotFoundError = errors.New("user not found")
 
-func (s *LocalAuthProvider) Authenticate(ctx context.Context, payload *PasswordCredentials) (*auth.AuthResult, error) {
+func (s *LocalAuthProvider) Authenticate(ctx context.Context, payload *PasswordCredentials) (*models.Identity, error) {
 	database := db.GetDB(ctx)
 	credentials := models.Credential{}
 	if result := database.Preload("Identity").First(&credentials, "email = ?", payload.Email); result.Error != nil {
@@ -62,9 +61,5 @@ func (s *LocalAuthProvider) Authenticate(ctx context.Context, payload *PasswordC
 		return nil, err
 	}
 
-	return &auth.AuthResult{
-		Identity:   &credentials.Identity,
-		Provider:   "local",
-		Credential: &credentials,
-	}, nil
+	return &credentials.Identity, nil
 }

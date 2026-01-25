@@ -1,16 +1,17 @@
 package oauth
 
 import (
-	"crypto/sha256"
-	"encoding/base64"
+	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"net/url"
-	"slices"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/internal/jwt"
 )
 
@@ -30,7 +31,7 @@ func RegisterOAuthController(router *gin.RouterGroup) {
 	controller := NewOAuthContoller()
 
 	// router already prefixed with "/oauth"
-	router.GET("/authorize", controller.handleAuthorize)
+	router.GET("/authorize", OAuthMiddleware, controller.handleAuthorize)
 	router.POST("/token", controller.handleToken)
 }
 
@@ -46,11 +47,6 @@ func (s *OAuthController) handleToken(c *gin.Context) {
 	redirectURI := c.PostForm("redirect_uri")
 	codeVerifier := c.PostForm("code_verifier")
 
-	log.Println("code:", code)
-	log.Println("clientID:", clientID)
-	log.Println("redirectURI:", redirectURI)
-	log.Println("codeVerifier:", codeVerifier)
-
 	if code == "" || clientID == "" || redirectURI == "" || codeVerifier == "" {
 		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_request"})
 		return
@@ -59,7 +55,8 @@ func (s *OAuthController) handleToken(c *gin.Context) {
 	// Load authorization code
 	authCode, err := s.authCodes.Find(c, code)
 	if err != nil {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant 1"})
+		log.Println("auth code not found")
+		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
 		return
 	}
 
@@ -71,24 +68,28 @@ func (s *OAuthController) handleToken(c *gin.Context) {
 
 	// Validate redirect_uri
 	if authCode.RedirectURI != redirectURI {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant 2"})
+		log.Println("invalid redirect uri")
+		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
 		return
 	}
 
 	// PKCE verification
 	if !verifyPKCE(codeVerifier, authCode.CodeChallenge) {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant 3"})
+		log.Println("invalid PRCE")
+		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
 		return
 	}
 
 	// Mark code as used
 	if err := s.authCodes.MarkUsed(c, code); err != nil {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant 4"})
+		log.Println("unable to mark used")
+		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
 		return
 	}
 
-	accessToken, err := jwt.GenerateJWT()
+	accessToken, err := jwt.GenerateJWT(authCode.UserID, authCode.Scopes, time.Minute*15)
 	if err != nil {
+		log.Println("unable to generate secure code")
 		c.AbortWithStatusJSON(500, gin.H{"error": "server_error"})
 		return
 	}
@@ -100,7 +101,6 @@ func (s *OAuthController) handleToken(c *gin.Context) {
 	})
 }
 
-// handleAuthorize
 func (s *OAuthController) handleAuthorize(c *gin.Context) {
 	// Parse query params
 	responseType := c.Query("response_type")
@@ -130,13 +130,13 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 	// Load client
 	client, err := s.clients.FindByID(c, clientID)
 	if err != nil {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_client"})
+		utils.Error(c, http.StatusBadRequest, errors.New("invalid_client"))
 		return
 	}
 
 	// Validate redirect_uri
 	if !isRedirectAllowed(client.RedirectURIs, redirectURI) {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_redirect_uri"})
+		utils.Error(c, http.StatusBadRequest, errors.New("invalid_redirect_uri"))
 		return
 	}
 
@@ -146,8 +146,13 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 		scopes = strings.Split(scope, " ")
 	}
 
-	// TODO: real authentication
-	userID := "dev-user"
+	userIDAny, ok := c.Get("userID")
+	if !ok {
+		utils.Error(c, http.StatusBadRequest, errors.New("user not found")) // make errors vars
+		return
+	}
+
+	userID := uuid.MustParse(userIDAny.(string))
 
 	// Generate authorization code
 	code, err := generateSecureCode()
@@ -159,7 +164,7 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 	authCode := &AuthorizationCode{
 		Code:                code,
 		ClientID:            clientID,
-		UserID:              userID,
+		UserID:              userID.String(),
 		RedirectURI:         redirectURI,
 		CodeChallenge:       codeChallenge,
 		CodeChallengeMethod: codeChallengeMethod,
@@ -179,26 +184,6 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 		redirect += "&state=" + url.QueryEscape(state)
 	}
 
-	log.Println(redirect)
+	fmt.Println(url.QueryEscape(code))
 	c.Redirect(http.StatusFound, redirect)
-}
-
-func isRedirectAllowed(allowed []string, uri string) bool {
-	return slices.Contains(allowed, uri)
-}
-
-func validatePKCE(challenge, method string) bool {
-	if challenge == "" {
-		return false
-	}
-	if method == "" {
-		method = "S256"
-	}
-	return method == "S256"
-}
-
-func verifyPKCE(verifier, expectedChallenge string) bool {
-	sum := sha256.Sum256([]byte(verifier))
-	challenge := base64.RawURLEncoding.EncodeToString(sum[:])
-	return challenge == expectedChallenge
 }

@@ -11,7 +11,7 @@ serve:
 database:
   # database connection path
   # if it's SQLite3 file - use absolute system path
-  url: "lumna.db?cache=shared&mode=rwc"
+  url: "/home/alex/projects/lumna/lumna.db?cache=shared&mode=rwc"
 
 # for jwt signing and verification
 secret_key: "a-string-secret-at-least-256-bits-long"
