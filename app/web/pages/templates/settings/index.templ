@@ -1,7 +1,7 @@
 package settings
 
 import (
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/dashboard"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -10,7 +10,7 @@ type SettingsPageData struct {
 }
 
 templ Index(page SettingsPageData) {
-	@templates.Dashboard(page.BasePage) {
+	@dashboard.Dashboard(page.BasePage) {
 		<h4>Settings</h4>
 	}
 }

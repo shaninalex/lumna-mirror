@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
 	"gitlab.com/shaninalex/lumna/app/web/pages/templates/auth"
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/components"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -54,19 +54,19 @@ func (s *AuthController) handleLoginSubmission(c *gin.Context) {
 
 	// Bind form data to struct
 	if err := c.ShouldBind(&payload); err != nil {
-		utils.RenderTemplate(c, http.StatusOK, partials.Alert(err.Error(), &partials.AlertTypeDanger))
+		utils.RenderTemplate(c, http.StatusOK, components.Alert(err.Error(), &components.AlertTypeDanger))
 		return
 	}
 
 	if err := payload.Validate(); err != nil {
-		utils.RenderTemplate(c, http.StatusOK, partials.Alert(err.Error(), &partials.AlertTypeDanger))
+		utils.RenderTemplate(c, http.StatusOK, components.Alert(err.Error(), &components.AlertTypeDanger))
 		return
 	}
 
 	// call authenticate
 	authResult, err := s.localProvider.Authenticate(c.Request.Context(), &payload)
 	if err != nil {
-		utils.RenderTemplate(c, http.StatusOK, partials.Alert(err.Error(), &partials.AlertTypeDanger))
+		utils.RenderTemplate(c, http.StatusOK, components.Alert(err.Error(), &components.AlertTypeDanger))
 		return
 	}
 
@@ -75,7 +75,7 @@ func (s *AuthController) handleLoginSubmission(c *gin.Context) {
 	session.Set("provider", authResult.Provider)
 
 	if err := session.Save(); err != nil {
-		utils.RenderTemplate(c, http.StatusOK, partials.Alert(err.Error(), &partials.AlertTypeDanger))
+		utils.RenderTemplate(c, http.StatusOK, components.Alert(err.Error(), &components.AlertTypeDanger))
 		return
 	}
 

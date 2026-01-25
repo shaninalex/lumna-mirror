@@ -2,11 +2,11 @@ package projects
 
 import (
 	"fmt"
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/dashboard"
 )
 
 templ ProjectEdit(page ProjectDetailPageData) {
-	@templates.Dashboard(page.BasePage) {
+	@dashboard.Dashboard(page.BasePage) {
 		<div class="d-flex align-items-start justify-content-between mb-4">
 			<div>
 				<a

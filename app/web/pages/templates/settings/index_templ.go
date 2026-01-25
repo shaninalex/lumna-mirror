@@ -9,7 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/dashboard"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -56,7 +56,7 @@ func Index(page SettingsPageData) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = templates.Dashboard(page.BasePage).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = dashboard.Dashboard(page.BasePage).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

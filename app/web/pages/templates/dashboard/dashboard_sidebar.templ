@@ -1,0 +1,23 @@
+package dashboard
+
+import "gitlab.com/shaninalex/lumna"
+
+templ DashboardSidebar() {
+	<div class="dashboard-sidebar bg-body-tertiary">
+		<a href={ templ.SafeURL("/") }>
+			<img src="/assets/img/logo-h.svg"/>
+		</a>
+		<div class="d-flex flex-column flex-grow-1">
+			<nav class="nav flex-column flex-grow-1">
+				<a class="nav-link active" aria-current="page" href={ templ.SafeURL("/") }>Home</a>
+				<a class="nav-link" href={ templ.SafeURL("/projects") }>Projects</a>
+			</nav>
+			<div>
+				<nav class="nav flex-column">
+					<a class="nav-link active" href={ templ.SafeURL("/settings") }>Settings</a>
+				</nav>
+				<small class="text-secondary">{ lumna.Version }</small>
+			</div>
+		</div>
+	</div>
+}

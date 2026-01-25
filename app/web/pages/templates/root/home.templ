@@ -1,7 +1,7 @@
 package root
 
 import (
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/dashboard"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -10,7 +10,7 @@ type HomePageData struct {
 }
 
 templ Home(page HomePageData) {
-	@templates.Dashboard(page.BasePage) {
+	@dashboard.Dashboard(page.BasePage) {
 		<div>Home page</div>
 	}
 }

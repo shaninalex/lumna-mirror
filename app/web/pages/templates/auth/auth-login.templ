@@ -1,12 +1,12 @@
 package auth
 
 import (
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/base"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
 templ LoginPage(page utils.BasePage) {
-	@templates.Base(page) {
+	@base.Base(page) {
 		<div class="vw-100 vh-100 d-flex align-items-center justify-content-center">
 			<div style="width: 320px">
 				<div class="text-center mb-3">

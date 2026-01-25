@@ -1,0 +1,91 @@
+package partials
+
+import (
+	"fmt"
+	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/components"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/tasks"
+)
+
+templ BoardListColumn(list models.BoardList) {
+	<div class="card kanban-column" id={ list.ID.String() }>
+		<div class="card-header d-flex align-items-center justify-content-between cursor-handle">
+			<div>{ list.Title }</div>
+			<div class="dropdown">
+				<button class="btn btn-default btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<i class="bi bi-three-dots"></i>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end">
+					<li>
+						<button
+							class="dropdown-item"
+							hx-get={ fmt.Sprintf("/hx/projects/board-list/%s/modal", list.ID.String()) }
+							hx-swap="beforeend"
+							hx-target="body"
+						>Edit</button>
+					</li>
+					<li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="card-body d-flex flex-column gap-2" data-column={ list.ID.String() }>
+			for _, task := range list.Tasks {
+				@tasks.TaskCard(task)
+			}
+		</div>
+	</div>
+}
+
+templ BoardListFormButton() {
+	<button
+		type="button"
+		class="btn btn-outline-secondary"
+		hx-get="/hx/projects/board-list/modal"
+		hx-target="body"
+		hx-swap="beforeend"
+	>
+		Add list
+	</button>
+}
+
+type BoardListFormData struct {
+	CSRF      string
+	Url       string
+	BoardList *models.BoardList
+}
+
+templ BoardListForm(data BoardListFormData) {
+	@components.Modal("boardListForm") {
+		<form hx-post={ data.Url }>
+			<div>
+				<input type="hidden" value={ data.CSRF } name="_csrf"/>
+				<div id="boardFormResult"></div>
+				<div class="mb-3">
+					<label for="form_title" class="form-label">Board List title</label>
+					if data.BoardList != nil {
+						<input type="text" class="form-control" name="title" id="form_title" value={ data.BoardList.Title } placeholder="Board list title" required/>
+					} else {
+						<input type="text" class="form-control" name="title" id="form_title" placeholder="Board list title" required/>
+					}
+				</div>
+			</div>
+			<button
+				type="button"
+				class="btn btn-secondary"
+				onclick="closeModal('#boardListForm')"
+			>
+				Close
+			</button>
+			<button type="submit" class="btn btn-primary">
+				{ boardListFormSubmitBtnText(data.BoardList) }
+			</button>
+		</form>
+	}
+}
+
+func boardListFormSubmitBtnText(b *models.BoardList) string {
+	if b != nil {
+		return "Update"
+	}
+	return "Add"
+}

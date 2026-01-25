@@ -3,7 +3,7 @@ package projects
 import (
 	"fmt"
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/dashboard"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 	"time"
 )
@@ -14,7 +14,7 @@ type ProjectsPageData struct {
 }
 
 templ ProjectsList(page ProjectsPageData) {
-	@templates.Dashboard(page.BasePage) {
+	@dashboard.Dashboard(page.BasePage) {
 		<div class="row">
 			for _, p := range page.Projects {
 				<div class="col-md-4">

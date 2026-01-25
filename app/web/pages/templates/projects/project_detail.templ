@@ -3,8 +3,8 @@ package projects
 import (
 	"fmt"
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates"
-	"gitlab.com/shaninalex/lumna/app/web/pages/templates/partials"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/board/partials"
+	"gitlab.com/shaninalex/lumna/app/web/pages/templates/dashboard"
 	"gitlab.com/shaninalex/lumna/app/web/utils"
 )
 
@@ -14,7 +14,7 @@ type ProjectDetailPageData struct {
 }
 
 templ ProjectDetail(page ProjectDetailPageData) {
-	@templates.Dashboard(page.BasePage) {
+	@dashboard.Dashboard(page.BasePage) {
 		<div class="d-flex align-items-start justify-content-between mb-4">
 			<div>
 				<a
