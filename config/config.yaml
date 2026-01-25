@@ -5,19 +5,19 @@
 env: development
 
 serve:
-  # port of the server
-  port: 8000
+    # port of the server
+    port: 8000
 
 database:
-  # database connection path
-  # if it's SQLite3 file - use absolute system path
-  url: "lumna.db?cache=shared&mode=rwc"
+    # database connection path
+    # if it's SQLite3 file - use absolute system path
+    url: "lumna.db?cache=shared&mode=rwc"
 
 # for jwt signing and verification
 secret_key: "a-string-secret-at-least-256-bits-long"
 
 api:
-  enabled: false
+    enabled: true
 
 html:
-  enabled: true
+    enabled: false
