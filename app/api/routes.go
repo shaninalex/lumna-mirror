@@ -42,4 +42,8 @@ Api.RegisterController(
 	TrackingMiddleware(),
 )
 
+Or even:
+Api.RegisterControllers([]controller{}, middlewares...)
+for multiple controllers under single set of middlewares
+
 */
