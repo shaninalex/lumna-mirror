@@ -1,3 +1,7 @@
+
+/*
+Codes - generate verifier and challenge codes for authorization requests
+*/
 export function Codes(): Promise<[string, string]> {
     const verifier = generateCodeVerifier()
 
@@ -26,9 +30,6 @@ function base64UrlEncode(buffer: Uint8Array): string {
     }
     return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")
 }
-
-
-
 
 /*
 
