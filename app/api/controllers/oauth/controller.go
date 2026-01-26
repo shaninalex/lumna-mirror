@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/internal/jwt"
 )
@@ -35,10 +34,22 @@ func RegisterOAuthController(router *gin.RouterGroup) {
 	router.POST("/token", controller.handleToken)
 }
 
+var (
+	OAuthErrorUnsuportedGratType      error = errors.New("unsupported grant type")
+	OAuthErrorInvalidRequest          error = errors.New("invalid request")
+	OAuthErrorInvalidClient           error = errors.New("invalid client")
+	OAuthErrorInvalidGrant            error = errors.New("invalid grant")
+	OAuthErrorServerError             error = errors.New("server error")
+	OAuthErrorUnsupportedResponseType error = errors.New("unsupported response type")
+	OAuthErrorInvalidPKCE             error = errors.New("invalid pkce")
+	OAuthErrorInvalidRedirectURI      error = errors.New("invalid redirect uri")
+	OAuthErrorUserNotFound            error = errors.New("user not found")
+)
+
 func (s *OAuthController) handleToken(c *gin.Context) {
 	grantType := c.PostForm("grant_type")
 	if grantType != "authorization_code" {
-		c.AbortWithStatusJSON(400, gin.H{"error": "unsupported_grant_type"})
+		utils.Error(c, http.StatusBadRequest, OAuthErrorUnsuportedGratType)
 		return
 	}
 
@@ -48,53 +59,53 @@ func (s *OAuthController) handleToken(c *gin.Context) {
 	codeVerifier := c.PostForm("code_verifier")
 
 	if code == "" || clientID == "" || redirectURI == "" || codeVerifier == "" {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_request"})
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidRequest)
 		return
 	}
 
 	// Load authorization code
 	authCode, err := s.authCodes.Find(c, code)
 	if err != nil {
-		log.Println("auth code not found")
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		log.Println("auth code not found", err)
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
 		return
 	}
 
 	// Validate client
 	if authCode.ClientID != clientID {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_client"})
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidClient)
 		return
 	}
 
 	// Validate redirect_uri
 	if authCode.RedirectURI != redirectURI {
 		log.Println("invalid redirect uri")
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
 		return
 	}
 
 	// PKCE verification
 	if !verifyPKCE(codeVerifier, authCode.CodeChallenge) {
 		log.Println("invalid PRCE")
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
 		return
 	}
 
 	// Mark code as used
 	if err := s.authCodes.MarkUsed(c, code); err != nil {
 		log.Println("unable to mark used")
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
 		return
 	}
 
-	accessToken, err := jwt.GenerateJWT(authCode.UserID, authCode.Scopes, time.Minute*15)
+	accessToken, err := jwt.GenerateAccessJWTToken(authCode.UserID, authCode.Scopes, time.Minute*15)
 	if err != nil {
-		log.Println("unable to generate secure code")
-		c.AbortWithStatusJSON(500, gin.H{"error": "server_error"})
+		log.Println("unable to generate secure code", err)
+		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
 		return
 	}
 
-	c.JSON(200, gin.H{
+	utils.Success(c, map[string]any{
 		"access_token": accessToken,
 		"token_type":   "Bearer",
 		"expires_in":   900,
@@ -113,30 +124,30 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 
 	// Basic validation
 	if responseType != "code" {
-		c.AbortWithStatusJSON(400, gin.H{"error": "unsupported_response_type"})
+		utils.Error(c, http.StatusBadRequest, OAuthErrorUnsupportedResponseType)
 		return
 	}
 
 	if clientID == "" || redirectURI == "" {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_request"})
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidRequest)
 		return
 	}
 
 	if !validatePKCE(codeChallenge, codeChallengeMethod) {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_pkce"})
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidPKCE)
 		return
 	}
 
 	// Load client
 	client, err := s.clients.FindByID(c, clientID)
 	if err != nil {
-		utils.Error(c, http.StatusBadRequest, errors.New("invalid_client"))
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidClient)
 		return
 	}
 
 	// Validate redirect_uri
 	if !isRedirectAllowed(client.RedirectURIs, redirectURI) {
-		utils.Error(c, http.StatusBadRequest, errors.New("invalid_redirect_uri"))
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidRedirectURI)
 		return
 	}
 
@@ -146,18 +157,16 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 		scopes = strings.Split(scope, " ")
 	}
 
-	userIDAny, ok := c.Get("userID")
-	if !ok {
-		utils.Error(c, http.StatusBadRequest, errors.New("user not found")) // make errors vars
+	userID, err := utils.GetUserID(c)
+	if err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
-
-	userID := uuid.MustParse(userIDAny.(string))
 
 	// Generate authorization code
 	code, err := generateSecureCode()
 	if err != nil {
-		c.AbortWithStatusJSON(500, gin.H{"error": "server_error"})
+		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
 		return
 	}
 
@@ -174,7 +183,7 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 	}
 
 	if err := s.authCodes.Save(c, authCode); err != nil {
-		c.AbortWithStatusJSON(500, gin.H{"error": "server_error"})
+		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
 		return
 	}
 

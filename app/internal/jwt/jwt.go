@@ -9,7 +9,8 @@ import (
 
 var jwtSecret = []byte("super-secret-key") // TODO: from config
 
-func GenerateJWT(userID string, scopes []string, ttl time.Duration) (string, error) {
+// GenerateAccessJWTToken - generate jwt access token
+func GenerateAccessJWTToken(userID string, scopes []string, ttl time.Duration) (string, error) {
 	claims := jwt.MapClaims{
 		"sub":   userID,
 		"scope": scopes,
@@ -20,6 +21,10 @@ func GenerateJWT(userID string, scopes []string, ttl time.Duration) (string, err
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtSecret)
 }
+
+// TODO: use separate jwtSecret for login_token
+
+var loginJWTSecret = []byte("super-secret-key")
 
 // GenerateLoginToken - generates token only for login. It's not access_token
 func GenerateLoginToken(userID string) (string, error) {
@@ -32,15 +37,16 @@ func GenerateLoginToken(userID string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(jwtSecret))
+	return token.SignedString([]byte(loginJWTSecret))
 }
 
+// ValidateLoginToken - validates login_token
 func ValidateLoginToken(tokenString string) (string, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method")
 		}
-		return jwtSecret, nil
+		return loginJWTSecret, nil
 	})
 	if err != nil {
 		return "", err
