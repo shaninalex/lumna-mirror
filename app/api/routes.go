@@ -11,12 +11,13 @@ import (
 )
 
 func RegisterApiV1Routes(client *client.Client, baseRouter *gin.Engine) {
+	// base API middlewares
+	baseRouter.Use(middlewares.CORSMiddleware())
+
 	oauthRoutes := baseRouter.Group("/oauth")
 	oauth.RegisterOAuthController(oauthRoutes)
 
 	router := baseRouter.Group("/api/v1")
-
-	router.Use(middlewares.CORSMiddleware())
 
 	auth.NewController(router)
 
