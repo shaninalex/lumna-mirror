@@ -14,15 +14,32 @@ func RegisterApiV1Routes(client *client.Client, baseRouter *gin.Engine) {
 	// base API middlewares
 	baseRouter.Use(middlewares.CORSMiddleware())
 
+	// OAuth
 	oauthRoutes := baseRouter.Group("/oauth")
 	oauth.RegisterOAuthController(oauthRoutes)
 
-	router := baseRouter.Group("/api/v1")
+	router := baseRouter.Group("/api/v1/auth")
+	auth.RegisterAuthController(router)
 
-	auth.NewController(router)
+	privateRoutes := baseRouter.Group("")
 
-	privateRoutes := router.Group("")
+	// TODO: auth middleware
 
-	user.NewController(privateRoutes)
-	projects.NewController(privateRoutes)
+	user.RegisterUserController(privateRoutes)
+	projects.RegisterProjectsController(privateRoutes)
 }
+
+/*
+
+TODO: create single interface
+Api.RegisterController(controller, middlewares...)
+
+For example:
+Api.RegisterController(
+	NewProjectsController,
+	AuthMiddleware(),
+	PermissionsMiddleware(),
+	TrackingMiddleware(),
+)
+
+*/

@@ -17,7 +17,7 @@ func NewProjectsController() *ProjectsController {
 	return s
 }
 
-func NewController(router *gin.RouterGroup) {
+func RegisterProjectsController(router *gin.RouterGroup) {
 	controller := NewProjectsController()
 
 	router.GET("/projects", controller.List)
