@@ -21,6 +21,7 @@ type RefreshTokenStore interface {
 	Save(ctx context.Context, token *models.RefreshToken) error
 	FindByHash(ctx context.Context, hash string) (*models.RefreshToken, error)
 	Revoke(ctx context.Context, id uuid.UUID) error
+	RevokeAll(ctx context.Context, userID uuid.UUID, clientID string) error
 }
 
 func NewPersistentRefreshTokenStore() *PersistentRefreshTokenStore {
@@ -51,6 +52,18 @@ func (p *PersistentRefreshTokenStore) Revoke(ctx context.Context, id uuid.UUID) 
 		return result.Error
 	}
 	return nil
+}
+
+func (p *PersistentRefreshTokenStore) RevokeAll(ctx context.Context, userID uuid.UUID, clientID string) error {
+	result := db.GetDB(ctx).
+		Model(&models.RefreshToken{}).
+		Where("identity_id = ? AND client_id = ?", userID.String(), clientID).
+		Update("revoked", true)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+
 }
 
 // Save implements [RefreshTokenStore].

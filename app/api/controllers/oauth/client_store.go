@@ -43,7 +43,7 @@ func (s *InMemoryClientStore) init() {
 	// Mock client for testing and devopment.
 	// move this to config
 	s.clients = append(s.clients, OAuthClient{
-		ID:            "angular-web",
+		ID:            "lumna-web-client",
 		Type:          "public",
 		RedirectURIs:  []string{"http://localhost:4200/auth/callback"},
 		AllowedScopes: []string{"openid", "profile"},

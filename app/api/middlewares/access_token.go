@@ -1,4 +1,4 @@
-package oauth
+package middlewares
 
 import (
 	"net/http"
@@ -8,7 +8,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/internal/auth/jwt"
 )
 
-func LoginTokenMiddleware(c *gin.Context) {
+func AccessTokenMiddleware(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	if authHeader == "" {
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
@@ -20,14 +20,14 @@ func LoginTokenMiddleware(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, utils.AccessTokenMiddlewareErrorInvalidHeader)
 		return
 	}
-
-	claims, err := jwt.ValidateLoginToken(token)
+	claims, err := jwt.ValidateAccessJWTToken(token)
 	if err != nil {
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
 		return
 	}
 
 	c.Set("userID", claims.Subject)
+	c.Set("clientID", claims.Audience)
 
 	c.Next()
 }
