@@ -10,7 +10,7 @@ import (
 var jwtSecret = []byte("super-secret-key") // TODO: from config
 
 // GenerateAccessJWTToken - generate jwt access token
-func GenerateAccessJWTToken(userID string, scopes []string, ttl time.Duration) (string, error) {
+func GenerateAccessJWTToken(userID string, scopes string, ttl time.Duration) (string, error) {
 	claims := jwt.MapClaims{
 		"iss":   "lumna-api",
 		"aud":   "lumna-web",

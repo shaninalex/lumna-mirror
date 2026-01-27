@@ -14,7 +14,7 @@ type RefreshToken struct {
 	// Hashed refresh token
 	Hash      string `gorm:"type:text;not null;uniqueIndex" json:"-"`
 	ClientID  string
-	Scopes    []string
+	Scopes    string
 	ExpiresAt time.Time `gorm:"not null;index" json:"expires_at"`
 	Revoked   bool      `gorm:"not null;default:false" json:"revoked"`
 	CreatedAt time.Time `gorm:"not null" json:"created_at"`

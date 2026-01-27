@@ -48,6 +48,8 @@ var (
 	OAuthErrorInvalidPKCE             error = errors.New("invalid pkce")
 	OAuthErrorInvalidRedirectURI      error = errors.New("invalid redirect uri")
 	OAuthErrorUserNotFound            error = errors.New("user not found")
+	OAuthErrorRefreshTokenRevoked     error = errors.New("refresh token revoked")
+	OAuthErrorTokenExpired            error = errors.New("token expired")
 )
 
 func (s *OAuthController) handleToken(c *gin.Context) {
@@ -160,40 +162,42 @@ func (s *OAuthController) handleRefreshToken(c *gin.Context) {
 	}
 
 	hash := hashToken(refreshToken)
-
-	rt, err := s.refreshTokenService.FindByHash(c, hash)
+	rt, err := s.refreshTokenService.FindByHash(c.Request.Context(), hash)
 	if err != nil {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		log.Printf("Refresh token not found by hash: %s", hash)
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
 		return
 	}
 
 	// reuse detection
 	if rt.Revoked {
-		// optional: revoke all tokens for this user+client
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		log.Printf("Token %s revoked", rt.ID.String())
+		utils.Error(c, http.StatusBadRequest, OAuthErrorRefreshTokenRevoked)
 		return
 	}
 
 	if rt.ClientID != clientID {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		log.Println("invalid client id: ", clientID)
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidClient)
 		return
 	}
 
 	if time.Now().After(rt.ExpiresAt) {
-		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		log.Println("unable to generate refresh token. Now: ", rt.ExpiresAt, " | Token: ", rt.ExpiresAt)
+		utils.Error(c, http.StatusBadRequest, OAuthErrorTokenExpired)
 		return
 	}
 
-	// 🔁 ROTATION
-	_ = s.refreshTokenService.Revoke(c, rt.ID)
+	_ = s.refreshTokenService.Revoke(c.Request.Context(), rt.ID)
 
 	newRefreshPlain, newRefreshHash, err := generateRefreshToken()
 	if err != nil {
-		c.AbortWithStatusJSON(500, gin.H{"error": "server_error"})
+		log.Println("unable to generate refresh token", err)
+		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
 		return
 	}
 
-	_ = s.refreshTokenService.Save(c, &models.RefreshToken{
+	_ = s.refreshTokenService.Save(c.Request.Context(), &models.RefreshToken{
 		Hash:       newRefreshHash,
 		IdentityID: rt.IdentityID,
 		ClientID:   rt.ClientID,
@@ -268,7 +272,7 @@ func (s *OAuthController) handleAuthorizationCode(c *gin.Context) {
 		return
 	}
 
-	accessToken, err := jwt.GenerateAccessJWTToken(authCode.UserID, authCode.Scopes, time.Minute*15)
+	accessToken, err := jwt.GenerateAccessJWTToken(authCode.UserID, strings.Join(authCode.Scopes, " "), time.Minute*15)
 	if err != nil {
 		log.Println("unable to generate access token", err)
 		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
@@ -285,9 +289,9 @@ func (s *OAuthController) handleAuthorizationCode(c *gin.Context) {
 	dbRefreshToken := models.RefreshToken{
 		IdentityID: uuid.MustParse(authCode.UserID),
 		Hash:       refreshTokenHash,
-		Scopes:     authCode.Scopes,
+		Scopes:     strings.Join(authCode.Scopes, " "),
 		ClientID:   authCode.ClientID,
-		ExpiresAt:  time.Now().Add(time.Duration(time.Now().Day()) * 30),
+		ExpiresAt:  time.Now().Add(30 * 24 * time.Hour),
 	}
 
 	if err := s.refreshTokenService.Save(c.Request.Context(), &dbRefreshToken); err != nil {

@@ -3,12 +3,7 @@ import requests
 import urllib
 
 from oauth_challenge_codes import codes
-
-
-BASE_URL = "http://localhost:8000"
-
-CLIENT_ID = "angular-web"
-REDIRECT_URI = "http://localhost:4200/auth/callback"
+from oauth_config import BASE_URL, CLIENT_ID, REDIRECT_URI
 
 def authenticate() -> str:
     payload = {

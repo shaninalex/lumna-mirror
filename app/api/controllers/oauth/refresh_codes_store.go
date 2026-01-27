@@ -35,7 +35,7 @@ type PersistentRefreshTokenStore struct {
 // FindByHash implements [RefreshTokenStore].
 func (p *PersistentRefreshTokenStore) FindByHash(ctx context.Context, hash string) (*models.RefreshToken, error) {
 	var refreshToken models.RefreshToken
-	if result := db.GetDB(ctx).Where("token_hash = ?", hash).Model(&refreshToken); result.Error != nil {
+	if result := db.GetDB(ctx).Where("hash = ?", hash).First(&refreshToken); result.Error != nil {
 		return nil, result.Error
 	}
 	return &refreshToken, nil
@@ -43,7 +43,14 @@ func (p *PersistentRefreshTokenStore) FindByHash(ctx context.Context, hash strin
 
 // Revoke implements [RefreshTokenStore].
 func (p *PersistentRefreshTokenStore) Revoke(ctx context.Context, id uuid.UUID) error {
-	panic("unimplemented")
+	result := db.GetDB(ctx).
+		Model(&models.RefreshToken{}).
+		Where("id = ?", id.String()).
+		Update("revoked", true)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
 
 // Save implements [RefreshTokenStore].
