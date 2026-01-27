@@ -10,8 +10,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
-	"gitlab.com/shaninalex/lumna/app/internal/jwt"
+	"gitlab.com/shaninalex/lumna/app/internal/auth/jwt"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
+	internalUtils "gitlab.com/shaninalex/lumna/app/internal/utils"
+	"gitlab.com/shaninalex/lumna/app/models"
 )
 
 type OAuthController struct {
@@ -100,15 +104,35 @@ func (s *OAuthController) handleToken(c *gin.Context) {
 
 	accessToken, err := jwt.GenerateAccessJWTToken(authCode.UserID, authCode.Scopes, time.Minute*15)
 	if err != nil {
-		log.Println("unable to generate secure code", err)
+		log.Println("unable to generate access token", err)
 		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
 		return
 	}
 
+	refreshToken, refreshTokenHash, err := generateRefreshToken()
+	if err != nil {
+		log.Println("unable to generate refresh token", err)
+		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
+		return
+	}
+
+	dbRefreshToken := models.RefreshToken{
+		IdentityID: uuid.MustParse(authCode.UserID),
+		TokenHash:  refreshTokenHash,
+		ExpiresAt:  time.Now().Add(time.Duration(time.Now().Day()) * 30),
+		UserAgent:  internalUtils.Pointer(c.Request.UserAgent()),
+		IpAddress:  internalUtils.Pointer(c.ClientIP()),
+	}
+
+	if result := db.GetDB(c.Request.Context()).Create(&dbRefreshToken); result.Error != nil {
+		panic(result.Error)
+	}
+
 	utils.Success(c, map[string]any{
-		"access_token": accessToken,
-		"token_type":   "Bearer",
-		"expires_in":   900,
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
+		"token_type":    "Bearer",
+		"expires_in":    900,
 	})
 }
 

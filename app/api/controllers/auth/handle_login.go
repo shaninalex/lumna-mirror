@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
+	"gitlab.com/shaninalex/lumna/app/internal/auth/jwt"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
-	"gitlab.com/shaninalex/lumna/app/internal/jwt"
 )
 
 func (s *AuthController) HandleAuthLogin(c *gin.Context) {

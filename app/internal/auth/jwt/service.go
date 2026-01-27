@@ -12,6 +12,8 @@ var jwtSecret = []byte("super-secret-key") // TODO: from config
 // GenerateAccessJWTToken - generate jwt access token
 func GenerateAccessJWTToken(userID string, scopes []string, ttl time.Duration) (string, error) {
 	claims := jwt.MapClaims{
+		"iss":   "lumna-api",
+		"aud":   "lumna-web",
 		"sub":   userID,
 		"scope": scopes,
 		"iat":   time.Now().Unix(),
@@ -29,7 +31,8 @@ var loginJWTSecret = []byte("super-secret-key")
 // GenerateLoginToken - generates token only for login. It's not access_token
 func GenerateLoginToken(userID string) (string, error) {
 	claims := jwt.MapClaims{
-		"iss": "https://auth.lumna.local",
+		"iss": "lumna-api",
+		"aud": "lumna-web",
 		"sub": userID,
 		"typ": "login",
 		"exp": time.Now().Add(5 * time.Minute).Unix(),

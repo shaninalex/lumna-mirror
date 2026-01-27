@@ -2,6 +2,7 @@ package oauth
 
 import (
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
 	"testing"
 )
@@ -22,4 +23,25 @@ func TestGenerateSecureCode(t *testing.T) {
 	if code1 == code2 {
 		t.Fatal("codes should be unique")
 	}
+}
+
+func generateRefreshToken() (string, string, error) {
+	b := make([]byte, 64)
+
+	if _, err := rand.Read(b); err != nil {
+		return "", "", err
+	}
+
+	// to client
+	plain := base64.RawURLEncoding.EncodeToString(b)
+
+	// to store
+	hash := hashToken(plain)
+
+	return plain, hash, nil
+}
+
+func hashToken(token string) string {
+	sum := sha256.Sum256([]byte(token))
+	return base64.RawURLEncoding.EncodeToString(sum[:])
 }

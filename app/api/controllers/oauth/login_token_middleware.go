@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"gitlab.com/shaninalex/lumna/app/internal/jwt"
+	"gitlab.com/shaninalex/lumna/app/internal/auth/jwt"
 )
 
 func OAuthMiddleware(c *gin.Context) {
