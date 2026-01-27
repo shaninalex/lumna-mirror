@@ -13,20 +13,20 @@ import (
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/internal/auth/jwt"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
-	internalUtils "gitlab.com/shaninalex/lumna/app/internal/utils"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
 type OAuthController struct {
-	clients   ClientStore
-	authCodes AuthorizationCodeStore
+	clients             ClientStore
+	authCodes           AuthorizationCodeStore
+	refreshTokenService RefreshTokenStore
 }
 
 func NewOAuthContoller() *OAuthController {
 	s := &OAuthController{
-		clients:   NewInMemoryClientStore(),
-		authCodes: NewInMemoryAuthorizationCodeStore(),
+		clients:             NewInMemoryClientStore(),
+		authCodes:           NewInMemoryAuthorizationCodeStore(),
+		refreshTokenService: NewPersistentRefreshTokenStore(),
 	}
 	return s
 }
@@ -52,88 +52,17 @@ var (
 
 func (s *OAuthController) handleToken(c *gin.Context) {
 	grantType := c.PostForm("grant_type")
-	if grantType != "authorization_code" {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorUnsuportedGratType)
+
+	switch grantType {
+	case "authorization_code":
+		s.handleAuthorizationCode(c)
 		return
-	}
-
-	code := c.PostForm("code")
-	clientID := c.PostForm("client_id")
-	redirectURI := c.PostForm("redirect_uri")
-	codeVerifier := c.PostForm("code_verifier")
-
-	if code == "" || clientID == "" || redirectURI == "" || codeVerifier == "" {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidRequest)
+	case "refresh_token":
+		s.handleRefreshToken(c)
 		return
-	}
-
-	// Load authorization code
-	authCode, err := s.authCodes.Find(c, code)
-	if err != nil {
-		log.Println("auth code not found", err)
+	default:
 		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
-		return
 	}
-
-	// Validate client
-	if authCode.ClientID != clientID {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidClient)
-		return
-	}
-
-	// Validate redirect_uri
-	if authCode.RedirectURI != redirectURI {
-		log.Println("invalid redirect uri")
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
-		return
-	}
-
-	// PKCE verification
-	if !verifyPKCE(codeVerifier, authCode.CodeChallenge) {
-		log.Println("invalid PRCE")
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
-		return
-	}
-
-	// Mark code as used
-	if err := s.authCodes.MarkUsed(c, code); err != nil {
-		log.Println("unable to mark used")
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
-		return
-	}
-
-	accessToken, err := jwt.GenerateAccessJWTToken(authCode.UserID, authCode.Scopes, time.Minute*15)
-	if err != nil {
-		log.Println("unable to generate access token", err)
-		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
-		return
-	}
-
-	refreshToken, refreshTokenHash, err := generateRefreshToken()
-	if err != nil {
-		log.Println("unable to generate refresh token", err)
-		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
-		return
-	}
-
-	dbRefreshToken := models.RefreshToken{
-		IdentityID: uuid.MustParse(authCode.UserID),
-		TokenHash:  refreshTokenHash,
-		ExpiresAt:  time.Now().Add(time.Duration(time.Now().Day()) * 30),
-		UserAgent:  internalUtils.Pointer(c.Request.UserAgent()),
-		IpAddress:  internalUtils.Pointer(c.ClientIP()),
-	}
-
-	if result := db.GetDB(c.Request.Context()).Create(&dbRefreshToken); result.Error != nil {
-		panic(result.Error)
-	}
-
-	utils.Success(c, map[string]any{
-		"access_token":  accessToken,
-		"refresh_token": refreshToken,
-		"token_type":    "Bearer",
-		"expires_in":    900,
-	})
 }
 
 func (s *OAuthController) handleAuthorize(c *gin.Context) {
@@ -219,4 +148,156 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 
 	fmt.Println(url.QueryEscape(code))
 	c.Redirect(http.StatusFound, redirect)
+}
+
+func (s *OAuthController) handleRefreshToken(c *gin.Context) {
+	refreshToken := c.PostForm("refresh_token")
+	clientID := c.PostForm("client_id")
+
+	if refreshToken == "" || clientID == "" {
+		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_request"})
+		return
+	}
+
+	hash := hashToken(refreshToken)
+
+	rt, err := s.refreshTokenService.FindByHash(c, hash)
+	if err != nil {
+		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		return
+	}
+
+	// reuse detection
+	if rt.Revoked {
+		// optional: revoke all tokens for this user+client
+		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		return
+	}
+
+	if rt.ClientID != clientID {
+		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		return
+	}
+
+	if time.Now().After(rt.ExpiresAt) {
+		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		return
+	}
+
+	// 🔁 ROTATION
+	_ = s.refreshTokenService.Revoke(c, rt.ID)
+
+	newRefreshPlain, newRefreshHash, err := generateRefreshToken()
+	if err != nil {
+		c.AbortWithStatusJSON(500, gin.H{"error": "server_error"})
+		return
+	}
+
+	_ = s.refreshTokenService.Save(c, &models.RefreshToken{
+		Hash:       newRefreshHash,
+		IdentityID: rt.IdentityID,
+		ClientID:   rt.ClientID,
+		Scopes:     rt.Scopes,
+		ExpiresAt:  time.Now().Add(30 * 24 * time.Hour),
+	})
+
+	accessToken, err := jwt.GenerateAccessJWTToken(rt.IdentityID.String(), rt.Scopes, time.Minute*15)
+	if err != nil {
+		log.Println("unable to generate access token", err)
+		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"access_token":  accessToken,
+		"refresh_token": newRefreshPlain,
+		"token_type":    "Bearer",
+		"expires_in":    900,
+	})
+}
+
+func (s *OAuthController) handleAuthorizationCode(c *gin.Context) {
+	grantType := c.PostForm("grant_type")
+	if grantType != "authorization_code" {
+		utils.Error(c, http.StatusBadRequest, OAuthErrorUnsuportedGratType)
+		return
+	}
+
+	code := c.PostForm("code")
+	clientID := c.PostForm("client_id")
+	redirectURI := c.PostForm("redirect_uri")
+	codeVerifier := c.PostForm("code_verifier")
+
+	if code == "" || clientID == "" || redirectURI == "" || codeVerifier == "" {
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidRequest)
+		return
+	}
+
+	// Load authorization code
+	authCode, err := s.authCodes.Find(c, code)
+	if err != nil {
+		log.Println("auth code not found", err)
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
+		return
+	}
+
+	// Validate client
+	if authCode.ClientID != clientID {
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidClient)
+		return
+	}
+
+	// Validate redirect_uri
+	if authCode.RedirectURI != redirectURI {
+		log.Println("invalid redirect uri")
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
+		return
+	}
+
+	// PKCE verification
+	if !verifyPKCE(codeVerifier, authCode.CodeChallenge) {
+		log.Println("invalid PRCE")
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
+		return
+	}
+
+	// Mark code as used
+	if err := s.authCodes.MarkUsed(c, code); err != nil {
+		log.Println("unable to mark used")
+		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
+		return
+	}
+
+	accessToken, err := jwt.GenerateAccessJWTToken(authCode.UserID, authCode.Scopes, time.Minute*15)
+	if err != nil {
+		log.Println("unable to generate access token", err)
+		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
+		return
+	}
+
+	refreshToken, refreshTokenHash, err := generateRefreshToken()
+	if err != nil {
+		log.Println("unable to generate refresh token", err)
+		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
+		return
+	}
+
+	dbRefreshToken := models.RefreshToken{
+		IdentityID: uuid.MustParse(authCode.UserID),
+		Hash:       refreshTokenHash,
+		Scopes:     authCode.Scopes,
+		ClientID:   authCode.ClientID,
+		ExpiresAt:  time.Now().Add(time.Duration(time.Now().Day()) * 30),
+	}
+
+	if err := s.refreshTokenService.Save(c.Request.Context(), &dbRefreshToken); err != nil {
+		panic(err)
+	}
+
+	utils.Success(c, map[string]any{
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
+		"token_type":    "Bearer",
+		"expires_in":    900,
+	})
 }

@@ -2,18 +2,55 @@ package oauth
 
 import (
 	"context"
-	"time"
+
+	"github.com/google/uuid"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/models"
 )
 
-type RefreshToken struct {
-	Token     string
-	ClientID  string
-	UserID    string
-	Scopes    []string
-	ExpiresAt time.Time
-	Revoked   bool
-}
+// type RefreshToken struct {
+// 	Token     string
+// 	ClientID  string
+// 	UserID    string
+// 	Scopes    []string
+// 	ExpiresAt time.Time
+// 	Revoked   bool
+// }
 
 type RefreshTokenStore interface {
-	Save(ctx context.Context, token *RefreshToken) error
+	Save(ctx context.Context, token *models.RefreshToken) error
+	FindByHash(ctx context.Context, hash string) (*models.RefreshToken, error)
+	Revoke(ctx context.Context, id uuid.UUID) error
+}
+
+func NewPersistentRefreshTokenStore() *PersistentRefreshTokenStore {
+	return &PersistentRefreshTokenStore{}
+}
+
+var _ RefreshTokenStore = (*PersistentRefreshTokenStore)(nil)
+
+type PersistentRefreshTokenStore struct {
+}
+
+// FindByHash implements [RefreshTokenStore].
+func (p *PersistentRefreshTokenStore) FindByHash(ctx context.Context, hash string) (*models.RefreshToken, error) {
+	var refreshToken models.RefreshToken
+	if result := db.GetDB(ctx).Where("token_hash = ?", hash).Model(&refreshToken); result.Error != nil {
+		return nil, result.Error
+	}
+	return &refreshToken, nil
+}
+
+// Revoke implements [RefreshTokenStore].
+func (p *PersistentRefreshTokenStore) Revoke(ctx context.Context, id uuid.UUID) error {
+	panic("unimplemented")
+}
+
+// Save implements [RefreshTokenStore].
+func (p *PersistentRefreshTokenStore) Save(ctx context.Context, token *models.RefreshToken) error {
+	if result := db.GetDB(ctx).Create(&token); result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }
