@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
-	"testing"
 )
 
 func generateSecureCode() (string, error) {
@@ -14,15 +13,6 @@ func generateSecureCode() (string, error) {
 		return "", err
 	}
 	return base64.RawURLEncoding.EncodeToString(b), nil
-}
-
-func TestGenerateSecureCode(t *testing.T) {
-	code1, _ := generateSecureCode()
-	code2, _ := generateSecureCode()
-
-	if code1 == code2 {
-		t.Fatal("codes should be unique")
-	}
 }
 
 func generateRefreshToken() (string, string, error) {

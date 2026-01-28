@@ -6,6 +6,10 @@ import (
 	"slices"
 )
 
+// TODO:
+// DOCS: https://developer.okta.com/blog/2019/05/01/is-the-oauth-implicit-flow-dead
+// section with "PKCE HELPER FUNCTIONS"
+
 func isRedirectAllowed(allowed []string, uri string) bool {
 	return slices.Contains(allowed, uri)
 }

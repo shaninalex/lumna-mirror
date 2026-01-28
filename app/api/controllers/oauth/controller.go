@@ -42,17 +42,17 @@ func RegisterOAuthController(router *gin.RouterGroup) {
 }
 
 var (
-	OAuthErrorUnsuportedGratType      error = errors.New("unsupported grant type")
-	OAuthErrorInvalidRequest          error = errors.New("invalid request")
-	OAuthErrorInvalidClient           error = errors.New("invalid client")
-	OAuthErrorInvalidGrant            error = errors.New("invalid grant")
-	OAuthErrorServerError             error = errors.New("server error")
-	OAuthErrorUnsupportedResponseType error = errors.New("unsupported response type")
-	OAuthErrorInvalidPKCE             error = errors.New("invalid pkce")
-	OAuthErrorInvalidRedirectURI      error = errors.New("invalid redirect uri")
-	OAuthErrorUserNotFound            error = errors.New("user not found")
-	OAuthErrorRefreshTokenRevoked     error = errors.New("refresh token revoked")
-	OAuthErrorTokenExpired            error = errors.New("token expired")
+	ErrorUnsuportedGratType      = errors.New("unsupported grant type")
+	ErrorInvalidRequest          = errors.New("invalid request")
+	ErrorInvalidClient           = errors.New("invalid client")
+	ErrorInvalidGrant            = errors.New("invalid grant")
+	ErrorServerError             = errors.New("server error")
+	ErrorUnsupportedResponseType = errors.New("unsupported response type")
+	ErrorInvalidPKCE             = errors.New("invalid pkce")
+	ErrorInvalidRedirectURI      = errors.New("invalid redirect uri")
+	ErrorUserNotFound            = errors.New("user not found")
+	ErrorRefreshTokenRevoked     = errors.New("refresh token revoked")
+	ErrorTokenExpired            = errors.New("token expired")
 )
 
 func (s *OAuthController) handleToken(c *gin.Context) {
@@ -66,12 +66,18 @@ func (s *OAuthController) handleToken(c *gin.Context) {
 		s.processRefreshToken(c)
 		return
 	default:
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidGrant)
 	}
 }
 
 func (s *OAuthController) processRefreshToken(c *gin.Context) {
-	refreshToken := c.PostForm("refresh_token")
+	cookie, err := c.Request.Cookie("refresh_token")
+	if err != nil {
+		c.AbortWithStatusJSON(400, gin.H{"error": "invalid_grant"})
+		return
+	}
+
+	refreshToken := cookie.Value
 	clientID := c.PostForm("client_id")
 
 	if refreshToken == "" || clientID == "" {
@@ -83,26 +89,26 @@ func (s *OAuthController) processRefreshToken(c *gin.Context) {
 	rt, err := s.refreshTokenService.FindByHash(c.Request.Context(), hash)
 	if err != nil {
 		log.Printf("Refresh token not found by hash: %s", hash)
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidGrant)
 		return
 	}
 
 	// reuse detection
 	if rt.Revoked {
 		log.Printf("Security event! Attempt to refresh already revoked token ( %s )", rt.ID.String())
-		utils.Error(c, http.StatusBadRequest, OAuthErrorRefreshTokenRevoked)
+		utils.Error(c, http.StatusBadRequest, ErrorRefreshTokenRevoked)
 		return
 	}
 
 	if rt.ClientID != clientID {
 		log.Println("invalid client id: ", clientID)
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidClient)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidClient)
 		return
 	}
 
 	if time.Now().After(rt.ExpiresAt) {
 		log.Println("unable to generate refresh token. Now: ", rt.ExpiresAt, " | Token: ", rt.ExpiresAt)
-		utils.Error(c, http.StatusBadRequest, OAuthErrorTokenExpired)
+		utils.Error(c, http.StatusBadRequest, ErrorTokenExpired)
 		return
 	}
 
@@ -111,7 +117,7 @@ func (s *OAuthController) processRefreshToken(c *gin.Context) {
 	newRefreshPlain, newRefreshHash, err := generateRefreshToken()
 	if err != nil {
 		log.Println("unable to generate refresh token", err)
-		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
+		utils.Error(c, http.StatusInternalServerError, ErrorServerError)
 		return
 	}
 
@@ -126,7 +132,7 @@ func (s *OAuthController) processRefreshToken(c *gin.Context) {
 	accessToken, err := jwt.GenerateAccessJWTToken(rt.IdentityID.String(), rt.Scopes, time.Minute*15)
 	if err != nil {
 		log.Println("unable to generate access token", err)
-		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
+		utils.Error(c, http.StatusInternalServerError, ErrorServerError)
 		return
 	}
 
@@ -141,7 +147,7 @@ func (s *OAuthController) processRefreshToken(c *gin.Context) {
 func (s *OAuthController) processAuthorizationCode(c *gin.Context) {
 	grantType := c.PostForm("grant_type")
 	if grantType != "authorization_code" {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorUnsuportedGratType)
+		utils.Error(c, http.StatusBadRequest, ErrorUnsuportedGratType)
 		return
 	}
 
@@ -151,7 +157,7 @@ func (s *OAuthController) processAuthorizationCode(c *gin.Context) {
 	codeVerifier := c.PostForm("code_verifier")
 
 	if code == "" || clientID == "" || redirectURI == "" || codeVerifier == "" {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidRequest)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidRequest)
 		return
 	}
 
@@ -159,48 +165,48 @@ func (s *OAuthController) processAuthorizationCode(c *gin.Context) {
 	authCode, err := s.authCodes.Find(c, code)
 	if err != nil {
 		log.Println("auth code not found", err)
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidGrant)
 		return
 	}
 
 	// Validate client
 	if authCode.ClientID != clientID {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidClient)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidClient)
 		return
 	}
 
 	// Validate redirect_uri
 	if authCode.RedirectURI != redirectURI {
 		log.Println("invalid redirect uri")
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidGrant)
 		return
 	}
 
 	// PKCE verification
 	if !verifyPKCE(codeVerifier, authCode.CodeChallenge) {
 		log.Println("invalid PRCE")
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidGrant)
 		return
 	}
 
 	// Mark code as used
 	if err := s.authCodes.MarkUsed(c, code); err != nil {
 		log.Println("unable to mark used")
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidGrant)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidGrant)
 		return
 	}
 
 	accessToken, err := jwt.GenerateAccessJWTToken(authCode.UserID, strings.Join(authCode.Scopes, " "), time.Minute*15)
 	if err != nil {
 		log.Println("unable to generate access token", err)
-		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
+		utils.Error(c, http.StatusInternalServerError, ErrorServerError)
 		return
 	}
 
 	refreshToken, refreshTokenHash, err := generateRefreshToken()
 	if err != nil {
 		log.Println("unable to generate refresh token", err)
-		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
+		utils.Error(c, http.StatusInternalServerError, ErrorServerError)
 		return
 	}
 
@@ -216,11 +222,20 @@ func (s *OAuthController) processAuthorizationCode(c *gin.Context) {
 		panic(err)
 	}
 
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "refresh_token",
+		Value:    refreshToken,
+		Path:     "/oauth/token",
+		HttpOnly: false, // <== TODO: change me!
+		Secure:   false, // <== TODO: change me!
+		SameSite: http.SameSiteStrictMode,
+		MaxAge:   60 * 60 * 24 * 30, // 30 days
+	})
+
 	utils.Success(c, map[string]any{
-		"access_token":  accessToken,
-		"refresh_token": refreshToken,
-		"token_type":    "Bearer",
-		"expires_in":    900,
+		"access_token": accessToken,
+		"token_type":   "Bearer",
+		"expires_in":   900,
 	})
 }
 
@@ -236,30 +251,30 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 
 	// Basic validation
 	if responseType != "code" {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorUnsupportedResponseType)
+		utils.Error(c, http.StatusBadRequest, ErrorUnsupportedResponseType)
 		return
 	}
 
 	if clientID == "" || redirectURI == "" {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidRequest)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidRequest)
 		return
 	}
 
 	if !validatePKCE(codeChallenge, codeChallengeMethod) {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidPKCE)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidPKCE)
 		return
 	}
 
 	// Load client
 	client, err := s.clients.FindByID(c, clientID)
 	if err != nil {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidClient)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidClient)
 		return
 	}
 
 	// Validate redirect_uri
 	if !isRedirectAllowed(client.RedirectURIs, redirectURI) {
-		utils.Error(c, http.StatusBadRequest, OAuthErrorInvalidRedirectURI)
+		utils.Error(c, http.StatusBadRequest, ErrorInvalidRedirectURI)
 		return
 	}
 
@@ -278,7 +293,7 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 	// Generate authorization code
 	code, err := generateSecureCode()
 	if err != nil {
-		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
+		utils.Error(c, http.StatusInternalServerError, ErrorServerError)
 		return
 	}
 
@@ -295,7 +310,7 @@ func (s *OAuthController) handleAuthorize(c *gin.Context) {
 	}
 
 	if err := s.authCodes.Save(c, authCode); err != nil {
-		utils.Error(c, http.StatusInternalServerError, OAuthErrorServerError)
+		utils.Error(c, http.StatusInternalServerError, ErrorServerError)
 		return
 	}
 

@@ -6,9 +6,10 @@ from oauth_config import BASE_URL, CLIENT_ID, REDIRECT_URI
 def refresh_request(rt: str):
     data = {
         "grant_type": "refresh_token",
-        "refresh_token": rt,
         "client_id": "angular-web",
     }
+    # make cookie header
+    # "refresh_token": rt,
 
     resp = requests.post(f"{BASE_URL}/oauth/token", data=data)
     if resp.status_code != 200:
