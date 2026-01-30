@@ -21,8 +21,8 @@ func RegisterAuthController(router *gin.RouterGroup) {
 	controller := &AuthController{}
 
 	router.POST("/login", controller.handleLogin)
-	router.POST("/logout", controller.handleLogout)
-	router.POST("/refresh", controller.handleRefresh)
+	router.GET("/logout", controller.handleLogout)
+	router.GET("/refresh", controller.handleRefresh)
 
 	// router.GET("/api/v1/auth/oauth/github", nil)
 	// router.GET("/api/v1/auth/oauth/github/callback", nil)
