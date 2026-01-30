@@ -35,7 +35,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 		return
 	}
 
-	if result := db.GetDB(c.Request.Context()).Where("id = ?", dbRefreshToken.ID).Delete(&dbRefreshToken); result.Error != nil {
+	if result := db.GetDB(c.Request.Context()).Where("id = ?", dbRefreshToken.ID.String()).Delete(&dbRefreshToken); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}

@@ -1,14 +1,13 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { ListModel } from '@entities/list';
-import { Field, form, required } from '@angular/forms/signals';
+import { FormField, form, required } from '@angular/forms/signals';
 import { taskEvents, TaskPayloadModel } from '@entities/task';
 import { Dispatcher, Events } from '@ngrx/signals/events';
-import { listEvents } from '@entities/list/model/list.events';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-task-fast-form-feature',
-    imports: [Field],
+    imports: [FormField],
     template: `
         @if (openedForm()) {
             <form (submit)="submit($event)" class="w-full">
@@ -16,7 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                     <input
                         class="input w-full"
                         placeholder="Column name"
-                        [field]="taskForm.title"
+                        [formField]="taskForm.title"
                         [autofocus]="true"
                     />
                     @if (taskForm.title().touched() && taskForm.title().errors().length) {

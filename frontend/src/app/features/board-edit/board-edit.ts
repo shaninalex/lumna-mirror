@@ -1,6 +1,6 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { BoardModel, BoardPayloadModel } from '@entities/board';
-import { Field, form, required } from '@angular/forms/signals';
+import { FormField, form, required } from '@angular/forms/signals';
 import { Dispatcher, Events } from '@ngrx/signals/events';
 import { projectEvents } from '@entities/project';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -8,7 +8,7 @@ import { boardEvents } from '@entities/board/model/board.events';
 
 @Component({
     selector: 'app-board-edit-feature',
-    imports: [Field],
+    imports: [FormField],
     templateUrl: './board-edit.html',
 })
 export class BoardEditFeature {

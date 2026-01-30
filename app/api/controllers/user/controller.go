@@ -9,7 +9,6 @@ func RegisterUserController(router *gin.RouterGroup) {
 	controller := NewUserContoller()
 
 	router.GET("/user/me", controller.Me)
-	router.GET("/user/logout", controller.Logout)
 }
 
 type UserController struct {

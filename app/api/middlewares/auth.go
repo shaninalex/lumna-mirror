@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -8,21 +9,25 @@ import (
 	"gitlab.com/shaninalex/lumna/app/internal/auth"
 )
 
+var (
+	ErrorAuthMiddlewareUnauthorized = errors.New("unaythorized")
+)
+
 func AuthMiddleware(c *gin.Context) {
-	authHeader := c.GetHeader("Authorization")
-	if authHeader == "" {
-		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
+	accessJWTToken, err := c.Cookie("access_token")
+	if err != nil {
+		utils.Error(c, http.StatusUnauthorized, ErrorAuthMiddlewareUnauthorized)
 		return
 	}
 
-	token, ok := utils.TokenFromAuthHeader(c)
-	if !ok {
-		utils.Error(c, http.StatusBadRequest, utils.AccessTokenMiddlewareErrorInvalidHeader)
+	if accessJWTToken == "" {
+		utils.Error(c, http.StatusUnauthorized, ErrorAuthMiddlewareUnauthorized)
 		return
 	}
-	claims, err := auth.ParseAccessJWTToken(token)
+
+	claims, err := auth.ParseAccessJWTToken(accessJWTToken)
 	if err != nil {
-		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
+		utils.Error(c, http.StatusUnauthorized, ErrorAuthMiddlewareUnauthorized)
 		return
 	}
 

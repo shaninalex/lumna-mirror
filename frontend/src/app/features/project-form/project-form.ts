@@ -1,11 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { DialogRef } from '@angular/cdk/dialog';
 import { ProjectPayload } from '@entities/project';
-import { Field, form, required, validate } from '@angular/forms/signals';
+import { FormField, form, required, validate } from '@angular/forms/signals';
 
 @Component({
     selector: 'app-project-form',
-    imports: [Field],
+    imports: [FormField],
     templateUrl: './project-form.html',
     styleUrl: './project-form.css',
 })

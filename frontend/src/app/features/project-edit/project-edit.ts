@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, Input, signal } from '@angular/core';
-import { form, required, Field } from '@angular/forms/signals';
+import { form, required, FormField } from '@angular/forms/signals';
 import { projectEvents, ProjectStore } from '@entities/project';
 import { Dispatcher, Events } from '@ngrx/signals/events';
 import { ProjectEditModel } from './model/project-edit.model';
@@ -7,11 +7,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-project-edit-feature',
-    imports: [Field],
+    imports: [FormField],
     template: `
         <form (submit)="submit($event)">
             <div class="mb-2">
-                <input class="input" placeholder="Project name" [field]="projectForm.title" />
+                <input class="input" placeholder="Project name" [formField]="projectForm.title" />
                 @if (projectForm.title().touched()) {
                     <ul class="error-list">
                         @for (error of projectForm.title().errors(); track error) {

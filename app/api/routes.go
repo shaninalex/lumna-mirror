@@ -16,7 +16,7 @@ func RegisterApiV1Routes(client *client.Client, baseRouter *gin.Engine) {
 	router := baseRouter.Group("/api/v1/auth")
 	auth.RegisterAuthController(router)
 
-	privateRoutes := baseRouter.Group("")
+	privateRoutes := baseRouter.Group("/api/v1/")
 	privateRoutes.Use(middlewares.AuthMiddleware)
 
 	user.RegisterUserController(privateRoutes)

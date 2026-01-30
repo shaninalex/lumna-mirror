@@ -53,6 +53,10 @@ func (s *AuthController) handleLogin(c *gin.Context) {
 		ExpiresAt:  refreshExp,
 	}
 
+	if result := db.GetDB(c.Request.Context()).Where("identity_id = ?", identity.ID.String()).Delete(&models.RefreshToken{}); result.Error != nil {
+		utils.Error(c, http.StatusBadRequest, result.Error)
+		return
+	}
 	if result := db.GetDB(c.Request.Context()).Create(&rt); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, result.Error)
 		return
