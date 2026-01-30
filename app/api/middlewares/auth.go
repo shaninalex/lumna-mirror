@@ -5,10 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
-	"gitlab.com/shaninalex/lumna/app/internal/auth/jwt"
+	"gitlab.com/shaninalex/lumna/app/internal/auth"
 )
 
-func AccessTokenMiddleware(c *gin.Context) {
+func AuthMiddleware(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	if authHeader == "" {
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
@@ -20,14 +20,12 @@ func AccessTokenMiddleware(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, utils.AccessTokenMiddlewareErrorInvalidHeader)
 		return
 	}
-	claims, err := jwt.ValidateAccessJWTToken(token)
+	claims, err := auth.ParseAccessJWTToken(token)
 	if err != nil {
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
 		return
 	}
 
 	c.Set("userID", claims.Subject)
-	c.Set("clientID", claims.Audience)
-
 	c.Next()
 }

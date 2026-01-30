@@ -1,4 +1,4 @@
-package jwt
+package auth
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ func GenerateAccessJWTToken(userID string, scopes string, ttl time.Duration) (st
 	return token.SignedString(jwtSecret)
 }
 
-func ValidateAccessJWTToken(tokenString string) (*AccessClaims, error) {
+func ParseAccessJWTToken(tokenString string) (*AccessClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &AccessClaims{}, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method")
