@@ -15,7 +15,6 @@ export class CoreService {
     readonly events = inject(Events);
     readonly dispatcher = inject(Dispatcher);
 
-    private readonly _sessionStore = inject(SessionStore);
     private readonly _coreStore = inject(CoreStore);
     private readonly _projectStore = inject(ProjectStore);
     private readonly _boardStore = inject(BoardStore);

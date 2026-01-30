@@ -1,8 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SessionStore } from '@core/store/session.store';
-import { UserStore } from '@entities/user';
 import { AuthService } from '../api/auth.service';
 import { AuthLayout } from '@core/layouts';
 
@@ -14,8 +12,6 @@ import { AuthLayout } from '@core/layouts';
 })
 export class Login {
     private authService = inject(AuthService);
-    private sessionStore = inject(SessionStore);
-    private userStore = inject(UserStore);
     private router = inject(Router);
 
     email = '';
@@ -24,8 +20,6 @@ export class Login {
     onSubmit(): void {
         this.authService.login(this.email, this.password).subscribe({
             next: (user) => {
-                this.sessionStore.setAuthenticated(true);
-                this.userStore.setUser(user);
                 this.router.navigate(['/']);
             },
         });
