@@ -5,6 +5,8 @@ import { SessionStore } from '@core/store/session.store';
 import { UserStore } from '@entities/user';
 import { AuthService } from '../api/auth.service';
 import { AuthLayout } from '@core/layouts';
+import { Store } from '@ngrx/store';
+import { actionSessionAuthenticate } from '@core/store/session.actions';
 
 @Component({
     selector: 'app-login',
@@ -15,6 +17,7 @@ import { AuthLayout } from '@core/layouts';
 export class Login {
     private authService = inject(AuthService);
     private sessionStore = inject(SessionStore);
+    private store = inject(Store);
     private userStore = inject(UserStore);
     private router = inject(Router);
 
@@ -24,6 +27,7 @@ export class Login {
     onSubmit(): void {
         this.authService.login(this.email, this.password).subscribe({
             next: (user) => {
+                this.store.dispatch(actionSessionAuthenticate({ user: user }));
                 this.sessionStore.setAuthenticated(true);
                 this.userStore.setUser(user);
                 this.router.navigate(['/']);

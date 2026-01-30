@@ -5,8 +5,7 @@ import { CoreService } from '@core/core.service';
 @Component({
     selector: 'app-root',
     imports: [RouterOutlet],
-    templateUrl: './app.html',
-    styleUrl: './app.css',
+    template: `<router-outlet />`,
 })
 export class App {
     readonly coreService = inject(CoreService);

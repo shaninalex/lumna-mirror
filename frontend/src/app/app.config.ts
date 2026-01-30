@@ -13,9 +13,9 @@ export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(),
         provideHttpClient(withInterceptors([refreshTokenInterceptor])),
-        provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideRouter(mainRoutes),
         provideEffects(effects),
         provideStore(reducers),
+        provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     ],
 };

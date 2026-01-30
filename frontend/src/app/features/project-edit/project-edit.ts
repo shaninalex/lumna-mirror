@@ -1,9 +1,8 @@
-import { Component, computed, effect, inject, Input, signal } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { form, required, FormField } from '@angular/forms/signals';
-import { projectEvents, ProjectState, ProjectStore } from '@entities/project';
+import { ProjectModel, ProjectState } from '@entities/project';
 import { Dispatcher, Events } from '@ngrx/signals/events';
 import { ProjectEditModel } from './model/project-edit.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -47,7 +46,7 @@ export class ProjectEditFeature {
     private readonly store = inject(Store<ProjectState>);
     private readonly events = inject(Events);
     loading = signal(false);
-    project = this.store.select();
+    project: ProjectModel;
 
     projectFormModel = signal<ProjectEditModel>({
         title: '',
@@ -56,17 +55,16 @@ export class ProjectEditFeature {
     readonly dispatcher = inject(Dispatcher);
 
     constructor() {
-        effect(() => {
-            const p = this.project();
-            if (p) {
-                this.projectFormModel.set({ title: p.title });
-            }
-        });
-
-        this.events
-            .on(projectEvents.updateProject)
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.loading.set(false));
+        // effect(() => {
+        //     const p = this.project();
+        //     if (p) {
+        //         this.projectFormModel.set({ title: p.title });
+        //     }
+        // });
+        // this.events
+        //     .on(projectEvents.updateProject)
+        //     .pipe(takeUntilDestroyed())
+        //     .subscribe(() => this.loading.set(false));
     }
 
     projectForm = form(this.projectFormModel, (schemaPath) => {
@@ -74,10 +72,10 @@ export class ProjectEditFeature {
     });
 
     submit(event: Event): void {
-        event.preventDefault();
-        this.loading.set(true);
-        this.dispatcher.dispatch(
-            projectEvents.patch({ id: this.projectId, data: this.projectFormModel() }),
-        );
+        // event.preventDefault();
+        // this.loading.set(true);
+        // this.dispatcher.dispatch(
+        //     // projectEvents.patch({ id: this.projectId, data: this.projectFormModel() }),
+        // );
     }
 }
