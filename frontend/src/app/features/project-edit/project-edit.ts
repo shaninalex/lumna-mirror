@@ -1,9 +1,10 @@
 import { Component, computed, effect, inject, Input, signal } from '@angular/core';
 import { form, required, FormField } from '@angular/forms/signals';
-import { projectEvents, ProjectStore } from '@entities/project';
+import { projectEvents, ProjectState, ProjectStore } from '@entities/project';
 import { Dispatcher, Events } from '@ngrx/signals/events';
 import { ProjectEditModel } from './model/project-edit.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
 
 @Component({
     selector: 'app-project-edit-feature',
@@ -43,10 +44,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class ProjectEditFeature {
     @Input() projectId: string;
-    private readonly store = inject(ProjectStore);
+    private readonly store = inject(Store<ProjectState>);
     private readonly events = inject(Events);
     loading = signal(false);
-    project = computed(() => this.store.entities().find((p) => p.id === this.projectId));
+    project = this.store.select();
 
     projectFormModel = signal<ProjectEditModel>({
         title: '',

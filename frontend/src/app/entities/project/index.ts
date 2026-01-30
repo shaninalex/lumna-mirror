@@ -1,5 +1,6 @@
-export * from './model/project.events'
-export * from './model/project.model'
-export * from './model/project.store'
+export * from './model/project.effects';
+export * from './model/project.model';
+export * from './model/project.store';
+export * from './model/project.selectors';
 
-export * from './ui'
+export * from './ui';
