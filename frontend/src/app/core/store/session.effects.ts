@@ -37,7 +37,7 @@ export class SessionEffects {
         );
     });
 
-    authenticated_redirect$ = createEffect(
+    authenticated_successfull_redirect$ = createEffect(
         () => {
             return this.actions$.pipe(
                 ofType(actionSessionAuthenticatedSuccessfull.type),
