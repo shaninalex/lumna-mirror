@@ -98,7 +98,6 @@ func NewImportRootCmd() *cobra.Command {
 					board := models.Board{
 						Title:     _board.Title,
 						ProjectID: project.ID,
-						Order:     uint(bi),
 					}
 					if result := c.DB().Create(&board); result.Error != nil {
 						panic(result.Error)

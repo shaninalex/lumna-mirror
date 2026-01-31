@@ -11,7 +11,6 @@ import (
 type Board struct {
 	ID        uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
 	Title     string    `gorm:"not null" json:"title"`
-	Order     uint      // TODO: why board has `order` field?
 	ProjectID uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
 
 	Lists []BoardList
