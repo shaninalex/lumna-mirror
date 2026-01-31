@@ -18,15 +18,21 @@ var (
 )
 
 func (s *AuthController) handleRefresh(c *gin.Context) {
-	if _, err := c.Cookie("access_token"); err != nil {
-		log.Println("Unauthorized request to refresh access token")
-		utils.Error(c, http.StatusBadRequest, err)
+	// if _, err := c.Cookie("access_token"); err != nil {
+	// 	log.Println("Unauthorized request to refresh access token")
+	// 	utils.Error(c, http.StatusBadRequest, err)
+	// 	return
+	// }
+
+	refreshCookie, err := c.Cookie("refresh_token")
+	if err != nil {
+		log.Println("[handleRefresh]: get refresh_token cookie error - ", err)
+		utils.Error(c, http.StatusUnauthorized, ErrorAuthRefreshToken)
 		return
 	}
 
-	refrashCookie, err := c.Cookie("refresh_token")
-	if err != nil {
-		utils.Error(c, http.StatusBadRequest, err)
+	if refreshCookie == "" {
+		utils.Error(c, http.StatusUnauthorized, ErrorAuthRefreshToken)
 		return
 	}
 
@@ -34,7 +40,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 	var dbRefreshToken *models.RefreshToken
 	if result := db.GetDB(c.Request.Context()).
 		Preload("Identity").
-		Where("hash = ?", auth.ToHashToken(refrashCookie)).
+		Where("hash = ?", auth.ToHashToken(refreshCookie)).
 		First(&dbRefreshToken); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

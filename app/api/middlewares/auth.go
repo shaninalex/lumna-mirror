@@ -11,20 +11,20 @@ import (
 )
 
 var (
-	ErrorAuthMiddlewareUnauthorized = errors.New("unaythorized")
+	ErrorAuthMiddlewareUnauthorized = errors.New("unauthorized")
 )
 
 func AuthMiddleware(c *gin.Context) {
 	accessJWTToken, err := c.Cookie("access_token")
 	if err != nil {
-		log.Println(1)
+		log.Printf("[AuthMiddleware]: %s", err)
 		utils.Error(c, http.StatusUnauthorized, ErrorAuthMiddlewareUnauthorized)
 		c.Abort()
 		return
 	}
 
 	if accessJWTToken == "" {
-		log.Println(2)
+		log.Printf("[AuthMiddleware]: access token \"%s\" is invalid", accessJWTToken)
 		utils.Error(c, http.StatusUnauthorized, ErrorAuthMiddlewareUnauthorized)
 		c.Abort()
 		return
@@ -32,7 +32,7 @@ func AuthMiddleware(c *gin.Context) {
 
 	claims, err := auth.ParseAccessJWTToken(accessJWTToken)
 	if err != nil {
-		log.Println(3)
+		log.Printf("[AuthMiddleware]: unable to parse: %s", err)
 		utils.Error(c, http.StatusUnauthorized, ErrorAuthMiddlewareUnauthorized)
 		c.Abort()
 		return
