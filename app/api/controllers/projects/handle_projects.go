@@ -1,7 +1,6 @@
 package projects
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -59,12 +58,10 @@ func (s *ProjectsController) Patch(c *gin.Context) {
 }
 
 func (s *ProjectsController) Delete(c *gin.Context) {
-	utils.Error(c, http.StatusBadRequest, fmt.Errorf("return error foregin key constraint failed"))
-
-	// id := uuid.MustParse(c.Param("id"))
-	// if err := s.projectService.Delete(c.Request.Context(), id); err != nil {
-	// 	utils.Error(c, http.StatusBadRequest, err)
-	// 	return
-	// }
-	// utils.Success(c, nil)
+	id := uuid.MustParse(c.Param("id"))
+	if err := s.projectService.Delete(c.Request.Context(), id); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+	utils.Success(c, nil)
 }
