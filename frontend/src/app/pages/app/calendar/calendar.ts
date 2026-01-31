@@ -3,7 +3,9 @@ import { UiService } from '@shared/ui';
 
 @Component({
     selector: 'app-calendar',
-    template: ` <div class="bg-gray-100 p-10 rounded-2xl">CALENDAR NOT IMPLEMENTED YET</div> `,
+    template: `
+        <div class="bg-(--color-secondary) p-10 rounded-2xl">CALENDAR NOT IMPLEMENTED YET</div>
+    `,
 })
 export class Calendar {
     private ui = inject(UiService);

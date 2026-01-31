@@ -8,6 +8,7 @@ import { FormField, form, required, validate } from '@angular/forms/signals';
     imports: [FormField],
     templateUrl: './project-form.html',
     styleUrl: './project-form.css',
+    host: { class: 'modal' },
 })
 export class ProjectForm {
     dialogRef = inject<DialogRef<ProjectPayload>>(DialogRef<ProjectPayload>);

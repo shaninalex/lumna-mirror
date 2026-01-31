@@ -11,7 +11,7 @@ import { AsyncPipe } from '@angular/common';
     selector: 'app-boards-list',
     imports: [BoardCreateFeature, RouterLink, AsyncPipe],
     template: `
-        <div class="bg-gray-200 card">
+        <div class="bg-(--color-secondary) card">
             <h2 class="font-medium text-lg mb-4">Boards</h2>
             @if (boards | async; as boards) {
                 <nav class="flex flex-wrap gap-4">

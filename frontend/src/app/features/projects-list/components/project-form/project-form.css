@@ -1,5 +1,5 @@
 :host {
-    background-color: var(--color-white);
+    background-color: var(--color-bg);
     display: block;
     padding: 1rem;
     border-radius: var(--radius-2xl);

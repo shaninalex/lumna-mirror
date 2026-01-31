@@ -8,7 +8,7 @@ import { KanbanBoardFeature } from '@features/kanban-board/kanban-board';
     selector: 'app-board-page',
     imports: [CdkMenu, CdkMenuTrigger, RouterLink, KanbanBoardFeature],
     template: `
-        <div class="card bg-lime-200 flex items-top justify-between mb-4">
+        <div class="card bg-lime-200 bg-lime-800 flex items-top justify-between mb-4">
             <div>
                 <div class="font-medium">{{ board()?.title }}</div>
             </div>

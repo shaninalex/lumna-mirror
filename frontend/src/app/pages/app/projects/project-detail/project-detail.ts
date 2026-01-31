@@ -11,7 +11,7 @@ import { AsyncPipe } from '@angular/common';
     selector: 'app-project-detail',
     imports: [RouterLink, BoardsList, AsyncPipe],
     template: `
-        <div class="bg-lime-200 card">
+        <div class="bg-lime-200 dark:bg-lime-800 card">
             <nav class="flex flex-wrap gap-4">
                 <a href="#" class="hover:underline">Invite members</a>
                 <a href="#" class="hover:underline">Roles</a>
@@ -26,11 +26,11 @@ import { AsyncPipe } from '@angular/common';
             <app-boards-list [projectId]="project.id" />
         }
 
-        <div class="bg-amber-100 card">
+        <div class="bg-amber-100 dark:bg-amber-800 card">
             <a class="font-medium text-lg mb-4 hover:underline">Calendar</a>
         </div>
 
-        <div class="bg-lime-100 card">
+        <div class="bg-lime-100 dark:bg-lime-800 card">
             <a class="font-medium text-lg mb-4 hover:underline">Documents/Notes</a>
         </div>
 
