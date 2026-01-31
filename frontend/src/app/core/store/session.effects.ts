@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, EMPTY, exhaustMap, map } from 'rxjs';
 import { SessionApi } from './session.api';
 import {
-    actionSessionAuthenticated,
     actionSessionAuthenticatedSuccessfull,
     actionSessionAuthenticateStart,
     actionSessionLoggedOut,

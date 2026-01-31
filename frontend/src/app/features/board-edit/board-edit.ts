@@ -31,7 +31,7 @@ export class BoardEditFeature {
             if (b) {
                 this.boardId = b.id;
                 this.boardFormModel.set({
-                    project_id: b.project_id,
+                    project_id: b.projectID,
                     title: b.title,
                 });
             }

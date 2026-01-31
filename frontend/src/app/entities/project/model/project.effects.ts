@@ -7,12 +7,12 @@ import {
     actionProjectsSetList,
 } from './project.actions';
 import { exhaustMap, map, of, switchMap, tap } from 'rxjs';
-import { ProjectService } from '../api/project.service';
+import { ProjectApi } from '../api/project.service';
 
 @Injectable()
 export class ProjectsEffects {
     private actions$ = inject(Actions);
-    private projectsApi = inject(ProjectService);
+    private projectsApi = inject(ProjectApi);
 
     get_projects_list$ = createEffect(() =>
         this.actions$.pipe(

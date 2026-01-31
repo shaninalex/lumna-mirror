@@ -8,7 +8,7 @@ import { ProjectEditModel } from '@features/project-edit';
 @Injectable({
     providedIn: 'root',
 })
-export class ProjectService {
+export class ProjectApi {
     http = inject(HttpClient);
 
     GetProjects(): Observable<ProjectModel[]> {
