@@ -1,11 +1,15 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ProjectModel } from '@entities/project';
+import { ProjectModel, ProjectState, selectProjectByID } from '@entities/project';
 import { BoardsList } from '@entities/board/ui/boards-list/boards-list';
+import { filter, Observable, switchMap, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { UiService } from '@shared/ui';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-project-detail',
-    imports: [RouterLink, BoardsList],
+    imports: [RouterLink, BoardsList, AsyncPipe],
     template: `
         <div class="bg-lime-200 card">
             <nav class="flex flex-wrap gap-4">
@@ -18,7 +22,9 @@ import { BoardsList } from '@entities/board/ui/boards-list/boards-list';
             </nav>
         </div>
 
-        <app-boards-list [projectId]="projectId" />
+        @if (project$ | async; as project) {
+            <app-boards-list [projectId]="project.id" />
+        }
 
         <div class="bg-amber-100 card">
             <a class="font-medium text-lg mb-4 hover:underline">Calendar</a>
@@ -31,22 +37,20 @@ import { BoardsList } from '@entities/board/ui/boards-list/boards-list';
         <a [routerLink]="['edit']" class="btn btn-sm btn-primary">Edit</a>
     `,
 })
-export class ProjectDetail {
-    projectId: string;
+export class ProjectDetail implements OnInit {
+    private ui = inject(UiService);
     private route = inject(ActivatedRoute);
-    readonly project = signal<ProjectModel | null>(null);
+    private store = inject(Store<ProjectState>);
+    project$: Observable<ProjectModel>;
 
-    constructor() {
-        this.route.data.subscribe((data) => {
-            this.project.set(data['project']);
-        });
-
-        this.route.params.subscribe((params) => {
-            try {
-                this.projectId = params['id'];
-            } catch {
-                alert('Invalid project id');
-            }
-        });
+    ngOnInit() {
+        this.project$ = this.route.params.pipe(
+            switchMap((params) =>
+                this.store.select(selectProjectByID(params['id'])).pipe(
+                    filter((project) => !!project),
+                    tap((project) => this.ui.setPageTitle(`Project: ${project.title}`)),
+                ),
+            ),
+        );
     }
 }
