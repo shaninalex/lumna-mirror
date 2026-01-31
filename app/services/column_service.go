@@ -17,13 +17,13 @@ func NewColumnService() *ColumnService {
 
 func (s *ColumnService) ReorderList(ctx context.Context, listID uuid.UUID, order uint) error {
 	database := db.GetDB(ctx)
-	return database.Model(&models.BoardList{}).
+	return database.Model(&models.Column{}).
 		Where("id = ?", listID).
 		Update("order", order).Error
 }
 
-func (s *ColumnService) BoardListGet(ctx context.Context, boardListID uuid.UUID) (*models.BoardList, error) {
-	var boardList models.BoardList
+func (s *ColumnService) BoardListGet(ctx context.Context, boardListID uuid.UUID) (*models.Column, error) {
+	var boardList models.Column
 	if result := db.GetDB(ctx).Where("id = ?", boardListID).First(&boardList); result.Error != nil {
 		return nil, result.Error
 	}

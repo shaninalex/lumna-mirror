@@ -1,13 +1,21 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
-import { ListModel, ListPayloadModel } from '@entities/list';
+import {
+    actionColumnFailed,
+    actionColumnPatch,
+    actionColumnUpsert,
+    ColumnState,
+    ColumnModel,
+    ColumnPayloadModel,
+} from '@entities/column';
 import { FormField, form, required } from '@angular/forms/signals';
-import { Dispatcher, Events } from '@ngrx/signals/events';
-import { listEvents } from '@entities/list/model/list.events';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ClickOutsideDirective } from '@shared/directives';
+import { Actions, ofType } from '@ngrx/effects';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { tap } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 @Component({
-    selector: 'app-list-edit-name-feature',
+    selector: 'app-column-edit-name-feature',
     imports: [FormField, ClickOutsideDirective],
     template: `
         @if (formOpen()) {
@@ -39,59 +47,64 @@ import { ClickOutsideDirective } from '@shared/directives';
             </form>
         } @else {
             <div class="text-lg font-medium" (click)="formOpen.set(true)">
-                {{ list().title }} [{{ list().id }}]
+                {{ column().title }} [{{ column().id }}]
             </div>
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListEditNameFeature {
-    private readonly dispatcher = inject(Dispatcher);
-    private readonly events = inject(Events);
+export class ColumnEditNameFeature {
+    private actions$ = inject(Actions);
+    private store = inject(Store<ColumnState>);
 
-    list = input.required<ListModel>();
+    column = input.required<ColumnModel>();
     formOpen = signal(false);
     loading = signal(false);
-    listFormModel = signal<ListPayloadModel>({
+    columnFormModel = signal<ColumnPayloadModel>({
         title: '',
         order: 0,
     });
 
-    listForm = form(this.listFormModel, (schemaPath) => {
+    listForm = form(this.columnFormModel, (schemaPath) => {
         required(schemaPath.title, { message: 'Name is required' });
     });
 
     constructor() {
         effect(() =>
-            this.listFormModel.set({
-                title: this.list().title,
-                order: this.list().order,
+            this.columnFormModel.set({
+                title: this.column().title,
+                order: this.column().order,
             }),
         );
 
-        this.events
-            .on(listEvents.failed)
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                this.loading.set(false);
-            });
+        this.actions$
+            .pipe(
+                ofType(actionColumnFailed),
+                takeUntilDestroyed(),
+                tap(() => this.loading.set(false)),
+            )
+            .subscribe();
 
-        this.events
-            .on(listEvents._patchSuccess)
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                this.loading.set(false);
-                this.formOpen.set(false);
-            });
+        this.actions$
+            .pipe(
+                ofType(actionColumnUpsert),
+                takeUntilDestroyed(),
+                tap(() => {
+                    this.loading.set(false);
+                    this.formOpen.set(false);
+                }),
+            )
+            .subscribe();
     }
 
     submit(event: Event): void {
         event.preventDefault();
         this.loading.set(true);
-        this.dispatcher.dispatch(
-            listEvents.patch({
-                listId: this.list().id,
-                data: this.listFormModel(),
+
+        this.store.dispatch(
+            actionColumnPatch({
+                columnId: this.column().id,
+                data: this.columnFormModel(),
             }),
         );
     }

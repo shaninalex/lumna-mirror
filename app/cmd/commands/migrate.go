@@ -27,7 +27,7 @@ func NewMigrateRootCmd() *cobra.Command {
 
 				&models.Project{},
 				&models.Board{},
-				&models.BoardList{},
+				&models.Column{},
 				&models.Task{},
 				&models.Note{},
 			); err != nil {

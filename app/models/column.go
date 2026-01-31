@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type BoardList struct {
+type Column struct {
 	ID    uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
 	Title string    `gorm:"not null" json:"title"`
 	Order uint      `json:"order"`
@@ -21,7 +21,7 @@ type BoardList struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (s *BoardList) BeforeCreate(tx *gorm.DB) error {
+func (s *Column) BeforeCreate(tx *gorm.DB) error {
 	if s.ID == uuid.Nil {
 		s.ID = uuid.New()
 	}
@@ -31,11 +31,11 @@ func (s *BoardList) BeforeCreate(tx *gorm.DB) error {
 	return nil
 }
 
-func (s *BoardList) BeforeUpdate(tx *gorm.DB) (err error) {
+func (s *Column) BeforeUpdate(tx *gorm.DB) (err error) {
 	s.UpdatedAt = time.Now()
 	return nil
 }
 
-func (s *BoardList) String() string {
-	return fmt.Sprintf("BoardList id=%s title=%s", s.ID.String(), s.Title)
+func (s *Column) String() string {
+	return fmt.Sprintf("Column id=%s title=%s", s.ID.String(), s.Title)
 }

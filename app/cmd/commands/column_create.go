@@ -9,10 +9,10 @@ import (
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
-func NewBoardListCreateCmd() *cobra.Command {
+func NewColumnCreateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create [board_id] [title]",
-		Short: "Create board list",
+		Short: "Create column",
 		Args:  cobra.MinimumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			c, err := client.NewClientForCLI(cmd)
@@ -23,15 +23,15 @@ func NewBoardListCreateCmd() *cobra.Command {
 			boardID := uuid.MustParse(args[0])
 			title := args[1]
 
-			boardList := models.BoardList{
+			column := models.Column{
 				Title:   title,
 				BoardID: boardID,
 			}
-			if result := db.Create(&boardList); result.Error != nil {
+			if result := db.Create(&column); result.Error != nil {
 				panic(result.Error)
 			}
 
-			log.Println("Board list created with ID:", boardList.ID.String())
+			log.Println("Column created with ID:", column.ID.String())
 		},
 	}
 

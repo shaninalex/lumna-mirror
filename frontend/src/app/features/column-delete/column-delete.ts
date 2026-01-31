@@ -1,31 +1,33 @@
 import { Component, inject, input } from '@angular/core';
-import { Dispatcher } from '@ngrx/signals/events';
-import { listEvents } from '@entities/list/model/list.events';
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { Store } from '@ngrx/store';
+import { actionColumnDelete, ColumnState } from '@entities/column';
 
 @Component({
-    selector: 'app-list-delete-feature',
+    selector: 'app-column-delete-feature',
     imports: [],
     template: `
         <button (click)="openDialog()" class="text-red-400 hover:underline">delete</button>
     `,
 })
-export class ListDeleteFeature {
-    readonly listId = input.required<string>();
-    readonly listName = input.required<string>();
-    private readonly dispatcher = inject(Dispatcher);
+export class ColumnDeleteFeature {
+    private store = inject(Store<ColumnState>);
+    columnId = input.required<string>();
+    columnName = input.required<string>();
     dialog = inject(Dialog);
 
     openDialog(): void {
-        const dialogRef = this.dialog.open<boolean>(DeleteListDialog, { data: this.listName() });
+        const dialogRef = this.dialog.open<boolean>(DeleteColumnDialog, {
+            data: this.columnName(),
+        });
         dialogRef.closed.subscribe((result) => {
-            if (result) this.dispatcher.dispatch(listEvents.delete(this.listId()));
+            if (result) this.store.dispatch(actionColumnDelete({ columnId: this.columnId() }));
         });
     }
 }
 
 @Component({
-    selector: 'app-list-delete-feature-dialog',
+    selector: 'app-column-delete-feature-dialog',
     template: `
         <h1 class="text-lg font-bold">Are you sure want to delete "{{ listName }}" list?</h1>
         <p class="mb-2">All data (tasks) related to that list will be deleted too</p>
@@ -47,7 +49,7 @@ export class ListDeleteFeature {
     imports: [],
     host: { class: 'modal' },
 })
-export class DeleteListDialog {
+export class DeleteColumnDialog {
     dialogRef = inject<DialogRef<boolean>>(DialogRef<boolean>);
     listName = inject(DIALOG_DATA);
 
