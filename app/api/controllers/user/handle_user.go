@@ -9,14 +9,12 @@ import (
 )
 
 func (s *UserController) Me(c *gin.Context) {
-	identity, err := s.userService.Identity(c.Request.Context())
+	userId, _ := utils.GetUserID(c)
+	identity, err := s.userService.Identity(c.Request.Context(), userId)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, fmt.Errorf("user not found"))
 		return
 	}
 
 	utils.Success(c, identity)
-}
-func (s *UserController) Logout(c *gin.Context) {
-	utils.Success(c, nil, "logged out")
 }

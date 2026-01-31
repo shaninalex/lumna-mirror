@@ -5,11 +5,10 @@ import (
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-func NewController(router *gin.RouterGroup) {
+func RegisterUserController(router *gin.RouterGroup) {
 	controller := NewUserContoller()
 
 	router.GET("/user/me", controller.Me)
-	router.GET("/user/logout", controller.Logout)
 }
 
 type UserController struct {

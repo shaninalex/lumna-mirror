@@ -1,31 +1,21 @@
-import { ProjectModel, ProjectStore } from '@entities/project';
+import { ProjectModel, ProjectState, selectProjectByID } from '@entities/project';
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 import { inject } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, firstValueFrom, map, tap } from 'rxjs';
-import { UiService } from '@shared/ui';
+import { take, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
 
-export const projectResolver: ResolveFn<ProjectModel> = (
+export const projectResolver: ResolveFn<ProjectModel | undefined> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
-    const store = inject(ProjectStore);
-
-    const ui = inject(UiService);
-    const id = route.paramMap.get('id')!;
-
-    let prefix = '';
-    if (route.url.find((u) => u.path.includes('edit'))) {
-        prefix = 'Edit ';
-    }
-
-    return firstValueFrom(
-        toObservable(store.entities).pipe(
-            filter((projects) => projects.some((p) => p.id === id)),
-            map((projects) => projects.find((p) => p.id === id)!),
-            tap((project) => {
-                ui.setPageTitle(`${prefix}${project.title}`);
-            }),
-        ),
+    const store = inject(Store<ProjectState>);
+    return store.select(selectProjectByID(route.params['id'])).pipe(
+        take(1),
+        tap((project) => {
+            if (project) {
+                // store.dispatch(StatusListGetActions({ projectId: project.id }));
+                // store.dispatch(TaskListGetActions({ projectId: project.id }));
+            }
+        }),
     );
 };

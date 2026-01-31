@@ -1,17 +1,17 @@
-import { Component, computed, effect, inject, Input, signal } from '@angular/core';
-import { form, required, Field } from '@angular/forms/signals';
-import { projectEvents, ProjectStore } from '@entities/project';
+import { Component, inject, Input, signal } from '@angular/core';
+import { form, required, FormField } from '@angular/forms/signals';
+import { ProjectModel, ProjectState } from '@entities/project';
 import { Dispatcher, Events } from '@ngrx/signals/events';
 import { ProjectEditModel } from './model/project-edit.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
 
 @Component({
     selector: 'app-project-edit-feature',
-    imports: [Field],
+    imports: [FormField],
     template: `
         <form (submit)="submit($event)">
             <div class="mb-2">
-                <input class="input" placeholder="Project name" [field]="projectForm.title" />
+                <input class="input" placeholder="Project name" [formField]="projectForm.title" />
                 @if (projectForm.title().touched()) {
                     <ul class="error-list">
                         @for (error of projectForm.title().errors(); track error) {
@@ -43,10 +43,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class ProjectEditFeature {
     @Input() projectId: string;
-    private readonly store = inject(ProjectStore);
+    private readonly store = inject(Store<ProjectState>);
     private readonly events = inject(Events);
     loading = signal(false);
-    project = computed(() => this.store.entities().find((p) => p.id === this.projectId));
+    project: ProjectModel;
 
     projectFormModel = signal<ProjectEditModel>({
         title: '',
@@ -55,17 +55,16 @@ export class ProjectEditFeature {
     readonly dispatcher = inject(Dispatcher);
 
     constructor() {
-        effect(() => {
-            const p = this.project();
-            if (p) {
-                this.projectFormModel.set({ title: p.title });
-            }
-        });
-
-        this.events
-            .on(projectEvents.updateProject)
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.loading.set(false));
+        // effect(() => {
+        //     const p = this.project();
+        //     if (p) {
+        //         this.projectFormModel.set({ title: p.title });
+        //     }
+        // });
+        // this.events
+        //     .on(projectEvents.updateProject)
+        //     .pipe(takeUntilDestroyed())
+        //     .subscribe(() => this.loading.set(false));
     }
 
     projectForm = form(this.projectFormModel, (schemaPath) => {
@@ -73,10 +72,10 @@ export class ProjectEditFeature {
     });
 
     submit(event: Event): void {
-        event.preventDefault();
-        this.loading.set(true);
-        this.dispatcher.dispatch(
-            projectEvents.patch({ id: this.projectId, data: this.projectFormModel() }),
-        );
+        // event.preventDefault();
+        // this.loading.set(true);
+        // this.dispatcher.dispatch(
+        //     // projectEvents.patch({ id: this.projectId, data: this.projectFormModel() }),
+        // );
     }
 }

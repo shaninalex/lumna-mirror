@@ -1,20 +1,20 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { sessionEvents } from '@core/store/session.store';
-import { UserService, UserStore } from '@entities/user';
-import { Dispatcher } from '@ngrx/signals/events';
+import { actionSessionAuthenticated } from '@core/store/session.actions';
+import { actionUserSet, UserService } from '@entities/user';
+import { Store } from '@ngrx/store';
 import { catchError, map, of } from 'rxjs';
 
 export const authGuard: CanActivateFn = () => {
     const userService = inject(UserService);
-    const userStore = inject(UserStore);
     const router = inject(Router);
-    const dispatch = inject(Dispatcher);
+    const store = inject(Store);
 
-    return userService.getMe().pipe(
+    // TODO: check store before emmiting again
+    return userService.me().pipe(
         map((user) => {
-            userStore.setUser(user);
-            dispatch.dispatch(sessionEvents.authenticated());
+            store.dispatch(actionUserSet({ user }));
+            store.dispatch(actionSessionAuthenticated());
             return true;
         }),
         catchError(() => {

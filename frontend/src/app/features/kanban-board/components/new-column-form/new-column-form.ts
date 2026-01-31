@@ -1,6 +1,6 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { BoardModel } from '@entities/board';
-import { Field, form, required } from '@angular/forms/signals';
+import { FormField, form, required } from '@angular/forms/signals';
 import { Dispatcher, Events } from '@ngrx/signals/events';
 import { ListPayloadModel } from '@entities/list';
 import { listEvents } from '@entities/list/model/list.events';
@@ -8,7 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-new-column-form',
-    imports: [Field],
+    imports: [FormField],
     template: `
         @if (openedForm()) {
             <form (submit)="submit($event)" class="w-[280px]">
@@ -16,7 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                     <input
                         class="input w-full"
                         placeholder="Column name"
-                        [field]="listForm.title"
+                        [formField]="listForm.title"
                     />
                     @if (listForm.title().touched() && listForm.title().errors().length) {
                         <ul class="error-list">

@@ -2,7 +2,7 @@ import { Component, inject, Input, signal } from '@angular/core';
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { BoardPayloadModel } from '@entities/board';
 import { Dispatcher } from '@ngrx/signals/events';
-import { Field, form, required, validate } from '@angular/forms/signals';
+import { form, FormField, required, validate } from '@angular/forms/signals';
 import { boardEvents } from '@entities/board/model/board.events';
 
 @Component({
@@ -32,7 +32,7 @@ export class BoardCreateFeature {
 
 @Component({
     selector: 'app-board-create-feature-form',
-    imports: [Field],
+    imports: [FormField],
     templateUrl: './board-create.html',
     host: { class: 'modal' },
 })

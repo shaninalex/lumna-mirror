@@ -5,14 +5,14 @@
             class="border block w-full rounded-lg px-2 py-1 border-gray-400"
             type="text"
             placeholder="Board title"
-            [field]="boardForm.title"
+            [formField]="boardForm.title"
         />
         @if (boardForm.title().touched() && boardForm.title().errors()) {
-        <ul class="error-list">
-            @for (error of boardForm.title().errors(); track error) {
-            <li class="text-red-500 text-sm">{{ error.message }}</li>
-            }
-        </ul>
+            <ul class="error-list">
+                @for (error of boardForm.title().errors(); track error) {
+                    <li class="text-red-500 text-sm">{{ error.message }}</li>
+                }
+            </ul>
         }
     </div>
 

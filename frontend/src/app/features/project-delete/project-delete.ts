@@ -3,7 +3,7 @@ import { Component, computed, inject, Input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { projectEvents, ProjectStore } from '@entities/project';
+import { ProjectModel } from '@entities/project';
 import { Dispatcher, Events } from '@ngrx/signals/events';
 
 @Component({
@@ -20,26 +20,26 @@ export class ProjectDeleteFeature {
     @Input() projectId: string;
 
     private readonly dispatcher = inject(Dispatcher);
-    private readonly store = inject(ProjectStore);
     private readonly events = inject(Events);
     private router = inject(Router);
 
-    project = computed(() => this.store.entities().find((p) => p.id === this.projectId));
+    // project = computed(() => this.store.entities().find((p) => p.id === this.projectId));
+    project: ProjectModel;
 
     constructor() {
-        this.events
-            .on(projectEvents._deleteProjectSuccess)
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.router.navigate(['/projects']));
+        // this.events
+        //     .on(projectEvents._deleteProjectSuccess)
+        //     .pipe(takeUntilDestroyed())
+        //     .subscribe(() => this.router.navigate(['/projects']));
     }
 
     openDialog(): void {
         const dialogRef = this.dialog.open<boolean>(DeleteProjectDialog, {
-            data: this.project()?.title,
+            // data: this.project()?.title,
         });
 
         dialogRef.closed.subscribe((result) => {
-            if (result) this.dispatcher.dispatch(projectEvents.deleteProject(this.projectId));
+            // if (result) this.dispatcher.dispatch(projectEvents.deleteProject(this.projectId));
         });
     }
 }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
 import { ListModel, ListPayloadModel } from '@entities/list';
-import { Field, form, required } from '@angular/forms/signals';
+import { FormField, form, required } from '@angular/forms/signals';
 import { Dispatcher, Events } from '@ngrx/signals/events';
 import { listEvents } from '@entities/list/model/list.events';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -8,12 +8,12 @@ import { ClickOutsideDirective } from '@shared/directives';
 
 @Component({
     selector: 'app-list-edit-name-feature',
-    imports: [Field, ClickOutsideDirective],
+    imports: [FormField, ClickOutsideDirective],
     template: `
         @if (formOpen()) {
             <form (submit)="submit($event)" class="flex gap-2" (clickOutside)="formOpen.set(false)">
                 <div>
-                    <input class="input" placeholder="Project name" [field]="listForm.title" />
+                    <input class="input" placeholder="Project name" [formField]="listForm.title" />
                     @if (listForm.title().touched() && listForm.title().errors().length) {
                         <ul class="error-list">
                             @for (error of listForm.title().errors(); track error) {

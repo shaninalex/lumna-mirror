@@ -17,10 +17,12 @@ func NewAuthContoller() *AuthController {
 	return s
 }
 
-func NewController(router *gin.RouterGroup) {
+func RegisterAuthController(router *gin.RouterGroup) {
 	controller := &AuthController{}
 
-	router.POST("/auth/login", controller.HandleAuthLogin)
+	router.POST("/login", controller.handleLogin)
+	router.GET("/logout", controller.handleLogout)
+	router.GET("/refresh", controller.handleRefresh)
 
 	// router.GET("/api/v1/auth/oauth/github", nil)
 	// router.GET("/api/v1/auth/oauth/github/callback", nil)
