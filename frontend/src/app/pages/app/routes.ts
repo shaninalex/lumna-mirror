@@ -6,6 +6,7 @@ import { Projects } from './projects/projects';
 import { projectsRoutes } from './projects/projects.routes';
 import { boardRoutes } from './boards/boards.routes';
 import { authGuard } from './guards/auth.guard';
+import { Calendar } from './calendar/calendar';
 
 export const routes: Routes = [
     {
@@ -21,6 +22,10 @@ export const routes: Routes = [
                 path: 'projects',
                 component: Projects,
                 children: [...projectsRoutes, ...boardRoutes],
+            },
+            {
+                path: 'calendar',
+                component: Calendar,
             },
         ],
     },

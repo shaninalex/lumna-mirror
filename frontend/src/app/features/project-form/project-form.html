@@ -6,7 +6,7 @@
             placeholder="Project title"
             [formField]="projectForm.title"
         />
-        @if (projectForm.title().touched()) {
+        @if (projectForm.title().dirty()) {
             <ul class="error-list">
                 @for (error of projectForm.title().errors(); track error) {
                     <li class="text-red-500 text-sm">{{ error.message }}</li>
