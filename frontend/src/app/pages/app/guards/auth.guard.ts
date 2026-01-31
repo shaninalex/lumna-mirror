@@ -10,7 +10,6 @@ export const authGuard: CanActivateFn = () => {
     const router = inject(Router);
     const store = inject(Store);
 
-    // TODO: check store before emmiting again
     return userService.me().pipe(
         map((user) => {
             store.dispatch(actionUserSet({ user }));

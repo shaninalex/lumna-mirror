@@ -7,11 +7,13 @@ import { boardRoutes } from './boards/boards.routes';
 import { authGuard } from './guards/auth.guard';
 import { Calendar } from './calendar/calendar';
 import { ProjectsContainer } from './projects/container';
+import { DashboardContainer } from './container';
 
 export const routes: Routes = [
     {
         path: '',
         canActivate: [authGuard],
+        component: DashboardContainer,
         children: [
             {
                 path: '',

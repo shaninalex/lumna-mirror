@@ -1,11 +1,17 @@
 import { Component, inject, Input, input } from '@angular/core';
-import { BoardModel } from '@entities/board';
+import {
+    actionBoardDelete,
+    actionBoardDeleteSuccess,
+    BoardModel,
+    BoardState,
+} from '@entities/board';
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Dispatcher, Events } from '@ngrx/signals/events';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { boardEvents } from '@entities/board/model/board.events';
+import { Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { tap } from 'rxjs';
 
 @Component({
     selector: 'app-board-delete-feature',
@@ -20,15 +26,19 @@ export class BoardDeleteFeature {
     dialog = inject(Dialog);
     board = input<BoardModel>();
 
-    private readonly dispatcher = inject(Dispatcher);
-    private readonly events = inject(Events);
+    private actions$ = inject(Actions);
+    private store = inject(Store<BoardState>);
+
     private router = inject(Router);
 
     constructor() {
-        this.events
-            .on(boardEvents._deleteSuccess)
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.router.navigate(['/projects', this.projectId]));
+        this.actions$
+            .pipe(
+                ofType(actionBoardDeleteSuccess),
+                takeUntilDestroyed(),
+                tap((data) => this.router.navigate(['/projects', this.projectId])),
+            )
+            .subscribe();
     }
 
     openDialog(): void {
@@ -37,7 +47,9 @@ export class BoardDeleteFeature {
         });
         dialogRef.closed.subscribe((result) => {
             const b = this.board();
-            if (result && b) this.dispatcher.dispatch(boardEvents.delete(b.id));
+            if (result && b) {
+                this.store.dispatch(actionBoardDelete({ boardId: b.id }));
+            }
         });
     }
 }

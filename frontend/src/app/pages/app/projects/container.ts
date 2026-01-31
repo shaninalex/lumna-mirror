@@ -1,6 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MainLayout } from '@core';
 import { ProjectState, selectProjects } from '@entities/project';
 import { actionProjectList } from '@entities/project/model/project.actions';
 import { Store } from '@ngrx/store';
@@ -8,12 +7,8 @@ import { Subscription, tap } from 'rxjs';
 
 @Component({
     selector: 'app-projects-container',
-    imports: [RouterOutlet, MainLayout],
-    template: `
-        <app-main-layout pageTitle="Projects">
-            <router-outlet />
-        </app-main-layout>
-    `,
+    imports: [RouterOutlet],
+    template: ` <router-outlet /> `,
 })
 export class ProjectsContainer implements OnInit, OnDestroy {
     private store = inject(Store<ProjectState>);

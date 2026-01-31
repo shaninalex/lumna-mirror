@@ -12,7 +12,7 @@ export const actionBoardSetList = createAction(
 // CREATE
 export const actionBoardCreate = createAction(
     '[Board] create',
-    props<{ data: BoardPayloadModel }>(),
+    props<{ projectID: string; data: BoardPayloadModel }>(),
 );
 
 // PATCH

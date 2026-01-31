@@ -1,9 +1,9 @@
 import { Component, inject, Input, signal } from '@angular/core';
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { BoardPayloadModel } from '@entities/board';
+import { actionBoardCreate, BoardPayloadModel, BoardState } from '@entities/board';
 import { Dispatcher } from '@ngrx/signals/events';
 import { form, FormField, required, validate } from '@angular/forms/signals';
-import { boardEvents } from '@entities/board/model/board.events';
+import { Store } from '@ngrx/store';
 
 @Component({
     selector: 'app-board-create-feature',
@@ -14,7 +14,7 @@ export class BoardCreateFeature {
     @Input() projectId: string;
 
     dialog = inject(Dialog);
-    dispatcher = inject(Dispatcher);
+    private store = inject(Store<BoardState>);
 
     newBoard(): void {
         const dialogRef = this.dialog.open<BoardPayloadModel>(BoardForm, {
@@ -25,7 +25,8 @@ export class BoardCreateFeature {
         });
 
         dialogRef.closed.subscribe((result) => {
-            if (result) this.dispatcher.dispatch(boardEvents.create(result));
+            if (result)
+                this.store.dispatch(actionBoardCreate({ projectID: this.projectId, data: result }));
         });
     }
 }
@@ -41,7 +42,7 @@ export class BoardForm {
     data = inject(DIALOG_DATA);
 
     boardFormModel = signal<BoardPayloadModel>({
-        project_id: this.data.project_id,
+        projectID: this.data.project_id,
         title: '',
     });
 

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProjectModel, ProjectState, selectProjectByID } from '@entities/project';
-import { BoardsList } from '@entities/board/ui/boards-list/boards-list';
+import { actionBoardGetList, BoardsList } from '@entities/board';
 import { filter, Observable, switchMap, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { UiService } from '@shared/ui';
@@ -48,7 +48,10 @@ export class ProjectDetail implements OnInit {
             switchMap((params) =>
                 this.store.select(selectProjectByID(params['id'])).pipe(
                     filter((project) => !!project),
-                    tap((project) => this.ui.setPageTitle(`Project: ${project.title}`)),
+                    tap((project) => {
+                        this.ui.setPageTitle(`Project: ${project.title}`);
+                        this.store.dispatch(actionBoardGetList({ projectId: project.id }));
+                    }),
                 ),
             ),
         );
