@@ -10,8 +10,8 @@ import { Store } from '@ngrx/store';
 })
 export class AuthLoginFeature {
     private store = inject(Store);
-    email = '';
-    password = '';
+    email = 'test@test.com'; // just for developing
+    password = '111'; // just for developing
 
     constructor() {
         // subscribe to login errors effects

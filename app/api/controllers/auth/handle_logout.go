@@ -17,7 +17,7 @@ func (s *AuthController) handleLogout(c *gin.Context) {
 	}
 
 	c.SetCookie("access_token", "", 0, "/", "", true, true)
-	c.SetCookie("refresh", "", 0, "/", "", true, true)
+	c.SetCookie("refresh_token", "", 0, "/", "", true, true)
 
 	utils.Success(c, nil, "Logout successfull")
 }

@@ -22,7 +22,7 @@ export function refreshTokenInterceptor(
 
     return next(authReq).pipe(
         catchError((error: HttpErrorResponse) => {
-            if (error.status === 401 && !authReq.url.includes('/api/v1/refresh')) {
+            if (error.status === 401 && !authReq.url.includes('/api/v1/auth/refresh')) {
                 return handle401(authReq, next, http);
             }
 
@@ -40,7 +40,7 @@ function handle401(
         isRefreshing = true;
         refreshSubject.next(null);
 
-        return http.get('/api/v1/refresh', { withCredentials: true }).pipe(
+        return http.get('/api/v1/auth/refresh', { withCredentials: true }).pipe(
             switchMap(() => {
                 isRefreshing = false;
                 refreshSubject.next(true);

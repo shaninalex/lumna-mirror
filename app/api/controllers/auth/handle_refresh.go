@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"time"
 
@@ -17,16 +18,24 @@ var (
 )
 
 func (s *AuthController) handleRefresh(c *gin.Context) {
-	userID, _ := utils.GetUserID(c)
+	if _, err := c.Cookie("access_token"); err != nil {
+		log.Println("Unauthorized request to refresh access token")
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
 	refrashCookie, err := c.Cookie("refresh_token")
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	// find and delete existed refresh token
+	// find existed refresh token
 	var dbRefreshToken *models.RefreshToken
-	if result := db.GetDB(c.Request.Context()).Where("hash = ?", auth.ToHashToken(refrashCookie)).First(&dbRefreshToken); result.Error != nil {
+	if result := db.GetDB(c.Request.Context()).
+		Preload("Identity").
+		Where("hash = ?", auth.ToHashToken(refrashCookie)).
+		First(&dbRefreshToken); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
@@ -35,14 +44,9 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 		return
 	}
 
-	if result := db.GetDB(c.Request.Context()).Where("id = ?", dbRefreshToken.ID.String()).Delete(&dbRefreshToken); result.Error != nil {
-		utils.Error(c, http.StatusBadRequest, err)
-		return
-	}
-
 	// Create new set of access/refresh tokens
 	accessTtl := time.Minute * 15
-	token, err := auth.GenerateAccessJWTToken(userID.String(), "all", accessTtl)
+	token, err := auth.GenerateAccessJWTToken(dbRefreshToken.IdentityID.String(), "all", accessTtl)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
@@ -57,13 +61,22 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 	refreshTtl := time.Hour * 24 * 30 // 30 days
 	refreshExp := time.Now().Add(refreshTtl)
 	rt := models.RefreshToken{
-		IdentityID: userID,
+		IdentityID: dbRefreshToken.IdentityID,
 		Hash:       toDB,
 		ClientID:   "angular-web-app",
 		Scopes:     "all",
 		ExpiresAt:  refreshExp,
 	}
 
+	// Delete existed refresh tokens
+	if result := db.GetDB(c.Request.Context()).
+		Where("identity_id = ?", dbRefreshToken.IdentityID.String()).
+		Delete(&dbRefreshToken); result.Error != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	// create new one
 	if result := db.GetDB(c.Request.Context()).Create(&rt); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, result.Error)
 		return

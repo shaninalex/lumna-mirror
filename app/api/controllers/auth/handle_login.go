@@ -30,7 +30,7 @@ func (s *AuthController) handleLogin(c *gin.Context) {
 		return
 	}
 
-	accessTtl := time.Minute * 15
+	accessTtl := time.Minute * 1
 	token, err := auth.GenerateAccessJWTToken(identity.ID.String(), "all", accessTtl)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
