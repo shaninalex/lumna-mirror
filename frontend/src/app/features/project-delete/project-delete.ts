@@ -1,10 +1,18 @@
 import { DialogRef, DIALOG_DATA, Dialog } from '@angular/cdk/dialog';
-import { Component, computed, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ProjectModel } from '@entities/project';
-import { Dispatcher, Events } from '@ngrx/signals/events';
+import {
+    actionProjectDelete,
+    actionProjectDeleteSuccess,
+    ProjectModel,
+    ProjectState,
+    selectProjectByID,
+} from '@entities/project';
+import { Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { filter, tap } from 'rxjs';
 
 @Component({
     selector: 'app-project-delete-feature',
@@ -15,31 +23,34 @@ import { Dispatcher, Events } from '@ngrx/signals/events';
         <button class="btn btn-danger" (click)="openDialog()">Delete</button>
     `,
 })
-export class ProjectDeleteFeature {
+export class ProjectDeleteFeature implements OnInit {
+    private store = inject(Store<ProjectState>);
+    private actions$ = inject(Actions);
+    private router = inject(Router);
+
     dialog = inject(Dialog);
     @Input() projectId: string;
 
-    private readonly dispatcher = inject(Dispatcher);
-    private readonly events = inject(Events);
-    private router = inject(Router);
-
-    // project = computed(() => this.store.entities().find((p) => p.id === this.projectId));
     project: ProjectModel;
 
-    constructor() {
-        // this.events
-        //     .on(projectEvents._deleteProjectSuccess)
-        //     .pipe(takeUntilDestroyed())
-        //     .subscribe(() => this.router.navigate(['/projects']));
+    ngOnInit() {
+        this.store.select(selectProjectByID(this.projectId)).pipe(
+            filter((project) => !!project),
+            tap((project) => (this.project = project)),
+        );
+
+        this.actions$
+            .pipe(ofType(actionProjectDeleteSuccess), takeUntilDestroyed())
+            .subscribe(() => this.router.navigate(['/projects']));
     }
 
     openDialog(): void {
         const dialogRef = this.dialog.open<boolean>(DeleteProjectDialog, {
-            // data: this.project()?.title,
+            data: this.project.title,
         });
 
         dialogRef.closed.subscribe((result) => {
-            // if (result) this.dispatcher.dispatch(projectEvents.deleteProject(this.projectId));
+            if (result) this.store.dispatch(actionProjectDelete({ project_id: this.projectId }));
         });
     }
 }

@@ -5,3 +5,4 @@ export { ProjectEffects } from './project.effects';
 export { projectReducer } from './project.store';
 
 export * from './project.actions';
+export * from './project.selectors';

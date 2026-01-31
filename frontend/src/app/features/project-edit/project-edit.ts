@@ -1,9 +1,10 @@
 import { Component, inject, Input, signal } from '@angular/core';
-import { form, required, FormField } from '@angular/forms/signals';
-import { ProjectModel, ProjectState } from '@entities/project';
-import { Dispatcher, Events } from '@ngrx/signals/events';
-import { ProjectEditModel } from './model/project-edit.model';
 import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
+import { form, required, FormField } from '@angular/forms/signals';
+import { ProjectEditModel } from './model/project-edit.model';
+
+import { ProjectModel, ProjectState } from '@entities/project';
 
 @Component({
     selector: 'app-project-edit-feature',
@@ -42,9 +43,11 @@ import { Store } from '@ngrx/store';
     `,
 })
 export class ProjectEditFeature {
+    private actions$ = inject(Actions);
+    private store = inject(Store<ProjectState>);
+
     @Input() projectId: string;
-    private readonly store = inject(Store<ProjectState>);
-    private readonly events = inject(Events);
+
     loading = signal(false);
     project: ProjectModel;
 
@@ -52,7 +55,6 @@ export class ProjectEditFeature {
         title: '',
     });
     errors = signal<string[]>([]);
-    readonly dispatcher = inject(Dispatcher);
 
     constructor() {
         // effect(() => {

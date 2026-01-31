@@ -1,21 +1,23 @@
 import { createAction, props } from '@ngrx/store';
 import { ProjectModel, ProjectPayload } from './project.model';
 
-export const actionProjectList = createAction('[Projects] get list');
+export const actionProjectList = createAction('[Project] get list');
 
 export const actionProjectDelete = createAction(
-    '[Projects] delete',
+    '[Project] delete',
     props<{ project_id: string }>(),
 );
 
+export const actionProjectDeleteSuccess = createAction('[Project] deleted');
+
 export const actionProjectsSetList = createAction(
-    '[Projects] set list',
+    '[Project] set list',
     props<{ projects: ProjectModel[] }>(),
 );
 
 export const actionProjectCreate = createAction(
-    '[Projects] Create',
+    '[Project] Create',
     props<{ payload: ProjectPayload }>(),
 );
 
-export const actionProjectAdd = createAction('[Projects] add', props<{ project: ProjectModel }>());
+export const actionProjectAdd = createAction('[Project] add', props<{ project: ProjectModel }>());

@@ -1,7 +1,6 @@
 import { Component, inject, Input, signal } from '@angular/core';
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { actionBoardCreate, BoardPayloadModel, BoardState } from '@entities/board';
-import { Dispatcher } from '@ngrx/signals/events';
 import { form, FormField, required, validate } from '@angular/forms/signals';
 import { Store } from '@ngrx/store';
 
