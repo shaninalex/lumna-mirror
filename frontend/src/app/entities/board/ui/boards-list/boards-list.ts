@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { BoardCreateFeature } from '@features/board-create';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -26,12 +26,12 @@ import { AsyncPipe } from '@angular/common';
         </div>
     `,
 })
-export class BoardsList {
+export class BoardsList implements OnInit {
     @Input() projectId: string;
     private store = inject(Store<BoardState>);
     boards: Observable<BoardModel[]>;
 
-    constructor() {
+    ngOnInit() {
         this.boards = this.store.select(selectBoardsByProjectId(this.projectId));
     }
 }

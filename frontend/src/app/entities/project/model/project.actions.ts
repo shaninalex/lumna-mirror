@@ -18,4 +18,4 @@ export const actionProjectCreate = createAction(
     props<{ payload: ProjectPayload }>(),
 );
 
-export const actionProjectsAdd = createAction('[Projects] add', props<{ project: ProjectModel }>());
+export const actionProjectAdd = createAction('[Projects] add', props<{ project: ProjectModel }>());

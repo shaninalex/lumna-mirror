@@ -48,10 +48,7 @@ export class ProjectDetail implements OnInit {
             switchMap((params) =>
                 this.store.select(selectProjectByID(params['id'])).pipe(
                     filter((project) => !!project),
-                    tap((project) => {
-                        this.ui.setPageTitle(`Project: ${project.title}`);
-                        this.store.dispatch(actionBoardGetList({ projectId: project.id }));
-                    }),
+                    tap((project) => this.ui.setPageTitle(`Project: ${project.title}`)),
                 ),
             ),
         );

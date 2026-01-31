@@ -1,8 +1,10 @@
 export interface BoardModel {
     id: string;
     title: string;
-    order: number; // <= always positive
-    projectID: string;
+    project_id: string;
+
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface BoardPayloadModel {

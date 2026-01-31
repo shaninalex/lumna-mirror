@@ -13,12 +13,7 @@ export const selectBoards = createSelector(selectBoardFeature, (state) =>
  * Select boards by project id, always sorted by `order` ASC
  */
 export const selectBoardsByProjectId = (projectId: string) =>
-    createSelector(selectBoards, (boards) =>
-        boards
-            .filter((b) => b.projectID === projectId)
-            .slice() // defensive copy before sort. do not mutate state
-            .sort((a, b) => a.order - b.order),
-    );
+    createSelector(selectBoards, (boards) => boards.filter((b) => b.project_id === projectId));
 
 export const selectBoardById = (boardId: string) =>
     createSelector(

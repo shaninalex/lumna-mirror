@@ -3,11 +3,12 @@ import { inject, Injectable } from '@angular/core';
 import {
     actionProjectCreate,
     actionProjectList,
-    actionProjectsAdd,
+    actionProjectAdd,
     actionProjectsSetList,
 } from './project.actions';
 import { exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { ProjectApi } from '../api/project.service';
+import { actionBoardSetList, BoardModel } from '@entities/board';
 
 @Injectable()
 export class ProjectsEffects {
@@ -31,8 +32,23 @@ export class ProjectsEffects {
             exhaustMap((action) =>
                 this.projectsApi
                     .CreateProject(action.payload)
-                    .pipe(switchMap((data) => of(actionProjectsAdd({ project: data })))),
+                    .pipe(switchMap((data) => of(actionProjectAdd({ project: data })))),
             ),
+        ),
+    );
+
+    set_boards$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionProjectsSetList),
+            map((data) => {
+                const boards: BoardModel[] = [];
+                for (let i = 0; i < data.projects.length; i++) {
+                    for (let bi = 0; bi < data.projects[i].boards.length; bi++) {
+                        boards.push(data.projects[i].boards[bi]);
+                    }
+                }
+                return actionBoardSetList({ boards });
+            }),
         ),
     );
 }

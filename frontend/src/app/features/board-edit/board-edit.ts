@@ -40,7 +40,7 @@ export class BoardEditFeature {
             if (b) {
                 this.boardId = b.id;
                 this.boardFormModel.set({
-                    projectID: b.projectID,
+                    projectID: b.project_id,
                     title: b.title,
                 });
             }
