@@ -2,6 +2,7 @@
 set -e
 
 # Bump version & create tag
+# Docs: https://commitizen-tools.github.io/commitizen/
 cz bump
 
 # Get latest tag only
