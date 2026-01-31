@@ -51,6 +51,7 @@ func AuthMiddleware(c *gin.Context) {
 
 	ctx := c.Request.Context()
 	ctx = context.WithValue(ctx, internal.ContextIdentity, userID)
+	// fill request context with values here
 
 	c.Set("userID", userID)
 	c.Request = c.Request.WithContext(ctx)
