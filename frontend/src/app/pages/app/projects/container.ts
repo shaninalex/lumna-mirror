@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { ProjectState, selectProjects } from '@entities/project';
 import { actionProjectList } from '@entities/project/model/project.actions';
 import { Store } from '@ngrx/store';
-import { Subscription, tap } from 'rxjs';
+import { Subscription, take, tap } from 'rxjs';
 
 @Component({
     selector: 'app-projects-container',
@@ -19,6 +19,7 @@ export class ProjectsContainer implements OnInit, OnDestroy {
             this.store
                 .select(selectProjects)
                 .pipe(
+                    take(1),
                     tap((projects) => {
                         if (!projects.length) {
                             this.store.dispatch(actionProjectList());
