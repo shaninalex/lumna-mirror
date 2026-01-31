@@ -1,7 +1,12 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject, Injectable } from '@angular/core';
-import { actionProjectList, actionProjectsSet } from './project.actions';
-import { exhaustMap, of, switchMap } from 'rxjs';
+import {
+    actionProjectCreate,
+    actionProjectList,
+    actionProjectsAdd,
+    actionProjectsSetList,
+} from './project.actions';
+import { exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { ProjectService } from '../api/project.service';
 
 @Injectable()
@@ -15,7 +20,18 @@ export class ProjectsEffects {
             exhaustMap(() =>
                 this.projectsApi
                     .GetProjects()
-                    .pipe(switchMap((data) => of(actionProjectsSet({ projects: data })))),
+                    .pipe(switchMap((data) => of(actionProjectsSetList({ projects: data })))),
+            ),
+        ),
+    );
+
+    create_project$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionProjectCreate.type),
+            exhaustMap((action) =>
+                this.projectsApi
+                    .CreateProject(action.payload)
+                    .pipe(switchMap((data) => of(actionProjectsAdd({ project: data })))),
             ),
         ),
     );

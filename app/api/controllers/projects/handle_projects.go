@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
-	"gitlab.com/shaninalex/lumna/app/internal"
 )
 
 func (s *ProjectsController) List(c *gin.Context) {
@@ -29,7 +28,10 @@ func (s *ProjectsController) Create(c *gin.Context) {
 		return
 	}
 
-	userID := c.Request.Context().Value(internal.ContextUserID).(uuid.UUID)
+	userID, err := utils.GetUserID(c)
+	if err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+	}
 
 	project, err := s.projectService.Create(c.Request.Context(), payload.Title, userID)
 	if err != nil {

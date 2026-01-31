@@ -7,14 +7,18 @@ import (
 	"github.com/google/uuid"
 )
 
-var UserIDNotInContextError error = errors.New("user id not found in request context")
+var ErrorUserIDNotInContext error = errors.New("user id not found in request context")
+var ErrorInvalidUserID error = errors.New("invalid user id")
 
 func GetUserID(c *gin.Context) (uuid.UUID, error) {
 	userIDAny, ok := c.Get("userID")
 	if !ok {
-		return uuid.Nil, UserIDNotInContextError
+		return uuid.Nil, ErrorUserIDNotInContext
 	}
 
-	userID := uuid.MustParse(userIDAny.(string))
+	userID, ok := userIDAny.(uuid.UUID)
+	if !ok {
+		return uuid.Nil, ErrorInvalidUserID
+	}
 	return userID, nil
 }

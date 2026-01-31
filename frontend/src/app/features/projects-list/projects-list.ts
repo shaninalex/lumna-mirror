@@ -6,7 +6,7 @@ import { ProjectForm } from '@features/project-form/project-form';
 import { Dialog } from '@angular/cdk/dialog';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription, tap } from 'rxjs';
-import { actionProjectList } from '@entities/project/model/project.actions';
+import { actionProjectCreate, actionProjectList } from '@entities/project/model/project.actions';
 
 @Component({
     selector: 'app-projects-list-feature',
@@ -53,8 +53,11 @@ export class ProjectsListFeature implements OnInit, OnDestroy {
         });
 
         dialogRef.closed.subscribe((result) => {
-            console.log(result);
-            // if (result) this.dispatcher.dispatch(projectEvents.createProject(result));
+            if (!result) return;
+            const payload: ProjectPayload = {
+                title: result.title,
+            };
+            this.store.dispatch(actionProjectCreate({ payload }));
         });
     }
 }

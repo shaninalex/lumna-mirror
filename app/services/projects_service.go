@@ -55,8 +55,7 @@ func (s *ProjectService) Create(ctx context.Context, title string, userID uuid.U
 	project := models.Project{
 		Title: title,
 	}
-	database := db.GetDB(ctx)
-	if result := database.Create(&project); result.Error != nil {
+	if result := db.GetDB(ctx).Create(&project); result.Error != nil {
 		return nil, result.Error
 	}
 

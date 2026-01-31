@@ -9,7 +9,10 @@ export const initialState: ProjectState = projectsAdapter.getInitialState();
 
 export const projectsReducer = createReducer(
     initialState,
-    on(ProjectActions.actionProjectsSet, (state, action) =>
+    on(ProjectActions.actionProjectsSetList, (state, action) =>
         projectsAdapter.setAll(action.projects, state),
+    ),
+    on(ProjectActions.actionProjectsAdd, (state, action) =>
+        projectsAdapter.addOne(action.project, state),
     ),
 );

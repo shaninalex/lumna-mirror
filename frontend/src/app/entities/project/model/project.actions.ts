@@ -1,12 +1,17 @@
 import { createAction, props } from '@ngrx/store';
-import { ProjectModel } from './project.model';
+import { ProjectModel, ProjectPayload } from './project.model';
 
-export const actionProjectList = createAction('[Projects] Get List');
+export const actionProjectList = createAction('[Projects] get list');
 export const actionProjectDelete = createAction(
-    '[Projects] Delete',
+    '[Projects] delete',
     props<{ project_id: string }>(),
 );
-export const actionProjectsSet = createAction(
-    '[Projects] Set list',
+export const actionProjectsSetList = createAction(
+    '[Projects] set list',
     props<{ projects: ProjectModel[] }>(),
 );
+export const actionProjectCreate = createAction(
+    '[Projects] Create',
+    props<{ payload: ProjectPayload }>(),
+);
+export const actionProjectsAdd = createAction('[Projects] add', props<{ project: ProjectModel }>());
