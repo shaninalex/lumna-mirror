@@ -1,29 +1,26 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { UiService } from '@shared/ui';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { UserService, UserStore } from '@entities/user';
-import { CdkMenuTrigger } from '@angular/cdk/menu';
+import { Store } from '@ngrx/store';
+import { AsyncPipe } from '@angular/common';
+import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
+
+import { UiService } from '@shared/ui';
+import { selectUser, UserState } from '@entities/user';
+import { actionSessionLoggingOut } from '@core/store/index';
 
 @Component({
     selector: 'app-header',
-    imports: [CdkMenuTrigger],
+    imports: [CdkMenuTrigger, CdkMenu, CdkMenuItem, AsyncPipe],
     templateUrl: './header.html',
     styleUrl: './header.css',
 })
 export class Header {
     private readonly ui = inject(UiService);
-    private readonly router = inject(Router);
-    private readonly userService = inject(UserService);
     readonly title = toSignal(this.ui.pageTitle);
-
-    readonly userStore = inject(UserStore);
-    readonly user = this.userStore.user;
+    readonly store = inject(Store<UserState>);
+    readonly user = this.store.select(selectUser);
 
     logout(): void {
-        this.userService.logout().subscribe(() => {
-            this.userStore.setUser(null);
-            this.router.navigate(['/auth/login']);
-        });
+        this.store.dispatch(actionSessionLoggingOut());
     }
 }

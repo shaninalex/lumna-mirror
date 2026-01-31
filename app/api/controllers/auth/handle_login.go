@@ -65,5 +65,5 @@ func (s *AuthController) handleLogin(c *gin.Context) {
 	c.SetCookie("access_token", token, int(accessTtl.Seconds()), "/", "", true, true)
 	c.SetCookie("refresh_token", toClient, int(refreshTtl.Seconds()), "/", "", true, true)
 
-	utils.Success(c, nil, "Login successfull")
+	utils.Success(c, identity, "Login successfull")
 }

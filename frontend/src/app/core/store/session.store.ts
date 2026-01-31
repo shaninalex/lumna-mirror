@@ -1,28 +1,22 @@
-import { patchState, signalStore, type, withMethods, withState } from '@ngrx/signals';
-import { eventGroup } from '@ngrx/signals/events';
+import { createReducer, on } from '@ngrx/store';
+import * as SessionActions from './session.actions';
 
 type SessionState = {
-    isAuthenticated: boolean;
+    authenticated: boolean;
 };
 
 const initialState: SessionState = {
-    isAuthenticated: false,
+    authenticated: false,
 };
 
-export const sessionEvents = eventGroup({
-    source: 'Session',
-    events: {
-        authenticated: type<void>(),
-        logout: type<void>(),
-    },
-});
-
-export const SessionStore = signalStore(
-    { providedIn: 'root' },
-    withState(initialState),
-    withMethods((store) => ({
-        setAuthenticated(value: boolean): void {
-            patchState(store, { isAuthenticated: value });
-        },
-    })),
+export const sessionReducer = createReducer(
+    initialState,
+    on(
+        SessionActions.actionSessionAuthenticatedSuccessfull,
+        SessionActions.actionSessionAuthenticated,
+        (state, action) => ({
+            authenticated: true,
+        }),
+    ),
+    on(SessionActions.actionSessionLoggedOut, (state, action) => ({ authenticated: false })),
 );

@@ -5,6 +5,7 @@ import { actionProjectList, actionProjectsSet } from './project.actions';
 import { exhaustMap, of, switchMap } from 'rxjs';
 import { ProjectService } from '../api/project.service';
 
+//  TODO: class based efffect
 export const ProjectsGetEffect = createEffect(
     (actions$ = inject(Actions), service = inject(ProjectService), router = inject(Router)) => {
         return actions$.pipe(
