@@ -1,12 +1,18 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { ProjectModel, ProjectPayload, ProjectState, selectProjects } from '@entities/project';
-import { ProjectCard } from '@entities/project/ui';
+import { Component, inject, signal } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AsyncPipe, NgClass } from '@angular/common';
-import { ProjectForm } from '@features/project-form/project-form';
 import { Dialog } from '@angular/cdk/dialog';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { actionProjectCreate } from '@entities/project/model/project.actions';
+
+import { ProjectCard } from '@entities/project/ui';
+import { ProjectForm } from './components';
+import {
+    ProjectModel,
+    ProjectPayload,
+    ProjectState,
+    selectProjects,
+    actionProjectCreate,
+} from '@entities/project';
 
 @Component({
     selector: 'app-projects-list-feature',
