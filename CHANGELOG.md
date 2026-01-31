@@ -1,3 +1,29 @@
+## 0.27.0 (2026-01-31)
+
+### Feat
+
+- **ui**: login/logout actions and effects
+- **api**: back to simple access/refresh token auth
+- **api**: auth
+- **api**: oauth refresh token
+- **api**: refresh token
+- **api**: refresh token
+- **api**: authentication + authorization
+- restore angular ui
+- **web**: board edit form
+
+### Fix
+
+- **auth**: refresh token
+- **ui**: login
+- **api**: todos + rename
+- **api**: use cors middleware before everything else
+
+### Refactor
+
+- **api**: api routes
+- **web**: templates
+
 ## 0.26.0 (2026-01-25)
 
 ### Feat
