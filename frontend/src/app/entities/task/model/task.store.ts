@@ -1,74 +1,55 @@
-import { inject } from '@angular/core';
-import { patchState, signalStore, withMethods } from '@ngrx/signals';
-import { addEntities, addEntity, updateEntities, withEntities } from '@ngrx/signals/entities';
 import { TaskModel } from './task.model';
-import { Events, withEventHandlers } from '@ngrx/signals/events';
-import { taskEvents } from './task.events';
-import { TaskApi } from '@entities/task/api/task.api';
-import { map, switchMap, tap } from 'rxjs';
-import { mapResponse } from '@ngrx/operators';
+import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import { createReducer, on } from '@ngrx/store';
+import {
+    actionTaskChangeOrder,
+    actionTaskDeleteSuccess,
+    actionTaskSetTasks,
+    actionTaskUpsert,
+} from './task.actions';
 
-export const TaskStore = signalStore(
-    { providedIn: 'root' },
-    withEntities<TaskModel>(),
-    withMethods((store) => ({
-        boardTasks(boardId: string): TaskModel[] {
-            return store.entities().filter((p) => p.board_id === boardId);
-        },
-    })),
-    withEventHandlers((store, events = inject(Events), api = inject(TaskApi)) => ({
-        actionGetTasks$: events.on(taskEvents.getTasks).pipe(
-            switchMap((e) =>
-                api.List(e.payload.board_id).pipe(
-                    mapResponse({
-                        next: (tasks) => taskEvents.setTasks(tasks),
-                        error: (error) => taskEvents.failed(error),
-                    }),
-                ),
-            ),
-        ),
+export interface TaskState extends EntityState<TaskModel> {}
+export const taskAdapter = createEntityAdapter<TaskModel>();
+const initialState = taskAdapter.getInitialState();
 
-        actionCreate$: events.on(taskEvents.create).pipe(
-            switchMap((e) =>
-                api.Create(e.payload.board_id, e.payload.data).pipe(
-                    mapResponse({
-                        next: (task) => taskEvents.setTask(task),
-                        error: (error) => taskEvents.failed(error),
-                    }),
-                ),
-            ),
-        ),
+export const taskReducer = createReducer(
+    initialState,
+    on(actionTaskSetTasks, (state, { tasks }) => taskAdapter.setAll(tasks, state)),
+    on(actionTaskUpsert, (state, { task }) => taskAdapter.upsertOne(task, state)),
+    on(actionTaskDeleteSuccess, (state, { taskId }) => taskAdapter.removeOne(taskId, state)),
 
-        actionChangeOrder$: events.on(taskEvents.changeOrder).pipe(
-            map((data) => {
-                // same list
-                if (data.payload.listId && data.payload.tasks) {
-                    return patchState(
-                        store,
-                        updateEntities({
-                            ids: data.payload.tasks.map((t) => t.id),
-                            changes: (task) => {
-                                const tasks = data.payload.tasks;
-                                if (!tasks) return {};
-                                const t = tasks.find((t) => t.id === task.id);
-                                if (!t) return {};
-                                return {
-                                    order: t.order,
-                                };
-                            },
-                        }),
-                    );
-                } else {
-                }
-            }),
-        ),
+    // Change order for multiple tasks
+    on(actionTaskChangeOrder, (state, action) => {
+        const { columnId, tasks, columns } = action;
 
-        _setTasks$: events
-            .on(taskEvents.setTasks)
-            .pipe(tap((e) => patchState(store, addEntities(e.payload ? e.payload : [])))),
+        // CASE 1: reorder tasks inside one list
+        if (columnId && tasks) {
+            return taskAdapter.updateMany(
+                tasks.map((t) => ({
+                    id: t.id,
+                    changes: {
+                        order: t.order,
+                    },
+                })),
+                state,
+            );
+        }
 
-        _setTask$: events
-            .on(taskEvents.setTask)
-            .pipe(tap((e) => patchState(store, addEntity(e.payload)))),
-    })),
+        // CASE 2: move tasks between columns
+        if (columns) {
+            const updates = columns.flatMap((list) =>
+                (list.tasks ?? []).map((task) => ({
+                    id: task.id,
+                    changes: {
+                        order: task.order,
+                        listId: list.id,
+                    },
+                })),
+            );
+
+            return taskAdapter.updateMany(updates, state);
+        }
+
+        return state;
+    }),
 );

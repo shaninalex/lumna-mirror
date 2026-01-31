@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
     providedIn: 'root',
 })
-export class UserService {
+export class UserApi {
     http = inject(HttpClient);
 
     me(): Observable<UserModel> {

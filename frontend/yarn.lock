@@ -1308,13 +1308,6 @@
   dependencies:
     tslib "^2.3.0"
 
-"@ngrx/signals@^21.0.0":
-  version "21.0.0"
-  resolved "https://registry.npmjs.org/@ngrx/signals/-/signals-21.0.0.tgz"
-  integrity sha512-GZaOcnt1MBzqRv+m4gvsusksveqkQQZwbfxBOofTjLj7V1JWz18kyC1R3ZI/aO/M++cqG/zqP+yh/33pFenZYw==
-  dependencies:
-    tslib "^2.3.0"
-
 "@ngrx/store-devtools@^21.0.0":
   version "21.0.0"
   resolved "https://registry.npmjs.org/@ngrx/store-devtools/-/store-devtools-21.0.0.tgz"

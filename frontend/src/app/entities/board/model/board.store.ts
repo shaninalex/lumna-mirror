@@ -7,7 +7,7 @@ export interface BoardState extends EntityState<BoardModel> {}
 export const boardAdapter = createEntityAdapter<BoardModel>();
 const initialState = boardAdapter.getInitialState();
 
-export const boardsReducer = createReducer(
+export const boardReducer = createReducer(
     initialState,
     on(actionBoardSetList, (state, { boards }) => boardAdapter.setAll(boards, state)),
     on(actionBoardUpsert, (state, { board }) => boardAdapter.upsertOne(board, state)),

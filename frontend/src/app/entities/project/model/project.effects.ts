@@ -11,7 +11,7 @@ import { ProjectApi } from '../api/project.service';
 import { actionBoardSetList, BoardModel } from '@entities/board';
 
 @Injectable()
-export class ProjectsEffects {
+export class ProjectEffects {
     private actions$ = inject(Actions);
     private projectsApi = inject(ProjectApi);
 

@@ -7,7 +7,7 @@ export interface ProjectState extends EntityState<ProjectModel> {}
 export const projectsAdapter = createEntityAdapter<ProjectModel>();
 export const initialState = projectsAdapter.getInitialState();
 
-export const projectsReducer = createReducer(
+export const projectReducer = createReducer(
     initialState,
     on(ProjectActions.actionProjectsSetList, (state, action) =>
         projectsAdapter.setAll(action.projects, state),
