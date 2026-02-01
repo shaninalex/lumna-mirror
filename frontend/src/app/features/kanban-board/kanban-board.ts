@@ -26,6 +26,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { KanbanApi } from './api/kanban.api';
 import { Store } from '@ngrx/store';
+import { actionKanbanLoadColumns } from './model';
 
 @Component({
     selector: 'app-kanban-board-feature',
@@ -117,7 +118,7 @@ export class KanbanBoardFeature implements OnInit {
     tasks = signal<TaskModel[]>([]);
 
     ngOnInit() {
-        this.columnStore.dispatch(actionColumnGetList({ boardId: this.board.id }));
+        this.columnStore.dispatch(actionKanbanLoadColumns({ boardId: this.board.id }));
     }
 
     listTasks(column_id: string): TaskModel[] {

@@ -8,14 +8,22 @@ import {
     actionTaskSetTasks,
     actionTaskUpsert,
 } from './task.actions';
-import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
-import { TaskModel } from './task.model';
+import { catchError, exhaustMap, map, of, switchMap } from 'rxjs';
 import { actionColumnSetList } from '@entities/column';
+import { actionKanbanColumnsLoaded } from '@features/kanban-board';
 
 @Injectable()
 export class TaskEffects {
     private actions$ = inject(Actions);
     private taskApi = inject(TaskApi);
+
+    // listen for kanban effect to load columns
+    set_list$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionKanbanColumnsLoaded),
+            map((action) => actionTaskSetTasks({ tasks: action.tasks })),
+        ),
+    );
 
     task_list$ = createEffect(() =>
         this.actions$.pipe(
@@ -37,21 +45,6 @@ export class TaskEffects {
                     catchError((error) => of(actionTaskFailed({ error }))),
                 ),
             ),
-        ),
-    );
-
-    add_column_tasks$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(actionColumnSetList),
-            map((action) => {
-                const tasks: TaskModel[] = [];
-                for (let ci = 0; ci < action.columns.length; ci++) {
-                    for (let ti = 0; ti < action.columns[ci].tasks.length; ti++) {
-                        tasks.push(action.columns[ci].tasks[ti]);
-                    }
-                }
-                return actionTaskSetTasks({ tasks });
-            }),
         ),
     );
 }

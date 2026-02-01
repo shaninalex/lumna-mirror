@@ -14,7 +14,7 @@ const initialState = taskAdapter.getInitialState();
 
 export const taskReducer = createReducer(
     initialState,
-    on(actionTaskSetTasks, (state, { tasks }) => taskAdapter.setAll(tasks, state)),
+    on(actionTaskSetTasks, (state, { tasks }) => taskAdapter.addMany(tasks, state)),
     on(actionTaskUpsert, (state, { task }) => taskAdapter.upsertOne(task, state)),
     on(actionTaskDeleteSuccess, (state, { taskId }) => taskAdapter.removeOne(taskId, state)),
 

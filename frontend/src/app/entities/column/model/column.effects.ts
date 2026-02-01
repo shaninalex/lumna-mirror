@@ -9,22 +9,19 @@ import {
     actionColumnSetList,
     actionColumnUpsert,
 } from './column.actions';
-import { exhaustMap, map, of, switchMap, tap } from 'rxjs';
-import { actionTaskSetTasks, TaskModel } from '@entities/task';
+import { exhaustMap, map, of, switchMap } from 'rxjs';
+import { actionKanbanColumnsLoaded } from '@features/kanban-board/model/shared.actions';
 
 @Injectable()
 export class ColumnEffects {
     private actions$ = inject(Actions);
     private columnsApi = inject(ColumnsApi);
 
-    list_columns$ = createEffect(() =>
+    // listen for kanban effect to load columns
+    set_list$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionColumnGetList),
-            exhaustMap((action) =>
-                this.columnsApi
-                    .List(action.boardId)
-                    .pipe(switchMap((columns) => of(actionColumnSetList({ columns })))),
-            ),
+            ofType(actionKanbanColumnsLoaded),
+            map((action) => actionColumnSetList({ columns: action.columns })),
         ),
     );
 

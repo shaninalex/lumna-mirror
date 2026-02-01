@@ -1,1 +1,2 @@
-export { KanbanApi } from './api/kanban.api'
+export { KanbanApi } from './api/kanban.api';
+export * from './model';

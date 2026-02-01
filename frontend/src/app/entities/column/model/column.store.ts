@@ -16,7 +16,7 @@ export const columnReducer = createReducer(
     initialState,
 
     // Replace all columns for a board (after load)
-    on(actionColumnSetList, (state, { columns }) => columnAdapter.setAll(columns, state)),
+    on(actionColumnSetList, (state, { columns }) => columnAdapter.addMany(columns, state)),
 
     // Create OR update a column
     on(actionColumnUpsert, (state, { column }) => columnAdapter.upsertOne(column, state)),

@@ -5,9 +5,18 @@ export interface ColumnModel {
     title: string;
     order: number;
     board_id: string;
-    tasks: TaskModel[];
     created_at: Date;
     updated_at: Date;
+}
+
+export interface ApiColumnModel {
+    id: string;
+    title: string;
+    order: number;
+    board_id: string;
+    created_at: string;
+    updated_at: string;
+    tasks: TaskModel[];
 }
 
 export interface ColumnPayloadModel {
