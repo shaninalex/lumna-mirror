@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { BoardModel } from '@entities/board';
 import { actionColumnChangeOrder, ColumnModel, ColumnState } from '@entities/column';
 import { NewColumnForm } from '@features/kanban-board/components';
@@ -23,9 +23,12 @@ import { KanbanApi } from './api/kanban.api';
 import { Store } from '@ngrx/store';
 import { actionKanbanLoadColumns } from './model';
 import { selectColumnsByBoardId } from '@entities/column/model/column.selectors';
+import { Observable, combineLatest, map, take } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-kanban-board-feature',
+    standalone: true,
     imports: [
         NewColumnForm,
         CdkMenu,
@@ -38,49 +41,62 @@ import { selectColumnsByBoardId } from '@entities/column/model/column.selectors'
         CdkDrag,
         CdkDragHandle,
         TaskFastFormFeature,
+        AsyncPipe,
     ],
     templateUrl: './kanban-board.component.html',
+    styleUrl: './kanban-board.component.css',
     providers: [KanbanApi],
 })
 export class KanbanBoardFeature implements OnInit {
     private columnStore = inject(Store<ColumnState>);
     private taskStore = inject(Store<TaskState>);
     private kanbanApi = inject(KanbanApi);
-    @Input() board: BoardModel;
-    column_length: number;
 
-    columns = signal<ColumnModel[]>([]);
-    tasks = signal<TaskModel[]>([]);
+    @Input() board!: BoardModel;
 
-    ngOnInit() {
+    columns$!: Observable<ColumnModel[]>;
+    tasks$!: Observable<TaskModel[]>;
+
+    /** View model: columns with tasks */
+    columnsWithTasks$!: Observable<(ColumnModel & { tasks: TaskModel[] })[]>;
+
+    ngOnInit(): void {
         this.columnStore.dispatch(actionKanbanLoadColumns({ boardId: this.board.id }));
-        this.columnStore
-            .select(selectColumnsByBoardId(this.board.id))
-            .subscribe((columns) => this.columns.set(columns));
 
-        this.taskStore.select(selectTasksByBoardId(this.board.id)).subscribe((tasks) => {
-            this.tasks.set(tasks);
-        });
+        this.columns$ = this.columnStore.select(selectColumnsByBoardId(this.board.id));
+
+        this.tasks$ = this.taskStore.select(selectTasksByBoardId(this.board.id));
+
+        this.columnsWithTasks$ = combineLatest([this.columns$, this.tasks$]).pipe(
+            map(([columns, tasks]) =>
+                columns.map((col) => ({
+                    ...col,
+                    tasks: tasks.filter((t) => t.column_id === col.id),
+                })),
+            ),
+        );
     }
 
-    listTasks(column_id: string): TaskModel[] {
-        return this.tasks().filter((t) => t.column_id === column_id);
-    }
-
-    dropTask(event: CdkDragDrop<TaskModel[]>, l: ColumnModel) {
-        const isSameList = event.previousContainer === event.container;
+    // Drag & Drop – Tasks
+    dropTask(event: CdkDragDrop<TaskModel[]>, column: ColumnModel): void {
         const board = this.board;
         if (!board) return;
 
+        const isSameList = event.previousContainer === event.container;
+
         if (isSameList) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-            const p = {
-                listId: l.id,
+
+            this._updateTaskOrders(event.container.data);
+
+            const payload = {
+                listId: column.id,
                 tasks: this._buildTasksPayload(event.container.data),
             };
+
             this.kanbanApi
-                .Patch(board.id, p)
-                .subscribe(() => this.taskStore.dispatch(actionTaskChangeOrder(p)));
+                .Patch(board.id, payload)
+                .subscribe(() => this.taskStore.dispatch(actionTaskChangeOrder(payload)));
         } else {
             transferArrayItem(
                 event.previousContainer.data,
@@ -88,44 +104,59 @@ export class KanbanBoardFeature implements OnInit {
                 event.previousIndex,
                 event.currentIndex,
             );
+
             this._updateTaskOrders(event.previousContainer.data);
             this._updateTaskOrders(event.container.data);
 
-            const p = {
+            const payload = {
                 columns: [
                     {
-                        id: event.item.data.list_id,
+                        id: event.item.data.column_id,
                         tasks: this._buildTasksPayload(event.previousContainer.data),
                     },
-                    { id: l.id, tasks: this._buildTasksPayload(event.container.data) },
+                    {
+                        id: column.id,
+                        tasks: this._buildTasksPayload(event.container.data),
+                    },
                 ],
             };
+
             this.kanbanApi
-                .Patch(board.id, p)
-                .subscribe(() => this.taskStore.dispatch(actionTaskChangeOrder(p)));
+                .Patch(board.id, payload)
+                .subscribe(() => this.taskStore.dispatch(actionTaskChangeOrder(payload)));
         }
     }
 
-    dropList(event: CdkDragDrop<ColumnModel[]>) {
-        moveItemInArray(this.columns(), event.previousIndex, event.currentIndex);
-        this.columns().forEach((list, index) => (list.order = index));
+    // Drag & Drop – Columns
+    dropColumn(event: CdkDragDrop<ColumnModel[]>): void {
+        this.columns$.pipe(take(1)).subscribe((columns) => {
+            moveItemInArray(columns, event.previousIndex, event.currentIndex);
 
-        const board = this.board;
-        if (!board) return;
+            columns.forEach((col, index) => (col.order = index));
 
-        const p = {
-            columns: this.columns().map((list) => ({ id: list.id, order: list.order })),
-        };
-        this.kanbanApi
-            .Patch(board.id, p)
-            .subscribe(() => this.columnStore.dispatch(actionColumnChangeOrder(p)));
+            const payload = {
+                columns: columns.map((col) => ({
+                    id: col.id,
+                    order: col.order,
+                })),
+            };
+
+            this.kanbanApi
+                .Patch(this.board.id, payload)
+                .subscribe(() => this.columnStore.dispatch(actionColumnChangeOrder(payload)));
+        });
     }
+
+    // Helpers
 
     private _updateTaskOrders(tasks: TaskModel[]): void {
         tasks.forEach((task, index) => (task.order = index));
     }
 
     private _buildTasksPayload(tasks: TaskModel[]): { id: string; order: number }[] {
-        return tasks.map((task) => ({ id: task.id, order: task.order }));
+        return tasks.map((task) => ({
+            id: task.id,
+            order: task.order,
+        }));
     }
 }

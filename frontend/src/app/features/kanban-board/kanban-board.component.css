@@ -1,0 +1,6 @@
+.kanban-column:hover .kanban-column-handler {
+    opacity: 1;
+}
+.kanban-column-handler {
+    opacity: 0;
+}
