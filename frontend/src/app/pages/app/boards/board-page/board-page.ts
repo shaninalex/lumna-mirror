@@ -6,7 +6,6 @@ import { KanbanBoardFeature } from '@features/kanban-board/kanban-board';
 import { UiService } from '@shared/ui';
 import { filter, Observable, switchMap, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { selectBoardById } from '@entities/board/model/board.selectors';
 
