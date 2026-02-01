@@ -1,5 +1,5 @@
 import { TaskModel } from './task.model';
-import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import {
     actionTaskChangeOrder,
@@ -22,29 +22,25 @@ export const taskReducer = createReducer(
     on(actionTaskChangeOrder, (state, action) => {
         const { columnId, tasks, columns } = action;
 
-        console.log(action);
-
         // CASE 1: reorder tasks inside one list
         if (columnId && tasks) {
-            return taskAdapter.updateMany(
-                tasks.map((t) => ({
-                    id: t.id,
-                    changes: {
-                        order: t.order,
-                    },
-                })),
-                state,
-            );
+            const updates: Update<TaskModel>[] = tasks.map((t) => ({
+                id: t.id,
+                changes: {
+                    order: t.order,
+                },
+            }));
+            return taskAdapter.updateMany(updates, state);
         }
 
         // CASE 2: move tasks between columns
         if (columns) {
-            const updates = columns.flatMap((list) =>
-                (list.tasks ?? []).map((task) => ({
+            const updates: Update<TaskModel>[] = columns.flatMap((column) =>
+                (column.tasks ?? []).map((task) => ({
                     id: task.id,
                     changes: {
                         order: task.order,
-                        listId: list.id,
+                        column_id: column.id,
                     },
                 })),
             );

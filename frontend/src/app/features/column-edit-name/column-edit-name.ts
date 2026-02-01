@@ -47,8 +47,7 @@ import { Store } from '@ngrx/store';
             </form>
         } @else {
             <div class="font-medium" (click)="formOpen.set(true)">
-                {{ column().title }} <br />
-                <small>{{ column().id }}</small>
+                {{ column().title }}
             </div>
         }
     `,

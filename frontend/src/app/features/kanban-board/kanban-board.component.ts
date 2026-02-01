@@ -62,16 +62,15 @@ export class KanbanBoardFeature implements OnInit {
 
     ngOnInit(): void {
         this.columnStore.dispatch(actionKanbanLoadColumns({ boardId: this.board.id }));
-
         this.columns$ = this.columnStore.select(selectColumnsByBoardId(this.board.id));
-
         this.tasks$ = this.taskStore.select(selectTasksByBoardId(this.board.id));
-
         this.columnsWithTasks$ = combineLatest([this.columns$, this.tasks$]).pipe(
             map(([columns, tasks]) =>
                 columns.map((col) => ({
                     ...col,
-                    tasks: tasks.filter((t) => t.column_id === col.id),
+                    tasks: tasks
+                        .filter((t) => t.column_id === col.id)
+                        .sort((a, b) => a.order - b.order),
                 })),
             ),
         );
@@ -131,9 +130,9 @@ export class KanbanBoardFeature implements OnInit {
 
             moveItemInArray(reordered, event.previousIndex, event.currentIndex);
 
-            const updatedColumns = reordered.map((col) => ({
+            const updatedColumns = reordered.map((col, index) => ({
                 id: col.id,
-                order: col.order,
+                order: index,
             }));
 
             const payload: KanbanBoardChangeOrderPayload = {
