@@ -8,7 +8,9 @@ import {
     actionTaskSetTasks,
     actionTaskUpsert,
 } from './task.actions';
-import { catchError, exhaustMap, of, switchMap } from 'rxjs';
+import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
+import { TaskModel } from './task.model';
+import { actionColumnSetList } from '@entities/column';
 
 @Injectable()
 export class TaskEffects {
@@ -35,6 +37,21 @@ export class TaskEffects {
                     catchError((error) => of(actionTaskFailed({ error }))),
                 ),
             ),
+        ),
+    );
+
+    add_column_tasks$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionColumnSetList),
+            map((action) => {
+                const tasks: TaskModel[] = [];
+                for (let ci = 0; ci < action.columns.length; ci++) {
+                    for (let ti = 0; ti < action.columns[ci].tasks.length; ti++) {
+                        tasks.push(action.columns[ci].tasks[ti]);
+                    }
+                }
+                return actionTaskSetTasks({ tasks });
+            }),
         ),
     );
 }

@@ -5,8 +5,16 @@ import { ColumnEffects, columnReducer } from '@entities/column';
 
 import { SessionEffects } from '@core/store/session.effects';
 import { sessionReducer } from '@core/store/session.store';
+import { TaskEffects, taskReducer } from '@entities/task';
 
-export const effects = [ProjectEffects, SessionEffects, BoardsEffects, ColumnEffects, UserEffects];
+export const effects = [
+    ProjectEffects,
+    SessionEffects,
+    BoardsEffects,
+    ColumnEffects,
+    UserEffects,
+    TaskEffects,
+];
 
 export const reducers = {
     project: projectReducer,
@@ -14,4 +22,5 @@ export const reducers = {
     session: sessionReducer,
     board: boardReducer,
     column: columnReducer,
+    task: taskReducer,
 };

@@ -15,7 +15,7 @@ type Column struct {
 
 	BoardID uuid.UUID `gorm:"type:uuid;not null;index" json:"board_id"`
 
-	Tasks []Task
+	Tasks []Task `json:"tasks"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
