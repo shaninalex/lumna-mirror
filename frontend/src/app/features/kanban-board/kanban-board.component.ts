@@ -87,8 +87,6 @@ export class KanbanBoardFeature implements OnInit {
         if (isSameList) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
 
-            this._updateTaskOrders(event.container.data);
-
             const payload = {
                 listId: column.id,
                 tasks: this._buildTasksPayload(event.container.data),
@@ -104,9 +102,6 @@ export class KanbanBoardFeature implements OnInit {
                 event.previousIndex,
                 event.currentIndex,
             );
-
-            this._updateTaskOrders(event.previousContainer.data);
-            this._updateTaskOrders(event.container.data);
 
             const payload = {
                 columns: [
@@ -130,12 +125,12 @@ export class KanbanBoardFeature implements OnInit {
     // Drag & Drop – Columns
     dropColumn(event: CdkDragDrop<ColumnModel[]>): void {
         this.columns$.pipe(take(1)).subscribe((columns) => {
-            moveItemInArray(columns, event.previousIndex, event.currentIndex);
+            const reordered = [...columns];
 
-            columns.forEach((col, index) => (col.order = index));
+            moveItemInArray(reordered, event.previousIndex, event.currentIndex);
 
             const payload = {
-                columns: columns.map((col) => ({
+                columns: reordered.map((col) => ({
                     id: col.id,
                     order: col.order,
                 })),
@@ -147,16 +142,10 @@ export class KanbanBoardFeature implements OnInit {
         });
     }
 
-    // Helpers
-
-    private _updateTaskOrders(tasks: TaskModel[]): void {
-        tasks.forEach((task, index) => (task.order = index));
-    }
-
-    private _buildTasksPayload(tasks: TaskModel[]): { id: string; order: number }[] {
-        return tasks.map((task) => ({
+    private _buildTasksPayload(tasks: TaskModel[]) {
+        return tasks.map((task, index) => ({
             id: task.id,
-            order: task.order,
+            order: index,
         }));
     }
 }

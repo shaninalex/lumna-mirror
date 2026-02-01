@@ -22,6 +22,8 @@ export const taskReducer = createReducer(
     on(actionTaskChangeOrder, (state, action) => {
         const { columnId, tasks, columns } = action;
 
+        console.log(action);
+
         // CASE 1: reorder tasks inside one list
         if (columnId && tasks) {
             return taskAdapter.updateMany(
