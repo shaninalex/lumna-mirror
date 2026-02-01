@@ -30,7 +30,16 @@ export class KanbanEffects {
                             });
 
                             for (const task of col.tasks) {
-                                tasks.push(task);
+                                tasks.push({
+                                    id: task.id,
+                                    board_id: action.boardId,
+                                    column_id: task.column_id,
+                                    title: task.title,
+                                    order: task.order,
+                                    done: task.done,
+                                    created_at: task.created_at,
+                                    updated_at: task.updated_at,
+                                });
                             }
                         }
                         return of(actionKanbanColumnsLoaded({ columns, tasks }));

@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { BoardModel, BoardState } from '@entities/board';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
-import { KanbanBoardFeature } from '@features/kanban-board/kanban-board';
+import { KanbanBoardFeature } from '@features/kanban-board';
 import { UiService } from '@shared/ui';
 import { filter, Observable, switchMap, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
