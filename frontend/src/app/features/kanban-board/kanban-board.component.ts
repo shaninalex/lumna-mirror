@@ -21,7 +21,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { KanbanApi } from './api/kanban.api';
 import { Store } from '@ngrx/store';
-import { actionKanbanLoadColumns } from './model';
+import { actionKanbanLoadColumns, KanbanBoardChangeOrderPayload } from './model';
 import { selectColumnsByBoardId } from '@entities/column/model/column.selectors';
 import { Observable, combineLatest, map, take } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -87,8 +87,9 @@ export class KanbanBoardFeature implements OnInit {
         if (isSameList) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
 
-            const payload = {
-                listId: column.id,
+            const payload: KanbanBoardChangeOrderPayload = {
+                moveType: 'task',
+                columnId: column.id,
                 tasks: this._buildTasksPayload(event.container.data),
             };
 
@@ -103,7 +104,8 @@ export class KanbanBoardFeature implements OnInit {
                 event.currentIndex,
             );
 
-            const payload = {
+            const payload: KanbanBoardChangeOrderPayload = {
+                moveType: 'task',
                 columns: [
                     {
                         id: event.item.data.column_id,
@@ -129,16 +131,21 @@ export class KanbanBoardFeature implements OnInit {
 
             moveItemInArray(reordered, event.previousIndex, event.currentIndex);
 
-            const payload = {
-                columns: reordered.map((col) => ({
-                    id: col.id,
-                    order: col.order,
-                })),
+            const updatedColumns = reordered.map((col) => ({
+                id: col.id,
+                order: col.order,
+            }));
+
+            const payload: KanbanBoardChangeOrderPayload = {
+                moveType: 'column',
+                columns: updatedColumns,
             };
 
             this.kanbanApi
                 .Patch(this.board.id, payload)
-                .subscribe(() => this.columnStore.dispatch(actionColumnChangeOrder(payload)));
+                .subscribe(() =>
+                    this.columnStore.dispatch(actionColumnChangeOrder({ columns: updatedColumns })),
+                );
         });
     }
 
