@@ -7,7 +7,7 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
     selector: 'app-project-card',
     imports: [RouterLink, CdkMenu, CdkMenuTrigger],
     template: `
-        <div class="bg-gray-100 rounded-xl p-4 block">
+        <div class="bg-(--color-secondary) rounded-xl p-4 block">
             <div class="flex justify-between">
                 <a
                     [routerLink]="['/projects', project.id]"

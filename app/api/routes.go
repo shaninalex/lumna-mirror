@@ -3,6 +3,8 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/board"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/column"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/projects"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
 	"gitlab.com/shaninalex/lumna/app/api/middlewares"
@@ -21,6 +23,8 @@ func RegisterApiV1Routes(client *client.Client, baseRouter *gin.Engine) {
 
 	user.RegisterUserController(privateRoutes)
 	projects.RegisterProjectsController(privateRoutes)
+	column.RegisterColumnController(privateRoutes)
+	board.RegisterBoardController(privateRoutes)
 }
 
 /*

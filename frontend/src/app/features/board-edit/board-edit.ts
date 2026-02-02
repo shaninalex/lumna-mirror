@@ -1,9 +1,17 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
-import { BoardModel, BoardPayloadModel } from '@entities/board';
+import {
+    actionBoardFailed,
+    actionBoardPatch,
+    actionBoardUpsert,
+    BoardModel,
+    BoardPayloadModel,
+    BoardState,
+} from '@entities/board';
 import { FormField, form, required } from '@angular/forms/signals';
-import { Dispatcher, Events } from '@ngrx/signals/events';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { boardEvents } from '@entities/board/model/board.events';
+import { Actions, ofType } from '@ngrx/effects';
+import { tap } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 @Component({
     selector: 'app-board-edit-feature',
@@ -13,10 +21,11 @@ import { boardEvents } from '@entities/board/model/board.events';
 export class BoardEditFeature {
     board = input<BoardModel>();
     boardId: string;
-    private readonly dispatcher = inject(Dispatcher);
-    private readonly events = inject(Events);
+    private actions$ = inject(Actions);
+    private store = inject(Store<BoardState>);
+
     boardFormModel = signal<BoardPayloadModel>({
-        project_id: '',
+        projectID: '',
         title: '',
     });
     boardForm = form(this.boardFormModel, (schemaPath) => {
@@ -31,30 +40,36 @@ export class BoardEditFeature {
             if (b) {
                 this.boardId = b.id;
                 this.boardFormModel.set({
-                    project_id: b.project_id,
+                    projectID: b.project_id,
                     title: b.title,
                 });
             }
         });
 
-        this.events
-            .on(boardEvents.failed)
-            .pipe(takeUntilDestroyed())
-            .subscribe((data) => {
-                this.errors.set([data.payload.toString()]);
-                this.loading.set(false);
-            });
+        this.actions$
+            .pipe(
+                ofType(actionBoardFailed),
+                takeUntilDestroyed(),
+                tap((data) => {
+                    this.errors.set([data.error.toString()]);
+                    this.loading.set(false);
+                }),
+            )
+            .subscribe();
 
-        this.events
-            .on(boardEvents.set)
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.loading.set(false));
+        this.actions$
+            .pipe(
+                ofType(actionBoardUpsert),
+                takeUntilDestroyed(),
+                tap(() => this.loading.set(false)),
+            )
+            .subscribe();
     }
 
     submit(event: Event): void {
         event.preventDefault();
         this.loading.set(true);
         const formData = this.boardFormModel();
-        this.dispatcher.dispatch(boardEvents.patch({ boardId: this.boardId, data: formData }));
+        this.store.dispatch(actionBoardPatch({ boardId: this.boardId, data: formData }));
     }
 }

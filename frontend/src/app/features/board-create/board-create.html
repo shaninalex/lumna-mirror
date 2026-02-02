@@ -5,9 +5,10 @@
             class="border block w-full rounded-lg px-2 py-1 border-gray-400"
             type="text"
             placeholder="Board title"
+            autocomplete="off"
             [formField]="boardForm.title"
         />
-        @if (boardForm.title().touched() && boardForm.title().errors()) {
+        @if (boardForm.title().dirty() && boardForm.title().errors()) {
             <ul class="error-list">
                 @for (error of boardForm.title().errors(); track error) {
                     <li class="text-red-500 text-sm">{{ error.message }}</li>

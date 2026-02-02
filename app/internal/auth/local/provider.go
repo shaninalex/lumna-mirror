@@ -4,26 +4,22 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/mail"
 
+	"github.com/go-playground/validator/v10"
 	"gitlab.com/shaninalex/lumna/app/internal/db"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
-// var _ auth.AuthProvider = (*LocalAuthProvider)(nil)
-
 type PasswordCredentials struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
 }
 
 func (s *PasswordCredentials) Validate() error {
-	if _, err := mail.ParseAddress(s.Email); err != nil {
+	validate := validator.New()
+	err := validate.Struct(s)
+	if err != nil {
 		return err
-	}
-
-	if len(s.Password) == 0 {
-		return fmt.Errorf("password is empty")
 	}
 
 	return nil

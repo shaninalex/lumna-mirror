@@ -22,6 +22,8 @@ func RegisterAuthController(router *gin.RouterGroup) {
 
 	router.POST("/login", controller.handleLogin)
 	router.GET("/logout", controller.handleLogout)
+
+	// refresh require authenticated request to get user id
 	router.GET("/refresh", controller.handleRefresh)
 
 	// router.GET("/api/v1/auth/oauth/github", nil)

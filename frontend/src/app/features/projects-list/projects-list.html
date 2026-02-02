@@ -22,11 +22,11 @@
     }
 
     <div>
-        <button (click)="toggleViewMode()">
+        <button (click)="toggleViewMode()" class="btn btn-sm btn-secondary">
             @if (viewMode() === 'grid') {
-                <i class="fa-solid fa-grip-lines"></i>
-            } @else {
                 <i class="fa-solid fa-grip"></i>
+            } @else {
+                <i class="fa-solid fa-list"></i>
             }
         </button>
     </div>

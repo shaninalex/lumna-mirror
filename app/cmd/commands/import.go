@@ -27,8 +27,8 @@ type MockDbDataSchema struct {
 	Projects []struct {
 		Title  string `json:"title"`
 		Boards []struct {
-			Title string `json:"title"`
-			Lists []struct {
+			Title   string `json:"title"`
+			Columns []struct {
 				Title string `json:"title"`
 				Order int    `json:"order"`
 				Tasks []struct {
@@ -36,7 +36,7 @@ type MockDbDataSchema struct {
 					Order int    `json:"order"`
 					Body  string `json:"body"`
 				} `json:"tasks"`
-			} `json:"lists"`
+			} `json:"columns"`
 		} `json:"boards"`
 	} `json:"projects"`
 }
@@ -98,29 +98,28 @@ func NewImportRootCmd() *cobra.Command {
 					board := models.Board{
 						Title:     _board.Title,
 						ProjectID: project.ID,
-						Order:     uint(bi),
 					}
 					if result := c.DB().Create(&board); result.Error != nil {
 						panic(result.Error)
 					}
 					fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
-					for li, _list := range _board.Lists {
-						boardList := models.BoardList{
+					for li, _list := range _board.Columns {
+						column := models.Column{
 							Title:   _list.Title,
 							BoardID: board.ID,
 							Order:   uint(li),
 						}
-						if result := c.DB().Create(&boardList); result.Error != nil {
+						if result := c.DB().Create(&column); result.Error != nil {
 							panic(result.Error)
 						}
-						fmt.Printf("\t\t%d. List: %s\n", li, boardList.Title)
+						fmt.Printf("\t\t%d. List: %s\n", li, column.Title)
 						for ti, _task := range _list.Tasks {
 							task := models.Task{
-								Title:       _task.Title,
-								BoardListID: boardList.ID,
-								Order:       uint(ti),
-								ProjectID:   project.ID,
-								Body:        _task.Body,
+								Title:     _task.Title,
+								ColumnID:  column.ID,
+								Order:     uint(ti),
+								ProjectID: project.ID,
+								Body:      _task.Body,
 							}
 							if result := c.DB().Create(&task); result.Error != nil {
 								panic(result.Error)

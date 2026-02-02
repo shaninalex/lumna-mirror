@@ -18,7 +18,7 @@
             "boards": [
                 {
                     "title": "development",
-                    "lists": [
+                    "columns": [
                         {
                             "title": "TODO",
                             "order": 0,
@@ -61,7 +61,7 @@
                 },
                 {
                     "title": "marketing",
-                    "lists": [
+                    "columns": [
                         {
                             "title": "TODO",
                             "order": 0,

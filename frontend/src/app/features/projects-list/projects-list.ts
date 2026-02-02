@@ -1,20 +1,25 @@
 import { Component, inject, signal } from '@angular/core';
-import { ProjectModel, ProjectPayload, ProjectState, selectProjects } from '@entities/project';
-import { ProjectCard } from '@entities/project/ui';
+import { Observable } from 'rxjs';
 import { AsyncPipe, NgClass } from '@angular/common';
-import { ProjectForm } from '@features/project-form/project-form';
 import { Dialog } from '@angular/cdk/dialog';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+
+import { ProjectCard } from '@entities/project/ui';
+import { ProjectForm } from './components';
+import {
+    ProjectModel,
+    ProjectPayload,
+    ProjectState,
+    selectProjects,
+    actionProjectCreate,
+} from '@entities/project';
 
 @Component({
     selector: 'app-projects-list-feature',
     imports: [ProjectCard, NgClass, AsyncPipe],
     templateUrl: './projects-list.html',
-    styleUrl: './projects-list.css',
 })
 export class ProjectsListFeature {
-    private readonly projectStore = inject(Store<ProjectState>);
     private store = inject(Store<ProjectState>);
     projects: Observable<ProjectModel[]> = this.store.select(selectProjects);
 
@@ -35,8 +40,11 @@ export class ProjectsListFeature {
         });
 
         dialogRef.closed.subscribe((result) => {
-            console.log(result);
-            // if (result) this.dispatcher.dispatch(projectEvents.createProject(result));
+            if (!result) return;
+            const payload: ProjectPayload = {
+                title: result.title,
+            };
+            this.store.dispatch(actionProjectCreate({ payload }));
         });
     }
 }

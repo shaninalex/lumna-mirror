@@ -1,3 +1,3 @@
-export { UserService } from './api/user.service';
+export { UserApi } from './api/user.service';
 
 export * from './model';

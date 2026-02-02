@@ -9,7 +9,11 @@ import (
 )
 
 func (s *UserController) Me(c *gin.Context) {
-	userId, _ := utils.GetUserID(c)
+	userId, err := utils.GetUserID(c)
+	if err != nil {
+		utils.Error(c, http.StatusBadRequest, fmt.Errorf("user not found in context"))
+		return
+	}
 	identity, err := s.userService.Identity(c.Request.Context(), userId)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, fmt.Errorf("user not found"))

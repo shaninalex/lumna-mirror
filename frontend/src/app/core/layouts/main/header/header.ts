@@ -7,10 +7,11 @@ import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { UiService } from '@shared/ui';
 import { selectUser, UserState } from '@entities/user';
 import { actionSessionLoggingOut } from '@core/store/index';
+import { ThemeSwitcher } from './components';
 
 @Component({
     selector: 'app-header',
-    imports: [CdkMenuTrigger, CdkMenu, CdkMenuItem, AsyncPipe],
+    imports: [CdkMenuTrigger, CdkMenu, CdkMenuItem, AsyncPipe, ThemeSwitcher],
     templateUrl: './header.html',
     styleUrl: './header.css',
 })

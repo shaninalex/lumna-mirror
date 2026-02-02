@@ -29,10 +29,4 @@ export class SessionApi {
             .get<APIResponse<void>>(`/api/v1/auth/refresh`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
-
-    user(): Observable<UserModel> {
-        return this.http
-            .get<APIResponse<UserModel>>(`/api/v1/user/me`, { withCredentials: true })
-            .pipe(map((response) => response.data));
-    }
 }

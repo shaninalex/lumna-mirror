@@ -1,3 +1,37 @@
+## 0.28.0 (2026-02-02)
+
+### Feat
+
+- add custom app logger
+- **ui**: move tasks and columns, persists changes
+- **ui**: kanban effects + actions
+- **api**: column with tasks list
+- **ui**: theme switcher
+
+### Fix
+
+- **ui**: load columns and tasks in kanban board
+- invalid user effects
+- **ui**: kanban board (without data loading )
+- **ui**: task store
+- **ui**: column state and components ( except kanban )
+- **ui**: fix select board detail
+- **ui**: board selection
+- **ui**: type errors
+- **ui**: board store
+- **ui**: project detail
+- **ui**: project detail
+- **ui**: projects container
+- **ui**: create project
+- **ui**: get projects
+- **api**: refresh token 2
+- **api**: refresh token
+
+### Refactor
+
+- remove signals from kanban board
+- split project service
+
 ## 0.27.1 (2026-01-31)
 
 ### Fix

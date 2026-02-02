@@ -37,12 +37,16 @@ func ParseAccessJWTToken(tokenString string) (*AccessClaims, error) {
 		return jwtSecret, nil
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Unable to parse: %s", err)
 	}
 
 	claims, ok := token.Claims.(*AccessClaims)
 	if !ok || !token.Valid {
 		return nil, fmt.Errorf("invalid token claims")
+	}
+
+	if claims.ExpiresAt.Before(time.Now()) {
+		return nil, fmt.Errorf("access token expired")
 	}
 
 	return claims, nil

@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, EMPTY, exhaustMap, map } from 'rxjs';
 import { SessionApi } from './session.api';
 import {
-    actionSessionAuthenticated,
     actionSessionAuthenticatedSuccessfull,
     actionSessionAuthenticateStart,
     actionSessionLoggedOut,
@@ -24,6 +23,18 @@ export class SessionEffects {
             exhaustMap((action) =>
                 this.sessionApi.login(action.email, action.password).pipe(
                     map((user) => actionSessionAuthenticatedSuccessfull({ user: user })),
+                    catchError(() => EMPTY), // TODO: handle auth errors
+                ),
+            ),
+        );
+    });
+
+    logging_out_init$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(actionSessionLoggingOut.type),
+            exhaustMap(() =>
+                this.sessionApi.logout().pipe(
+                    map(() => actionSessionLoggedOut()),
                     catchError(() => EMPTY),
                 ),
             ),
@@ -46,18 +57,6 @@ export class SessionEffects {
         },
         { dispatch: false },
     );
-
-    logging_out_init$ = createEffect(() => {
-        return this.actions$.pipe(
-            ofType(actionSessionLoggingOut.type),
-            exhaustMap(() =>
-                this.sessionApi.logout().pipe(
-                    map(() => actionSessionLoggedOut()),
-                    catchError(() => EMPTY),
-                ),
-            ),
-        );
-    });
 
     logging_out_completed$ = createEffect(() => {
         return this.actions$.pipe(

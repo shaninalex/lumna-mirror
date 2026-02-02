@@ -11,10 +11,9 @@ import (
 type Board struct {
 	ID        uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
 	Title     string    `gorm:"not null" json:"title"`
-	Order     uint
 	ProjectID uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
 
-	Lists []BoardList
+	Columns []Column `json:"-"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

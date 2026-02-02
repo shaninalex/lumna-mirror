@@ -1,9 +1,16 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
-import { ListModel } from '@entities/list';
 import { FormField, form, required } from '@angular/forms/signals';
-import { taskEvents, TaskPayloadModel } from '@entities/task';
-import { Dispatcher, Events } from '@ngrx/signals/events';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
+import {
+    TaskState,
+    TaskPayloadModel,
+    actionTaskUpsert,
+    actionTaskFailed,
+    actionTaskCreate,
+} from '@entities/task';
+import { ColumnModel } from '@entities/column';
 
 @Component({
     selector: 'app-task-fast-form-feature',
@@ -56,48 +63,35 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     `,
 })
 export class TaskFastFormFeature {
-    private readonly dispatcher = inject(Dispatcher);
-    private readonly events = inject(Events);
-    list = input.required<ListModel>();
+    private store = inject(Store<TaskState>);
+    private actions$ = inject(Actions);
+
+    list = input.required<ColumnModel>();
     task_count = input.required<number>();
     openedForm = signal<boolean>(false);
     loading = signal(false);
     errors = signal<string[]>([]);
     taskFormModel = signal<TaskPayloadModel>({
         title: '',
-        list_id: '',
+        column_id: '',
         order: 0,
     });
 
     constructor() {
-        this.events
-            .on(taskEvents.setTask)
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                this.loading.set(false);
-                this.openedForm.set(false);
-                this.errors.set([]);
-                this.taskForm().value.set({
-                    title: '',
-                    list_id: '',
-                    order: 0,
-                });
-                this.errors.set([]);
-            });
+        this.actions$
+            .pipe(ofType(actionTaskUpsert), takeUntilDestroyed())
+            .subscribe(() => this._reset());
 
-        this.events
-            .on(taskEvents.failed)
-            .pipe(takeUntilDestroyed())
-            .subscribe((data) => {
-                this.errors.set([data.payload.toString()]);
-                this.loading.set(false);
-            });
+        this.actions$.pipe(ofType(actionTaskFailed), takeUntilDestroyed()).subscribe((data) => {
+            this.errors.set([data.error.toString()]);
+            this.loading.set(false);
+        });
 
         effect(() => {
             if (!this.openedForm()) {
                 this.taskForm().value.set({
                     title: '',
-                    list_id: '',
+                    column_id: '',
                     order: 0,
                 });
                 this.errors.set([]);
@@ -112,13 +106,25 @@ export class TaskFastFormFeature {
     submit(event: Event) {
         event.preventDefault();
         const formData = this.taskFormModel();
-        formData.list_id = this.list().id;
+        formData.column_id = this.list().id;
         formData.order = this.task_count();
-        this.dispatcher.dispatch(
-            taskEvents.create({
+        this.store.dispatch(
+            actionTaskCreate({
                 board_id: this.list().board_id,
                 data: formData,
             }),
         );
+    }
+
+    private _reset() {
+        this.loading.set(false);
+        this.openedForm.set(false);
+        this.errors.set([]);
+        this.taskForm().value.set({
+            title: '',
+            column_id: '',
+            order: 0,
+        });
+        this.errors.set([]);
     }
 }

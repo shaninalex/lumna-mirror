@@ -7,11 +7,13 @@ import (
 	"gitlab.com/shaninalex/lumna/app/internal"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/logger"
 	"gorm.io/gorm"
 )
 
 type Client struct {
-	ctx context.Context
+	ctx    context.Context
+	logger logger.Logger
 }
 
 func (s *Client) Context() context.Context {
@@ -30,6 +32,10 @@ func (s *Client) DB() *gorm.DB {
 	return db.GetDB(s.ctx)
 }
 
+func (s *Client) Logger() logger.Logger {
+	return s.logger
+}
+
 func NewClientForCLI(cmd *cobra.Command) (*Client, error) {
 	configPath, err := cmd.Flags().GetString("config")
 	if err != nil {
@@ -37,11 +43,13 @@ func NewClientForCLI(cmd *cobra.Command) (*Client, error) {
 	}
 
 	cnf := config.ReadConfig(configPath)
+	// NOTE: context is not for data, it's about lifespan
 	ctx := context.WithValue(cmd.Context(), internal.ContextConfig, cnf)
 	ctx = context.WithValue(ctx, internal.ContextDB, db.Connect(cnf.Database.Url))
 
 	client := &Client{
-		ctx: ctx,
+		ctx:    ctx,
+		logger: logger.NewSimpleLogger(ctx),
 	}
 	return client, nil
 }

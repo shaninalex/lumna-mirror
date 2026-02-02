@@ -1,10 +1,13 @@
 export interface KanbanBoardChangeOrderPayload {
-    listId?: string;
+    columnId?: string;
+    moveType: string;
+
     tasks?: Array<{
         id: string;
         order: number;
     }>;
-    lists?: Array<{
+
+    columns?: Array<{
         id: string;
         order?: number;
         tasks?: Array<{

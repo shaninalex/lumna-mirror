@@ -1,15 +1,18 @@
 import { createReducer, on } from '@ngrx/store';
 import { ProjectModel } from './project.model';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import * as ProjectActions from './project.actions';
 
 export interface ProjectState extends EntityState<ProjectModel> {}
-export const projectsAdapter: EntityAdapter<ProjectModel> = createEntityAdapter<ProjectModel>();
-export const initialState: ProjectState = projectsAdapter.getInitialState();
+export const projectsAdapter = createEntityAdapter<ProjectModel>();
+export const initialState = projectsAdapter.getInitialState();
 
-export const projectsReducer = createReducer(
+export const projectReducer = createReducer(
     initialState,
-    on(ProjectActions.actionProjectsSet, (state, action) =>
-        projectsAdapter.setAll(action.projects, state),
+    on(ProjectActions.actionProjectsSetList, (state, action) =>
+        projectsAdapter.addMany(action.projects, state),
+    ),
+    on(ProjectActions.actionProjectAdd, (state, action) =>
+        projectsAdapter.addOne(action.project, state),
     ),
 );

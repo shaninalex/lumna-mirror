@@ -1,0 +1,39 @@
+package services
+
+import (
+	"context"
+
+	"github.com/google/uuid"
+	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/models"
+)
+
+type ColumnService struct {
+}
+
+func NewColumnService() *ColumnService {
+	return &ColumnService{}
+}
+
+func (s *ColumnService) Filter(ctx context.Context, boardId uuid.UUID) []models.Column {
+	var columns []models.Column
+	if result := db.GetDB(ctx).Preload("Tasks").Where("board_id = ?", boardId).Find(&columns); result.Error != nil {
+		return []models.Column{}
+	}
+	return columns
+}
+
+func (s *ColumnService) Get(ctx context.Context, boardListID uuid.UUID) (*models.Column, error) {
+	var column models.Column
+	if result := db.GetDB(ctx).Where("id = ?", boardListID).First(&column); result.Error != nil {
+		return nil, result.Error
+	}
+	return &column, nil
+}
+
+func (s *ColumnService) Reorder(ctx context.Context, listID uuid.UUID, order uint) error {
+	// TODO: get pointer of a struct and change it
+	return db.GetDB(ctx).Model(&models.Column{}).
+		Where("id = ?", listID).
+		Update("order", order).Error
+}

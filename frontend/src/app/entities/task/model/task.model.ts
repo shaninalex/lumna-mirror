@@ -1,7 +1,7 @@
 export interface TaskModel {
     id: string;
     board_id: string;
-    list_id: string;
+    column_id: string;
     title: string;
     order: number;
     done: boolean;
@@ -11,6 +11,6 @@ export interface TaskModel {
 
 export interface TaskPayloadModel {
     title: string;
-    list_id: string;
+    column_id: string;
     order: number;
 }
