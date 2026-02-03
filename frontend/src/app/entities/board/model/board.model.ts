@@ -9,5 +9,5 @@ export interface BoardModel {
 
 export interface BoardPayloadModel {
     title: string;
-    projectID: string;
+    project_id: string;
 }

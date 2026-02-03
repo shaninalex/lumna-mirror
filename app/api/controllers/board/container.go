@@ -23,5 +23,7 @@ func NewBoardController() *BoardController {
 func RegisterBoardController(router *gin.RouterGroup) {
 	controller := NewBoardController()
 
+	router.POST("boards", controller.Create)
 	router.PATCH("board/:boardId/order", controller.ChangeOrder)
+
 }

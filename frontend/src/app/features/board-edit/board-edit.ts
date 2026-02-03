@@ -25,7 +25,7 @@ export class BoardEditFeature {
     private store = inject(Store<BoardState>);
 
     boardFormModel = signal<BoardPayloadModel>({
-        projectID: '',
+        project_id: '',
         title: '',
     });
     boardForm = form(this.boardFormModel, (schemaPath) => {
@@ -40,7 +40,7 @@ export class BoardEditFeature {
             if (b) {
                 this.boardId = b.id;
                 this.boardFormModel.set({
-                    projectID: b.project_id,
+                    project_id: b.project_id,
                     title: b.title,
                 });
             }

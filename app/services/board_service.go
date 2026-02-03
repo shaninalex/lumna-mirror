@@ -16,7 +16,7 @@ func NewBoardService() *BoardService {
 	return &BoardService{}
 }
 
-func (s *BoardService) BoardCreate(ctx context.Context, projectID uuid.UUID, title string) (*models.Board, error) {
+func (s *BoardService) Create(ctx context.Context, projectID uuid.UUID, title string) (*models.Board, error) {
 	board := models.Board{
 		ProjectID: projectID,
 		Title:     title,
