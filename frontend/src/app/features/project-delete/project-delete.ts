@@ -19,8 +19,7 @@ import { filter, Observable, tap } from 'rxjs';
     imports: [AsyncPipe],
     template: `
         @if (project$ | async; as project) {
-            <div class="border-b border-gray-200 mb-4"></div>
-            <h2 class="mb-4">Danger</h2>
+            <h2 class="mb-2">Danger</h2>
             <button class="btn btn-danger" (click)="openDialog(project.title)">Delete</button>
         }
     `,

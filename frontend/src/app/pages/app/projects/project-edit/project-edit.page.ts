@@ -12,7 +12,7 @@ import { Observable, filter, switchMap, tap } from 'rxjs';
     template: `
         <h1>Project Edit</h1>
         <app-project-edit-feature [project$]="project$" />
-        <div class="mb-4"></div>
+        <div class="border-b border-slate-200 dark:border-slate-700 my-4"></div>
         <app-project-delete-feature [project$]="project$" />
     `,
 })

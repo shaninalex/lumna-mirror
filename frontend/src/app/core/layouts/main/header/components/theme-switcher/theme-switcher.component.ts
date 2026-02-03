@@ -25,7 +25,7 @@ import { AsyncPipe } from '@angular/common';
             }
         </button>
         <ng-template #theme>
-            <div class="border bg-surface border-gray-200 rounded-xl p-4 flex flex-col" cdkMenu>
+            <div class="dropdown p-4 flex flex-col" cdkMenu>
                 <button (click)="changeTheme('light')" class="cursor-pointer" cdkMenuItem>
                     Light
                 </button>

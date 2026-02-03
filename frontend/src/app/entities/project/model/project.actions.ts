@@ -8,7 +8,10 @@ export const actionProjectDelete = createAction(
     props<{ project_id: string }>(),
 );
 
-export const actionProjectDeleteSuccess = createAction('[Project] deleted');
+export const actionProjectDeleteSuccess = createAction(
+    '[Project] deleted',
+    props<{ project_id: string }>(),
+);
 
 export const actionProjectsSetList = createAction(
     '[Project] set list',

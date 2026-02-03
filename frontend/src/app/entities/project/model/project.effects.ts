@@ -1,13 +1,13 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject, Injectable } from '@angular/core';
 import {
-    actionProjectCreate,
+    actionProjectCreate, actionProjectDelete, actionProjectDeleteSuccess,
     actionProjectList,
     actionProjectsSetList,
     actionProjectUpdate,
     actionProjectUpsert,
 } from './project.actions';
-import { exhaustMap, map, of, switchMap, tap } from 'rxjs';
+import { exhaustMap, map, of, switchMap } from 'rxjs';
 import { ProjectApi } from '../api/project.service';
 import { actionBoardSetList, BoardModel } from '@entities/board';
 
@@ -44,11 +44,19 @@ export class ProjectEffects {
             exhaustMap((action) =>
                 this.projectsApi
                     .Patch(action.id, action.data)
-                    // TODO: upsert instead of add!
                     .pipe(switchMap((data) => of(actionProjectUpsert({ project: data })))),
             ),
         ),
     );
+
+    delete_project$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionProjectDelete),
+            exhaustMap((action) =>
+                this.projectsApi
+                    .DeleteProject(action.project_id)
+                    .pipe(switchMap(() => of(actionProjectDeleteSuccess({ project_id: action.project_id })))))
+    ))
 
     set_boards$ = createEffect(() =>
         this.actions$.pipe(
