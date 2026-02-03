@@ -3,8 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import {
     actionProjectCreate,
     actionProjectList,
-    actionProjectAdd,
     actionProjectsSetList,
+    actionProjectUpdate,
+    actionProjectUpsert,
 } from './project.actions';
 import { exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { ProjectApi } from '../api/project.service';
@@ -17,7 +18,7 @@ export class ProjectEffects {
 
     get_projects_list$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionProjectList.type),
+            ofType(actionProjectList),
             exhaustMap(() =>
                 this.projectsApi
                     .GetProjects()
@@ -28,11 +29,23 @@ export class ProjectEffects {
 
     create_project$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionProjectCreate.type),
+            ofType(actionProjectCreate),
             exhaustMap((action) =>
                 this.projectsApi
                     .CreateProject(action.payload)
-                    .pipe(switchMap((data) => of(actionProjectAdd({ project: data })))),
+                    .pipe(switchMap((data) => of(actionProjectUpsert({ project: data })))),
+            ),
+        ),
+    );
+
+    update_project$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionProjectUpdate),
+            exhaustMap((action) =>
+                this.projectsApi
+                    .Patch(action.id, action.data)
+                    // TODO: upsert instead of add!
+                    .pipe(switchMap((data) => of(actionProjectUpsert({ project: data })))),
             ),
         ),
     );

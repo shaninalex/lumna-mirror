@@ -12,7 +12,7 @@ export const projectReducer = createReducer(
     on(ProjectActions.actionProjectsSetList, (state, action) =>
         projectsAdapter.addMany(action.projects, state),
     ),
-    on(ProjectActions.actionProjectAdd, (state, action) =>
-        projectsAdapter.addOne(action.project, state),
+    on(ProjectActions.actionProjectUpsert, (state, action) =>
+        projectsAdapter.upsertOne(action.project, state),
     ),
 );
