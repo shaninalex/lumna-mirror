@@ -25,7 +25,7 @@ import { selectBoardById } from '@entities/board/model/board.selectors';
                     </button>
 
                     <ng-template #menu>
-                        <div class="bg-white border border-gray-200 rounded-xl p-4" cdkMenu>
+                        <div class="dropdown p-4" cdkMenu>
                             <a [routerLink]="['edit']">Edit</a>
                         </div>
                     </ng-template>

@@ -19,7 +19,7 @@ export class ColumnsApi {
             .pipe(map((response) => response.data));
     }
 
-    Create(boardId: string, payload: ColumnPayloadModel): Observable<ColumnModel> {
+    Create(payload: ColumnPayloadModel): Observable<ColumnModel> {
         return this.http
             .post<APIResponse<ColumnModel>>(`/api/v1/columns`, payload, { withCredentials: true })
             .pipe(map((response) => response.data));

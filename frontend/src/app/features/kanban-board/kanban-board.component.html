@@ -15,20 +15,7 @@
                                 <i class="fa-regular fa-hand"></i>
                             </button>
 
-                            <!-- to separate component. Keep templates small! -->
-                            <button [cdkMenuTriggerFor]="menu" class="cursor-pointer">
-                                <i class="fa-solid fa-ellipsis"></i>
-                            </button>
-
-                            <ng-template #menu>
-                                <div class="bg-white border border-gray-200 rounded-xl p-4" cdkMenu>
-                                    <app-column-delete-feature
-                                        [columnId]="c.id"
-                                        [columnName]="c.title"
-                                    />
-                                </div>
-                            </ng-template>
-                            <!-- end -->
+                            <app-column-dropdown-feature [column]="c" />
                         </div>
                     </div>
 
@@ -50,7 +37,7 @@
                 </div>
             }
 
-            <app-new-column-form [board]="board" [columns_length]="columns.length" />
+            <app-new-column-form [boardId]="board.id" [columns_length]="columns.length" />
         }
     </div>
 </div>

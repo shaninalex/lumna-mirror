@@ -1,5 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
-import { BoardModel } from '@entities/board';
+import { Component, inject, Input, input, OnInit, signal } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
 import {
     actionColumnCreate,
@@ -59,11 +58,11 @@ import { tap } from 'rxjs';
     `,
     host: { class: 'flex-shrink-0' },
 })
-export class NewColumnForm {
+export class NewColumnForm implements OnInit {
     private actions$ = inject(Actions);
     private store = inject(Store<ColumnState>);
 
-    board = input<BoardModel>();
+    @Input() boardId: string;
     columns_length = input.required<number>();
 
     openedForm = signal<boolean>(false);
@@ -72,23 +71,24 @@ export class NewColumnForm {
     columnFormModel = signal<ColumnPayloadModel>({
         title: '',
         order: 0,
+        board_id: '',
     });
 
     columnForm = form(this.columnFormModel, (schemaPath) => {
         required(schemaPath.title, { message: 'Name is required' });
     });
 
-    constructor() {
+    ngOnInit() {
         this.actions$
             .pipe(
                 ofType(actionColumnSetList),
-                takeUntilDestroyed(),
                 tap(() => {
                     this.loading.set(false);
                     this.openedForm.set(false);
                     this.columnForm().value.set({
                         title: '',
                         order: 0,
+                        board_id: '',
                     });
                 }),
             )
@@ -97,7 +97,6 @@ export class NewColumnForm {
         this.actions$
             .pipe(
                 ofType(actionColumnFailed),
-                takeUntilDestroyed(),
                 tap((data) => {
                     this.errors.set([data.error.toString()]);
                     this.loading.set(false);
@@ -109,17 +108,11 @@ export class NewColumnForm {
     submit(event: Event) {
         event.preventDefault();
         const formData = this.columnFormModel();
-        const b = this.board();
 
         if (!formData.title) return;
-        if (!b) return;
 
         formData.order = this.columns_length() ? this.columns_length() : 0;
-        this.store.dispatch(
-            actionColumnCreate({
-                boardId: b.id,
-                data: formData,
-            }),
-        );
+        formData.board_id = this.boardId;
+        this.store.dispatch(actionColumnCreate({ data: formData }));
     }
 }

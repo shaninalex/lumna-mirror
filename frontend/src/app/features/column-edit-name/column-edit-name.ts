@@ -63,6 +63,7 @@ export class ColumnEditNameFeature {
     columnFormModel = signal<ColumnPayloadModel>({
         title: '',
         order: 0,
+        board_id: '',
     });
 
     listForm = form(this.columnFormModel, (schemaPath) => {
@@ -74,13 +75,13 @@ export class ColumnEditNameFeature {
             this.columnFormModel.set({
                 title: this.column().title,
                 order: this.column().order,
+                board_id: this.column().board_id,
             }),
         );
 
         this.actions$
             .pipe(
                 ofType(actionColumnFailed),
-                takeUntilDestroyed(),
                 tap(() => this.loading.set(false)),
             )
             .subscribe();
@@ -88,7 +89,6 @@ export class ColumnEditNameFeature {
         this.actions$
             .pipe(
                 ofType(actionColumnUpsert),
-                takeUntilDestroyed(),
                 tap(() => {
                     this.loading.set(false);
                     this.formOpen.set(false);

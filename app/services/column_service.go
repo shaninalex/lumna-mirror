@@ -37,3 +37,21 @@ func (s *ColumnService) Reorder(ctx context.Context, listID uuid.UUID, order uin
 		Where("id = ?", listID).
 		Update("order", order).Error
 }
+
+type NewColumn struct {
+	BoardId uuid.UUID `json:"board_id"`
+	Order   uint      `json:"order"`
+	Title   string    `json:"title"`
+}
+
+func (s *ColumnService) Create(ctx context.Context, payload NewColumn) (*models.Column, error) {
+	column := models.Column{
+		BoardID: payload.BoardId,
+		Order:   payload.Order,
+		Title:   payload.Title,
+	}
+	if result := db.GetDB(ctx).Create(&column); result.Error != nil {
+		return nil, result.Error
+	}
+	return &column, nil
+}

@@ -22,6 +22,7 @@
             "@pages/*": ["./src/app/pages/*"],
             "@shared/*": ["./src/app/shared/*"],
             "@entities/*": ["./src/app/entities/*"],
+            "@features": ["./src/app/features"],
             "@features/*": ["./src/app/features/*"],
             "@environments/*": ["./src/environments/*"],
             "@tdata/*": ["./src/tdata/*"],

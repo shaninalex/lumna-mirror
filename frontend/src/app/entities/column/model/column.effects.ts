@@ -30,7 +30,7 @@ export class ColumnEffects {
             ofType(actionColumnCreate),
             exhaustMap((action) =>
                 this.columnsApi
-                    .Create(action.boardId, action.data)
+                    .Create(action.data)
                     .pipe(switchMap((column) => of(actionColumnUpsert({ column })))),
             ),
         ),

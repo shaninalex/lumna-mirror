@@ -12,7 +12,7 @@ export const actionColumnSetList = createAction(
 // CREATE
 export const actionColumnCreate = createAction(
     '[Column] create',
-    props<{ boardId: string; data: ColumnPayloadModel }>(),
+    props<{ data: ColumnPayloadModel }>(),
 );
 
 // PATCH

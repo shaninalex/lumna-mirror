@@ -7,7 +7,8 @@ import {
     ColumnDeleteFeature,
     ColumnEditNameFeature,
     TaskFastFormFeature,
-} from '@root/src/app/features';
+    ColumnDropdownFeature,
+} from '@features';
 import { actionTaskChangeOrder, selectTasksByBoardId, TaskModel, TaskState } from '@entities/task';
 import { TaskCard } from '@entities/task/ui/task-card/task-card';
 import {
@@ -31,9 +32,6 @@ import { AsyncPipe } from '@angular/common';
     standalone: true,
     imports: [
         NewColumnForm,
-        CdkMenu,
-        CdkMenuTrigger,
-        ColumnDeleteFeature,
         ColumnEditNameFeature,
         TaskCard,
         CdkDropListGroup,
@@ -42,6 +40,7 @@ import { AsyncPipe } from '@angular/common';
         CdkDragHandle,
         TaskFastFormFeature,
         AsyncPipe,
+        ColumnDropdownFeature,
     ],
     templateUrl: './kanban-board.component.html',
     styleUrl: './kanban-board.component.css',

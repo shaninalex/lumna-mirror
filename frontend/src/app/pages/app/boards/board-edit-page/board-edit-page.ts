@@ -17,9 +17,9 @@ import { filter, Observable, switchMap, tap } from 'rxjs';
             <app-board-edit-feature [board]="board" />
             <div class="my-4 border-b border-gray-200"></div>
             <app-board-delete-feature
+                [boardId]="board.id"
                 [boardTitle]="board.title"
                 [projectId]="projectId"
-                [boardId]="board.id"
             />
         }
     `,

@@ -22,4 +22,5 @@ export interface ApiColumnModel {
 export interface ColumnPayloadModel {
     title: string;
     order: number;
+    board_id: string;
 }
