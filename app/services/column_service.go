@@ -55,3 +55,10 @@ func (s *ColumnService) Create(ctx context.Context, payload NewColumn) (*models.
 	}
 	return &column, nil
 }
+
+func (s *ColumnService) Delete(ctx context.Context, id uuid.UUID) error {
+	if result := db.GetDB(ctx).Where("id = ?", id).Delete(&models.Column{}); result.Error != nil {
+		return result.Error
+	}
+	return nil
+}

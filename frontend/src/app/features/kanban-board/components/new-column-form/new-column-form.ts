@@ -4,6 +4,7 @@ import {
     actionColumnCreate,
     actionColumnFailed,
     actionColumnSetList,
+    actionColumnUpsert,
     ColumnPayloadModel,
     ColumnState,
 } from '@entities/column';
@@ -81,7 +82,7 @@ export class NewColumnForm implements OnInit {
     ngOnInit() {
         this.actions$
             .pipe(
-                ofType(actionColumnSetList),
+                ofType(actionColumnUpsert),
                 tap(() => {
                     this.loading.set(false);
                     this.openedForm.set(false);

@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ColumnsApi } from '../api/columns.api';
 import {
     actionColumnCreate,
+    actionColumnDelete,
     actionColumnDeleteSuccess,
     actionColumnGetList,
     actionColumnPatch,
@@ -49,7 +50,7 @@ export class ColumnEffects {
 
     delete_column$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionColumnPatch),
+            ofType(actionColumnDelete),
             exhaustMap((action) =>
                 this.columnsApi
                     .Delete(action.columnId)
