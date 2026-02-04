@@ -13,7 +13,7 @@ import {
 import { ColumnModel } from '@entities/column';
 
 @Component({
-    selector: 'app-task-fast-form-feature',
+    selector: 'app-task-inline-form-feature',
     imports: [FormField],
     template: `
         @if (openedForm()) {
@@ -62,11 +62,11 @@ import { ColumnModel } from '@entities/column';
         }
     `,
 })
-export class TaskFastFormFeature {
+export class TaskInlineFormFeature {
     private store = inject(Store<TaskState>);
     private actions$ = inject(Actions);
 
-    list = input.required<ColumnModel>();
+    column = input.required<ColumnModel>();
     task_count = input.required<number>();
     openedForm = signal<boolean>(false);
     loading = signal(false);
@@ -106,11 +106,11 @@ export class TaskFastFormFeature {
     submit(event: Event) {
         event.preventDefault();
         const formData = this.taskFormModel();
-        formData.column_id = this.list().id;
+        formData.column_id = this.column().id;
         formData.order = this.task_count();
         this.store.dispatch(
             actionTaskCreate({
-                board_id: this.list().board_id,
+                board_id: this.column().board_id,
                 data: formData,
             }),
         );

@@ -1,17 +1,17 @@
-package projects
+package project
 
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-type ProjectsController struct {
+type ProjectController struct {
 	projectService *services.ProjectService
 	boardService   *services.BoardService
 }
 
-func NewProjectsController() *ProjectsController {
-	s := &ProjectsController{
+func NewProjectsController() *ProjectController {
+	s := &ProjectController{
 		projectService: services.NewProjectService(),
 		boardService:   services.NewBoardService(),
 	}
@@ -19,7 +19,7 @@ func NewProjectsController() *ProjectsController {
 	return s
 }
 
-func RegisterProjectsController(router *gin.RouterGroup) {
+func RegisterProjectController(router *gin.RouterGroup) {
 	controller := NewProjectsController()
 
 	router.GET("/projects", controller.List)

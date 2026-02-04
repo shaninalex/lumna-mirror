@@ -34,6 +34,7 @@ export class KanbanEffects {
                                     id: task.id,
                                     board_id: action.boardId,
                                     column_id: task.column_id,
+                                    project_id: task.project_id,
                                     title: task.title,
                                     order: task.order,
                                     done: task.done,

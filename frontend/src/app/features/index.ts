@@ -7,5 +7,5 @@ export { BoardDeleteFeature } from './board-delete/board-delete';
 export { ColumnDeleteFeature } from './column-delete/column-delete';
 export { ColumnEditNameFeature } from './column-edit-name/column-edit-name';
 export { ColumnDropdownFeature } from './column-dropdown';
-export { TaskFastFormFeature } from './task-fast-form/task-fast-form';
+export { TaskInlineFormFeature } from './task-inline-form';
 export { AuthLoginFeature } from './auth-login/auth-login.component';

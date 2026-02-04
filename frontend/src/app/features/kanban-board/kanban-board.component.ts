@@ -2,13 +2,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { BoardModel } from '@entities/board';
 import { actionColumnChangeOrder, ColumnModel, ColumnState } from '@entities/column';
 import { NewColumnForm } from '@features/kanban-board/components';
-import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
-import {
-    ColumnDeleteFeature,
-    ColumnEditNameFeature,
-    TaskFastFormFeature,
-    ColumnDropdownFeature,
-} from '@features';
+import { ColumnEditNameFeature, TaskInlineFormFeature, ColumnDropdownFeature } from '@features';
 import { actionTaskChangeOrder, selectTasksByBoardId, TaskModel, TaskState } from '@entities/task';
 import { TaskCard } from '@entities/task/ui/task-card/task-card';
 import {
@@ -38,7 +32,7 @@ import { AsyncPipe } from '@angular/common';
         CdkDropList,
         CdkDrag,
         CdkDragHandle,
-        TaskFastFormFeature,
+        TaskInlineFormFeature,
         AsyncPipe,
         ColumnDropdownFeature,
     ],
