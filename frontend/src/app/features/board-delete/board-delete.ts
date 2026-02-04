@@ -22,14 +22,14 @@ import { tap } from 'rxjs';
 })
 export class BoardDeleteFeature {
     @Input() projectId: string;
+    @Input() boardId: string;
     @Input() boardTitle: string;
 
     dialog = inject(Dialog);
 
+    private router = inject(Router);
     private actions$ = inject(Actions);
     private store = inject(Store<BoardState>);
-
-    private router = inject(Router);
 
     constructor() {
         this.actions$
@@ -47,7 +47,7 @@ export class BoardDeleteFeature {
         });
         dialogRef.closed.subscribe((result) => {
             if (result) {
-                this.store.dispatch(actionBoardDelete({ boardId: this.projectId }));
+                this.store.dispatch(actionBoardDelete({ boardId: this.boardId }));
             }
         });
     }
