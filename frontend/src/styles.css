@@ -24,6 +24,10 @@ html {
     color: var(--color-text);
 }
 
+.bg-surface-secondary {
+    background-color: var(--color-secondary);
+}
+
 .bg-surface {
     background-color: var(--color-bg);
 }
@@ -93,4 +97,9 @@ html {
     -ms-animation: rotating 2s linear infinite;
     -o-animation: rotating 2s linear infinite;
     animation: rotating 2s linear infinite;
+}
+
+.link-disabled {
+    color: var(--color-secondary);
+    cursor: not-allowed;
 }

@@ -13,12 +13,12 @@ import { AsyncPipe } from '@angular/common';
     template: `
         <div class="bg-lime-200 dark:bg-lime-800 card">
             <nav class="flex flex-wrap gap-4">
-                <a href="#" class="hover:underline">Invite members</a>
-                <a href="#" class="hover:underline">Roles</a>
-                <a href="#" class="hover:underline">Webhooks</a>
-                <a href="#" class="hover:underline">Notifications</a>
-                <a href="#" class="hover:underline">Emails</a>
-                <a href="#" class="hover:underline">Integrations</a>
+                <a class="hover:underline">Invite members</a>
+                <a class="hover:underline">Roles</a>
+                <a class="hover:underline">Webhooks</a>
+                <a class="hover:underline">Notifications</a>
+                <a class="hover:underline">Emails</a>
+                <a class="hover:underline">Integrations</a>
             </nav>
         </div>
 
