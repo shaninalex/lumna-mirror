@@ -55,11 +55,11 @@ html {
 }
 
 .btn.btn-primary {
-    @apply bg-teal-500;
+    @apply bg-teal-500 text-white;
 }
 
 .btn.btn-danger {
-    @apply bg-red-500;
+    @apply bg-red-500 text-white;
 }
 
 .btn.btn-secondary {
