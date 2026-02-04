@@ -9,7 +9,7 @@ import (
 )
 
 func (s *ColumnController) Create(c *gin.Context) {
-	payload := services.NewColumn{}
+	payload := services.ColumnUpdate{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)

@@ -38,13 +38,13 @@ func (s *ColumnService) Reorder(ctx context.Context, listID uuid.UUID, order uin
 		Update("order", order).Error
 }
 
-type NewColumn struct {
+type ColumnUpdate struct {
 	BoardId uuid.UUID `json:"board_id"`
 	Order   uint      `json:"order"`
 	Title   string    `json:"title"`
 }
 
-func (s *ColumnService) Create(ctx context.Context, payload NewColumn) (*models.Column, error) {
+func (s *ColumnService) Create(ctx context.Context, payload ColumnUpdate) (*models.Column, error) {
 	column := models.Column{
 		BoardID: payload.BoardId,
 		Order:   payload.Order,
@@ -54,6 +54,13 @@ func (s *ColumnService) Create(ctx context.Context, payload NewColumn) (*models.
 		return nil, result.Error
 	}
 	return &column, nil
+}
+
+func (s *ColumnService) Update(ctx context.Context, column *models.Column) (*models.Column, error) {
+	if result := db.GetDB(ctx).Save(&column); result.Error != nil {
+		return nil, result.Error
+	}
+	return column, nil
 }
 
 func (s *ColumnService) Delete(ctx context.Context, id uuid.UUID) error {

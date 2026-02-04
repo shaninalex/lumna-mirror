@@ -10,7 +10,6 @@ import {
 import { FormField, form, required } from '@angular/forms/signals';
 import { ClickOutsideDirective } from '@shared/directives';
 import { Actions, ofType } from '@ngrx/effects';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 
@@ -21,7 +20,12 @@ import { Store } from '@ngrx/store';
         @if (formOpen()) {
             <form (submit)="submit($event)" class="flex gap-2" (clickOutside)="formOpen.set(false)">
                 <div>
-                    <input class="input" placeholder="Project name" [formField]="listForm.title" />
+                    <input
+                        class="input"
+                        placeholder="Project name"
+                        [formField]="listForm.title"
+                        autocomplete="off"
+                    />
                     @if (listForm.title().touched() && listForm.title().errors().length) {
                         <ul class="error-list">
                             @for (error of listForm.title().errors(); track error) {
@@ -38,7 +42,7 @@ import { Store } from '@ngrx/store';
                         [disabled]="listForm().invalid()"
                     >
                         @if (loading()) {
-                            Processing...
+                            <i class="fa-solid fa-spinner spin"></i>
                         } @else {
                             Save
                         }
@@ -46,7 +50,7 @@ import { Store } from '@ngrx/store';
                 </div>
             </form>
         } @else {
-            <div class="font-medium" (click)="formOpen.set(true)">
+            <div class="font-medium cursor-pointer hover:underline" (click)="formOpen.set(true)">
                 {{ column().title }}
             </div>
         }
