@@ -1,29 +1,45 @@
-import { Component, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BoardModel } from '@entities/board';
+import { BoardModel, BoardState } from '@entities/board';
+import { selectBoardById } from '@entities/board/model/board.selectors';
+import { Store } from '@ngrx/store';
 import { BoardDeleteFeature, BoardEditFeature } from '@root/src/app/features';
+import { UiService } from '@shared/ui';
+import { filter, Observable, switchMap, tap } from 'rxjs';
 
 @Component({
     selector: 'app-board-edit-page',
-    imports: [BoardEditFeature, BoardDeleteFeature],
+    imports: [BoardEditFeature, BoardDeleteFeature, AsyncPipe],
     template: `
-        <h1>Board "{{ board()?.title }}" Edit</h1>
-        <app-board-edit-feature [board]="board()" />
-        <div class="my-4 border-b border-gray-200"></div>
-        <app-board-delete-feature [board]="board()" [projectId]="projectId" />
+        @if (board$ | async; as board) {
+            <h1>Board "{{ board.title }}" Edit</h1>
+            <app-board-edit-feature [board]="board" />
+            <div class="my-4 border-b border-gray-200"></div>
+            <app-board-delete-feature
+                [boardId]="board.id"
+                [boardTitle]="board.title"
+                [projectId]="projectId"
+            />
+        }
     `,
 })
 export class BoardEditPage {
-    route = inject(ActivatedRoute);
-    board = signal<BoardModel | undefined>(undefined);
-    projectId: string;
+    private store = inject(Store<BoardState>);
+    private ui = inject(UiService);
 
-    constructor() {
-        this.route.data.subscribe((data) => {
-            this.board.set(data['board']);
-        });
-        this.route.params.subscribe((params) => {
-            this.projectId = params['id'];
-        });
-    }
+    route = inject(ActivatedRoute);
+    projectId: string;
+    board$: Observable<BoardModel> = this.route.params.pipe(
+        tap((params) => (this.projectId = params['id'])),
+        switchMap((params) =>
+            this.store.select(selectBoardById(params['boardId'])).pipe(
+                filter((board) => !!board),
+                tap((board) => {
+                    const title = `Edit board: ${board.title}`;
+                    this.ui.setPageTitle(title);
+                }),
+            ),
+        ),
+    );
 }

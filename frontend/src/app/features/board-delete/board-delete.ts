@@ -1,8 +1,7 @@
-import { Component, inject, Input, input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import {
     actionBoardDelete,
     actionBoardDeleteSuccess,
-    BoardModel,
     BoardState,
 } from '@entities/board';
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
@@ -23,32 +22,32 @@ import { tap } from 'rxjs';
 })
 export class BoardDeleteFeature {
     @Input() projectId: string;
-    dialog = inject(Dialog);
-    board = input<BoardModel>();
+    @Input() boardId: string;
+    @Input() boardTitle: string;
 
-    private actions$ = inject(Actions);
-    private store = inject(Store<BoardState>);
+    dialog = inject(Dialog);
 
     private router = inject(Router);
+    private actions$ = inject(Actions);
+    private store = inject(Store<BoardState>);
 
     constructor() {
         this.actions$
             .pipe(
                 ofType(actionBoardDeleteSuccess),
                 takeUntilDestroyed(),
-                tap((data) => this.router.navigate(['/projects', this.projectId])),
+                tap(() => this.router.navigate(['/projects', this.projectId])),
             )
             .subscribe();
     }
 
     openDialog(): void {
         const dialogRef = this.dialog.open<boolean>(DeleteBoardDialog, {
-            data: this.board()?.title,
+            data: this.boardTitle,
         });
         dialogRef.closed.subscribe((result) => {
-            const b = this.board();
-            if (result && b) {
-                this.store.dispatch(actionBoardDelete({ boardId: b.id }));
+            if (result) {
+                this.store.dispatch(actionBoardDelete({ boardId: this.boardId }));
             }
         });
     }

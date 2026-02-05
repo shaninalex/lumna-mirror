@@ -34,7 +34,7 @@ export class BoardsEffects {
             ofType(actionBoardCreate),
             exhaustMap((action) =>
                 this.boardApi
-                    .Create(action.projectID, action.data)
+                    .Create(action.data)
                     .pipe(switchMap((board) => of(actionBoardUpsert({ board })))),
             ),
         ),

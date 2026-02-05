@@ -115,11 +115,10 @@ func NewImportRootCmd() *cobra.Command {
 						fmt.Printf("\t\t%d. List: %s\n", li, column.Title)
 						for ti, _task := range _list.Tasks {
 							task := models.Task{
-								Title:     _task.Title,
-								ColumnID:  column.ID,
-								Order:     uint(ti),
-								ProjectID: project.ID,
-								Body:      _task.Body,
+								Title:    _task.Title,
+								ColumnID: column.ID,
+								Order:    uint(ti),
+								Body:     _task.Body,
 							}
 							if result := c.DB().Create(&task); result.Error != nil {
 								panic(result.Error)

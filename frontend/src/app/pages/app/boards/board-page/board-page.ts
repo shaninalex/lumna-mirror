@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { BoardModel, BoardState } from '@entities/board';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
@@ -20,12 +20,12 @@ import { selectBoardById } from '@entities/board/model/board.selectors';
                 </div>
 
                 <div>
-                    <button [cdkMenuTriggerFor]="menu">
+                    <button [cdkMenuTriggerFor]="menu" class="cursor-pointer">
                         <i class="fa-solid fa-ellipsis"></i>
                     </button>
 
                     <ng-template #menu>
-                        <div class="bg-white border border-gray-200 rounded-xl p-4" cdkMenu>
+                        <div class="dropdown p-4" cdkMenu>
                             <a [routerLink]="['edit']">Edit</a>
                         </div>
                     </ng-template>

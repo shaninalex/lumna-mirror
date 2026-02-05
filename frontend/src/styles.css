@@ -8,18 +8,24 @@
     --color-bg: var(--color-white);
     --color-text: var(--color-slate-900);
     --color-secondary: var(--color-gray-100);
+    --color-layout-border: var(--color-slate-200);
 }
 
 [data-theme='dark'] {
     --color-bg: var(--color-slate-800);
     --color-text: var(--color-white);
     --color-secondary: var(--color-slate-700);
+    --color-layout-border: var(--color-slate-700);
 }
 
 body,
 html {
     background-color: var(--color-bg);
     color: var(--color-text);
+}
+
+.bg-surface-secondary {
+    background-color: var(--color-secondary);
 }
 
 .bg-surface {
@@ -31,6 +37,13 @@ html {
     display: block;
     padding: 1rem;
     border-radius: var(--radius-2xl);
+    border: 1px solid var(--color-layout-border);
+}
+
+.dropdown {
+    @apply rounded-xl;
+    border: 1px solid var(--color-layout-border);
+    background-color: var(--color-bg);
 }
 
 .btn {
@@ -42,11 +55,11 @@ html {
 }
 
 .btn.btn-primary {
-    @apply bg-teal-500;
+    @apply bg-teal-500 text-white;
 }
 
 .btn.btn-danger {
-    @apply bg-red-500;
+    @apply bg-red-500 text-white;
 }
 
 .btn.btn-secondary {
@@ -58,7 +71,7 @@ html {
 }
 
 .input {
-    @apply border block w-full rounded-lg px-2 py-1 border-gray-400;
+    @apply border block w-full rounded-lg px-2 py-1 border-gray-400 dark:border-slate-500;
 }
 
 @keyframes rotating {
@@ -84,4 +97,9 @@ html {
     -ms-animation: rotating 2s linear infinite;
     -o-animation: rotating 2s linear infinite;
     animation: rotating 2s linear infinite;
+}
+
+.link-disabled {
+    color: var(--color-secondary);
+    cursor: not-allowed;
 }

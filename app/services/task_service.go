@@ -33,3 +33,24 @@ func (s *TaskService) ReorderTask(ctx context.Context, taskID uuid.UUID, boardLi
 			"order":         order,
 		}).Error
 }
+
+// TaskPayload - used to create/partial update task
+// TODO: add validators
+type TaskPayload struct {
+	Title     string    `json:"title"`
+	Order     uint      `json:"order"`
+	ProjectID uuid.UUID `json:"project_id"`
+	ColumnID  uuid.UUID `json:"column_id"`
+}
+
+func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
+	task := models.Task{
+		Title:    payload.Title,
+		Order:    payload.Order,
+		ColumnID: payload.ColumnID,
+	}
+	if result := db.GetDB(ctx).Create(&task); result.Error != nil {
+		return nil, result.Error
+	}
+	return &task, nil
+}

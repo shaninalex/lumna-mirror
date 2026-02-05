@@ -1,4 +1,4 @@
-package projects
+package project
 
 import (
 	"net/http"
@@ -8,7 +8,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 )
 
-func (s *ProjectsController) List(c *gin.Context) {
+func (s *ProjectController) List(c *gin.Context) {
 	projects, err := s.projectService.List(c.Request.Context())
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
@@ -17,7 +17,7 @@ func (s *ProjectsController) List(c *gin.Context) {
 	utils.Success(c, projects)
 }
 
-func (s *ProjectsController) Create(c *gin.Context) {
+func (s *ProjectController) Create(c *gin.Context) {
 	payload := struct {
 		Title string `json:"title"`
 	}{}
@@ -40,7 +40,7 @@ func (s *ProjectsController) Create(c *gin.Context) {
 	utils.Success(c, project)
 }
 
-func (s *ProjectsController) Patch(c *gin.Context) {
+func (s *ProjectController) Patch(c *gin.Context) {
 	payload := struct {
 		Title string `json:"title"`
 	}{}
@@ -57,7 +57,7 @@ func (s *ProjectsController) Patch(c *gin.Context) {
 	utils.Success(c, project)
 }
 
-func (s *ProjectsController) Delete(c *gin.Context) {
+func (s *ProjectController) Delete(c *gin.Context) {
 	id := uuid.MustParse(c.Param("id"))
 	if err := s.projectService.Delete(c.Request.Context(), id); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)

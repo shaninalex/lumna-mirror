@@ -25,7 +25,7 @@ export class BoardCreateFeature {
 
         dialogRef.closed.subscribe((result) => {
             if (result)
-                this.store.dispatch(actionBoardCreate({ projectID: this.projectId, data: result }));
+                this.store.dispatch(actionBoardCreate({ data: result }));
         });
     }
 }
@@ -41,7 +41,7 @@ export class BoardForm {
     data = inject(DIALOG_DATA);
 
     boardFormModel = signal<BoardPayloadModel>({
-        projectID: this.data.project_id,
+        project_id: this.data.project_id,
         title: '',
     });
 

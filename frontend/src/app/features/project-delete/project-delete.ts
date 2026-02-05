@@ -1,6 +1,6 @@
 import { DialogRef, DIALOG_DATA, Dialog } from '@angular/cdk/dialog';
+import { AsyncPipe } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -12,41 +12,38 @@ import {
 } from '@entities/project';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, tap } from 'rxjs';
+import { filter, Observable, tap } from 'rxjs';
 
 @Component({
     selector: 'app-project-delete-feature',
-    imports: [],
+    imports: [AsyncPipe],
     template: `
-        <div class="border-b border-gray-200 mb-4"></div>
-        <h2 class="mb-4">Danger</h2>
-        <button class="btn btn-danger" (click)="openDialog()">Delete</button>
+        @if (project$ | async; as project) {
+            <h2 class="mb-2">Danger</h2>
+            <button class="btn btn-danger" (click)="openDialog(project.title)">Delete</button>
+        }
     `,
 })
 export class ProjectDeleteFeature implements OnInit {
     private store = inject(Store<ProjectState>);
     private actions$ = inject(Actions);
     private router = inject(Router);
+    private projectId: string;
+
+    @Input() project$: Observable<ProjectModel>;
 
     dialog = inject(Dialog);
-    @Input() projectId: string;
-
-    project: ProjectModel;
 
     ngOnInit() {
-        this.store.select(selectProjectByID(this.projectId)).pipe(
-            filter((project) => !!project),
-            tap((project) => (this.project = project)),
-        );
-
+        this.project$.subscribe((project) => (this.projectId = project.id));
         this.actions$
-            .pipe(ofType(actionProjectDeleteSuccess), takeUntilDestroyed())
+            .pipe(ofType(actionProjectDeleteSuccess))
             .subscribe(() => this.router.navigate(['/projects']));
     }
 
-    openDialog(): void {
+    openDialog(title: string): void {
         const dialogRef = this.dialog.open<boolean>(DeleteProjectDialog, {
-            data: this.project.title,
+            data: title,
         });
 
         dialogRef.closed.subscribe((result) => {
@@ -85,6 +82,7 @@ export class DeleteProjectDialog {
     confirm(): void {
         this.dialogRef.close(true);
     }
+
     cancel(): void {
         this.dialogRef.close(false);
     }

@@ -18,19 +18,11 @@
     </div>
 
     <div class="flex items-center gap-4">
-        <button
-            type="submit"
-            class="bg-teal-500 text-white rounded-lg px-2 py-1 cursor-pointer text-sm disabled:opacity-50"
-            [disabled]="boardForm().invalid()"
-        >
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="boardForm().invalid()">
             Create
         </button>
 
-        <button
-            type="button"
-            (pointerdown)="cancel()"
-            class="bg-gray-200 text-white rounded-lg px-2 py-1 cursor-pointer text-sm"
-        >
+        <button type="button" (pointerdown)="cancel()" class="btn btn-secondary btn-sm">
             Cancel
         </button>
     </div>

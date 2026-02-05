@@ -1,14 +1,12 @@
-import { Component, inject, input, signal } from '@angular/core';
-import { BoardModel } from '@entities/board';
+import { Component, inject, Input, input, OnInit, signal } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
 import {
     actionColumnCreate,
     actionColumnFailed,
-    actionColumnSetList,
+    actionColumnUpsert,
     ColumnPayloadModel,
     ColumnState,
 } from '@entities/column';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs';
@@ -59,37 +57,30 @@ import { tap } from 'rxjs';
     `,
     host: { class: 'flex-shrink-0' },
 })
-export class NewColumnForm {
+export class NewColumnForm implements OnInit {
     private actions$ = inject(Actions);
     private store = inject(Store<ColumnState>);
 
-    board = input<BoardModel>();
+    @Input() board_id: string;
     columns_length = input.required<number>();
 
     openedForm = signal<boolean>(false);
     loading = signal(false);
     errors = signal<string[]>([]);
-    columnFormModel = signal<ColumnPayloadModel>({
-        title: '',
-        order: 0,
-    });
+    columnFormModel = signal<{ title: string }>({ title: '' });
 
     columnForm = form(this.columnFormModel, (schemaPath) => {
         required(schemaPath.title, { message: 'Name is required' });
     });
 
-    constructor() {
+    ngOnInit() {
         this.actions$
             .pipe(
-                ofType(actionColumnSetList),
-                takeUntilDestroyed(),
+                ofType(actionColumnUpsert),
                 tap(() => {
                     this.loading.set(false);
                     this.openedForm.set(false);
-                    this.columnForm().value.set({
-                        title: '',
-                        order: 0,
-                    });
+                    this.columnForm().value.set({ title: '' });
                 }),
             )
             .subscribe();
@@ -97,7 +88,6 @@ export class NewColumnForm {
         this.actions$
             .pipe(
                 ofType(actionColumnFailed),
-                takeUntilDestroyed(),
                 tap((data) => {
                     this.errors.set([data.error.toString()]);
                     this.loading.set(false);
@@ -109,16 +99,16 @@ export class NewColumnForm {
     submit(event: Event) {
         event.preventDefault();
         const formData = this.columnFormModel();
-        const b = this.board();
 
         if (!formData.title) return;
-        if (!b) return;
 
-        formData.order = this.columns_length() ? this.columns_length() : 0;
         this.store.dispatch(
             actionColumnCreate({
-                boardId: b.id,
-                data: formData,
+                data: {
+                    title: formData.title,
+                    order: this.columns_length() ? this.columns_length() : 0,
+                    board_id: this.board_id,
+                },
             }),
         );
     }

@@ -1,0 +1,26 @@
+@if (project$ | async; as project) {
+    <form (submit)="submit($event)">
+        <div class="mb-2">
+            <input class="input" placeholder="Project name" [formField]="projectForm.title" />
+            @if (projectForm.title().touched()) {
+                <ul class="error-list">
+                    @for (error of projectForm.title().errors(); track error) {
+                        <li class="text-red-500 text-sm">{{ error.message }}</li>
+                    }
+                </ul>
+            }
+        </div>
+
+        @if (errors()) {
+            <ul class="mb-2">
+                @for (error of errors(); track error) {
+                    <li class="text-red-500 text-sm">{{ error }}</li>
+                }
+            </ul>
+        }
+
+        <div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+}

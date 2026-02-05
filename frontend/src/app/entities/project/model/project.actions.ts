@@ -8,7 +8,10 @@ export const actionProjectDelete = createAction(
     props<{ project_id: string }>(),
 );
 
-export const actionProjectDeleteSuccess = createAction('[Project] deleted');
+export const actionProjectDeleteSuccess = createAction(
+    '[Project] deleted',
+    props<{ project_id: string }>(),
+);
 
 export const actionProjectsSetList = createAction(
     '[Project] set list',
@@ -20,4 +23,12 @@ export const actionProjectCreate = createAction(
     props<{ payload: ProjectPayload }>(),
 );
 
-export const actionProjectAdd = createAction('[Project] add', props<{ project: ProjectModel }>());
+export const actionProjectUpdate = createAction(
+    '[Project] update',
+    props<{ id: string; data: ProjectPayload }>(),
+);
+
+export const actionProjectUpsert = createAction(
+    '[Project] add',
+    props<{ project: ProjectModel }>(),
+);

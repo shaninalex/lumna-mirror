@@ -19,11 +19,11 @@ export class BoardApi {
             .pipe(map((response) => response.data));
     }
 
-    Create(projectId: string, payload: BoardPayloadModel): Observable<BoardModel> {
+    Create(payload: BoardPayloadModel): Observable<BoardModel> {
         return this.http
             .post<
                 APIResponse<BoardModel>
-            >(`/api/v1/project/${projectId}/boards`, payload, { withCredentials: true })
+            >(`/api/v1/boards`, payload, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 

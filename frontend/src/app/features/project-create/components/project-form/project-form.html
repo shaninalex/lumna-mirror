@@ -19,7 +19,7 @@
     <div class="flex items-center gap-4">
         <button
             type="submit"
-            class="bg-teal-500 text-white rounded-lg px-2 py-1 cursor-pointer text-sm disabled:opacity-50"
+            class="btn btn-primary btn-sm"
             [disabled]="projectForm().invalid()"
         >
             Create
@@ -28,7 +28,7 @@
         <button
             type="button"
             (click)="cancel()"
-            class="bg-gray-200 text-white rounded-lg px-2 py-1 cursor-pointer text-sm"
+            class="btn btn-secondary btn-sm"
         >
             Cancel
         </button>

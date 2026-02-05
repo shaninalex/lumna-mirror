@@ -10,7 +10,6 @@ import {
 import { FormField, form, required } from '@angular/forms/signals';
 import { ClickOutsideDirective } from '@shared/directives';
 import { Actions, ofType } from '@ngrx/effects';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 
@@ -21,7 +20,12 @@ import { Store } from '@ngrx/store';
         @if (formOpen()) {
             <form (submit)="submit($event)" class="flex gap-2" (clickOutside)="formOpen.set(false)">
                 <div>
-                    <input class="input" placeholder="Project name" [formField]="listForm.title" />
+                    <input
+                        class="input"
+                        placeholder="Project name"
+                        [formField]="listForm.title"
+                        autocomplete="off"
+                    />
                     @if (listForm.title().touched() && listForm.title().errors().length) {
                         <ul class="error-list">
                             @for (error of listForm.title().errors(); track error) {
@@ -38,7 +42,7 @@ import { Store } from '@ngrx/store';
                         [disabled]="listForm().invalid()"
                     >
                         @if (loading()) {
-                            Processing...
+                            <i class="fa-solid fa-spinner spin"></i>
                         } @else {
                             Save
                         }
@@ -46,7 +50,7 @@ import { Store } from '@ngrx/store';
                 </div>
             </form>
         } @else {
-            <div class="font-medium" (click)="formOpen.set(true)">
+            <div class="font-medium cursor-pointer hover:underline" (click)="formOpen.set(true)">
                 {{ column().title }}
             </div>
         }
@@ -60,10 +64,7 @@ export class ColumnEditNameFeature {
     column = input.required<ColumnModel>();
     formOpen = signal(false);
     loading = signal(false);
-    columnFormModel = signal<ColumnPayloadModel>({
-        title: '',
-        order: 0,
-    });
+    columnFormModel = signal<{ title: string }>({ title: '' });
 
     listForm = form(this.columnFormModel, (schemaPath) => {
         required(schemaPath.title, { message: 'Name is required' });
@@ -73,14 +74,12 @@ export class ColumnEditNameFeature {
         effect(() =>
             this.columnFormModel.set({
                 title: this.column().title,
-                order: this.column().order,
             }),
         );
 
         this.actions$
             .pipe(
                 ofType(actionColumnFailed),
-                takeUntilDestroyed(),
                 tap(() => this.loading.set(false)),
             )
             .subscribe();
@@ -88,7 +87,6 @@ export class ColumnEditNameFeature {
         this.actions$
             .pipe(
                 ofType(actionColumnUpsert),
-                takeUntilDestroyed(),
                 tap(() => {
                     this.loading.set(false);
                     this.formOpen.set(false);
@@ -100,11 +98,16 @@ export class ColumnEditNameFeature {
     submit(event: Event): void {
         event.preventDefault();
         this.loading.set(true);
+        const data = this.columnFormModel();
 
         this.store.dispatch(
             actionColumnPatch({
                 columnId: this.column().id,
-                data: this.columnFormModel(),
+                data: {
+                    title: data.title,
+                    order: this.column().order,
+                    board_id: this.column().board_id,
+                },
             }),
         );
     }

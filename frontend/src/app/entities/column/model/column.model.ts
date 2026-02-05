@@ -14,12 +14,13 @@ export interface ApiColumnModel {
     title: string;
     order: number;
     board_id: string;
-    created_at: string;
-    updated_at: string;
+    created_at: Date;
+    updated_at: Date;
     tasks: TaskModel[];
 }
 
 export interface ColumnPayloadModel {
     title: string;
     order: number;
+    board_id: string;
 }

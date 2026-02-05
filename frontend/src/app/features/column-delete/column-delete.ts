@@ -7,7 +7,9 @@ import { actionColumnDelete, ColumnState } from '@entities/column';
     selector: 'app-column-delete-feature',
     imports: [],
     template: `
-        <button (click)="openDialog()" class="text-red-400 hover:underline">delete</button>
+        <button (click)="openDialog()" class="text-red-400 hover:underline cursor-pointer">
+            delete
+        </button>
     `,
 })
 export class ColumnDeleteFeature {

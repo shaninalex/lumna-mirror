@@ -2,7 +2,7 @@
     <div class="flex items-start gap-4 overflow-x-scroll w-full" cdkDropListGroup>
         @if (columnsWithTasks$ | async; as columns) {
             @for (c of columns; track c.id) {
-                <div cdkDrag class="card bg-gray-100 w-[280px] shrink-0 kanban-column">
+                <div cdkDrag class="card bg-surface-secondary w-[280px] shrink-0 kanban-column">
                     <!-- Column header -->
                     <div class="flex items-center justify-between gap-2 mb-4">
                         <app-column-edit-name-feature [column]="c" />
@@ -15,20 +15,7 @@
                                 <i class="fa-regular fa-hand"></i>
                             </button>
 
-                            <!-- to separate component. Keep templates small! -->
-                            <button [cdkMenuTriggerFor]="menu" class="cursor-pointer">
-                                <i class="fa-solid fa-ellipsis"></i>
-                            </button>
-
-                            <ng-template #menu>
-                                <div class="bg-white border border-gray-200 rounded-xl p-4" cdkMenu>
-                                    <app-column-delete-feature
-                                        [columnId]="c.id"
-                                        [columnName]="c.title"
-                                    />
-                                </div>
-                            </ng-template>
-                            <!-- end -->
+                            <app-column-dropdown-feature [column]="c" />
                         </div>
                     </div>
 
@@ -46,11 +33,15 @@
                         }
                     </div>
 
-                    <app-task-fast-form-feature [list]="c" [task_count]="c.tasks.length" />
+                    <app-task-inline-form-feature
+                        [column_id]="c.id"
+                        [project_id]="board.id"
+                        [task_count]="c.tasks.length"
+                    />
                 </div>
             }
 
-            <app-new-column-form [board]="board" [columns_length]="columns.length" />
+            <app-new-column-form [board_id]="board.id" [columns_length]="columns.length" />
         }
     </div>
 </div>

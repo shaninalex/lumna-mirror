@@ -16,7 +16,7 @@ func NewBoardService() *BoardService {
 	return &BoardService{}
 }
 
-func (s *BoardService) BoardCreate(ctx context.Context, projectID uuid.UUID, title string) (*models.Board, error) {
+func (s *BoardService) Create(ctx context.Context, projectID uuid.UUID, title string) (*models.Board, error) {
 	board := models.Board{
 		ProjectID: projectID,
 		Title:     title,
@@ -45,10 +45,10 @@ func (s *BoardService) BoardGet(ctx context.Context, boardID uuid.UUID) (*models
 	database := db.GetDB(ctx)
 	board := &models.Board{}
 	if result := database.
-		Preload("Lists", func(tx *gorm.DB) *gorm.DB {
+		Preload("Columns", func(tx *gorm.DB) *gorm.DB {
 			return tx.Order("\"order\" ASC")
 		}).
-		Preload("Lists.Tasks", func(tx *gorm.DB) *gorm.DB {
+		Preload("Columns.Tasks", func(tx *gorm.DB) *gorm.DB {
 			return tx.Order("\"order\" ASC")
 		}).
 		Where("id = ?", boardID.String()).

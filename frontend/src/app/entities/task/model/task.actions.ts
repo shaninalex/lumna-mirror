@@ -10,7 +10,7 @@ export const actionTaskSetTasks = createAction('[Task] set tasks', props<{ tasks
 // CREATE
 export const actionTaskCreate = createAction(
     '[Task] create',
-    props<{ board_id: string; data: TaskPayloadModel }>(),
+    props<{ data: TaskPayloadModel }>(),
 );
 
 // PATCH

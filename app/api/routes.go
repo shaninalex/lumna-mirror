@@ -5,7 +5,8 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/board"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/column"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/projects"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
 	"gitlab.com/shaninalex/lumna/app/api/middlewares"
 	"gitlab.com/shaninalex/lumna/app/internal/client"
@@ -22,9 +23,10 @@ func RegisterApiV1Routes(client *client.Client, baseRouter *gin.Engine) {
 	privateRoutes.Use(middlewares.AuthMiddleware)
 
 	user.RegisterUserController(privateRoutes)
-	projects.RegisterProjectsController(privateRoutes)
+	project.RegisterProjectController(privateRoutes)
 	column.RegisterColumnController(privateRoutes)
 	board.RegisterBoardController(privateRoutes)
+	task.RegisterTaskController(privateRoutes)
 }
 
 /*

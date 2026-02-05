@@ -14,6 +14,7 @@ type Column struct {
 	Order uint      `json:"order"`
 
 	BoardID uuid.UUID `gorm:"type:uuid;not null;index" json:"board_id"`
+	Board   Board     `json:"-"`
 
 	Tasks []Task `json:"tasks"`
 
