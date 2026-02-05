@@ -12,6 +12,7 @@ export interface TaskModel {
 
 export interface TaskPayloadModel {
     title: string;
-    column_id: string;
     order: number;
+    column_id: string;
+    project_id: string;
 }

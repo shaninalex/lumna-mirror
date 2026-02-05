@@ -24,6 +24,7 @@ export class KanbanEffects {
                                 id: col.id,
                                 title: col.title,
                                 order: col.order,
+                                project_id: '',
                                 board_id: col.board_id,
                                 created_at: new Date(col.created_at),
                                 updated_at: new Date(col.updated_at),

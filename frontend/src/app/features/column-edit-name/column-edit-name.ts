@@ -68,6 +68,7 @@ export class ColumnEditNameFeature {
         title: '',
         order: 0,
         board_id: '',
+        project_id: '',
     });
 
     listForm = form(this.columnFormModel, (schemaPath) => {
@@ -80,6 +81,7 @@ export class ColumnEditNameFeature {
                 title: this.column().title,
                 order: this.column().order,
                 board_id: this.column().board_id,
+                project_id: this.column().project_id,
             }),
         );
 

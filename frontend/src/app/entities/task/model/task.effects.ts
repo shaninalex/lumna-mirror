@@ -40,7 +40,7 @@ export class TaskEffects {
         this.actions$.pipe(
             ofType(actionTaskCreate),
             exhaustMap((action) =>
-                this.taskApi.Create(action.board_id, action.data).pipe(
+                this.taskApi.Create(action.data).pipe(
                     switchMap((task) => of(actionTaskUpsert({ task }))),
                     catchError((error) => of(actionTaskFailed({ error }))),
                 ),

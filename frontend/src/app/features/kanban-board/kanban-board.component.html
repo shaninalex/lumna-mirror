@@ -33,7 +33,12 @@
                         }
                     </div>
 
-                    <app-task-inline-form-feature [column]="c" [task_count]="c.tasks.length" />
+                    <app-task-inline-form-feature
+                        [column_id]="c.id"
+                        [project_id]="c.project_id"
+                        [board_id]="c.board_id"
+                        [task_count]="c.tasks.length"
+                    />
                 </div>
             }
 

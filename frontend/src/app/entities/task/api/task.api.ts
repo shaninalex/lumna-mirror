@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { APIResponse } from '@shared/models';
-import { environment as env } from '@environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { TaskModel, TaskPayloadModel } from '@entities/task';
 
@@ -19,11 +18,9 @@ export class TaskApi {
             .pipe(map((response) => response.data));
     }
 
-    Create(boardId: string, payload: TaskPayloadModel): Observable<TaskModel> {
+    Create(payload: TaskPayloadModel): Observable<TaskModel> {
         return this.http
-            .post<
-                APIResponse<TaskModel>
-            >(`/api/v1/board/${boardId}/tasks`, payload, { withCredentials: true })
+            .post<APIResponse<TaskModel>>(`/api/v1/tasks`, payload, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 

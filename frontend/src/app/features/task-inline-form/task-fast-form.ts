@@ -66,14 +66,18 @@ export class TaskInlineFormFeature {
     private store = inject(Store<TaskState>);
     private actions$ = inject(Actions);
 
-    column = input.required<ColumnModel>();
+    board_id = input.required<string>();
+    project_id = input.required<string>();
+    column_id = input.required<string>();
     task_count = input.required<number>();
+
     openedForm = signal<boolean>(false);
     loading = signal(false);
     errors = signal<string[]>([]);
     taskFormModel = signal<TaskPayloadModel>({
         title: '',
         column_id: '',
+        project_id: '',
         order: 0,
     });
 
@@ -92,6 +96,7 @@ export class TaskInlineFormFeature {
                 this.taskForm().value.set({
                     title: '',
                     column_id: '',
+                    project_id: '',
                     order: 0,
                 });
                 this.errors.set([]);
@@ -106,12 +111,15 @@ export class TaskInlineFormFeature {
     submit(event: Event) {
         event.preventDefault();
         const formData = this.taskFormModel();
-        formData.column_id = this.column().id;
-        formData.order = this.task_count();
+        const payload = {
+            title: formData.title,
+            order: formData.order,
+            column_id: this.column_id(),
+            project_id: this.board_id(),
+        };
         this.store.dispatch(
             actionTaskCreate({
-                board_id: this.column().board_id,
-                data: formData,
+                data: payload,
             }),
         );
     }
@@ -123,6 +131,7 @@ export class TaskInlineFormFeature {
         this.taskForm().value.set({
             title: '',
             column_id: '',
+            project_id: '',
             order: 0,
         });
         this.errors.set([]);

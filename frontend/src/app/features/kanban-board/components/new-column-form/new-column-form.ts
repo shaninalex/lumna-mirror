@@ -3,12 +3,10 @@ import { FormField, form, required } from '@angular/forms/signals';
 import {
     actionColumnCreate,
     actionColumnFailed,
-    actionColumnSetList,
     actionColumnUpsert,
     ColumnPayloadModel,
     ColumnState,
 } from '@entities/column';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs';
@@ -73,6 +71,7 @@ export class NewColumnForm implements OnInit {
         title: '',
         order: 0,
         board_id: '',
+        project_id: '',
     });
 
     columnForm = form(this.columnFormModel, (schemaPath) => {
@@ -90,6 +89,7 @@ export class NewColumnForm implements OnInit {
                         title: '',
                         order: 0,
                         board_id: '',
+                        project_id: '',
                     });
                 }),
             )

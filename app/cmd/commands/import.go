@@ -105,9 +105,10 @@ func NewImportRootCmd() *cobra.Command {
 					fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
 					for li, _list := range _board.Columns {
 						column := models.Column{
-							Title:   _list.Title,
-							BoardID: board.ID,
-							Order:   uint(li),
+							Title:     _list.Title,
+							BoardID:   board.ID,
+							ProjectID: project.ID,
+							Order:     uint(li),
 						}
 						if result := c.DB().Create(&column); result.Error != nil {
 							panic(result.Error)
