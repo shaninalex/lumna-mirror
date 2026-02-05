@@ -21,26 +21,16 @@ export class KanbanEffects {
                         const tasks: TaskModel[] = [];
                         for (const col of apiColumns) {
                             columns.push({
-                                id: col.id,
-                                title: col.title,
-                                order: col.order,
-                                project_id: '',
-                                board_id: col.board_id,
+                                ...col,
                                 created_at: new Date(col.created_at),
                                 updated_at: new Date(col.updated_at),
                             });
 
                             for (const task of col.tasks) {
                                 tasks.push({
-                                    id: task.id,
-                                    board_id: action.boardId,
-                                    column_id: task.column_id,
-                                    project_id: task.project_id,
-                                    title: task.title,
-                                    order: task.order,
-                                    done: task.done,
-                                    created_at: task.created_at,
-                                    updated_at: task.updated_at,
+                                    ...task,
+                                    created_at: new Date(task.created_at),
+                                    updated_at: new Date(task.updated_at),
                                 });
                             }
                         }

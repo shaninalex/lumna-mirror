@@ -3,7 +3,7 @@ import { BoardModel } from '@entities/board';
 import { actionColumnChangeOrder, ColumnModel, ColumnState } from '@entities/column';
 import { NewColumnForm } from '@features/kanban-board/components';
 import { ColumnEditNameFeature, TaskInlineFormFeature, ColumnDropdownFeature } from '@features';
-import { actionTaskChangeOrder, selectTasksByBoardId, TaskModel, TaskState } from '@entities/task';
+import { actionTaskChangeOrder, selectTasksByColumns, TaskModel, TaskState } from '@entities/task';
 import { TaskCard } from '@entities/task/ui/task-card/task-card';
 import {
     CdkDrag,
@@ -18,7 +18,7 @@ import { KanbanApi } from './api/kanban.api';
 import { Store } from '@ngrx/store';
 import { actionKanbanLoadColumns, KanbanBoardChangeOrderPayload } from './model';
 import { selectColumnsByBoardId } from '@entities/column/model/column.selectors';
-import { Observable, combineLatest, map, take } from 'rxjs';
+import { Observable, combineLatest, map, switchMap, take, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -56,7 +56,11 @@ export class KanbanBoardFeature implements OnInit {
     ngOnInit(): void {
         this.columnStore.dispatch(actionKanbanLoadColumns({ boardId: this.board.id }));
         this.columns$ = this.columnStore.select(selectColumnsByBoardId(this.board.id));
-        this.tasks$ = this.taskStore.select(selectTasksByBoardId(this.board.id));
+        this.tasks$ = this.columns$.pipe(
+            switchMap((columns) =>
+                this.taskStore.select(selectTasksByColumns(columns.map((c) => c.id))),
+            ),
+        );
         this.columnsWithTasks$ = combineLatest([this.columns$, this.tasks$]).pipe(
             map(([columns, tasks]) =>
                 columns.map((col) => ({

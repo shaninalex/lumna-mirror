@@ -3,14 +3,7 @@ import { FormField, form, required } from '@angular/forms/signals';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
-import {
-    TaskState,
-    TaskPayloadModel,
-    actionTaskUpsert,
-    actionTaskFailed,
-    actionTaskCreate,
-} from '@entities/task';
-import { ColumnModel } from '@entities/column';
+import { TaskState, actionTaskUpsert, actionTaskFailed, actionTaskCreate } from '@entities/task';
 
 @Component({
     selector: 'app-task-inline-form-feature',
@@ -66,7 +59,6 @@ export class TaskInlineFormFeature {
     private store = inject(Store<TaskState>);
     private actions$ = inject(Actions);
 
-    board_id = input.required<string>();
     project_id = input.required<string>();
     column_id = input.required<string>();
     task_count = input.required<number>();
@@ -74,31 +66,21 @@ export class TaskInlineFormFeature {
     openedForm = signal<boolean>(false);
     loading = signal(false);
     errors = signal<string[]>([]);
-    taskFormModel = signal<TaskPayloadModel>({
-        title: '',
-        column_id: '',
-        project_id: '',
-        order: 0,
-    });
+    taskFormModel = signal<{ title: string }>({ title: '' });
 
     constructor() {
         this.actions$
             .pipe(ofType(actionTaskUpsert), takeUntilDestroyed())
             .subscribe(() => this._reset());
 
-        this.actions$.pipe(ofType(actionTaskFailed), takeUntilDestroyed()).subscribe((data) => {
+        this.actions$.pipe(ofType(actionTaskFailed)).subscribe((data) => {
             this.errors.set([data.error.toString()]);
             this.loading.set(false);
         });
 
         effect(() => {
             if (!this.openedForm()) {
-                this.taskForm().value.set({
-                    title: '',
-                    column_id: '',
-                    project_id: '',
-                    order: 0,
-                });
+                this.taskForm().value.set({ title: '' });
                 this.errors.set([]);
             }
         });
@@ -111,29 +93,20 @@ export class TaskInlineFormFeature {
     submit(event: Event) {
         event.preventDefault();
         const formData = this.taskFormModel();
-        const payload = {
+        const data = {
             title: formData.title,
-            order: formData.order,
+            order: this.task_count(),
             column_id: this.column_id(),
-            project_id: this.board_id(),
+            project_id: this.project_id(),
         };
-        this.store.dispatch(
-            actionTaskCreate({
-                data: payload,
-            }),
-        );
+        this.store.dispatch(actionTaskCreate({ data }));
     }
 
     private _reset() {
         this.loading.set(false);
         this.openedForm.set(false);
         this.errors.set([]);
-        this.taskForm().value.set({
-            title: '',
-            column_id: '',
-            project_id: '',
-            order: 0,
-        });
+        this.taskForm().value.set({ title: '' });
         this.errors.set([]);
     }
 }

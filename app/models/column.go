@@ -16,9 +16,6 @@ type Column struct {
 	BoardID uuid.UUID `gorm:"type:uuid;not null;index" json:"board_id"`
 	Board   Board     `json:"-"`
 
-	ProjectID uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
-	Project   Project   `json:"-"`
-
 	Tasks []Task `json:"tasks"`
 
 	CreatedAt time.Time `json:"created_at"`

@@ -35,14 +35,13 @@
 
                     <app-task-inline-form-feature
                         [column_id]="c.id"
-                        [project_id]="c.project_id"
-                        [board_id]="c.board_id"
+                        [project_id]="board.id"
                         [task_count]="c.tasks.length"
                     />
                 </div>
             }
 
-            <app-new-column-form [boardId]="board.id" [columns_length]="columns.length" />
+            <app-new-column-form [board_id]="board.id" [columns_length]="columns.length" />
         }
     </div>
 </div>

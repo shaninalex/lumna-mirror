@@ -71,7 +71,7 @@ html {
 }
 
 .input {
-    @apply border block w-full rounded-lg px-2 py-1 border-gray-400 dark:border-slate-700;
+    @apply border block w-full rounded-lg px-2 py-1 border-gray-400 dark:border-slate-500;
 }
 
 @keyframes rotating {

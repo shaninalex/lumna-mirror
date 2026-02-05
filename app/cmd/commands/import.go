@@ -105,10 +105,9 @@ func NewImportRootCmd() *cobra.Command {
 					fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
 					for li, _list := range _board.Columns {
 						column := models.Column{
-							Title:     _list.Title,
-							BoardID:   board.ID,
-							ProjectID: project.ID,
-							Order:     uint(li),
+							Title:   _list.Title,
+							BoardID: board.ID,
+							Order:   uint(li),
 						}
 						if result := c.DB().Create(&column); result.Error != nil {
 							panic(result.Error)
@@ -116,11 +115,10 @@ func NewImportRootCmd() *cobra.Command {
 						fmt.Printf("\t\t%d. List: %s\n", li, column.Title)
 						for ti, _task := range _list.Tasks {
 							task := models.Task{
-								Title:     _task.Title,
-								ColumnID:  column.ID,
-								Order:     uint(ti),
-								ProjectID: project.ID,
-								Body:      _task.Body,
+								Title:    _task.Title,
+								ColumnID: column.ID,
+								Order:    uint(ti),
+								Body:     _task.Body,
 							}
 							if result := c.DB().Create(&task); result.Error != nil {
 								panic(result.Error)

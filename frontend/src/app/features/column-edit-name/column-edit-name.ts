@@ -64,12 +64,7 @@ export class ColumnEditNameFeature {
     column = input.required<ColumnModel>();
     formOpen = signal(false);
     loading = signal(false);
-    columnFormModel = signal<ColumnPayloadModel>({
-        title: '',
-        order: 0,
-        board_id: '',
-        project_id: '',
-    });
+    columnFormModel = signal<{ title: string }>({ title: '' });
 
     listForm = form(this.columnFormModel, (schemaPath) => {
         required(schemaPath.title, { message: 'Name is required' });
@@ -79,9 +74,6 @@ export class ColumnEditNameFeature {
         effect(() =>
             this.columnFormModel.set({
                 title: this.column().title,
-                order: this.column().order,
-                board_id: this.column().board_id,
-                project_id: this.column().project_id,
             }),
         );
 
@@ -106,11 +98,16 @@ export class ColumnEditNameFeature {
     submit(event: Event): void {
         event.preventDefault();
         this.loading.set(true);
+        const data = this.columnFormModel();
 
         this.store.dispatch(
             actionColumnPatch({
                 columnId: this.column().id,
-                data: this.columnFormModel(),
+                data: {
+                    title: data.title,
+                    order: this.column().order,
+                    board_id: this.column().board_id,
+                },
             }),
         );
     }

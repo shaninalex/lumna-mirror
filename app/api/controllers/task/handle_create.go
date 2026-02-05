@@ -19,6 +19,7 @@ func (s *TaskController) handleCreateTask(c *gin.Context) {
 	task, err := s.taskService.CreateTask(c.Request.Context(), &payload)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
+		return
 	}
 
 	utils.Success(c, task)

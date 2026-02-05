@@ -61,18 +61,13 @@ export class NewColumnForm implements OnInit {
     private actions$ = inject(Actions);
     private store = inject(Store<ColumnState>);
 
-    @Input() boardId: string;
+    @Input() board_id: string;
     columns_length = input.required<number>();
 
     openedForm = signal<boolean>(false);
     loading = signal(false);
     errors = signal<string[]>([]);
-    columnFormModel = signal<ColumnPayloadModel>({
-        title: '',
-        order: 0,
-        board_id: '',
-        project_id: '',
-    });
+    columnFormModel = signal<{ title: string }>({ title: '' });
 
     columnForm = form(this.columnFormModel, (schemaPath) => {
         required(schemaPath.title, { message: 'Name is required' });
@@ -85,12 +80,7 @@ export class NewColumnForm implements OnInit {
                 tap(() => {
                     this.loading.set(false);
                     this.openedForm.set(false);
-                    this.columnForm().value.set({
-                        title: '',
-                        order: 0,
-                        board_id: '',
-                        project_id: '',
-                    });
+                    this.columnForm().value.set({ title: '' });
                 }),
             )
             .subscribe();
@@ -112,8 +102,14 @@ export class NewColumnForm implements OnInit {
 
         if (!formData.title) return;
 
-        formData.order = this.columns_length() ? this.columns_length() : 0;
-        formData.board_id = this.boardId;
-        this.store.dispatch(actionColumnCreate({ data: formData }));
+        this.store.dispatch(
+            actionColumnCreate({
+                data: {
+                    title: formData.title,
+                    order: this.columns_length() ? this.columns_length() : 0,
+                    board_id: this.board_id,
+                },
+            }),
+        );
     }
 }

@@ -29,7 +29,6 @@ func NewMigrateRootCmd() *cobra.Command {
 				&models.Board{},
 				&models.Column{},
 				&models.Task{},
-				&models.Note{},
 			); err != nil {
 				log.Fatal(err)
 			}

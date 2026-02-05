@@ -45,10 +45,9 @@ type TaskPayload struct {
 
 func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
 	task := models.Task{
-		Title:     payload.Title,
-		Order:     payload.Order,
-		ProjectID: payload.ProjectID,
-		ColumnID:  payload.ColumnID,
+		Title:    payload.Title,
+		Order:    payload.Order,
+		ColumnID: payload.ColumnID,
 	}
 	if result := db.GetDB(ctx).Create(&task); result.Error != nil {
 		return nil, result.Error

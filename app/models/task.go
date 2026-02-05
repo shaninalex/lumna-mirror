@@ -9,17 +9,16 @@ import (
 )
 
 type Task struct {
-	ID    uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
-	Title string    `gorm:"not null" json:"title"`
-	Order uint      `json:"order"`
-	Done  bool      `json:"done"`
-	Body  string    `json:"body"`
-
-	ProjectID uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
-	ColumnID  uuid.UUID `gorm:"type:uuid;not null;index" json:"column_id"`
-
+	ID        uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
+	Title     string    `gorm:"not null" json:"title"`
+	Order     uint      `json:"order"`
+	Done      bool      `json:"done"`
+	Body      string    `json:"body"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+
+	ColumnID uuid.UUID `gorm:"type:uuid;not null;index" json:"column_id"`
+	Column   Column    `json:"-"`
 }
 
 func (s *Task) BeforeCreate(tx *gorm.DB) error {

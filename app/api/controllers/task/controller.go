@@ -18,5 +18,5 @@ func NewTaskController() *TaskController {
 func RegisterTaskController(router *gin.RouterGroup) {
 	controller := NewTaskController()
 
-	router.POST("task", controller.handleCreateTask)
+	router.POST("tasks", controller.handleCreateTask)
 }
