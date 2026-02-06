@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/internal/client"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
@@ -33,33 +34,33 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			_ = c.Provide(persistence.ProvideDB)
 			_ = c.Provide(web.NewWebApplication)
 
-			router := web.NewWebApplication(client)
-			srv := &http.Server{
-				Addr:    fmt.Sprintf(":%d", client.Config().Serve.Port),
-				Handler: router,
-			}
-
-			log.Printf("Run server on :%d\n", client.Config().Serve.Port)
-			go func() {
-				if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-					log.Fatalf("listen: %s\n", err)
+			c.Invoke(func(router *gin.Engine, config *config.Config) {
+				srv := &http.Server{
+					Addr:    fmt.Sprintf(":%d", client.Config().Serve.Port),
+					Handler: router,
 				}
-			}()
 
-			quit := make(chan os.Signal, 1)
-			signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-			<-quit
-			log.Println("Shutting down server...")
+				log.Printf("Run server on :%d\n", client.Config().Serve.Port)
+				go func() {
+					if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+						log.Fatalf("listen: %s\n", err)
+					}
+				}()
 
-			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancel()
+				quit := make(chan os.Signal, 1)
+				signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+				<-quit
+				log.Println("Shutting down server...")
 
-			if err := srv.Shutdown(ctx); err != nil {
-				log.Fatal("Server forced to shutdown:", err)
-			}
+				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+				defer cancel()
 
-			log.Println("Server exiting")
+				if err := srv.Shutdown(ctx); err != nil {
+					log.Fatal("Server forced to shutdown:", err)
+				}
 
+				log.Println("Server exiting")
+			})
 		},
 	}
 
