@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
@@ -35,7 +35,7 @@ func (s *BoardController) ChangeOrder(c *gin.Context) {
 	}
 
 	ctx := c.Request.Context()
-	_db := db.GetDB(ctx)
+	_db := persistence.GetDB(ctx)
 
 	if payload.MoveType == "task" {
 		// move in a single column

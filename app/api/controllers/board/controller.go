@@ -27,5 +27,4 @@ func RegisterBoardController(router *gin.RouterGroup) {
 	router.PATCH("board/:boardId", controller.Patch)
 	router.DELETE("board/:boardId", controller.Delete)
 	router.PATCH("board/:boardId/order", controller.ChangeOrder)
-
 }

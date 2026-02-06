@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/internal/auth"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
@@ -32,7 +32,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 
 	// find existed refresh token
 	var dbRefreshToken *models.RefreshToken
-	if result := db.GetDB(c.Request.Context()).
+	if result := persistence.GetDB(c.Request.Context()).
 		Preload("Identity").
 		Where("hash = ?", auth.ToHashToken(refreshCookie)).
 		First(&dbRefreshToken); result.Error != nil {
@@ -69,7 +69,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 	}
 
 	// Delete existed refresh tokens
-	if result := db.GetDB(c.Request.Context()).
+	if result := persistence.GetDB(c.Request.Context()).
 		Where("identity_id = ?", dbRefreshToken.IdentityID.String()).
 		Delete(&dbRefreshToken); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, err)
@@ -77,7 +77,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 	}
 
 	// create new one
-	if result := db.GetDB(c.Request.Context()).Create(&rt); result.Error != nil {
+	if result := persistence.GetDB(c.Request.Context()).Create(&rt); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, result.Error)
 		return
 	}

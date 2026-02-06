@@ -7,7 +7,7 @@ import (
 	"gitlab.com/shaninalex/lumna"
 )
 
-func NewRouter() *gin.Engine {
+func NewDefaultRouter() *gin.Engine {
 	router := gin.Default()
 
 	router.RedirectTrailingSlash = false

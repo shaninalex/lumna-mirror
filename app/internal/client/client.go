@@ -6,8 +6,8 @@ import (
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/internal"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
 	"gitlab.com/shaninalex/lumna/app/internal/logger"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gorm.io/gorm"
 )
 
@@ -29,7 +29,7 @@ func (s *Client) Config() *config.Config {
 }
 
 func (s *Client) DB() *gorm.DB {
-	return db.GetDB(s.ctx)
+	return persistence.GetDB(s.ctx)
 }
 
 func (s *Client) Logger() logger.Logger {
@@ -45,11 +45,11 @@ func NewClientForCLI(cmd *cobra.Command) (*Client, error) {
 	cnf := config.ReadConfig(configPath)
 	// NOTE: context is not for data, it's about lifespan
 	ctx := context.WithValue(cmd.Context(), internal.ContextConfig, cnf)
-	ctx = context.WithValue(ctx, internal.ContextDB, db.Connect(cnf.Database.Url))
+	ctx = context.WithValue(ctx, internal.ContextDB, persistence.Connect(cnf.Database.Url))
 
 	client := &Client{
 		ctx:    ctx,
-		logger: logger.NewSimpleLogger(ctx),
+		logger: logger.ProvideLogger(ctx),
 	}
 	return client, nil
 }

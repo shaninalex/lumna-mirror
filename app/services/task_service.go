@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
@@ -16,7 +16,7 @@ func NewTaskService() *TaskService {
 }
 
 func (s *TaskService) GetTask(ctx context.Context, taskID uuid.UUID) (*models.Task, error) {
-	database := db.GetDB(ctx)
+	database := persistence.GetDB(ctx)
 	task := &models.Task{}
 	if result := database.Where("id = ?", taskID).First(&task); result.Error != nil {
 		return nil, result.Error
@@ -25,7 +25,7 @@ func (s *TaskService) GetTask(ctx context.Context, taskID uuid.UUID) (*models.Ta
 }
 
 func (s *TaskService) ReorderTask(ctx context.Context, taskID uuid.UUID, boardListID uuid.UUID, order uint) error {
-	database := db.GetDB(ctx)
+	database := persistence.GetDB(ctx)
 	return database.Model(&models.Task{}).
 		Where("id = ?", taskID).
 		Updates(map[string]any{
@@ -49,7 +49,7 @@ func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		Order:    payload.Order,
 		ColumnID: payload.ColumnID,
 	}
-	if result := db.GetDB(ctx).Create(&task); result.Error != nil {
+	if result := persistence.GetDB(ctx).Create(&task); result.Error != nil {
 		return nil, result.Error
 	}
 	return &task, nil

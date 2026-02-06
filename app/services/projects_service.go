@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
@@ -16,7 +16,7 @@ func NewProjectService() *ProjectService {
 }
 
 func (s *ProjectService) Get(ctx context.Context, id uuid.UUID) (*models.Project, error) {
-	database := db.GetDB(ctx)
+	database := persistence.GetDB(ctx)
 	project := &models.Project{}
 	if result := database.Preload("Boards").Where("id = ?", id.String()).First(&project); result.Error != nil {
 		return nil, result.Error
@@ -25,7 +25,7 @@ func (s *ProjectService) Get(ctx context.Context, id uuid.UUID) (*models.Project
 }
 
 func (s *ProjectService) List(ctx context.Context) ([]models.Project, error) {
-	database := db.GetDB(ctx)
+	database := persistence.GetDB(ctx)
 	projects := []models.Project{}
 	if result := database.Preload("Boards").Find(&projects); result.Error != nil {
 		return nil, result.Error
@@ -37,7 +37,7 @@ func (s *ProjectService) Create(ctx context.Context, title string, userID uuid.U
 	project := models.Project{
 		Title: title,
 	}
-	if result := db.GetDB(ctx).Create(&project); result.Error != nil {
+	if result := persistence.GetDB(ctx).Create(&project); result.Error != nil {
 		return nil, result.Error
 	}
 
@@ -45,7 +45,7 @@ func (s *ProjectService) Create(ctx context.Context, title string, userID uuid.U
 }
 
 func (s *ProjectService) Update(ctx context.Context, projectID uuid.UUID, title string) (*models.Project, error) {
-	database := db.GetDB(ctx)
+	database := persistence.GetDB(ctx)
 	project := models.Project{}
 	if result := database.Where("id = ?", projectID).First(&project); result.Error != nil {
 		return nil, result.Error
@@ -61,7 +61,7 @@ func (s *ProjectService) Update(ctx context.Context, projectID uuid.UUID, title 
 }
 
 func (s *ProjectService) Delete(ctx context.Context, id uuid.UUID) error {
-	database := db.GetDB(ctx)
+	database := persistence.GetDB(ctx)
 	if result := database.Where("id = ?", id).Delete(&models.Project{}); result.Error != nil {
 		return result.Error
 	}

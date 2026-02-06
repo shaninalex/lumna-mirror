@@ -2,11 +2,13 @@ package commands
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/internal/client"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"go.uber.org/dig"
+	"gorm.io/gorm"
 )
 
 func NewProjectsListCommand() *cobra.Command {
@@ -14,29 +16,38 @@ func NewProjectsListCommand() *cobra.Command {
 		Use:   "list",
 		Short: "List projects",
 		Run: func(cmd *cobra.Command, args []string) {
-			c, err := client.NewClientForCLI(cmd)
+			c := dig.New()
+			configPath, err := cmd.Flags().GetString("config")
 			if err != nil {
-				log.Fatal(err)
-			}
-			db := c.DB()
-
-			projects := []models.Project{}
-
-			if result := db.Preload("Boards").Find(&projects); result.Error != nil {
-				panic(result.Error)
+				panic(err)
 			}
 
-			for i, p := range projects {
-				fmt.Println(i, p.String())
-				for _, b := range p.Boards {
-					fmt.Println("\t\t", b.String())
-				}
-				fmt.Println()
-			}
+			_ = c.Provide(config.ProvideConfig(configPath))
+			_ = c.Provide(persistence.ProvideDB)
 
-			fmt.Println("Total projects: ", len(projects))
+			if err := c.Invoke(projectsList); err != nil {
+				panic(err)
+			}
 		},
 	}
 
 	return cmd
+}
+
+func projectsList(db *gorm.DB) {
+	projects := []models.Project{}
+
+	if result := db.Preload("Boards").Find(&projects); result.Error != nil {
+		panic(result.Error)
+	}
+
+	for i, p := range projects {
+		fmt.Println(i, p.String())
+		for _, b := range p.Boards {
+			fmt.Println("\t\t", b.String())
+		}
+		fmt.Println()
+	}
+
+	fmt.Println("Total projects: ", len(projects))
 }

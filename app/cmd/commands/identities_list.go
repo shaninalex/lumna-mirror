@@ -2,11 +2,13 @@ package commands
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/internal/client"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"go.uber.org/dig"
+	"gorm.io/gorm"
 )
 
 func NewIdentitiesListCmd() *cobra.Command {
@@ -14,21 +16,31 @@ func NewIdentitiesListCmd() *cobra.Command {
 		Use:   "list",
 		Short: "Identities list",
 		Run: func(cmd *cobra.Command, args []string) {
-			c, err := client.NewClientForCLI(cmd)
+			c := dig.New()
+			configPath, err := cmd.Flags().GetString("config")
 			if err != nil {
-				log.Fatal(err)
-			}
-			db := c.DB()
-			identities := []models.Identity{}
-			if result := db.Find(&identities); result.Error != nil {
-				panic(result.Error)
+				panic(err)
 			}
 
-			for i, identity := range identities {
-				fmt.Println(i+1, identity.String())
+			_ = c.Provide(config.ProvideConfig(configPath))
+			_ = c.Provide(persistence.ProvideDB)
+
+			if err := c.Invoke(identitiesList); err != nil {
+				panic(err)
 			}
 		},
 	}
 
 	return cmd
+}
+
+func identitiesList(db *gorm.DB) {
+	identities := []models.Identity{}
+	if result := db.Find(&identities); result.Error != nil {
+		panic(result.Error)
+	}
+
+	for i, identity := range identities {
+		fmt.Printf("%d: %s\n", i+1, identity.String())
+	}
 }

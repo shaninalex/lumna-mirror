@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
@@ -27,8 +27,9 @@ func (s *BoardController) Patch(c *gin.Context) {
 		return
 	}
 
+	// use board service
 	var board models.Board
-	if result := db.GetDB(c.Request.Context()).Where("id = ?", boardId).First(&board); result.Error != nil {
+	if result := persistence.GetDB(c.Request.Context()).Where("id = ?", boardId).First(&board); result.Error != nil {
 		log.Println(result.Error)
 		utils.Error(c, http.StatusBadRequest, err)
 		return
@@ -36,7 +37,7 @@ func (s *BoardController) Patch(c *gin.Context) {
 
 	board.Title = payload.Title
 
-	if result := db.GetDB(c.Request.Context()).Save(&board); result.Error != nil {
+	if result := persistence.GetDB(c.Request.Context()).Save(&board); result.Error != nil {
 		log.Println(result.Error)
 		utils.Error(c, http.StatusBadRequest, err)
 		return

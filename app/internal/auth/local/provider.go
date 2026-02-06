@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
@@ -40,7 +40,7 @@ func (s *LocalAuthProvider) Name() string {
 var UserNotFoundError = errors.New("user not found")
 
 func (s *LocalAuthProvider) Authenticate(ctx context.Context, payload *PasswordCredentials) (*models.Identity, error) {
-	database := db.GetDB(ctx)
+	database := persistence.GetDB(ctx)
 	credentials := models.Credential{}
 	if result := database.Preload("Identity").First(&credentials, "email = ?", payload.Email); result.Error != nil {
 		if result.Error.Error() == "record not found" {

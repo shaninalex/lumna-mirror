@@ -1,9 +1,10 @@
-package db
+package persistence
 
 import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/internal"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -28,3 +29,9 @@ func GetDB(ctx context.Context) *gorm.DB {
 	}
 	return conn
 }
+
+func ProvideDB(config *config.Config) *gorm.DB {
+	return Connect(config.Database.Url)
+}
+
+// 	ctx = context.WithValue(ctx, internal.ContextDB, db.Connect(cnf.Database.Url))

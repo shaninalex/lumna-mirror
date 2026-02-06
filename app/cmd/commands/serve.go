@@ -12,7 +12,10 @@ import (
 
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/internal/client"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/web"
+	"go.uber.org/dig"
 )
 
 func NewRootServeCommand() (cmd *cobra.Command) {
@@ -21,10 +24,14 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 		Short: "Run webserver",
 		Args:  cobra.ArbitraryArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			client, err := client.NewClientForCLI(cmd)
+			c := dig.New()
+			configPath, err := cmd.Flags().GetString("config")
 			if err != nil {
-				log.Fatal(err)
+				panic(err)
 			}
+			_ = c.Provide(config.ProvideConfig(configPath))
+			_ = c.Provide(persistence.ProvideDB)
+			_ = c.Provide(web.NewWebApplication)
 
 			router := web.NewWebApplication(client)
 			srv := &http.Server{

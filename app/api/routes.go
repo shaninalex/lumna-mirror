@@ -9,10 +9,9 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
 	"gitlab.com/shaninalex/lumna/app/api/middlewares"
-	"gitlab.com/shaninalex/lumna/app/internal/client"
 )
 
-func RegisterApiV1Routes(client *client.Client, baseRouter *gin.Engine) {
+func RegisterApiV1Routes(baseRouter *gin.Engine) {
 	// base API middlewares
 	baseRouter.Use(middlewares.CORSMiddleware())
 

@@ -5,8 +5,11 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/internal/client"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"go.uber.org/dig"
+	"gorm.io/gorm"
 )
 
 func NewColumnCreateCmd() *cobra.Command {
@@ -15,25 +18,36 @@ func NewColumnCreateCmd() *cobra.Command {
 		Short: "Create column",
 		Args:  cobra.MinimumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			c, err := client.NewClientForCLI(cmd)
+			c := dig.New()
+			configPath, err := cmd.Flags().GetString("config")
 			if err != nil {
 				panic(err)
 			}
-			db := c.DB()
+			_ = c.Provide(config.ProvideConfig(configPath))
+			_ = c.Provide(persistence.ProvideDB)
+
 			boardID := uuid.MustParse(args[0])
 			title := args[1]
-
 			column := models.Column{
 				Title:   title,
 				BoardID: boardID,
 			}
-			if result := db.Create(&column); result.Error != nil {
-				panic(result.Error)
+			if err := c.Invoke(createColumn(column)); err != nil {
+				panic(err)
 			}
-
-			log.Println("Column created with ID:", column.ID.String())
 		},
 	}
 
 	return cmd
+}
+
+func createColumn(column models.Column) func(db *gorm.DB) {
+	return func(db *gorm.DB) {
+
+		if result := db.Create(&column); result.Error != nil {
+			panic(result.Error)
+		}
+
+		log.Println("Column created with ID:", column.ID.String())
+	}
 }
