@@ -15,11 +15,10 @@ func (s *BoardController) Delete(c *gin.Context) {
 		return
 	}
 
-	if err := s.boardService.BoardDelete(c.Request.Context(), boardId); err != nil {
+	if err := s.boardService.Delete(c.Request.Context(), boardId); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
 	utils.Success(c, nil, "Board deleted")
 }
-

@@ -1,3 +1,31 @@
+## 0.30.0 (2026-02-07)
+
+### Feat
+
+- **di**: services providers
+- **di**: wiring up with dig
+
+## 0.29.0 (2026-02-05)
+
+### Feat
+
+- **ui**: update column name
+- **ui**: add + delete column
+- **ui**: create column
+- **ui**: delete board
+- **ui**: update board ui + api
+
+### Fix
+
+- **ui**: create task, refactor models
+- **ui**: create board
+- **ui**: delete project + styles
+- **ui**: update project
+
+### Refactor
+
+- **ui**: create project form
+
 ## 0.28.0 (2026-02-02)
 
 ### Feat

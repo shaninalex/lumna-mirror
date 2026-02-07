@@ -8,10 +8,13 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
-	"gitlab.com/shaninalex/lumna/app/internal/client"
+	"gitlab.com/shaninalex/lumna/app/internal/auth"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/internal/utils"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"go.uber.org/dig"
+	"gorm.io/gorm"
 )
 
 type MockDbDataSchema struct {
@@ -47,10 +50,15 @@ func NewImportRootCmd() *cobra.Command {
 		Short: "Import db",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			c, err := client.NewClientForCLI(cmd)
+			c := dig.New()
+			configPath, err := cmd.Flags().GetString("config")
 			if err != nil {
 				panic(err)
 			}
+
+			_ = c.Provide(config.ProvideConfig(configPath))
+			_ = c.Provide(persistence.ProvideDB)
+
 			// read resources/mock_db.json
 			var payload MockDbDataSchema
 			data, err := os.ReadFile(args[0])
@@ -61,74 +69,82 @@ func NewImportRootCmd() *cobra.Command {
 				panic(err)
 			}
 
-			// create identity+credential
-			for idx, idn := range payload.Identities {
-				identity := models.Identity{
-					ID:       uuid.MustParse(idn.ID),
-					Email:    idn.Email,
-					FullName: idn.FullName,
-				}
-				if result := c.DB().Create(&identity); result.Error != nil {
-					panic(result.Error)
-				}
-				fmt.Printf("%d. Identity: %s\n", idx, identity.Email)
-				for cidx, crd := range idn.Credentials {
-					pwd, _ := local.CreatePasswordHash(crd.Password)
-					credential := models.Credential{
-						IdentityID:   identity.ID,
-						Provider:     crd.Provider,
-						PasswordHash: utils.Pointer(pwd),
-						Email:        &idn.Email,
-					}
-					if result := c.DB().Create(&credential); result.Error != nil {
-						panic(result.Error)
-					}
-					fmt.Printf("\t%d. credential for: %s\n", cidx, identity.Email)
-				}
-			}
-
-			// create projects
-			for pidx, _project := range payload.Projects {
-				project := models.Project{Title: _project.Title}
-				if result := c.DB().Create(&project); result.Error != nil {
-					panic(result.Error)
-				}
-				fmt.Printf("%d. Project: %s\n", pidx, project.Title)
-				for bi, _board := range _project.Boards {
-					board := models.Board{
-						Title:     _board.Title,
-						ProjectID: project.ID,
-					}
-					if result := c.DB().Create(&board); result.Error != nil {
-						panic(result.Error)
-					}
-					fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
-					for li, _list := range _board.Columns {
-						column := models.Column{
-							Title:   _list.Title,
-							BoardID: board.ID,
-							Order:   uint(li),
-						}
-						if result := c.DB().Create(&column); result.Error != nil {
-							panic(result.Error)
-						}
-						fmt.Printf("\t\t%d. List: %s\n", li, column.Title)
-						for ti, _task := range _list.Tasks {
-							task := models.Task{
-								Title:    _task.Title,
-								ColumnID: column.ID,
-								Order:    uint(ti),
-								Body:     _task.Body,
-							}
-							if result := c.DB().Create(&task); result.Error != nil {
-								panic(result.Error)
-							}
-							fmt.Printf("\t\t\t%d. Task: %s\n", ti, task.Title)
-						}
-					}
-				}
+			if err := c.Invoke(importDB(payload)); err != nil {
+				panic(err)
 			}
 		},
 	}
 	return cmd
+}
+
+func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
+	return func(database *gorm.DB) {
+		// create identity+credential
+		for idx, idn := range payload.Identities {
+			identity := models.Identity{
+				ID:       uuid.MustParse(idn.ID),
+				Email:    idn.Email,
+				FullName: idn.FullName,
+			}
+			if result := database.Create(&identity); result.Error != nil {
+				panic(result.Error)
+			}
+			fmt.Printf("%d. Identity: %s\n", idx, identity.Email)
+			for cidx, crd := range idn.Credentials {
+				pwd, _ := auth.CreatePasswordHash(crd.Password)
+				credential := models.Credential{
+					IdentityID:   identity.ID,
+					Provider:     crd.Provider,
+					PasswordHash: utils.Pointer(pwd),
+					Email:        &idn.Email,
+				}
+				if result := database.Create(&credential); result.Error != nil {
+					panic(result.Error)
+				}
+				fmt.Printf("\t%d. credential for: %s\n", cidx, identity.Email)
+			}
+		}
+
+		// create projects
+		for pidx, _project := range payload.Projects {
+			project := models.Project{Title: _project.Title}
+			if result := database.Create(&project); result.Error != nil {
+				panic(result.Error)
+			}
+			fmt.Printf("%d. Project: %s\n", pidx, project.Title)
+			for bi, _board := range _project.Boards {
+				board := models.Board{
+					Title:     _board.Title,
+					ProjectID: project.ID,
+				}
+				if result := database.Create(&board); result.Error != nil {
+					panic(result.Error)
+				}
+				fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
+				for li, _list := range _board.Columns {
+					column := models.Column{
+						Title:   _list.Title,
+						BoardID: board.ID,
+						Order:   uint(li),
+					}
+					if result := database.Create(&column); result.Error != nil {
+						panic(result.Error)
+					}
+					fmt.Printf("\t\t%d. List: %s\n", li, column.Title)
+					for ti, _task := range _list.Tasks {
+						task := models.Task{
+							Title:    _task.Title,
+							ColumnID: column.ID,
+							Order:    uint(ti),
+							Body:     _task.Body,
+						}
+						if result := database.Create(&task); result.Error != nil {
+							panic(result.Error)
+						}
+						fmt.Printf("\t\t\t%d. Task: %s\n", ti, task.Title)
+					}
+				}
+			}
+		}
+	}
 }

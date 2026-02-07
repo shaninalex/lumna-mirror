@@ -5,14 +5,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
-	"gitlab.com/shaninalex/lumna/app/models"
 )
 
 func (s *AuthController) handleLogout(c *gin.Context) {
 	userID, _ := utils.GetUserID(c)
-	if result := db.GetDB(c.Request.Context()).Where("identity_id = ?", userID.String()).Delete(&models.RefreshToken{}); result.Error != nil {
-		utils.Error(c, http.StatusBadRequest, result.Error)
+
+	if err := s.authTokenService.DeleteRefreshToken(c.Request.Context(), userID); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 

@@ -2,29 +2,33 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
+	"gitlab.com/shaninalex/lumna/app/internal/auth"
+	"gitlab.com/shaninalex/lumna/app/services"
 )
 
 type AuthController struct {
-	localProvider *local.LocalAuthProvider
+	localProvider    *auth.EmailAuthProvider
+	authTokenService *services.AuthTokenService
 }
 
-func NewAuthContoller() *AuthController {
+func NewAuthContoller(
+	authProvider *auth.EmailAuthProvider,
+	authTokenService *services.AuthTokenService,
+) *AuthController {
 	s := &AuthController{
-		localProvider: local.NewLocalAuthProvider(),
+		localProvider:    authProvider,
+		authTokenService: authTokenService,
 	}
 
 	return s
 }
 
-func RegisterAuthController(router *gin.RouterGroup) {
-	controller := &AuthController{}
-
-	router.POST("/login", controller.handleLogin)
-	router.GET("/logout", controller.handleLogout)
+func (s *AuthController) Register(router *gin.RouterGroup) {
+	router.POST("/login", s.handleLogin)
+	router.GET("/logout", s.handleLogout)
 
 	// refresh require authenticated request to get user id
-	router.GET("/refresh", controller.handleRefresh)
+	router.GET("/refresh", s.handleRefresh)
 
 	// router.GET("/api/v1/auth/oauth/github", nil)
 	// router.GET("/api/v1/auth/oauth/github/callback", nil)

@@ -5,20 +5,18 @@ import (
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-func RegisterUserController(router *gin.RouterGroup) {
-	controller := NewUserContoller()
-
-	router.GET("/user/me", controller.Me)
-}
-
 type UserController struct {
 	userService *services.UserService
 }
 
-func NewUserContoller() *UserController {
+func NewUserController(userService *services.UserService) *UserController {
 	s := &UserController{
-		userService: &services.UserService{},
+		userService: userService,
 	}
 
 	return s
+}
+
+func (s *UserController) Register(router *gin.RouterGroup) {
+	router.GET("/user/me", s.Me)
 }

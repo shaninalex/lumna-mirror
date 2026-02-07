@@ -10,9 +10,12 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/internal/client"
-	"gitlab.com/shaninalex/lumna/app/web"
+	"gitlab.com/shaninalex/lumna/app/api"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/internal/persistence"
+	"go.uber.org/dig"
 )
 
 func NewRootServeCommand() (cmd *cobra.Command) {
@@ -21,38 +24,49 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 		Short: "Run webserver",
 		Args:  cobra.ArbitraryArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			client, err := client.NewClientForCLI(cmd)
+			c := dig.New()
+			configPath, err := cmd.Flags().GetString("config")
 			if err != nil {
-				log.Fatal(err)
+				panic(err)
+			}
+			_ = c.Provide(config.ProvideConfig(configPath))
+			_ = c.Provide(persistence.ProvideDB)
+
+			// Providing api module
+			if err := api.Module(c); err != nil {
+				panic(err)
 			}
 
-			router := web.NewWebApplication(client)
-			srv := &http.Server{
-				Addr:    fmt.Sprintf(":%d", client.Config().Serve.Port),
-				Handler: router,
-			}
-
-			log.Printf("Run server on :%d\n", client.Config().Serve.Port)
-			go func() {
-				if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-					log.Fatalf("listen: %s\n", err)
+			err = c.Invoke(func(router *gin.Engine, config *config.Config) {
+				srv := &http.Server{
+					Addr:    fmt.Sprintf(":%d", config.Serve.Port),
+					Handler: router,
 				}
-			}()
 
-			quit := make(chan os.Signal, 1)
-			signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-			<-quit
-			log.Println("Shutting down server...")
+				log.Printf("Run server on :%d\n", config.Serve.Port)
+				go func() {
+					if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+						log.Fatalf("listen: %s\n", err)
+					}
+				}()
 
-			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancel()
+				quit := make(chan os.Signal, 1)
+				signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+				<-quit
+				log.Println("Shutting down server...")
 
-			if err := srv.Shutdown(ctx); err != nil {
-				log.Fatal("Server forced to shutdown:", err)
+				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+				defer cancel()
+
+				if err := srv.Shutdown(ctx); err != nil {
+					log.Fatal("Server forced to shutdown:", err)
+				}
+
+				log.Println("Server exiting")
+			})
+			if err != nil {
+				panic(err)
 			}
-
-			log.Println("Server exiting")
-
 		},
 	}
 

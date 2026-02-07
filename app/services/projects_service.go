@@ -4,30 +4,29 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gorm.io/gorm"
 )
 
 type ProjectService struct {
+	db *gorm.DB
 }
 
-func NewProjectService() *ProjectService {
-	return &ProjectService{}
+func NewProjectService(db *gorm.DB) *ProjectService {
+	return &ProjectService{db: db}
 }
 
 func (s *ProjectService) Get(ctx context.Context, id uuid.UUID) (*models.Project, error) {
-	database := db.GetDB(ctx)
 	project := &models.Project{}
-	if result := database.Preload("Boards").Where("id = ?", id.String()).First(&project); result.Error != nil {
+	if result := s.db.WithContext(ctx).Preload("Boards").Where("id = ?", id.String()).First(&project); result.Error != nil {
 		return nil, result.Error
 	}
 	return project, nil
 }
 
 func (s *ProjectService) List(ctx context.Context) ([]models.Project, error) {
-	database := db.GetDB(ctx)
 	projects := []models.Project{}
-	if result := database.Preload("Boards").Find(&projects); result.Error != nil {
+	if result := s.db.WithContext(ctx).Preload("Boards").Find(&projects); result.Error != nil {
 		return nil, result.Error
 	}
 	return projects, nil
@@ -37,7 +36,7 @@ func (s *ProjectService) Create(ctx context.Context, title string, userID uuid.U
 	project := models.Project{
 		Title: title,
 	}
-	if result := db.GetDB(ctx).Create(&project); result.Error != nil {
+	if result := s.db.WithContext(ctx).Create(&project); result.Error != nil {
 		return nil, result.Error
 	}
 
@@ -45,7 +44,7 @@ func (s *ProjectService) Create(ctx context.Context, title string, userID uuid.U
 }
 
 func (s *ProjectService) Update(ctx context.Context, projectID uuid.UUID, title string) (*models.Project, error) {
-	database := db.GetDB(ctx)
+	database := s.db.WithContext(ctx)
 	project := models.Project{}
 	if result := database.Where("id = ?", projectID).First(&project); result.Error != nil {
 		return nil, result.Error
@@ -61,8 +60,7 @@ func (s *ProjectService) Update(ctx context.Context, projectID uuid.UUID, title 
 }
 
 func (s *ProjectService) Delete(ctx context.Context, id uuid.UUID) error {
-	database := db.GetDB(ctx)
-	if result := database.Where("id = ?", id).Delete(&models.Project{}); result.Error != nil {
+	if result := s.db.WithContext(ctx).Where("id = ?", id).Delete(&models.Project{}); result.Error != nil {
 		return result.Error
 	}
 	return nil

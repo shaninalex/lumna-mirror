@@ -10,20 +10,21 @@ type ProjectController struct {
 	boardService   *services.BoardService
 }
 
-func NewProjectsController() *ProjectController {
+func NewProjectsController(
+	projectService *services.ProjectService,
+	boardService *services.BoardService,
+) *ProjectController {
 	s := &ProjectController{
-		projectService: services.NewProjectService(),
-		boardService:   services.NewBoardService(),
+		projectService: projectService,
+		boardService:   boardService,
 	}
 
 	return s
 }
 
-func RegisterProjectController(router *gin.RouterGroup) {
-	controller := NewProjectsController()
-
-	router.GET("/projects", controller.List)
-	router.POST("/projects", controller.Create)
-	router.PATCH("/project/:id", controller.Patch)
-	router.DELETE("/project/:id", controller.Delete)
+func (s *ProjectController) Register(router *gin.RouterGroup) {
+	router.GET("/projects", s.List)
+	router.POST("/projects", s.Create)
+	router.PATCH("/project/:id", s.Patch)
+	router.DELETE("/project/:id", s.Delete)
 }

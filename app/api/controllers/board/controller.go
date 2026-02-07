@@ -11,21 +11,22 @@ type BoardController struct {
 	taskService   *services.TaskService
 }
 
-func NewBoardController() *BoardController {
+func NewBoardController(
+	boardService *services.BoardService,
+	columnService *services.ColumnService,
+	taskService *services.TaskService,
+) *BoardController {
 	s := &BoardController{
-		boardService:  services.NewBoardService(),
-		columnService: services.NewColumnService(),
-		taskService:   services.NewTaskService(),
+		boardService:  boardService,
+		columnService: columnService,
+		taskService:   taskService,
 	}
 	return s
 }
 
-func RegisterBoardController(router *gin.RouterGroup) {
-	controller := NewBoardController()
-
-	router.POST("boards", controller.Create)
-	router.PATCH("board/:boardId", controller.Patch)
-	router.DELETE("board/:boardId", controller.Delete)
-	router.PATCH("board/:boardId/order", controller.ChangeOrder)
-
+func (s *BoardController) Register(router *gin.RouterGroup) {
+	router.POST("boards", s.Create)
+	router.PATCH("board/:boardId", s.Patch)
+	router.DELETE("board/:boardId", s.Delete)
+	router.PATCH("board/:boardId/order", s.ChangeOrder)
 }

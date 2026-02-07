@@ -4,29 +4,29 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"gitlab.com/shaninalex/lumna/app/internal/db"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gorm.io/gorm"
 )
 
 type TaskService struct {
+	db *gorm.DB
 }
 
-func NewTaskService() *TaskService {
-	return &TaskService{}
+func NewTaskService(db *gorm.DB) *TaskService {
+	return &TaskService{db: db}
 }
 
 func (s *TaskService) GetTask(ctx context.Context, taskID uuid.UUID) (*models.Task, error) {
-	database := db.GetDB(ctx)
 	task := &models.Task{}
-	if result := database.Where("id = ?", taskID).First(&task); result.Error != nil {
+	if result := s.db.WithContext(ctx).Where("id = ?", taskID).First(&task); result.Error != nil {
 		return nil, result.Error
 	}
 	return task, nil
 }
 
 func (s *TaskService) ReorderTask(ctx context.Context, taskID uuid.UUID, boardListID uuid.UUID, order uint) error {
-	database := db.GetDB(ctx)
-	return database.Model(&models.Task{}).
+	return s.db.WithContext(ctx).
+		Model(&models.Task{}).
 		Where("id = ?", taskID).
 		Updates(map[string]any{
 			"board_list_id": boardListID,
@@ -49,7 +49,7 @@ func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		Order:    payload.Order,
 		ColumnID: payload.ColumnID,
 	}
-	if result := db.GetDB(ctx).Create(&task); result.Error != nil {
+	if result := s.db.WithContext(ctx).Create(&task); result.Error != nil {
 		return nil, result.Error
 	}
 	return &task, nil

@@ -69,3 +69,9 @@ func GetConfig(ctx context.Context) *Config {
 	}
 	return cnf
 }
+
+func ProvideConfig(configPath string) func() *Config {
+	return func() *Config {
+		return ReadConfig(configPath)
+	}
+}

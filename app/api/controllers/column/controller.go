@@ -9,19 +9,17 @@ type ColumnController struct {
 	columnService *services.ColumnService
 }
 
-func NewColumnController() *ColumnController {
+func NewColumnController(columnService *services.ColumnService) *ColumnController {
 	s := &ColumnController{
-		columnService: services.NewColumnService(),
+		columnService: columnService,
 	}
 
 	return s
 }
 
-func RegisterColumnController(router *gin.RouterGroup) {
-	controller := NewColumnController()
-
-	router.GET("columns", controller.List)
-	router.POST("columns", controller.Create)
-	router.DELETE("column/:columnId", controller.Delete)
-	router.PATCH("column/:columnId", controller.Patch)
+func (s *ColumnController) Register(router *gin.RouterGroup) {
+	router.GET("columns", s.List)
+	router.POST("columns", s.Create)
+	router.DELETE("column/:columnId", s.Delete)
+	router.PATCH("column/:columnId", s.Patch)
 }

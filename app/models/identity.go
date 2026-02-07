@@ -33,5 +33,5 @@ func (u *Identity) BeforeUpdate(tx *gorm.DB) (err error) {
 }
 
 func (s *Identity) String() string {
-	return fmt.Sprintf("Identity id=%s title=%s", s.ID.String(), s.Email)
+	return fmt.Sprintf("Identity %s email=%s", s.ID.String(), s.Email)
 }

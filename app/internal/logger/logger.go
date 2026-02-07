@@ -15,7 +15,7 @@ type SimpleLogger struct {
 	queue chan string
 }
 
-func NewSimpleLogger(ctx context.Context) *SimpleLogger {
+func ProvideLogger(ctx context.Context) Logger {
 	l := SimpleLogger{
 		queue: make(chan string, 100),
 		ctx:   ctx,
