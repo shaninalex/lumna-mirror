@@ -11,6 +11,7 @@ import (
 
 func (s *AuthController) handleLogout(c *gin.Context) {
 	userID, _ := utils.GetUserID(c)
+	// TODO: move to auth service. Do not call db in handlers directly!
 	if result := persistence.GetDB(c.Request.Context()).Where("identity_id = ?", userID.String()).Delete(&models.RefreshToken{}); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, result.Error)
 		return

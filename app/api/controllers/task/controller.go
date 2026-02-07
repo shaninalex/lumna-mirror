@@ -9,14 +9,12 @@ type TaskController struct {
 	taskService *services.TaskService
 }
 
-func NewTaskController() *TaskController {
+func NewTaskController(taskService *services.TaskService) *TaskController {
 	return &TaskController{
-		taskService: services.NewTaskService(),
+		taskService: taskService,
 	}
 }
 
-func RegisterTaskController(router *gin.RouterGroup) {
-	controller := NewTaskController()
-
-	router.POST("tasks", controller.handleCreateTask)
+func (s *TaskController) Register(router *gin.RouterGroup) {
+	router.POST("tasks", s.handleCreateTask)
 }

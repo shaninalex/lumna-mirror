@@ -1,0 +1,65 @@
+package api
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/board"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/column"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
+	"gitlab.com/shaninalex/lumna/app/api/middlewares"
+	"go.uber.org/dig"
+)
+
+func ProvideRouter() *gin.Engine {
+	router := gin.Default()
+
+	router.RedirectTrailingSlash = false
+	router.RedirectFixedPath = false
+
+	router.GET("/_health", HealthRoute)
+
+	return router
+}
+
+func HealthRoute(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "ok",
+		"version": lumna.Version,
+	})
+}
+
+type ApiDeps struct {
+	dig.In
+
+	AuthController    *auth.AuthController
+	BoardController   *board.BoardController
+	ColumnController  *column.ColumnController
+	ProjectController *project.ProjectController
+	TaskController    *task.TaskController
+	UserController    *user.UserController
+}
+
+func NewApi(deps ApiDeps) *gin.Engine {
+	// base API middlewares
+	router := ProvideRouter()
+	router.Use(middlewares.CORSMiddleware())
+
+	authGroup := router.Group("/api/v1/auth")
+	deps.AuthController.Register(authGroup)
+
+	private := router.Group("/")
+	private.Use(middlewares.AuthMiddleware)
+
+	deps.BoardController.Register(private)
+	deps.ColumnController.Register(private)
+	deps.ProjectController.Register(private)
+	deps.TaskController.Register(private)
+	deps.UserController.Register(private)
+
+	return router
+}

@@ -12,10 +12,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/internal/client"
+	"gitlab.com/shaninalex/lumna/app/api"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/internal/persistence"
-	"gitlab.com/shaninalex/lumna/app/web"
 	"go.uber.org/dig"
 )
 
@@ -32,15 +31,17 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			}
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
-			_ = c.Provide(web.NewWebApplication)
 
-			c.Invoke(func(router *gin.Engine, config *config.Config) {
+			// Providing api module
+			_ = api.Module(c)
+
+			err = c.Invoke(func(router *gin.Engine, config *config.Config) {
 				srv := &http.Server{
-					Addr:    fmt.Sprintf(":%d", client.Config().Serve.Port),
+					Addr:    fmt.Sprintf(":%d", config.Serve.Port),
 					Handler: router,
 				}
 
-				log.Printf("Run server on :%d\n", client.Config().Serve.Port)
+				log.Printf("Run server on :%d\n", config.Serve.Port)
 				go func() {
 					if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 						log.Fatalf("listen: %s\n", err)
@@ -61,6 +62,9 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 
 				log.Println("Server exiting")
 			})
+			if err != nil {
+				panic(err)
+			}
 		},
 	}
 

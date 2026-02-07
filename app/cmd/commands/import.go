@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
+	"gitlab.com/shaninalex/lumna/app/internal/auth"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/internal/utils"
@@ -91,7 +91,7 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 			}
 			fmt.Printf("%d. Identity: %s\n", idx, identity.Email)
 			for cidx, crd := range idn.Credentials {
-				pwd, _ := local.CreatePasswordHash(crd.Password)
+				pwd, _ := auth.CreatePasswordHash(crd.Password)
 				credential := models.Credential{
 					IdentityID:   identity.ID,
 					Provider:     crd.Provider,

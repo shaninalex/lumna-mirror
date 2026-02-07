@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
-	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
+	"gitlab.com/shaninalex/lumna/app/internal/auth"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/internal/utils"
@@ -68,7 +68,7 @@ func identityCreate(email, fullname, pwd string, active bool) func(db *gorm.DB) 
 			log.Fatal(result.Error)
 		}
 
-		pwdHash, err := local.CreatePasswordHash(pwd)
+		pwdHash, err := auth.CreatePasswordHash(pwd)
 		if err != nil {
 			log.Fatal(err)
 		}

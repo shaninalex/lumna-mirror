@@ -32,6 +32,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 
 	// find existed refresh token
 	var dbRefreshToken *models.RefreshToken
+	// TODO: move to auth service. Do not call db in handlers directly!
 	if result := persistence.GetDB(c.Request.Context()).
 		Preload("Identity").
 		Where("hash = ?", auth.ToHashToken(refreshCookie)).
@@ -69,6 +70,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 	}
 
 	// Delete existed refresh tokens
+	// TODO: move to auth service. Do not call db in handlers directly!
 	if result := persistence.GetDB(c.Request.Context()).
 		Where("identity_id = ?", dbRefreshToken.IdentityID.String()).
 		Delete(&dbRefreshToken); result.Error != nil {
@@ -77,6 +79,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 	}
 
 	// create new one
+	// TODO: move to auth service. Do not call db in handlers directly!
 	if result := persistence.GetDB(c.Request.Context()).Create(&rt); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, result.Error)
 		return

@@ -1,4 +1,4 @@
-package local
+package auth
 
 import (
 	"context"
@@ -6,8 +6,8 @@ import (
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
-	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gorm.io/gorm"
 )
 
 type PasswordCredentials struct {
@@ -25,24 +25,24 @@ func (s *PasswordCredentials) Validate() error {
 	return nil
 }
 
-type LocalAuthProvider struct {
+type EmailAuthProvider struct {
+	db *gorm.DB
 }
 
-func NewLocalAuthProvider() *LocalAuthProvider {
-	s := &LocalAuthProvider{}
+func NewLocalAuthProvider(db *gorm.DB) *EmailAuthProvider {
+	s := &EmailAuthProvider{}
 	return s
 }
 
-func (s *LocalAuthProvider) Name() string {
+func (s *EmailAuthProvider) Name() string {
 	return "local"
 }
 
 var UserNotFoundError = errors.New("user not found")
 
-func (s *LocalAuthProvider) Authenticate(ctx context.Context, payload *PasswordCredentials) (*models.Identity, error) {
-	database := persistence.GetDB(ctx)
+func (s *EmailAuthProvider) Authenticate(ctx context.Context, payload *PasswordCredentials) (*models.Identity, error) {
 	credentials := models.Credential{}
-	if result := database.Preload("Identity").First(&credentials, "email = ?", payload.Email); result.Error != nil {
+	if result := s.db.WithContext(ctx).Preload("Identity").First(&credentials, "email = ?", payload.Email); result.Error != nil {
 		if result.Error.Error() == "record not found" {
 			return nil, UserNotFoundError
 		}

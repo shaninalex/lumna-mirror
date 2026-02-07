@@ -37,6 +37,7 @@ func (s *BoardController) ChangeOrder(c *gin.Context) {
 	ctx := c.Request.Context()
 	_db := persistence.GetDB(ctx)
 
+	// TODO: Move saving to service! Create new KanbanService that works with columns and tasks
 	if payload.MoveType == "task" {
 		// move in a single column
 		if payload.ColumnId != nil {

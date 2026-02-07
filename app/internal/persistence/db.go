@@ -1,9 +1,6 @@
 package persistence
 
 import (
-	"context"
-
-	"gitlab.com/shaninalex/lumna/app/internal"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -22,16 +19,6 @@ func Connect(connectionString string) *gorm.DB {
 	return db
 }
 
-func GetDB(ctx context.Context) *gorm.DB {
-	conn, ok := ctx.Value(internal.ContextDB).(*gorm.DB)
-	if !ok {
-		panic("db not found in context")
-	}
-	return conn
-}
-
 func ProvideDB(config *config.Config) *gorm.DB {
 	return Connect(config.Database.Url)
 }
-
-// 	ctx = context.WithValue(ctx, internal.ContextDB, db.Connect(cnf.Database.Url))

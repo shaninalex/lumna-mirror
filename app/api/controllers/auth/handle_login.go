@@ -7,13 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/internal/auth"
-	"gitlab.com/shaninalex/lumna/app/internal/auth/local"
 	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
 func (s *AuthController) handleLogin(c *gin.Context) {
-	payload := local.PasswordCredentials{}
+	payload := auth.PasswordCredentials{}
 	if err := c.ShouldBindBodyWithJSON(&payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
@@ -53,10 +52,13 @@ func (s *AuthController) handleLogin(c *gin.Context) {
 		ExpiresAt:  refreshExp,
 	}
 
+	// TODO: move to auth service. Do not call db in handlers directly!
 	if result := persistence.GetDB(c.Request.Context()).Where("identity_id = ?", identity.ID.String()).Delete(&models.RefreshToken{}); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, result.Error)
 		return
 	}
+
+	// TODO: move to auth service. Do not call db in handlers directly!
 	if result := persistence.GetDB(c.Request.Context()).Create(&rt); result.Error != nil {
 		utils.Error(c, http.StatusBadRequest, result.Error)
 		return
