@@ -69,7 +69,7 @@ func NewImportRootCmd() *cobra.Command {
 				panic(err)
 			}
 
-			if err := c.Invoke(importDB); err != nil {
+			if err := c.Invoke(importDB(payload)); err != nil {
 				panic(err)
 			}
 		},

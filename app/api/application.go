@@ -52,7 +52,7 @@ func NewApi(deps ApiDeps) *gin.Engine {
 	authGroup := router.Group("/api/v1/auth")
 	deps.AuthController.Register(authGroup)
 
-	private := router.Group("/")
+	private := router.Group("/api/v1")
 	private.Use(middlewares.AuthMiddleware)
 
 	deps.BoardController.Register(private)

@@ -33,7 +33,9 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			_ = c.Provide(persistence.ProvideDB)
 
 			// Providing api module
-			_ = api.Module(c)
+			if err := api.Module(c); err != nil {
+				panic(err)
+			}
 
 			err = c.Invoke(func(router *gin.Engine, config *config.Config) {
 				srv := &http.Server{

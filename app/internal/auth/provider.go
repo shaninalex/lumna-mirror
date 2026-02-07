@@ -29,8 +29,10 @@ type EmailAuthProvider struct {
 	db *gorm.DB
 }
 
-func NewLocalAuthProvider(db *gorm.DB) *EmailAuthProvider {
-	s := &EmailAuthProvider{}
+func NewEmailAuthProvider(db *gorm.DB) *EmailAuthProvider {
+	s := &EmailAuthProvider{
+		db: db,
+	}
 	return s
 }
 

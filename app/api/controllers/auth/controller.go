@@ -3,15 +3,21 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/internal/auth"
+	"gitlab.com/shaninalex/lumna/app/services"
 )
 
 type AuthController struct {
-	localProvider *auth.EmailAuthProvider
+	localProvider    *auth.EmailAuthProvider
+	authTokenService *services.AuthTokenService
 }
 
-func NewAuthContoller(authProvider *auth.EmailAuthProvider) *AuthController {
+func NewAuthContoller(
+	authProvider *auth.EmailAuthProvider,
+	authTokenService *services.AuthTokenService,
+) *AuthController {
 	s := &AuthController{
-		localProvider: authProvider,
+		localProvider:    authProvider,
+		authTokenService: authTokenService,
 	}
 
 	return s

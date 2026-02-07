@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/internal/auth"
-	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
@@ -30,16 +29,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 		return
 	}
 
-	// find existed refresh token
-	var dbRefreshToken *models.RefreshToken
-	// TODO: move to auth service. Do not call db in handlers directly!
-	if result := persistence.GetDB(c.Request.Context()).
-		Preload("Identity").
-		Where("hash = ?", auth.ToHashToken(refreshCookie)).
-		First(&dbRefreshToken); result.Error != nil {
-		utils.Error(c, http.StatusBadRequest, err)
-		return
-	}
+	dbRefreshToken, err := s.authTokenService.BetByHash(c.Request.Context(), auth.ToHashToken(refreshCookie))
 	if dbRefreshToken == nil {
 		utils.Error(c, http.StatusBadRequest, ErrorAuthRefreshToken)
 		return
@@ -69,19 +59,8 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 		ExpiresAt:  refreshExp,
 	}
 
-	// Delete existed refresh tokens
-	// TODO: move to auth service. Do not call db in handlers directly!
-	if result := persistence.GetDB(c.Request.Context()).
-		Where("identity_id = ?", dbRefreshToken.IdentityID.String()).
-		Delete(&dbRefreshToken); result.Error != nil {
+	if err := s.authTokenService.RewriteRefreshToken(c.Request.Context(), rt.IdentityID, &rt); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
-		return
-	}
-
-	// create new one
-	// TODO: move to auth service. Do not call db in handlers directly!
-	if result := persistence.GetDB(c.Request.Context()).Create(&rt); result.Error != nil {
-		utils.Error(c, http.StatusBadRequest, result.Error)
 		return
 	}
 
