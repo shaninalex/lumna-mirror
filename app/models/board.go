@@ -13,7 +13,7 @@ type Board struct {
 	Title     string    `gorm:"not null" json:"title"`
 	ProjectID uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
 
-	Columns []Column `json:"-"`
+	Columns []Column `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"-"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
