@@ -1,3 +1,10 @@
+## 0.30.0 (2026-02-07)
+
+### Feat
+
+- **di**: services providers
+- **di**: wiring up with dig
+
 ## 0.29.0 (2026-02-05)
 
 ### Feat
