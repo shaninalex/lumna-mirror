@@ -31,7 +31,7 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			}
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
-
+			_ = c.Provide(provideCmdContext(cmd))
 			// Providing api module
 			if err := api.Module(c); err != nil {
 				panic(err)
@@ -71,4 +71,10 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 	}
 
 	return cmd
+}
+
+func provideCmdContext(cmd *cobra.Command) func() context.Context {
+	return func() context.Context {
+		return cmd.Context()
+	}
 }

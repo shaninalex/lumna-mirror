@@ -2,21 +2,25 @@ package project
 
 import (
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/internal/logger"
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
 type ProjectController struct {
 	projectService *services.ProjectService
 	boardService   *services.BoardService
+	logger         logger.Logger
 }
 
 func NewProjectsController(
 	projectService *services.ProjectService,
 	boardService *services.BoardService,
+	logger logger.Logger,
 ) *ProjectController {
 	s := &ProjectController{
 		projectService: projectService,
 		boardService:   boardService,
+		logger:         logger,
 	}
 
 	return s

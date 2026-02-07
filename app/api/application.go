@@ -47,6 +47,7 @@ type ApiDeps struct {
 func NewApi(deps ApiDeps) *gin.Engine {
 	// base API middlewares
 	router := ProvideRouter()
+	router.Use(gin.Recovery()) // <= write your onw recovery middleware with logger
 	router.Use(middlewares.CORSMiddleware())
 
 	authGroup := router.Group("/api/v1/auth")
