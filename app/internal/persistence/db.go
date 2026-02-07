@@ -1,7 +1,10 @@
 package persistence
 
 import (
+	"log"
+
 	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -21,4 +24,27 @@ func Connect(connectionString string) *gorm.DB {
 
 func ProvideDB(config *config.Config) *gorm.DB {
 	return Connect(config.Database.Url)
+}
+
+func Migrate(db *gorm.DB) error {
+	err := db.AutoMigrate(
+		&models.Identity{},
+		&models.Credential{},
+		&models.RefreshToken{},
+
+		&models.Project{},
+		&models.Board{},
+		&models.Column{},
+		&models.Task{},
+
+		&models.Job{},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	log.Printf("Database migrated")
+
+	return nil
 }

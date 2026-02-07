@@ -2,18 +2,54 @@ package services
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 
 	"github.com/google/uuid"
+	"gitlab.com/shaninalex/lumna/app/internal"
+	"gitlab.com/shaninalex/lumna/app/internal/bus"
+	"gitlab.com/shaninalex/lumna/app/internal/logger"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gorm.io/gorm"
 )
 
 type ProjectService struct {
-	db *gorm.DB
+	db       *gorm.DB
+	eventBus bus.EventBus
+	logger   logger.Logger
 }
 
-func NewProjectService(db *gorm.DB) *ProjectService {
-	return &ProjectService{db: db}
+func NewProjectService(
+	db *gorm.DB,
+	eventBus bus.EventBus,
+	logger logger.Logger,
+
+) *ProjectService {
+	s := &ProjectService{
+		db:       db,
+		eventBus: eventBus,
+		logger:   logger,
+	}
+	s.init()
+	return s
+}
+
+func (s *ProjectService) init() {
+	s.eventBus.Subscribe(internal.ProjectNewEvent, s.onNewProject)
+}
+
+func (s *ProjectService) onNewProject(ctx context.Context, data any) {
+	p, ok := data.(*models.Project)
+	if !ok {
+		return
+	}
+	s.logger.Log(fmt.Sprintf("Project created: %s", p.Title))
+	data, err := json.Marshal(p)
+	if err != nil {
+		s.logger.Log(fmt.Sprintf("Err: unable to parse project %s", err.Error()))
+	}
+
+	s.eventBus.Publish(ctx, internal.EmailSendEvent, p)
 }
 
 func (s *ProjectService) Get(ctx context.Context, id uuid.UUID) (*models.Project, error) {
@@ -33,14 +69,15 @@ func (s *ProjectService) List(ctx context.Context) ([]models.Project, error) {
 }
 
 func (s *ProjectService) Create(ctx context.Context, title string, userID uuid.UUID) (*models.Project, error) {
-	project := models.Project{
+	project := &models.Project{
 		Title: title,
 	}
 	if result := s.db.WithContext(ctx).Create(&project); result.Error != nil {
 		return nil, result.Error
 	}
 
-	return &project, nil
+	s.eventBus.Publish(ctx, internal.ProjectNewEvent, project)
+	return project, nil
 }
 
 func (s *ProjectService) Update(ctx context.Context, projectID uuid.UUID, title string) (*models.Project, error) {

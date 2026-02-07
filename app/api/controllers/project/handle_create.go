@@ -1,7 +1,6 @@
 package project
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,8 +26,6 @@ func (s *ProjectController) Create(c *gin.Context) {
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 	}
-
-	s.logger.Log(fmt.Sprintf("Project created: %s", project.Title))
 
 	utils.Success(c, project)
 }
