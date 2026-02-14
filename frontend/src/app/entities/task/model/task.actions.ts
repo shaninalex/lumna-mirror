@@ -8,10 +8,7 @@ export const actionTaskGetTasks = createAction('[Task] get tasks', props<{ board
 export const actionTaskSetTasks = createAction('[Task] set tasks', props<{ tasks: TaskModel[] }>());
 
 // CREATE
-export const actionTaskCreate = createAction(
-    '[Task] create',
-    props<{ data: TaskPayloadModel }>(),
-);
+export const actionTaskCreate = createAction('[Task] create', props<{ data: TaskPayloadModel }>());
 
 // PATCH
 export const actionTaskPatch = createAction(
