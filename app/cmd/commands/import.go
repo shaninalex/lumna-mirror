@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/internal/auth"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
@@ -19,7 +18,6 @@ import (
 
 type MockDbDataSchema struct {
 	Identities []struct {
-		ID          string `json:"id"`
 		FullName    string `json:"full_name"`
 		Email       string `json:"email"`
 		Credentials []struct {
@@ -82,7 +80,6 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 		// create identity+credential
 		for idx, idn := range payload.Identities {
 			identity := models.Identity{
-				ID:       uuid.MustParse(idn.ID),
 				Email:    idn.Email,
 				FullName: idn.FullName,
 			}

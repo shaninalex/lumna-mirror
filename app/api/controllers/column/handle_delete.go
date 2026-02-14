@@ -2,20 +2,20 @@ package column
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 )
 
 func (s *ColumnController) Delete(c *gin.Context) {
-	columnId, err := uuid.Parse(c.Param("columnId"))
+	columnId, err := strconv.Atoi(c.Param("columnId"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	if err := s.columnService.Delete(c.Request.Context(), columnId); err != nil {
+	if err := s.columnService.Delete(c.Request.Context(), uint(columnId)); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}

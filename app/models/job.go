@@ -3,12 +3,11 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Job struct {
-	ID          uuid.UUID `gorm:"type:uuid;primaryKey"`
+	ID          uint `gorm:"primaryKey"`
 	Type        string
 	Payload     string
 	Status      string
@@ -20,8 +19,5 @@ type Job struct {
 }
 
 func (u *Job) BeforeCreate(tx *gorm.DB) error {
-	if u.ID == uuid.Nil {
-		u.ID = uuid.New()
-	}
 	return nil
 }

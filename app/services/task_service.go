@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gorm.io/gorm"
 )
@@ -16,7 +15,7 @@ func NewTaskService(db *gorm.DB) *TaskService {
 	return &TaskService{db: db}
 }
 
-func (s *TaskService) GetTask(ctx context.Context, taskID uuid.UUID) (*models.Task, error) {
+func (s *TaskService) GetTask(ctx context.Context, taskID uint) (*models.Task, error) {
 	task := &models.Task{}
 	if result := s.db.WithContext(ctx).Where("id = ?", taskID).First(&task); result.Error != nil {
 		return nil, result.Error
@@ -24,7 +23,7 @@ func (s *TaskService) GetTask(ctx context.Context, taskID uuid.UUID) (*models.Ta
 	return task, nil
 }
 
-func (s *TaskService) ReorderTask(ctx context.Context, taskID uuid.UUID, boardListID uuid.UUID, order uint) error {
+func (s *TaskService) ReorderTask(ctx context.Context, taskID uint, boardListID uint, order uint) error {
 	return s.db.WithContext(ctx).
 		Model(&models.Task{}).
 		Where("id = ?", taskID).
@@ -37,10 +36,10 @@ func (s *TaskService) ReorderTask(ctx context.Context, taskID uuid.UUID, boardLi
 // TaskPayload - used to create/partial update task
 // TODO: add validators
 type TaskPayload struct {
-	Title     string    `json:"title"`
-	Order     uint      `json:"order"`
-	ProjectID uuid.UUID `json:"project_id"`
-	ColumnID  uuid.UUID `json:"column_id"`
+	Title     string `json:"title"`
+	Order     uint   `json:"order"`
+	ProjectID uint   `json:"project_id"`
+	ColumnID  uint   `json:"column_id"`
 }
 
 func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {

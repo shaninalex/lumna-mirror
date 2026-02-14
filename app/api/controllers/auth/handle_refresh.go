@@ -37,7 +37,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 
 	// Create new set of access/refresh tokens
 	accessTtl := time.Minute * 15
-	token, err := auth.GenerateAccessJWTToken(dbRefreshToken.IdentityID.String(), "all", accessTtl)
+	token, err := auth.GenerateAccessJWTToken(dbRefreshToken.IdentityID, "all", accessTtl)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

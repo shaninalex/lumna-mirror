@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gorm.io/gorm"
 )
@@ -18,7 +17,7 @@ func NewAuthTokenService(db *gorm.DB) *AuthTokenService {
 	}
 }
 
-func (s *AuthTokenService) RewriteRefreshToken(ctx context.Context, idenitityId uuid.UUID, rt *models.RefreshToken) error {
+func (s *AuthTokenService) RewriteRefreshToken(ctx context.Context, idenitityId uint, rt *models.RefreshToken) error {
 	if result := s.db.WithContext(ctx).Where("identity_id = ?", idenitityId).Delete(&models.RefreshToken{}); result.Error != nil {
 		return result.Error
 	}
@@ -30,7 +29,7 @@ func (s *AuthTokenService) RewriteRefreshToken(ctx context.Context, idenitityId 
 	return nil
 }
 
-func (s *AuthTokenService) DeleteRefreshToken(ctx context.Context, idenitityId uuid.UUID) error {
+func (s *AuthTokenService) DeleteRefreshToken(ctx context.Context, idenitityId uint) error {
 	return s.db.WithContext(ctx).Where("identity_id = ?", idenitityId).Delete(&models.RefreshToken{}).Error
 }
 

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/internal"
 	"gitlab.com/shaninalex/lumna/app/internal/bus"
 	"gitlab.com/shaninalex/lumna/app/internal/logger"
@@ -52,9 +51,9 @@ func (s *ProjectService) onNewProject(ctx context.Context, data any) {
 	s.eventBus.Publish(ctx, internal.EmailSendEvent, p)
 }
 
-func (s *ProjectService) Get(ctx context.Context, id uuid.UUID) (*models.Project, error) {
+func (s *ProjectService) Get(ctx context.Context, id uint) (*models.Project, error) {
 	project := &models.Project{}
-	if result := s.db.WithContext(ctx).Preload("Boards").Where("id = ?", id.String()).First(&project); result.Error != nil {
+	if result := s.db.WithContext(ctx).Preload("Boards").Where("id = ?", id).First(&project); result.Error != nil {
 		return nil, result.Error
 	}
 	return project, nil
@@ -68,7 +67,7 @@ func (s *ProjectService) List(ctx context.Context) ([]models.Project, error) {
 	return projects, nil
 }
 
-func (s *ProjectService) Create(ctx context.Context, title string, userID uuid.UUID) (*models.Project, error) {
+func (s *ProjectService) Create(ctx context.Context, title string, userID uint) (*models.Project, error) {
 	project := &models.Project{
 		Title: title,
 	}
@@ -80,7 +79,7 @@ func (s *ProjectService) Create(ctx context.Context, title string, userID uuid.U
 	return project, nil
 }
 
-func (s *ProjectService) Update(ctx context.Context, projectID uuid.UUID, title string) (*models.Project, error) {
+func (s *ProjectService) Update(ctx context.Context, projectID uint, title string) (*models.Project, error) {
 	database := s.db.WithContext(ctx)
 	project := models.Project{}
 	if result := database.Where("id = ?", projectID).First(&project); result.Error != nil {
@@ -96,7 +95,7 @@ func (s *ProjectService) Update(ctx context.Context, projectID uuid.UUID, title 
 	return &project, nil
 }
 
-func (s *ProjectService) Delete(ctx context.Context, id uuid.UUID) error {
+func (s *ProjectService) Delete(ctx context.Context, id uint) error {
 	if result := s.db.WithContext(ctx).Where("id = ?", id).Delete(&models.Project{}); result.Error != nil {
 		return result.Error
 	}

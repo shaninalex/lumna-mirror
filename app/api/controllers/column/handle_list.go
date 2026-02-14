@@ -3,9 +3,9 @@ package column
 import (
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 )
 
@@ -14,12 +14,12 @@ var (
 )
 
 func (s *ColumnController) List(c *gin.Context) {
-	boardId, err := uuid.Parse(c.Query("board_id"))
+	boardId, err := strconv.Atoi(c.Query("board_id"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, ErrorNoBoardProvided)
 		return
 	}
 
-	columns := s.columnService.Filter(c.Request.Context(), boardId)
+	columns := s.columnService.Filter(c.Request.Context(), uint(boardId))
 	utils.Success(c, columns)
 }

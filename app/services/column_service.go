@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gorm.io/gorm"
 )
@@ -16,7 +15,7 @@ func NewColumnService(db *gorm.DB) *ColumnService {
 	return &ColumnService{db: db}
 }
 
-func (s *ColumnService) Filter(ctx context.Context, boardId uuid.UUID) []models.Column {
+func (s *ColumnService) Filter(ctx context.Context, boardId uint) []models.Column {
 	var columns []models.Column
 	if result := s.db.WithContext(ctx).Preload("Tasks").Where("board_id = ?", boardId).Find(&columns); result.Error != nil {
 		return []models.Column{}
@@ -24,7 +23,7 @@ func (s *ColumnService) Filter(ctx context.Context, boardId uuid.UUID) []models.
 	return columns
 }
 
-func (s *ColumnService) Get(ctx context.Context, boardListID uuid.UUID) (*models.Column, error) {
+func (s *ColumnService) Get(ctx context.Context, boardListID uint) (*models.Column, error) {
 	var column models.Column
 	if result := s.db.WithContext(ctx).Where("id = ?", boardListID).First(&column); result.Error != nil {
 		return nil, result.Error
@@ -32,7 +31,7 @@ func (s *ColumnService) Get(ctx context.Context, boardListID uuid.UUID) (*models
 	return &column, nil
 }
 
-func (s *ColumnService) Reorder(ctx context.Context, listID uuid.UUID, order uint) error {
+func (s *ColumnService) Reorder(ctx context.Context, listID uint, order uint) error {
 	// TODO: get pointer of a struct and change it
 	return s.db.WithContext(ctx).Model(&models.Column{}).
 		Where("id = ?", listID).
@@ -40,9 +39,9 @@ func (s *ColumnService) Reorder(ctx context.Context, listID uuid.UUID, order uin
 }
 
 type ColumnUpdate struct {
-	BoardId uuid.UUID `json:"board_id"`
-	Order   uint      `json:"order"`
-	Title   string    `json:"title"`
+	BoardId uint   `json:"board_id"`
+	Order   uint   `json:"order"`
+	Title   string `json:"title"`
 }
 
 func (s *ColumnService) Create(ctx context.Context, payload ColumnUpdate) (*models.Column, error) {
@@ -64,7 +63,7 @@ func (s *ColumnService) Update(ctx context.Context, column *models.Column) (*mod
 	return column, nil
 }
 
-func (s *ColumnService) Delete(ctx context.Context, id uuid.UUID) error {
+func (s *ColumnService) Delete(ctx context.Context, id uint) error {
 	if result := s.db.WithContext(ctx).Where("id = ?", id).Delete(&models.Column{}); result.Error != nil {
 		return result.Error
 	}

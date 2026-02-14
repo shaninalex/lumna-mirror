@@ -4,21 +4,20 @@ import (
 	"errors"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 var ErrorUserIDNotInContext error = errors.New("user id not found in request context")
 var ErrorInvalidUserID error = errors.New("invalid user id")
 
-func GetUserID(c *gin.Context) (uuid.UUID, error) {
+func GetUserID(c *gin.Context) (uint, error) {
 	userIDAny, ok := c.Get("userID")
 	if !ok {
-		return uuid.Nil, ErrorUserIDNotInContext
+		return 0, ErrorUserIDNotInContext
 	}
 
-	userID, ok := userIDAny.(uuid.UUID)
+	userID, ok := userIDAny.(uint)
 	if !ok {
-		return uuid.Nil, ErrorInvalidUserID
+		return 0, ErrorInvalidUserID
 	}
 	return userID, nil
 }

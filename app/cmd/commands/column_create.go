@@ -2,8 +2,8 @@ package commands
 
 import (
 	"log"
+	"strconv"
 
-	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/internal/persistence"
@@ -26,11 +26,14 @@ func NewColumnCreateCmd() *cobra.Command {
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
 
-			boardID := uuid.MustParse(args[0])
+			boardID, err := strconv.Atoi(args[0])
+			if err != nil {
+				panic(err)
+			}
 			title := args[1]
 			column := models.Column{
 				Title:   title,
-				BoardID: boardID,
+				BoardID: uint(boardID),
 			}
 			if err := c.Invoke(createColumn(column)); err != nil {
 				panic(err)
@@ -48,6 +51,6 @@ func createColumn(column models.Column) func(db *gorm.DB) {
 			panic(result.Error)
 		}
 
-		log.Println("Column created with ID:", column.ID.String())
+		log.Println("Column created with ID:", column.ID)
 	}
 }
