@@ -27,7 +27,7 @@ import { AsyncPipe } from '@angular/common';
     `,
 })
 export class BoardsList implements OnInit {
-    @Input() projectId: string;
+    @Input() projectId: number;
     private store = inject(Store<BoardState>);
     boards: Observable<BoardModel[]>;
 

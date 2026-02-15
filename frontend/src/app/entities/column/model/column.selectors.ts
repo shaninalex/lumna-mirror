@@ -10,11 +10,11 @@ const selectColumns = createSelector(selectColumnFeature, (state) =>
 );
 
 // without sorting
-export const selectColumnsByBoardIdNoSort = (boardId: string) =>
+export const selectColumnsByBoardIdNoSort = (boardId: number) =>
     createSelector(selectColumns, (columns) => columns.filter((b) => b.board_id === boardId));
 
 // with sorting
-export const selectColumnsByBoardId = (boardId: string) =>
+export const selectColumnsByBoardId = (boardId: number) =>
     createSelector(selectColumns, (columns) =>
         columns.filter((b) => b.board_id === boardId).sort((a, b) => a.order - b.order),
     );

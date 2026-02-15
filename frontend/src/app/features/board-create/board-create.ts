@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
     template: ` <button class="btn btn-secondary" (click)="newBoard()">Create board</button> `,
 })
 export class BoardCreateFeature {
-    @Input() projectId: string;
+    @Input() projectId: number;
 
     dialog = inject(Dialog);
     private store = inject(Store<BoardState>);
@@ -24,8 +24,7 @@ export class BoardCreateFeature {
         });
 
         dialogRef.closed.subscribe((result) => {
-            if (result)
-                this.store.dispatch(actionBoardCreate({ data: result }));
+            if (result) this.store.dispatch(actionBoardCreate({ data: result }));
         });
     }
 }

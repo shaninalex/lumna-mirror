@@ -22,13 +22,13 @@ export class ProjectApi {
             .pipe(map((response) => response.data));
     }
 
-    DeleteProject(projectId: string): Observable<void> {
+    DeleteProject(projectId: number): Observable<void> {
         return this.http
             .delete<APIResponse<void>>(`/api/v1/project/${projectId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
-    Patch(projectId: string, payload: ProjectPayload): Observable<ProjectModel> {
+    Patch(projectId: number, payload: ProjectPayload): Observable<ProjectModel> {
         return this.http
             .patch<
                 APIResponse<ProjectModel>

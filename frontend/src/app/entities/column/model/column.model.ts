@@ -1,19 +1,19 @@
 import { TaskModel } from '@entities/task';
 
 export interface ColumnModel {
-    id: string;
+    id: number;
     title: string;
     order: number;
-    board_id: string;
+    board_id: number;
     created_at: Date;
     updated_at: Date;
 }
 
 export interface ApiColumnModel {
-    id: string;
+    id: number;
     title: string;
     order: number;
-    board_id: string;
+    board_id: number;
     created_at: Date;
     updated_at: Date;
     tasks: TaskModel[];
@@ -22,5 +22,5 @@ export interface ApiColumnModel {
 export interface ColumnPayloadModel {
     title: string;
     order: number;
-    board_id: string;
+    board_id: number;
 }

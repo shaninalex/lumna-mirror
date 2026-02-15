@@ -4,7 +4,7 @@ import { createAction, props } from '@ngrx/store';
 
 export const actionKanbanLoadColumns = createAction(
     '[Kanban] load columns',
-    props<{ boardId: string }>(),
+    props<{ boardId: number }>(),
 );
 
 export const actionKanbanColumnsLoaded = createAction(

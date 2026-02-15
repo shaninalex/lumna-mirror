@@ -8,7 +8,7 @@ import (
 )
 
 type Task struct {
-	ID        uint      `gorm:"type:uuid;primaryKey" json:"id"`
+	ID        uint      `gorm:"primaryKey" json:"id"`
 	Title     string    `gorm:"not null" json:"title"`
 	Order     uint      `json:"order"`
 	Done      bool      `json:"done"`
@@ -16,7 +16,7 @@ type Task struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 
-	ColumnID uint   `gorm:"type:uuid;not null;index" json:"column_id"`
+	ColumnID uint   `gorm:"not null;index" json:"column_id"`
 	Column   Column `json:"-"`
 }
 

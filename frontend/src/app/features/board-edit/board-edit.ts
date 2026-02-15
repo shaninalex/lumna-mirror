@@ -20,12 +20,12 @@ import { Store } from '@ngrx/store';
 })
 export class BoardEditFeature {
     board = input<BoardModel>();
-    boardId: string;
+    boardId: number;
     private actions$ = inject(Actions);
     private store = inject(Store<BoardState>);
 
     boardFormModel = signal<BoardPayloadModel>({
-        project_id: '',
+        project_id: 0,
         title: '',
     });
     boardForm = form(this.boardFormModel, (schemaPath) => {

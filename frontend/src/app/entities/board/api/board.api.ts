@@ -10,7 +10,7 @@ import { BoardModel, BoardPayloadModel } from '../model/board.model';
 export class BoardApi {
     http = inject(HttpClient);
 
-    List(projectId: string): Observable<BoardModel[]> {
+    List(projectId: number): Observable<BoardModel[]> {
         return this.http
             .get<
                 APIResponse<BoardModel[]>
@@ -24,13 +24,13 @@ export class BoardApi {
             .pipe(map((response) => response.data));
     }
 
-    Delete(boardId: string): Observable<void> {
+    Delete(boardId: number): Observable<void> {
         return this.http
             .delete<APIResponse<void>>(`/api/v1/board/${boardId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
-    Patch(boardId: string, payload: BoardPayloadModel): Observable<BoardModel> {
+    Patch(boardId: number, payload: BoardPayloadModel): Observable<BoardModel> {
         return this.http
             .patch<
                 APIResponse<BoardModel>

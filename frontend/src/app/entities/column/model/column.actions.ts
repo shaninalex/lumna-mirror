@@ -2,7 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { ColumnModel, ColumnPayloadModel } from './column.model';
 
 // LIST
-export const actionColumnGetList = createAction('[Column] get list', props<{ boardId: string }>());
+export const actionColumnGetList = createAction('[Column] get list', props<{ boardId: number }>());
 
 export const actionColumnSetList = createAction(
     '[Column] set list',
@@ -18,17 +18,17 @@ export const actionColumnCreate = createAction(
 // PATCH
 export const actionColumnPatch = createAction(
     '[Column] patch',
-    props<{ columnId: string; data: ColumnPayloadModel }>(),
+    props<{ columnId: number; data: ColumnPayloadModel }>(),
 );
 
 // CHANGE ORDER
 export const actionColumnChangeOrder = createAction(
     '[Column] change order',
-    props<{ columns: Array<{ id: string; order: number }> }>(),
+    props<{ columns: Array<{ id: number; order: number }> }>(),
 );
 
 // DELETE
-export const actionColumnDelete = createAction('[Column] delete', props<{ columnId: string }>());
+export const actionColumnDelete = createAction('[Column] delete', props<{ columnId: number }>());
 
 // REPLACEMENT:
 // - setList
@@ -40,7 +40,7 @@ export const actionColumnUpsert = createAction('[Column] upsert', props<{ column
 // - _deleteSuccess
 export const actionColumnDeleteSuccess = createAction(
     '[Column] delete success',
-    props<{ columnId: string }>(),
+    props<{ columnId: number }>(),
 );
 
 // ERROR

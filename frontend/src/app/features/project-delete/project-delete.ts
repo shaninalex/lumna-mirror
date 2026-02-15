@@ -8,7 +8,6 @@ import {
     actionProjectDeleteSuccess,
     ProjectModel,
     ProjectState,
-    selectProjectByID,
 } from '@entities/project';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -28,7 +27,7 @@ export class ProjectDeleteFeature implements OnInit {
     private store = inject(Store<ProjectState>);
     private actions$ = inject(Actions);
     private router = inject(Router);
-    private projectId: string;
+    private projectId: number;
 
     @Input() project$: Observable<ProjectModel>;
 

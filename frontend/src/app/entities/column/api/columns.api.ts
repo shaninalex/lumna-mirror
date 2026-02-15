@@ -10,7 +10,7 @@ import { ApiColumnModel, ColumnModel, ColumnPayloadModel } from '../model/column
 export class ColumnsApi {
     http = inject(HttpClient);
 
-    List(boardId: string): Observable<ApiColumnModel[]> {
+    List(boardId: number): Observable<ApiColumnModel[]> {
         const params = new HttpParams().set('board_id', boardId);
         return this.http
             .get<
@@ -25,13 +25,13 @@ export class ColumnsApi {
             .pipe(map((response) => response.data));
     }
 
-    Delete(columnId: string): Observable<void> {
+    Delete(columnId: number): Observable<void> {
         return this.http
             .delete<APIResponse<void>>(`/api/v1/column/${columnId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
-    Patch(columnId: string, payload: ColumnPayloadModel): Observable<ColumnModel> {
+    Patch(columnId: number, payload: ColumnPayloadModel): Observable<ColumnModel> {
         return this.http
             .patch<
                 APIResponse<ColumnModel>

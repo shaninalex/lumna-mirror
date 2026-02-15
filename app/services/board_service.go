@@ -56,19 +56,19 @@ func (s *BoardService) Get(ctx context.Context, boardID uint) (*models.Board, er
 }
 
 type KTask struct {
-	Id    string `json:"id"`
-	Order int    `json:"order"`
+	Id    uint `json:"id"`
+	Order uint `json:"order"`
 }
 
 type KColumn struct {
-	Id    string  `json:"id"`
-	Order *int    `json:"order"`
+	Id    uint    `json:"id"`
+	Order *uint   `json:"order"`
 	Tasks []KTask `json:"tasks"`
 }
 
 type KanbanBoardChangeOrderPayload struct {
 	MoveType string    `json:"moveType"`
-	ColumnId *string   `json:"columnId"`
+	ColumnId *uint     `json:"columnId"`
 	Tasks    []KTask   `json:"tasks"`
 	Columns  []KColumn `json:"columns"`
 }

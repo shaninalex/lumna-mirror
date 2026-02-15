@@ -21,7 +21,7 @@ import { AsyncPipe } from '@angular/common';
 export class ProjectEditFeature implements OnInit {
     private actions$ = inject(Actions);
     private store = inject(Store<ProjectState>);
-    private projectId: string;
+    private projectId: number;
     @Input() project$: Observable<ProjectModel>;
 
     loading = false;

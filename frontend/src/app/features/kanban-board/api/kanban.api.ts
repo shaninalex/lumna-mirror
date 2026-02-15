@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { APIResponse } from '@shared/models';
 import { HttpClient } from '@angular/common/http';
 import { KanbanBoardChangeOrderPayload } from '../model/kanban.model';
@@ -8,7 +8,7 @@ import { KanbanBoardChangeOrderPayload } from '../model/kanban.model';
 export class KanbanApi {
     http = inject(HttpClient);
 
-    public Patch(boardId: string, payload: KanbanBoardChangeOrderPayload): Observable<any> {
+    public Patch(boardId: number, payload: KanbanBoardChangeOrderPayload): Observable<any> {
         return this.http
             .patch<
                 APIResponse<any>

@@ -1,9 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
-import {
-    actionBoardDelete,
-    actionBoardDeleteSuccess,
-    BoardState,
-} from '@entities/board';
+import { actionBoardDelete, actionBoardDeleteSuccess, BoardState } from '@entities/board';
 import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,8 +17,8 @@ import { tap } from 'rxjs';
     `,
 })
 export class BoardDeleteFeature {
-    @Input() projectId: string;
-    @Input() boardId: string;
+    @Input() projectId: number;
+    @Input() boardId: number;
     @Input() boardTitle: string;
 
     dialog = inject(Dialog);

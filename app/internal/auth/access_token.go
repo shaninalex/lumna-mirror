@@ -19,7 +19,7 @@ func GenerateAccessJWTToken(userID uint, scopes string, ttl time.Duration) (stri
 	claims := jwt.MapClaims{
 		"iss":   "lumna-api",
 		"aud":   "lumna-web-client",
-		"sub":   userID,
+		"sub":   fmt.Sprintf("%d", userID),
 		"scope": scopes,
 		"iat":   time.Now().Unix(),
 		"exp":   time.Now().Add(ttl).Unix(),

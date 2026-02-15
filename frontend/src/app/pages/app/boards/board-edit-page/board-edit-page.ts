@@ -29,7 +29,7 @@ export class BoardEditPage {
     private ui = inject(UiService);
 
     route = inject(ActivatedRoute);
-    projectId: string;
+    projectId: number;
     board$: Observable<BoardModel> = this.route.params.pipe(
         tap((params) => (this.projectId = params['id'])),
         switchMap((params) =>
