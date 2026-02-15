@@ -25,39 +25,22 @@ func ProvideLogger(ctx context.Context) Logger {
 }
 
 func (s *SimpleLogger) Log(msg string) {
-	select {
-	case s.queue <- msg:
-	// case <-s.ctx.Done():
-	// fmt.Println("[Logger] log queue closed ")
-	default:
-		fmt.Println("logger queue is full...")
-	}
+	s.queue <- msg
 }
 
 func (s *SimpleLogger) init() {
+	fmt.Println("[Logger] Start")
 	go func() {
 		for {
 			select {
 			case msg := <-s.queue:
 				s.process(msg)
 			case <-s.ctx.Done():
-				s.drain()
+				fmt.Println("[Logger] Stopped")
 				return
 			}
 		}
 	}()
-}
-
-func (s *SimpleLogger) drain() {
-	fmt.Println("[Logger] remaining logs...")
-	for {
-		select {
-		case msg := <-s.queue:
-			s.process(msg)
-		default:
-			return
-		}
-	}
 }
 
 func (s *SimpleLogger) process(msg string) {

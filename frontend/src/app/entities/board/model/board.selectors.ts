@@ -12,10 +12,12 @@ export const selectBoards = createSelector(selectBoardFeature, (state) =>
 /**
  * Select boards by project id, always sorted by `order` ASC
  */
-export const selectBoardsByProjectId = (projectId: string) =>
-    createSelector(selectBoards, (boards) => boards.filter((b) => b.project_id === projectId));
+export const selectBoardsByProjectId = (projectId: number) =>
+    createSelector(selectBoards, (boards) => {
+        return boards.filter((b) => b.project_id === projectId);
+    });
 
-export const selectBoardById = (boardId: string) =>
+export const selectBoardById = (boardId: number) =>
     createSelector(
         selectBoardFeature,
         (state) => boardSelectors.selectEntities(state)[boardId] ?? null,

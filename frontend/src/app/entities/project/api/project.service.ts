@@ -3,7 +3,6 @@ import { map, Observable } from 'rxjs';
 import { ProjectModel, ProjectPayload } from '@entities/project';
 import { APIResponse } from '@shared/models';
 import { HttpClient } from '@angular/common/http';
-import { ProjectEditModel } from '@features/project-edit';
 
 @Injectable({
     providedIn: 'root',
@@ -23,13 +22,13 @@ export class ProjectApi {
             .pipe(map((response) => response.data));
     }
 
-    DeleteProject(projectId: string): Observable<void> {
+    DeleteProject(projectId: number): Observable<void> {
         return this.http
             .delete<APIResponse<void>>(`/api/v1/project/${projectId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
-    Patch(projectId: string, payload: ProjectEditModel): Observable<ProjectModel> {
+    Patch(projectId: number, payload: ProjectPayload): Observable<ProjectModel> {
         return this.http
             .patch<
                 APIResponse<ProjectModel>

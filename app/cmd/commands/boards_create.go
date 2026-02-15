@@ -2,8 +2,8 @@ package commands
 
 import (
 	"fmt"
+	"strconv"
 
-	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/internal/persistence"
@@ -30,13 +30,13 @@ func NewBoardsCreateCmd() *cobra.Command {
 			strId := args[0]
 			title := args[1]
 
-			ownerID, err := uuid.Parse(strId)
+			ownerID, err := strconv.Atoi(strId)
 			if err != nil {
 				panic(err)
 			}
 			board := models.Board{
 				Title:     title,
-				ProjectID: ownerID,
+				ProjectID: uint(ownerID),
 			}
 
 			if err := c.Invoke(createBoard(board)); err != nil {

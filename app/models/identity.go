@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Identity struct {
-	ID        uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
+	ID        uint      `gorm:"primaryKey" json:"id"`
 	FullName  string    `gorm:"not null" json:"full_name"`
 	Email     string    `gorm:"not null;unique" json:"email"`
 	Active    bool      `json:"active"`
@@ -18,9 +17,6 @@ type Identity struct {
 }
 
 func (u *Identity) BeforeCreate(tx *gorm.DB) error {
-	if u.ID == uuid.Nil {
-		u.ID = uuid.New()
-	}
 	if u.CreatedAt.IsZero() {
 		u.CreatedAt = time.Now()
 	}
@@ -33,5 +29,5 @@ func (u *Identity) BeforeUpdate(tx *gorm.DB) (err error) {
 }
 
 func (s *Identity) String() string {
-	return fmt.Sprintf("Identity %s email=%s", s.ID.String(), s.Email)
+	return fmt.Sprintf("Identity id=%d email=%s", s.ID, s.Email)
 }

@@ -4,25 +4,24 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Board struct {
-	ID        uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
-	Title     string    `gorm:"not null" json:"title"`
-	ProjectID uuid.UUID `gorm:"type:uuid;not null;index" json:"project_id"`
+	ID        uint   `gorm:"primaryKey" json:"id"`
+	Title     string `gorm:"not null" json:"title"`
+	ProjectID uint   `gorm:"not null;index" json:"project_id"`
 
-	Columns []Column `json:"-"`
+	Columns []Column `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"-"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (s *Board) BeforeCreate(tx *gorm.DB) error {
-	if s.ID == uuid.Nil {
-		s.ID = uuid.New()
-	}
+	// if s.ID == uuid.Nil {
+	// 	s.ID = uuid.New()
+	// }
 	if s.CreatedAt.IsZero() {
 		s.CreatedAt = time.Now()
 	}
@@ -35,5 +34,5 @@ func (s *Board) BeforeUpdate(tx *gorm.DB) (err error) {
 }
 
 func (s *Board) String() string {
-	return fmt.Sprintf("Board id=%s title=%s", s.ID.String(), s.Title)
+	return fmt.Sprintf("Board id=%d title=%s", s.ID, s.Title)
 }

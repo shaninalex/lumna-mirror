@@ -13,7 +13,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/api"
+	"gitlab.com/shaninalex/lumna/app/internal/bus"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/internal/email"
+	"gitlab.com/shaninalex/lumna/app/internal/logger"
 	"gitlab.com/shaninalex/lumna/app/internal/persistence"
 	"go.uber.org/dig"
 )
@@ -29,15 +32,23 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			if err != nil {
 				panic(err)
 			}
+
+			appContext, appCancel := context.WithCancel(context.Background())
+			defer appCancel()
+
+			_ = c.Provide(func() context.Context {
+				return appContext
+			})
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
+			_ = c.Provide(bus.ProvideEventBus)
+			_ = c.Provide(logger.ProvideLogger)
+			_ = c.Invoke(email.InvokeEmailQueue)
 
 			// Providing api module
-			if err := api.Module(c); err != nil {
-				panic(err)
-			}
+			_ = api.Module(c)
 
-			err = c.Invoke(func(router *gin.Engine, config *config.Config) {
+			err = c.Invoke(func(router *gin.Engine, config *config.Config, ctx context.Context) {
 				srv := &http.Server{
 					Addr:    fmt.Sprintf(":%d", config.Serve.Port),
 					Handler: router,
@@ -53,7 +64,9 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 				quit := make(chan os.Signal, 1)
 				signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 				<-quit
+
 				log.Println("Shutting down server...")
+				appCancel()
 
 				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 				defer cancel()

@@ -1,10 +1,10 @@
 package commands
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 
-	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/internal/auth"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
@@ -58,7 +58,6 @@ func identityCreate(email, fullname, pwd string, active bool) func(db *gorm.DB) 
 	return func(db *gorm.DB) {
 
 		user := models.Identity{
-			ID:       uuid.New(),
 			FullName: fullname,
 			Email:    email,
 			Active:   active,
@@ -76,7 +75,7 @@ func identityCreate(email, fullname, pwd string, active bool) func(db *gorm.DB) 
 		credential := models.Credential{
 			IdentityID:     user.ID,
 			Provider:       "local",
-			ProviderUserID: utils.Pointer(user.ID.String()),
+			ProviderUserID: utils.Pointer(fmt.Sprintf("%d", user.ID)),
 			Email:          &user.Email,
 			PasswordHash:   utils.Pointer(pwdHash),
 		}
@@ -85,7 +84,7 @@ func identityCreate(email, fullname, pwd string, active bool) func(db *gorm.DB) 
 			log.Fatal(result.Error)
 		}
 
-		log.Println("User created with ID:", user.ID.String())
-		log.Println("Credentials created", credential.ID.String())
+		log.Println("User created with ID:", user.ID)
+		log.Println("Credentials created", credential.ID)
 	}
 }

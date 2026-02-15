@@ -14,7 +14,7 @@ import { actionColumnDelete, ColumnState } from '@entities/column';
 })
 export class ColumnDeleteFeature {
     private store = inject(Store<ColumnState>);
-    columnId = input.required<string>();
+    columnId = input.required<number>();
     columnName = input.required<string>();
     dialog = inject(Dialog);
 

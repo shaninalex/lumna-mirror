@@ -15,11 +15,11 @@ type AccessClaims struct {
 }
 
 // GenerateAccessJWTToken - generate jwt access token
-func GenerateAccessJWTToken(userID string, scopes string, ttl time.Duration) (string, error) {
+func GenerateAccessJWTToken(userID uint, scopes string, ttl time.Duration) (string, error) {
 	claims := jwt.MapClaims{
 		"iss":   "lumna-api",
 		"aud":   "lumna-web-client",
-		"sub":   userID,
+		"sub":   fmt.Sprintf("%d", userID),
 		"scope": scopes,
 		"iat":   time.Now().Unix(),
 		"exp":   time.Now().Add(ttl).Unix(),

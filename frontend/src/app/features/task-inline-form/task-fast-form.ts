@@ -59,8 +59,8 @@ export class TaskInlineFormFeature {
     private store = inject(Store<TaskState>);
     private actions$ = inject(Actions);
 
-    project_id = input.required<string>();
-    column_id = input.required<string>();
+    project_id = input.required<number>();
+    column_id = input.required<number>();
     task_count = input.required<number>();
 
     openedForm = signal<boolean>(false);

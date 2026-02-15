@@ -2,15 +2,15 @@ package column
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
 func (s *ColumnController) Patch(c *gin.Context) {
-	columnId, err := uuid.Parse(c.Param("columnId"))
+	columnId, err := strconv.Atoi(c.Param("columnId"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
@@ -22,7 +22,7 @@ func (s *ColumnController) Patch(c *gin.Context) {
 		return
 	}
 
-	column, err := s.columnService.Get(c.Request.Context(), columnId)
+	column, err := s.columnService.Get(c.Request.Context(), uint(columnId))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

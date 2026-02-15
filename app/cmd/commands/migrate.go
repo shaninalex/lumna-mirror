@@ -1,14 +1,10 @@
 package commands
 
 import (
-	"log"
-
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/internal/config"
 	"gitlab.com/shaninalex/lumna/app/internal/persistence"
-	"gitlab.com/shaninalex/lumna/app/models"
 	"go.uber.org/dig"
-	"gorm.io/gorm"
 )
 
 func NewMigrateRootCmd() *cobra.Command {
@@ -26,28 +22,11 @@ func NewMigrateRootCmd() *cobra.Command {
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
 
-			if err := c.Invoke(migrate); err != nil {
+			if err := c.Invoke(persistence.Migrate); err != nil {
 				panic(err)
 			}
 		},
 	}
 
 	return cmd
-}
-
-func migrate(db *gorm.DB, config *config.Config) {
-	if err := db.AutoMigrate(
-		&models.Identity{},
-		&models.Credential{},
-		&models.RefreshToken{},
-
-		&models.Project{},
-		&models.Board{},
-		&models.Column{},
-		&models.Task{},
-	); err != nil {
-		log.Fatal(err)
-	}
-
-	log.Printf("Database migrated in %s\n", config.Database.Url)
 }

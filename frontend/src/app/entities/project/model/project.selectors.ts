@@ -8,7 +8,7 @@ export const selectProjects = createSelector(selectProjectsFeature, (state) =>
     projectsSelectors.selectAll(state),
 );
 
-export const selectProjectByID = (id: string) =>
+export const selectProjectByID = (id: number) =>
     createSelector(selectProjectsFeature, (state: ProjectState) =>
         projectsSelectors.selectAll(state).find((p) => p.id === id),
     );

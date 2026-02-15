@@ -1,9 +1,9 @@
 import { BoardModel } from '@entities/board';
 
 export interface ProjectModel {
-    id: string;
+    id: number;
     title: string;
-    owner_id: string;
+    owner_id: number;
     boards: BoardModel[];
     created_at: Date;
     updated_at: Date;

@@ -22,7 +22,7 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
                 </button>
 
                 <ng-template #menu>
-                    <div class="bg-white border border-gray-200 rounded-xl p-4" cdkMenu>
+                    <div class="dropdown p-4" cdkMenu>
                         <a [routerLink]="['/projects', project.id, 'edit']">Edit</a>
                     </div>
                 </ng-template>

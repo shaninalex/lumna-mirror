@@ -1,7 +1,7 @@
 export interface BoardModel {
-    id: string;
+    id: number;
     title: string;
-    project_id: string;
+    project_id: number;
 
     created_at: Date;
     updated_at: Date;
@@ -9,5 +9,5 @@ export interface BoardModel {
 
 export interface BoardPayloadModel {
     title: string;
-    project_id: string;
+    project_id: number;
 }

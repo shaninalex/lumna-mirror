@@ -1,3 +1,21 @@
+## 0.31.0 (2026-02-15)
+
+### Feat
+
+- event bus
+- **api**: context provider, project handlers, add logger to create project
+
+### Fix
+
+- **ui**: change id to numeric ids
+- **models**: relations
+- **ui**: layout
+
+### Refactor
+
+- uuid to uint on server
+- **api**: logger
+
 ## 0.30.0 (2026-02-07)
 
 ### Feat

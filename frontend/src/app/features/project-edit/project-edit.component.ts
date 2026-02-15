@@ -2,14 +2,13 @@ import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { form, required, FormField } from '@angular/forms/signals';
-import { ProjectEditModel } from './model/project-edit.model';
 
 import {
     actionProjectUpdate,
     actionProjectUpsert,
     ProjectModel,
+    ProjectPayload,
     ProjectState,
-    selectProjectByID,
 } from '@entities/project';
 import { filter, Observable, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -22,12 +21,12 @@ import { AsyncPipe } from '@angular/common';
 export class ProjectEditFeature implements OnInit {
     private actions$ = inject(Actions);
     private store = inject(Store<ProjectState>);
-    private projectId: string;
+    private projectId: number;
     @Input() project$: Observable<ProjectModel>;
 
     loading = false;
 
-    projectFormModel = signal<ProjectEditModel>({
+    projectFormModel = signal<ProjectPayload>({
         title: '',
     });
     errors = signal<string[]>([]);

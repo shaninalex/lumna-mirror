@@ -18,9 +18,7 @@ func Module(c *dig.Container) error {
 	_ = task.Module(c)
 	_ = user.Module(c)
 
-	if err := c.Provide(NewApi); err != nil {
-		panic(err)
-	}
+	_ = c.Provide(NewApi)
 
 	return nil
 }

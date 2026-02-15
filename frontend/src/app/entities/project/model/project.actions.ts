@@ -5,12 +5,12 @@ export const actionProjectList = createAction('[Project] get list');
 
 export const actionProjectDelete = createAction(
     '[Project] delete',
-    props<{ project_id: string }>(),
+    props<{ project_id: number }>(),
 );
 
 export const actionProjectDeleteSuccess = createAction(
     '[Project] deleted',
-    props<{ project_id: string }>(),
+    props<{ project_id: number }>(),
 );
 
 export const actionProjectsSetList = createAction(
@@ -25,7 +25,7 @@ export const actionProjectCreate = createAction(
 
 export const actionProjectUpdate = createAction(
     '[Project] update',
-    props<{ id: string; data: ProjectPayload }>(),
+    props<{ id: number; data: ProjectPayload }>(),
 );
 
 export const actionProjectUpsert = createAction(

@@ -61,7 +61,7 @@ export class NewColumnForm implements OnInit {
     private actions$ = inject(Actions);
     private store = inject(Store<ColumnState>);
 
-    @Input() board_id: string;
+    @Input() board_id: number;
     columns_length = input.required<number>();
 
     openedForm = signal<boolean>(false);

@@ -1,6 +1,6 @@
 export interface TaskModel {
-    id: string;
-    column_id: string;
+    id: number;
+    column_id: number;
     title: string;
     order: number;
     done: boolean;
@@ -11,5 +11,5 @@ export interface TaskModel {
 export interface TaskPayloadModel {
     title: string;
     order: number;
-    column_id: string;
+    column_id: number;
 }

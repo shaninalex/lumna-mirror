@@ -10,7 +10,7 @@ import {
 import { FormField, form, required } from '@angular/forms/signals';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
-import { Observable, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -20,12 +20,12 @@ import { Store } from '@ngrx/store';
 })
 export class BoardEditFeature {
     board = input<BoardModel>();
-    boardId: string;
+    boardId: number;
     private actions$ = inject(Actions);
     private store = inject(Store<BoardState>);
 
     boardFormModel = signal<BoardPayloadModel>({
-        project_id: '',
+        project_id: 0,
         title: '',
     });
     boardForm = form(this.boardFormModel, (schemaPath) => {

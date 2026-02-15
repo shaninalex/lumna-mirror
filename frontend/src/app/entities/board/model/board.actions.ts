@@ -2,7 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { BoardModel, BoardPayloadModel } from '@entities/board';
 
 // LIST
-export const actionBoardGetList = createAction('[Board] get list', props<{ projectId: string }>());
+export const actionBoardGetList = createAction('[Board] get list', props<{ projectId: number }>());
 
 export const actionBoardSetList = createAction(
     '[Board] set list',
@@ -18,19 +18,19 @@ export const actionBoardCreate = createAction(
 // PATCH
 export const actionBoardPatch = createAction(
     '[Board] patch',
-    props<{ boardId: string; data: BoardPayloadModel }>(),
+    props<{ boardId: number; data: BoardPayloadModel }>(),
 );
 
 // SET single board:
 export const actionBoardUpsert = createAction('[Board] upsert', props<{ board: BoardModel }>());
 
 // DELETE
-export const actionBoardDelete = createAction('[Board] delete', props<{ boardId: string }>());
+export const actionBoardDelete = createAction('[Board] delete', props<{ boardId: number }>());
 
 // to remove from store
 export const actionBoardDeleteSuccess = createAction(
     '[Board] delete success',
-    props<{ boardId: string }>(),
+    props<{ boardId: number }>(),
 );
 
 // ERROR

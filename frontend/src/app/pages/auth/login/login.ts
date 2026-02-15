@@ -1,19 +1,23 @@
-import { Component } from '@angular/core';
-import { AuthLayout } from '@core/layouts';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthLoginFeature } from '@features/index';
+import { UiService } from '@shared/ui';
 
 @Component({
     selector: 'app-login',
-    imports: [AuthLoginFeature, AuthLayout],
+    imports: [AuthLoginFeature],
     template: `
-        <app-auth-layout [hasLogo]="true">
-            <auth-login-feature />
+        <auth-login-feature />
 
-            <hr class="my-4 border-gray-300" />
-            <div class="text-center">
-                <a routerLink="#" class="text-gray-500 underline">Restore</a>
-            </div>
-        </app-auth-layout>
+        <hr class="my-4 border-gray-300" />
+        <div class="text-center">
+            <a routerLink="#" class="text-gray-500 underline">Restore</a>
+        </div>
     `,
 })
-export class Login {}
+export class Login implements OnInit {
+    private ui = inject(UiService);
+
+    ngOnInit(): void {
+        this.ui.setPageTitle('Login');
+    }
+}

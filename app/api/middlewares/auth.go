@@ -5,9 +5,9 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/internal"
 	"gitlab.com/shaninalex/lumna/app/internal/auth"
@@ -42,7 +42,7 @@ func AuthMiddleware(c *gin.Context) {
 		return
 	}
 
-	userID, err := uuid.Parse(claims.Subject)
+	userID, err := strconv.Atoi(claims.Subject)
 	if err != nil {
 		utils.Error(c, http.StatusUnauthorized, ErrorAuthMiddlewareInvalidID)
 		c.Abort()
@@ -53,7 +53,7 @@ func AuthMiddleware(c *gin.Context) {
 	ctx = context.WithValue(ctx, internal.ContextIdentity, userID)
 	// fill request context with values here
 
-	c.Set("userID", userID)
+	c.Set("userID", uint(userID))
 	c.Request = c.Request.WithContext(ctx)
 	c.Next()
 }

@@ -18,7 +18,6 @@ func NewProjectsController(
 		projectService: projectService,
 		boardService:   boardService,
 	}
-
 	return s
 }
 
