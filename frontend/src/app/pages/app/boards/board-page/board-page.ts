@@ -44,7 +44,6 @@ export class BoardPage implements OnInit {
 
     ngOnInit() {
         this.board$ = this.route.params.pipe(
-            tap((params) => console.log(params)),
             switchMap((params) =>
                 this.store.select(selectBoardById(params['id'])).pipe(
                     // filter((board) => !!board),

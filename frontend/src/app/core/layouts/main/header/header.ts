@@ -8,10 +8,11 @@ import { UiService } from '@shared/ui';
 import { selectUser, UserState } from '@entities/user';
 import { actionSessionLoggingOut } from '@core/store/index';
 import { ThemeSwitcher } from './components';
+import { BreadCrumbs } from './components/breadcrumbs/breadcrumbs.component';
 
 @Component({
     selector: 'app-header',
-    imports: [CdkMenuTrigger, CdkMenu, CdkMenuItem, AsyncPipe, ThemeSwitcher],
+    imports: [CdkMenuTrigger, CdkMenu, CdkMenuItem, AsyncPipe, ThemeSwitcher, BreadCrumbs],
     templateUrl: './header.html',
     styleUrl: './header.css',
 })

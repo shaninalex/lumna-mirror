@@ -1,5 +1,8 @@
 <header class="header">
-    <div class="font-medium">{{ title() }}</div>
+    <div class="flex gap-4 items-center">
+        <div class="font-medium">{{ title() }}</div>
+        <app-breadcrumbs />
+    </div>
 
     <div>
         <app-theme-switcher />

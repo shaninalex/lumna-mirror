@@ -10,6 +10,7 @@ export class UiService {
     pageTitle: BehaviorSubject<string> = new BehaviorSubject('');
     theme: BehaviorSubject<Theme> = new BehaviorSubject<Theme>('auto');
     private themeManager = new ThemeManager(this.theme);
+    private currentUrl: BehaviorSubject<string> = new BehaviorSubject('');
 
     titleService = inject(Title);
 
@@ -38,5 +39,13 @@ export class UiService {
 
     public getTheme(): Observable<Theme> {
         return this.theme;
+    }
+
+    public setUrl(s: string) {
+        this.currentUrl.next(s);
+    }
+
+    public getUrl(): Observable<string> {
+        return this.currentUrl;
     }
 }
