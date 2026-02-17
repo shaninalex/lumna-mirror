@@ -17,7 +17,6 @@ import { tap } from 'rxjs';
     `,
 })
 export class BoardDeleteFeature {
-    @Input() projectId: number;
     @Input() boardId: number;
     @Input() boardTitle: string;
 
@@ -28,13 +27,13 @@ export class BoardDeleteFeature {
     private store = inject(Store<BoardState>);
 
     constructor() {
-        this.actions$
-            .pipe(
-                ofType(actionBoardDeleteSuccess),
-                takeUntilDestroyed(),
-                tap(() => this.router.navigate(['/projects', this.projectId])),
-            )
-            .subscribe();
+        // this.actions$
+        //     .pipe(
+        //         ofType(actionBoardDeleteSuccess),
+        //         takeUntilDestroyed(),
+        //         tap(() => this.router.navigate(['/projects', this.projectId])),
+        //     )
+        //     .subscribe();
     }
 
     openDialog(): void {

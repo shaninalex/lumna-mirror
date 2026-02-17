@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { BoardModel, BoardState } from '@entities/board';
+import { actionBoardGet, BoardModel, BoardState } from '@entities/board';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { KanbanBoardFeature } from '@features/kanban-board';
@@ -40,14 +40,21 @@ export class BoardPage implements OnInit {
     private route = inject(ActivatedRoute);
     private ui = inject(UiService);
     private store = inject(Store<BoardState>);
-    board$: Observable<BoardModel>;
+    board$: Observable<BoardModel | null>;
 
     ngOnInit() {
         this.board$ = this.route.params.pipe(
+            tap((params) => console.log(params)),
             switchMap((params) =>
-                this.store.select(selectBoardById(params['boardId'])).pipe(
-                    filter((board) => !!board),
-                    tap((board) => this.ui.setPageTitle(`Board: ${board.title}`)),
+                this.store.select(selectBoardById(params['id'])).pipe(
+                    // filter((board) => !!board),
+                    tap((board) => {
+                        if (board) {
+                            this.ui.setPageTitle(`Board: ${board.title}`);
+                        } else {
+                            this.store.dispatch(actionBoardGet({ boardId: params['id'] }));
+                        }
+                    }),
                 ),
             ),
         );

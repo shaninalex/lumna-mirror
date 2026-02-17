@@ -2,12 +2,12 @@ import { Routes } from '@angular/router';
 
 import { Home } from './home/home';
 
-import { projectsRoutes } from './projects/projects.routes';
-import { boardRoutes } from './boards/boards.routes';
 import { authGuard } from './guards/auth.guard';
 import { Calendar } from './calendar/calendar';
-import { ProjectsContainer } from './projects/container';
 import { DashboardContainer } from './container';
+import { boardRoutes } from './boards/boards.routes';
+import { projectsRoutes } from './projects/projects.routes';
+import { taskRoutes } from './task';
 
 export const routes: Routes = [
     {
@@ -21,14 +21,12 @@ export const routes: Routes = [
                 title: 'Overview',
             },
             {
-                path: 'projects',
-                component: ProjectsContainer,
-                children: [...projectsRoutes, ...boardRoutes],
-            },
-            {
                 path: 'calendar',
                 component: Calendar,
             },
+            ...boardRoutes,
+            ...projectsRoutes,
+            ...taskRoutes,
         ],
     },
 ];

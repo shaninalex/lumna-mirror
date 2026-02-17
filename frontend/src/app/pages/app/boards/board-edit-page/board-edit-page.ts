@@ -16,11 +16,7 @@ import { filter, Observable, switchMap, tap } from 'rxjs';
             <h1>Board "{{ board.title }}" Edit</h1>
             <app-board-edit-feature [board]="board" />
             <div class="my-4 border-b border-gray-200"></div>
-            <app-board-delete-feature
-                [boardId]="board.id"
-                [boardTitle]="board.title"
-                [projectId]="projectId"
-            />
+            <app-board-delete-feature [boardId]="board.id" [boardTitle]="board.title" />
         }
     `,
 })
@@ -31,9 +27,8 @@ export class BoardEditPage {
     route = inject(ActivatedRoute);
     projectId: number;
     board$: Observable<BoardModel> = this.route.params.pipe(
-        tap((params) => (this.projectId = params['id'])),
         switchMap((params) =>
-            this.store.select(selectBoardById(params['boardId'])).pipe(
+            this.store.select(selectBoardById(params['id'])).pipe(
                 filter((board) => !!board),
                 tap((board) => {
                     const title = `Edit board: ${board.title}`;

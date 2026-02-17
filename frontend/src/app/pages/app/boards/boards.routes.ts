@@ -5,11 +5,11 @@ import { BoardEditPage } from './board-edit-page/board-edit-page';
 
 export const boardRoutes: Routes = [
     {
-        path: ':id/board/:boardId',
+        path: 'board/:id',
         component: BoardPage,
     },
     {
-        path: ':id/board/:boardId/edit',
+        path: 'board/:id/edit',
         component: BoardEditPage,
     },
 ];

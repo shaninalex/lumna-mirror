@@ -1,6 +1,8 @@
 <div class="rounded-xl p-4 bg-surface">
     <div class="flex justify-between items-center">
-        <div class="cursor-pointer mb-1 font-medium">{{ task().title }}</div>
+        <a [routerLink]="['/task', task().id]" class="cursor-pointer mb-1 font-medium">
+            {{ task().title }}
+        </a>
 
         <button class="cursor-pointer">
             <i class="fa-solid fa-ellipsis"></i>

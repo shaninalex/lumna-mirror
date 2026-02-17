@@ -24,6 +24,12 @@ export class BoardApi {
             .pipe(map((response) => response.data));
     }
 
+    Get(boardId: number): Observable<BoardModel> {
+        return this.http
+            .get<APIResponse<BoardModel>>(`/api/v1/board/${boardId}`, { withCredentials: true })
+            .pipe(map((response) => response.data));
+    }
+
     Delete(boardId: number): Observable<void> {
         return this.http
             .delete<APIResponse<void>>(`/api/v1/board/${boardId}`, { withCredentials: true })
