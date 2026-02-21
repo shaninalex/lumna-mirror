@@ -1,10 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ProjectModel, ProjectState, selectProjectByID } from '@entities/project';
+import { ProjectModel } from '@entities/project';
 import { BoardsList } from '@entities/board';
-import { filter, Observable, switchMap, tap } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { UiService } from '@shared/ui';
+import { filter, map, Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -37,20 +35,10 @@ import { AsyncPipe } from '@angular/common';
         <a [routerLink]="['edit']" class="btn btn-sm btn-primary">Edit</a>
     `,
 })
-export class ProjectDetail implements OnInit {
-    private ui = inject(UiService);
+export class ProjectDetail {
     private route = inject(ActivatedRoute);
-    private store = inject(Store<ProjectState>);
-    project$: Observable<ProjectModel>;
-
-    ngOnInit() {
-        this.project$ = this.route.params.pipe(
-            switchMap((params) =>
-                this.store.select(selectProjectByID(parseInt(params['id']))).pipe(
-                    filter((project) => !!project),
-                    tap((project) => this.ui.setPageTitle(`Project: ${project.title}`)),
-                ),
-            ),
-        );
-    }
+    project$: Observable<ProjectModel> = this.route.data.pipe(
+        filter((data) => !!data['project']),
+        map((data) => data['project'] as ProjectModel),
+    );
 }

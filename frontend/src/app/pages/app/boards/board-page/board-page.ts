@@ -1,13 +1,11 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {actionBoardGet, BoardModel, BoardState} from '@entities/board';
+import {Component, inject} from '@angular/core';
+import {BoardModel} from '@entities/board';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';
 import {KanbanBoardFeature} from '@features/kanban-board';
-import {UiService} from '@shared/ui';
-import {map, Observable, switchMap, tap} from 'rxjs';
+import {filter, map, Observable, tap} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
-import {Store} from '@ngrx/store';
-import {selectBoardById} from '@entities/board/model/board.selectors';
+import {UiService} from '@shared/ui';
 
 @Component({
     selector: 'app-board-page',
@@ -18,7 +16,6 @@ import {selectBoardById} from '@entities/board/model/board.selectors';
                 <div>
                     <div class="font-medium">{{ board.title }}</div>
                 </div>
-
                 <div>
                     <button [cdkMenuTriggerFor]="menu" class="cursor-pointer">
                         <i class="fa-solid fa-ellipsis"></i>
@@ -36,30 +33,13 @@ import {selectBoardById} from '@entities/board/model/board.selectors';
         }
     `,
 })
-export class BoardPage implements OnInit {
+export class BoardPage {
     private route = inject(ActivatedRoute);
     private ui = inject(UiService);
-    private store = inject(Store<BoardState>);
-    board$: Observable<BoardModel | null>;
 
-    ngOnInit() {
-        this.route.data.subscribe((data) => {
-            console.log(data["board"] as BoardModel)
-        })
-
-        this.board$ = this.route.params.pipe(
-            switchMap((params) =>
-                this.store.select(selectBoardById(params['id'])).pipe(
-                    // filter((board) => !!board),
-                    tap((board) => {
-                        if (board) {
-                            this.ui.setPageTitle(`Board: ${board.title}`);
-                        } else {
-                            this.store.dispatch(actionBoardGet({boardId: params['id']}));
-                        }
-                    }),
-                ),
-            ),
-        );
-    }
+    board$: Observable<BoardModel> = this.route.data.pipe(
+        filter((data) => !!data['board']),
+        map((data) => data['board'] as BoardModel),
+        tap((board) => this.ui.setPageTitle(`Board: ${board.title}`)),
+    );
 }

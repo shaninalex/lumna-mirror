@@ -1,12 +1,10 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BoardModel, BoardState } from '@entities/board';
-import { selectBoardById } from '@entities/board/model/board.selectors';
-import { Store } from '@ngrx/store';
+import { BoardModel } from '@entities/board';
 import { BoardDeleteFeature, BoardEditFeature } from '@root/src/app/features';
 import { UiService } from '@shared/ui';
-import { filter, Observable, switchMap, tap } from 'rxjs';
+import { filter, map, Observable, tap } from 'rxjs';
 
 @Component({
     selector: 'app-board-edit-page',
@@ -21,20 +19,13 @@ import { filter, Observable, switchMap, tap } from 'rxjs';
     `,
 })
 export class BoardEditPage {
-    private store = inject(Store<BoardState>);
     private ui = inject(UiService);
 
     route = inject(ActivatedRoute);
     projectId: number;
-    board$: Observable<BoardModel> = this.route.params.pipe(
-        switchMap((params) =>
-            this.store.select(selectBoardById(params['id'])).pipe(
-                filter((board) => !!board),
-                tap((board) => {
-                    const title = `Edit board: ${board.title}`;
-                    this.ui.setPageTitle(title);
-                }),
-            ),
-        ),
+    board$: Observable<BoardModel> = this.route.data.pipe(
+        filter((data) => !!data['board']),
+        map((data) => data['board'] as BoardModel),
+        tap((board) => this.ui.setPageTitle(`Edit board: ${board.title}`)),
     );
 }
