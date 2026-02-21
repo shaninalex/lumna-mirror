@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { ProjectModel } from '@entities/project';
 import { BoardsList } from '@entities/board';
 import { filter, map, Observable, tap } from 'rxjs';
@@ -46,3 +46,10 @@ export class ProjectDetail {
         tap((project) => this.ui.setPageTitle(`Project: ${project.title}`)),
     );
 }
+
+@Component({
+    selector: 'app-project-container',
+    imports: [RouterOutlet],
+    template: `<router-outlet />`,
+})
+export class ProjectContainer {}

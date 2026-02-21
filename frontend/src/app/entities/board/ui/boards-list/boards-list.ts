@@ -16,7 +16,7 @@ import { AsyncPipe } from '@angular/common';
             @if (boards | async; as boards) {
                 <nav class="flex flex-wrap gap-4">
                     @for (board of boards; track board.id) {
-                        <a [routerLink]="['/board', board.id]" class="btn btn-primary">{{
+                        <a [routerLink]="['/projects', projectId, 'boards', board.id]" class="btn btn-primary">{{
                             board.title
                         }}</a>
                     }

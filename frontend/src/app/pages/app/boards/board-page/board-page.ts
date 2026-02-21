@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { BoardModel } from '@entities/board';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { KanbanBoardFeature } from '@features/kanban-board';
 import { filter, map, Observable, tap } from 'rxjs';
@@ -23,7 +23,7 @@ import { UiService } from '@shared/ui';
 
                     <ng-template #menu>
                         <div class="dropdown p-4" cdkMenu>
-                            <a [routerLink]="['edit']">Edit</a>
+                            <a [routerLink]="['/projects', board.project_id, 'boards', board.id, 'edit']">Edit</a>
                         </div>
                     </ng-template>
                 </div>
@@ -43,3 +43,11 @@ export class BoardPage {
         tap((board) => this.ui.setPageTitle(`Board: ${board.title}`)),
     );
 }
+
+@Component({
+    selector: 'app-board-container',
+    imports: [RouterOutlet],
+    template: `<router-outlet />`,
+})
+export class BoardContainer {}
+
