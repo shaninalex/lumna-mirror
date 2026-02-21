@@ -8,6 +8,7 @@ import { DashboardContainer } from './container';
 import { boardRoutes } from './boards/boards.routes';
 import { projectsRoutes } from './projects/projects.routes';
 import { taskRoutes } from './task';
+import { settingsRoutes } from '@pages/app/settings';
 
 export const routes: Routes = [
     {
@@ -24,6 +25,7 @@ export const routes: Routes = [
                 path: 'calendar',
                 component: Calendar,
             },
+            ...settingsRoutes,
             ...projectsRoutes,
             ...boardRoutes,
             ...taskRoutes,

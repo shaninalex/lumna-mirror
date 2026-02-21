@@ -2,6 +2,8 @@ import { createAction, props } from '@ngrx/store';
 import { TaskModel, TaskPayloadModel } from './task.model';
 import { KanbanBoardChangeOrderPayload } from '@features/kanban-board/model';
 
+export const actionTaskGetTaskById = createAction('[Task] get task]', props<{task_id: number}>());
+
 // LIST
 export const actionTaskGetTasks = createAction('[Task] get tasks', props<{ board_id: number }>());
 

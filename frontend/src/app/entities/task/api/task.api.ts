@@ -26,7 +26,7 @@ export class TaskApi {
 
     Get(taskId: number): Observable<TaskModel> {
         return this.http
-            .delete<APIResponse<TaskModel>>(`/api/v1/task/${taskId}`, { withCredentials: true })
+            .get<APIResponse<TaskModel>>(`/api/v1/task/${taskId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 

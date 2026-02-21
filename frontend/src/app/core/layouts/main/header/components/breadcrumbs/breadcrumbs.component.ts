@@ -1,23 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { UiService } from '@shared/ui';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-breadcrumbs',
-    template: `
-        <ul class="flex items-center gap-2">
-            @for (item of links; track $index) {
-                <li>{{ item }}</li>
-            }
-        </ul>
-    `,
+    template: ``,
 })
 export class BreadCrumbs implements OnInit {
-    private ui = inject(UiService);
-    links: Array<string> = [];
+    private route = inject(ActivatedRoute);
 
     ngOnInit(): void {
-        this.ui.getUrl().subscribe((url) => this.processUrl(url));
+        console.log('breadcrumbs');
     }
-
-    private processUrl(url: string) {}
 }
