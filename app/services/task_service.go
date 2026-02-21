@@ -53,6 +53,7 @@ func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		Order:     payload.Order,
 		ColumnID:  column.ID,
 		ProjectID: column.ProjectID,
+		BoardID:   column.BoardID,
 	}
 	if result := s.db.WithContext(ctx).Create(&task); result.Error != nil {
 		return nil, result.Error

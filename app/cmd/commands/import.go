@@ -136,6 +136,7 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 							Order:     uint(ti),
 							Body:      _task.Body,
 							ProjectID: project.ID,
+							BoardID:   board.ID,
 						}
 						if result := database.Create(&task); result.Error != nil {
 							panic(result.Error)
