@@ -13,7 +13,9 @@ export class RouterEffects {
         () =>
             this.actions$.pipe(
                 ofType(routerNavigatedAction),
-                tap((action) => this.ui.setUrl(action.payload.routerState.url)),
+                tap((action) => {
+                    this.ui.setUrl(action.payload.routerState.url)
+                }),
             ),
         { dispatch: false },
     );

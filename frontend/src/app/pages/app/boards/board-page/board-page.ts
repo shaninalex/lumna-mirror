@@ -1,13 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { actionBoardGet, BoardModel, BoardState } from '@entities/board';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
-import { KanbanBoardFeature } from '@features/kanban-board';
-import { UiService } from '@shared/ui';
-import { filter, Observable, switchMap, tap } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
-import { Store } from '@ngrx/store';
-import { selectBoardById } from '@entities/board/model/board.selectors';
+import {Component, inject, OnInit} from '@angular/core';
+import {actionBoardGet, BoardModel, BoardState} from '@entities/board';
+import {ActivatedRoute, RouterLink} from '@angular/router';
+import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';
+import {KanbanBoardFeature} from '@features/kanban-board';
+import {UiService} from '@shared/ui';
+import {map, Observable, switchMap, tap} from 'rxjs';
+import {AsyncPipe} from '@angular/common';
+import {Store} from '@ngrx/store';
+import {selectBoardById} from '@entities/board/model/board.selectors';
 
 @Component({
     selector: 'app-board-page',
@@ -43,6 +43,10 @@ export class BoardPage implements OnInit {
     board$: Observable<BoardModel | null>;
 
     ngOnInit() {
+        this.route.data.subscribe((data) => {
+            console.log(data["board"] as BoardModel)
+        })
+
         this.board$ = this.route.params.pipe(
             switchMap((params) =>
                 this.store.select(selectBoardById(params['id'])).pipe(
@@ -51,7 +55,7 @@ export class BoardPage implements OnInit {
                         if (board) {
                             this.ui.setPageTitle(`Board: ${board.title}`);
                         } else {
-                            this.store.dispatch(actionBoardGet({ boardId: params['id'] }));
+                            this.store.dispatch(actionBoardGet({boardId: params['id']}));
                         }
                     }),
                 ),

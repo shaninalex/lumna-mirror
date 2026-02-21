@@ -18,6 +18,5 @@ export const appConfig: ApplicationConfig = {
         provideStore(reducers),
         provideRouterStore(),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-        provideRouterStore(),
     ],
 };
