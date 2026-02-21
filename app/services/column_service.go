@@ -45,10 +45,17 @@ type ColumnUpdate struct {
 }
 
 func (s *ColumnService) Create(ctx context.Context, payload ColumnUpdate) (*models.Column, error) {
+	board := &models.Board{}
+	result := s.db.WithContext(ctx).Where("id = ?", payload.BoardId).First(board)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
 	column := models.Column{
-		BoardID: payload.BoardId,
-		Order:   payload.Order,
-		Title:   payload.Title,
+		BoardID:   board.ID,
+		Order:     payload.Order,
+		Title:     payload.Title,
+		ProjectID: board.ProjectID,
 	}
 	if result := s.db.WithContext(ctx).Create(&column); result.Error != nil {
 		return nil, result.Error

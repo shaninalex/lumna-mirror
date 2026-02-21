@@ -15,6 +15,9 @@ type Column struct {
 	BoardID uint  `gorm:"not null;index" json:"board_id"`
 	Board   Board `json:"-"`
 
+	ProjectID uint    `gorm:"not null;index" json:"project_id"`
+	Project   Project `json:"-"`
+
 	Tasks []Task `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"tasks"`
 
 	CreatedAt time.Time `json:"created_at"`

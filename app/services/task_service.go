@@ -43,10 +43,16 @@ type TaskPayload struct {
 }
 
 func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
+	column := &models.Column{}
+	result := s.db.WithContext(ctx).Where("id = ?", payload.ColumnID).First(&column)
+	if result.Error != nil {
+		return nil, result.Error
+	}
 	task := models.Task{
-		Title:    payload.Title,
-		Order:    payload.Order,
-		ColumnID: payload.ColumnID,
+		Title:     payload.Title,
+		Order:     payload.Order,
+		ColumnID:  column.ID,
+		ProjectID: column.ProjectID,
 	}
 	if result := s.db.WithContext(ctx).Create(&task); result.Error != nil {
 		return nil, result.Error

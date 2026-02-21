@@ -1,6 +1,7 @@
 export interface TaskModel {
     id: number;
     column_id: number;
+    project_id: number;
     title: string;
     order: number;
     done: boolean;

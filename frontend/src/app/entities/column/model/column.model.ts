@@ -5,6 +5,7 @@ export interface ColumnModel {
     title: string;
     order: number;
     board_id: number;
+    project_id: number;
     created_at: Date;
     updated_at: Date;
 }
@@ -14,6 +15,7 @@ export interface ApiColumnModel {
     title: string;
     order: number;
     board_id: number;
+    project_id: number;
     created_at: Date;
     updated_at: Date;
     tasks: TaskModel[];

@@ -18,6 +18,9 @@ type Task struct {
 
 	ColumnID uint   `gorm:"not null;index" json:"column_id"`
 	Column   Column `json:"-"`
+
+	ProjectID uint    `gorm:"not null;index" json:"project_id"`
+	Project   Project `json:"-"`
 }
 
 func (s *Task) BeforeCreate(tx *gorm.DB) error {
