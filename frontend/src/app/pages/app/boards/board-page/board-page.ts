@@ -1,11 +1,11 @@
-import {Component, inject} from '@angular/core';
-import {BoardModel} from '@entities/board';
-import {ActivatedRoute, RouterLink} from '@angular/router';
-import {CdkMenu, CdkMenuTrigger} from '@angular/cdk/menu';
-import {KanbanBoardFeature} from '@features/kanban-board';
-import {filter, map, Observable, tap} from 'rxjs';
-import {AsyncPipe} from '@angular/common';
-import {UiService} from '@shared/ui';
+import { Component, inject } from '@angular/core';
+import { BoardModel } from '@entities/board';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
+import { KanbanBoardFeature } from '@features/kanban-board';
+import { filter, map, Observable, tap } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
+import { UiService } from '@shared/ui';
 
 @Component({
     selector: 'app-board-page',
