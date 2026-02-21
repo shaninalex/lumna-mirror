@@ -2,8 +2,9 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProjectModel } from '@entities/project';
 import { BoardsList } from '@entities/board';
-import { filter, map, Observable } from 'rxjs';
+import { filter, map, Observable, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { UiService } from '@shared/ui';
 
 @Component({
     selector: 'app-project-detail',
@@ -37,8 +38,11 @@ import { AsyncPipe } from '@angular/common';
 })
 export class ProjectDetail {
     private route = inject(ActivatedRoute);
+    private ui = inject(UiService);
+
     project$: Observable<ProjectModel> = this.route.data.pipe(
         filter((data) => !!data['project']),
         map((data) => data['project'] as ProjectModel),
+        tap((project) => this.ui.setPageTitle(`Project: ${project.title}`)),
     );
 }
