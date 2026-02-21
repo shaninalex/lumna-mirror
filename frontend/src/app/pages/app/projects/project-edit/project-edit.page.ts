@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectModel } from '@entities/project';
-import { ProjectDeleteFeature, ProjectEditFeature } from '@features/index';
+import { ProjectDeleteFeature, ProjectEditFeature } from '@features';
 import { UiService } from '@shared/ui';
 import { filter, map, Observable, tap } from 'rxjs';
 
