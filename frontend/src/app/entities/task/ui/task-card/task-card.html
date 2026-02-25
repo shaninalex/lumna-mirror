@@ -1,7 +1,7 @@
 <div class="rounded-xl p-4 bg-surface">
     <div class="flex justify-between items-center">
-        <a [routerLink]="['/task', task().id]" class="cursor-pointer mb-1 font-medium">
-            {{ task().title }}
+        <a [routerLink]="[detailUrl()]" class="cursor-pointer mb-1 font-medium">
+            {{ task.title }}
         </a>
 
         <button class="cursor-pointer">
@@ -19,7 +19,7 @@
         </button>
         <div>
             <i class="fa-regular fa-calendar"></i>
-            {{ task().created_at | date: 'd MMM' }}
+            {{ task.created_at | date: 'd MMM' }}
         </div>
     </div>
 </div>

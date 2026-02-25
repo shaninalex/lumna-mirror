@@ -28,7 +28,7 @@
                     >
                         @for (task of c.tasks; track task.id) {
                             <div cdkDrag [cdkDragData]="task">
-                                <app-task-card [task]="task" />
+                                <app-task-card [board_id]="board.id" [task]="task" />
                             </div>
                         }
                     </div>
