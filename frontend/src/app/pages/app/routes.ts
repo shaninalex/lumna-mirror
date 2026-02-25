@@ -16,6 +16,9 @@ import { ProjectEditPage } from '@pages/app/projects/project-edit/project-edit.p
 import { BoardContainer, BoardPage } from '@pages/app/boards/board-page/board-page';
 import { boardResolver } from '@pages/app/boards/resolver';
 import { BoardEditPage } from '@pages/app/boards/board-edit-page/board-edit-page';
+import {TaskContainer} from '@pages/app/task/container';
+import {taskResolver} from '@pages/app/task/task-resolver';
+import {TaskDetailComponent} from '@pages/app/task/task-detail';
 
 export const routes: Routes = [
     {
@@ -93,7 +96,19 @@ export const routes: Routes = [
                     },
                 ],
             },
-            ...taskRoutes,
+            {
+                path: 'task',
+                component: TaskContainer,
+                children: [
+                    {
+                        path: ':id',
+                        component: TaskDetailComponent,
+                        resolve: {
+                            task: taskResolver
+                        }
+                    },
+                ],
+            },
         ],
     },
 ];
