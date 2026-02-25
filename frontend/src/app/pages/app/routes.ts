@@ -90,25 +90,25 @@ export const routes: Routes = [
                                             board: boardResolver,
                                         },
                                     },
+                                    {
+                                        path: 'task',
+                                        component: TaskContainer,
+                                        children: [
+                                            {
+                                                path: ':id',
+                                                component: TaskDetailComponent,
+                                                resolve: {
+                                                    task: taskResolver
+                                                }
+                                            },
+                                        ],
+                                    },
                                 ],
                             },
                         ],
                     },
                 ],
-            },
-            {
-                path: 'task',
-                component: TaskContainer,
-                children: [
-                    {
-                        path: ':id',
-                        component: TaskDetailComponent,
-                        resolve: {
-                            task: taskResolver
-                        }
-                    },
-                ],
-            },
+            }
         ],
     },
 ];
