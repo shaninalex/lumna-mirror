@@ -9,6 +9,5 @@ export class BreadCrumbs implements OnInit {
     private route = inject(ActivatedRoute);
 
     ngOnInit(): void {
-        console.log('breadcrumbs');
     }
 }

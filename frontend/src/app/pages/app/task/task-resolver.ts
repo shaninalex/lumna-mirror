@@ -6,7 +6,7 @@ import { actionTaskGetTaskById, selectTaskById, TaskModel, TaskState } from '@en
 
 export const taskResolver: ResolveFn<TaskModel | null> = (route: ActivatedRouteSnapshot) => {
     const store = inject(Store<TaskState>);
-    const taskId = Number(route.paramMap.get('id'));
+    const taskId = Number(route.paramMap.get('taskId'));
 
     return store.select(selectTaskById(taskId)).pipe(
         tap((task: TaskModel | null) => {

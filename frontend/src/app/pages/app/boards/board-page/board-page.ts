@@ -9,7 +9,7 @@ import { UiService } from '@shared/ui';
 
 @Component({
     selector: 'app-board-page',
-    imports: [CdkMenu, CdkMenuTrigger, RouterLink, KanbanBoardFeature, AsyncPipe],
+    imports: [CdkMenu, CdkMenuTrigger, RouterLink, RouterOutlet, KanbanBoardFeature, AsyncPipe],
     template: `
         @if (board$ | async; as board) {
             <div class="card bg-lime-200 dark:bg-lime-800 flex items-top justify-between mb-4">
@@ -31,6 +31,7 @@ import { UiService } from '@shared/ui';
 
             <app-kanban-board-feature [board]="board" />
         }
+        <router-outlet />
     `,
 })
 export class BoardPage {
@@ -43,11 +44,3 @@ export class BoardPage {
         tap((board) => this.ui.setPageTitle(`Board: ${board.title}`)),
     );
 }
-
-@Component({
-    selector: 'app-board-container',
-    imports: [RouterOutlet],
-    template: `<router-outlet />`,
-})
-export class BoardContainer {}
-

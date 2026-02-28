@@ -5,7 +5,7 @@ import {authGuard} from './guards/auth.guard';
 import {DashboardContainer} from './container';
 import {Home} from '@pages/app/home';
 import {Calendar} from '@pages/app/calendar';
-import {SettingsPage, SettingsContainer} from '@pages/app/settings';
+import {SettingsContainer, SettingsPage} from '@pages/app/settings';
 import {TaskDetailComponent, taskResolver} from '@pages/app/task';
 import {BoardContainer, BoardEditPage, BoardPage, boardResolver} from '@pages/app/boards';
 import {
@@ -79,6 +79,15 @@ export const routes: Routes = [
                                         resolve: {
                                             board: boardResolver,
                                         },
+                                        children: [
+                                            {
+                                                path: 'task/:taskId',
+                                                component: TaskDetailComponent,
+                                                resolve: {
+                                                    task: taskResolver,
+                                                },
+                                            },
+                                        ],
                                     },
                                     {
                                         path: 'edit',
@@ -87,13 +96,6 @@ export const routes: Routes = [
                                             board: boardResolver,
                                         },
                                     },
-                                    {
-                                        path: 'task/:id',
-                                        component: TaskDetailComponent,
-                                        resolve: {
-                                            task: taskResolver,
-                                        },
-                                    }
                                 ],
                             },
                         ],
