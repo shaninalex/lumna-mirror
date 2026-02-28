@@ -20,9 +20,7 @@
                     </div>
 
                     <!-- Tasks -->
-                    <div
-                        class="min-h-[100px] is-flexflex-col gap-2 mb-4"
-                        cdkDropList
+                    <div class="p-3 is-flex is-flex-direction-column is-gap-2" cdkDropList
                         [cdkDropListData]="c.tasks"
                         (cdkDropListDropped)="dropTask($event, c)"
                     >
@@ -33,11 +31,13 @@
                         }
                     </div>
 
-                    <app-task-inline-form-feature
-                        [column_id]="c.id"
-                        [project_id]="board.id"
-                        [task_count]="c.tasks.length"
-                    />
+                    <div class="card-footer p-2">
+                        <app-task-inline-form-feature
+                            [column_id]="c.id"
+                            [project_id]="board.id"
+                            [task_count]="c.tasks.length"
+                        />
+                    </div>
                 </div>
             }
 

@@ -50,7 +50,7 @@ import { tap } from 'rxjs';
                 </div>
             </form>
         } @else {
-            <button class="button is-dark" (click)="this.openedForm.set(true)">
+            <button class="button is-light" (click)="this.openedForm.set(true)">
                 Create new column
             </button>
         }

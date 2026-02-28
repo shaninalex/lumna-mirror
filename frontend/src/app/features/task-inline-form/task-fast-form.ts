@@ -49,7 +49,7 @@ import { TaskState, actionTaskUpsert, actionTaskFailed, actionTaskCreate } from 
                 </div>
             </form>
         } @else {
-            <button class="button is-small  is-dark" (click)="this.openedForm.set(true)">
+            <button class="button is-small is-light" (click)="this.openedForm.set(true)">
                 add task
             </button>
         }

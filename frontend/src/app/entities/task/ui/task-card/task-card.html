@@ -1,25 +1,30 @@
-<div class="rounded-xl p-4 bg-surface">
-    <div class="is-flexjustify-between  is-align-items-center">
-        <a [routerLink]="[detailUrl()]" class="cursor-pointer mb-1 font-medium">
+<div class="card">
+    <div class="is-flex is-justify-content-space-between is-align-items-center">
+        <a [routerLink]="[detailUrl()]" class="card-header-title">
             {{ task.title }}
         </a>
-
-        <button class="cursor-pointer">
-            <i class="fa-solid fa-ellipsis"></i>
+        <button class="card-header-icon">
+            <span class="icon">
+                <i class="fa-solid fa-ellipsis"></i>
+            </span>
         </button>
     </div>
 
-    <div class="text-sm text-gray-400 mb-2">Short description</div>
+    <div class="card-content pt-0 px-3 pb-3">
+        <div class="is-flex is-justify-content-space-between is-align-items-center">
+            <button class="is-flex is-justify-content-space-between is-align-items-center gap-1">
+                <figure class="image is-16x16">
+                    <img src="img/7.png" alt="" class="is-rounded" />
+                </figure>
 
-    <div class="border-b border-gray-200 mb-2"></div>
-    <div class="is-flexjustify-between  is-align-items-center text-xs text-gray-400">
-        <button class="cursor-pointer is-flexjustify-between  is-align-items-center gap-1">
-            <img src="img/7.png" alt="" class="rounded-full size-5" />
-            <div>John Doe</div>
-        </button>
-        <div>
-            <i class="fa-regular fa-calendar"></i>
-            {{ task.created_at | date: 'd MMM' }}
+                <div>John Doe</div>
+            </button>
+
+            <time>
+                <i class="fa-regular fa-calendar"></i>
+                {{ task.created_at | date: 'd MMM' }}
+            </time>
         </div>
     </div>
 </div>
+
