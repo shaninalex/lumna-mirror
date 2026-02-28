@@ -1,1 +1,2 @@
-export { settingsRoutes } from './settings.routes'
+export {SettingsContainer} from './settings-container';
+export {SettingsPage} from './settings-page/settings-page';
