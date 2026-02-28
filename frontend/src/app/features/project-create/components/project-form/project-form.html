@@ -1,4 +1,4 @@
-<form (submit)="submit($event)" class="is-flexflex-col gap-2">
+<form (submit)="submit($event)" class="d-flex flex-col gap-2">
     <div>
         <input
             class="border block w-full rounded-lg px-2 py-1 border-gray-400"
@@ -16,19 +16,19 @@
         }
     </div>
 
-    <div class="is-flexitems-center gap-4">
+    <div class="d-flex items-center gap-4">
         <button
             type="submit"
-            class="button is-primary is-small"
+            class="btn is-primary is-small"
             [disabled]="projectForm().invalid()"
         >
             Create
         </button>
 
         <button
-            type="button"
+            type="btn"
             (click)="cancel()"
-            class="button is-small  is-dark"
+            class="btn is-small  is-dark"
         >
             Cancel
         </button>

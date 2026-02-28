@@ -1,15 +1,15 @@
 <div cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)">
-    <div class="is-flex is-align-items-start is-gap-2" cdkDropListGroup>
+    <div class="d-flex align-items-start gap-4" cdkDropListGroup>
         @if (columnsWithTasks$ | async; as columns) {
             @for (c of columns; track c.id) {
                 <div cdkDrag class="card kanban-column">
                     <!-- Column header -->
-                    <div class="card-header">
-                        <div class="is-flex-grow-1">
+                    <div class="card-header d-flex align-items-center">
+                        <div class="flex-grow-1">
                             <app-column-edit-name-feature [column]="c"/>
                         </div>
-                        <div class="is-flex is-align-items-start">
-                            <button cdkDragHandle class="card-header-icon kanban-column-handler px-0">
+                        <div class="d-flex align-items-start">
+                            <button cdkDragHandle class="btn btn-sm kanban-column-handler">
                                 <span class="icon">
                                     <i class="fa-regular fa-hand"></i>
                                 </span>
@@ -20,7 +20,7 @@
                     </div>
 
                     <!-- Tasks -->
-                    <div class="p-3 is-flex is-flex-direction-column is-gap-2" cdkDropList
+                    <div class="p-3 d-flex flex-column gap-2" cdkDropList
                         [cdkDropListData]="c.tasks"
                         (cdkDropListDropped)="dropTask($event, c)"
                     >

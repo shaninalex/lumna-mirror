@@ -1,28 +1,8 @@
 <header class="header">
-    <app-breadcrumbs />
+    <app-breadcrumbs/>
 
-    <div class="is-flex is-align-items-center is-gap-2">
-        <app-theme-switcher />
-
-        @if (user | async; as user) {
-            <button [cdkMenuTriggerFor]="menu">
-                <div class="is-flex is-align-items-center is-gap-1">
-                    <div class="cell">
-                        <span class="text-sm">{{ user.email }}</span>
-                    </div>
-                    <div class="cell">
-                        <figure class="image is-32x32">
-                            <img class="is-rounded" src="img/7.png" />
-                        </figure>
-                    </div>
-                </div>
-            </button>
-
-            <ng-template #menu>
-                <div class="dropdown p-4" cdkMenu>
-                    <button (click)="logout()" class="cursor-pointer" cdkMenuItem>Sign out</button>
-                </div>
-            </ng-template>
-        }
+    <div class="d-flex align-items-center gap-2">
+        <app-theme-switcher/>
+        <app-user-menu />
     </div>
 </header>

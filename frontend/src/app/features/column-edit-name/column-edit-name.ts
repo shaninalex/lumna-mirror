@@ -18,7 +18,7 @@ import { Store } from '@ngrx/store';
     imports: [FormField, ClickOutsideDirective],
     template: `
         @if (formOpen()) {
-            <form (submit)="submit($event)" class="is-flexgap-2" (clickOutside)="formOpen.set(false)">
+            <form (submit)="submit($event)" class="d-flex gap-2" (clickOutside)="formOpen.set(false)">
                 <div>
                     <input
                         class="input"
@@ -38,7 +38,7 @@ import { Store } from '@ngrx/store';
                 <div>
                     <button
                         type="submit"
-                        class="button is-primary is-small"
+                        class="btn is-primary is-small"
                         [disabled]="listForm().invalid()"
                     >
                         @if (loading()) {
@@ -50,8 +50,8 @@ import { Store } from '@ngrx/store';
                 </div>
             </form>
         } @else {
-            <div class="card-header-title" (click)="formOpen.set(true)">
-                {{ column().title }}
+            <div class="fw-bold" (click)="formOpen.set(true)">
+                <small>{{ column().title }}</small>
             </div>
         }
     `,

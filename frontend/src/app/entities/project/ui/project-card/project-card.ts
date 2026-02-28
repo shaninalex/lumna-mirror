@@ -8,22 +8,24 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
     imports: [RouterLink, CdkMenu, CdkMenuTrigger],
     template: `
         <div class="card">
-            <div class="card-content">
-                <div class="is-flex is-justify-content-space-between">
-                    <a [routerLink]="['/projects', project.id]" class="is-flex is-justify-content-space-between is-align-items-center is-size-5"
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a [routerLink]="['/projects', project.id]" class=""
                         style="color: inherit"
                     >
-                        <i class="fa-regular fa-calendar-days"></i>
-                        <b>{{ project.title }}</b>
+                        <h4 class="mb-0">
+                            <i class="fa-regular fa-calendar-days"></i>
+                            <b>{{ project.title }}</b>
+                        </h4>
                     </a>
 
-                    <button [cdkMenuTriggerFor]="menu">
+                    <button [cdkMenuTriggerFor]="menu" class="btn btn-sm">
                         <i class="fa-solid fa-ellipsis"></i>
                     </button>
 
                     <ng-template #menu>
-                        <div class="dropdown p-4" cdkMenu>
-                            <a [routerLink]="['/projects', project.id, 'edit']">Edit</a>
+                        <div class="dropdown-menu d-block" cdkMenu>
+                            <a [routerLink]="['/projects', project.id, 'edit']" class="dropdown-item">Edit</a>
                         </div>
                     </ng-template>
                 </div>

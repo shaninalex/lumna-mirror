@@ -7,15 +7,13 @@ import {RouterLink} from '@angular/router';
     selector: 'app-login',
     imports: [AuthLoginFeature, RouterLink],
     template: `
-        <h1 class="title">
-            Login
-        </h1>
-        <div class="box">
+        <h3 class="h3 mb-3">Login</h3>
+
+        <div class="mb-3">
             <auth-login-feature />
         </div>
-        <p class="has-text-centered">
-            <a routerLink="/">Forgot password</a>
-        </p>
+
+        <a routerLink="/">Forgot password</a>
     `,
 })
 export class Login implements OnInit {

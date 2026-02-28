@@ -1,22 +1,12 @@
 <div class="card">
-    <div class="is-flex is-justify-content-space-between is-align-items-center">
-        <a [routerLink]="[detailUrl()]" class="card-header-title">
+    <div class="card-body">
+        <a [routerLink]="[detailUrl()]" class="card-title d-block mb-2 fw-medium text-decoration-none">
             {{ task.title }}
         </a>
-        <button class="card-header-icon">
-            <span class="icon">
-                <i class="fa-solid fa-ellipsis"></i>
-            </span>
-        </button>
-    </div>
 
-    <div class="card-content pt-0 px-3 pb-3">
-        <div class="is-flex is-justify-content-space-between is-align-items-center">
-            <button class="is-flex is-justify-content-space-between is-align-items-center gap-1">
-                <figure class="image is-16x16">
-                    <img src="img/7.png" alt="" class="is-rounded" />
-                </figure>
-
+        <div class="d-flex justify-content-between align-items-center">
+            <button class="btn-sm btn p-0 d-flex justify-content-between align-items-center gap-1">
+                <img class="rounded-circle" src="img/7.png" style="width: 16px; height: 16px;"/>
                 <div>John Doe</div>
             </button>
 
@@ -27,4 +17,3 @@
         </div>
     </div>
 </div>
-

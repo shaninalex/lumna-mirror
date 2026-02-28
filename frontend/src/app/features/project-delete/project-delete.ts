@@ -25,7 +25,7 @@ import { Observable } from 'rxjs';
                 <div class="message-body">
                     <p>This action will delete all project data</p>
 
-                    <button class="button is-danger" (click)="openDialog(project.title)">Delete</button>
+                    <button class="btn is-danger" (click)="openDialog(project.title)">Delete</button>
                 </div>
             </article>
         }
@@ -64,7 +64,7 @@ export class ProjectDeleteFeature implements OnInit {
     template: `
         <h1 class="text-lg font-bold">Are you sure want to delete project {{ projectName }}?</h1>
         <p class="mb-2">All data related to that project will be deleted</p>
-        <div class="is-flexgap-2">
+        <div class="d-flex gap-2">
             <button
                 (click)="confirm()"
                 class="bg-red-500 text-white rounded-lg px-2 py-1 cursor-pointer"

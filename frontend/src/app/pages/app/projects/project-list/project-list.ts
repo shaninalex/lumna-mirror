@@ -5,16 +5,15 @@ import { Store } from '@ngrx/store';
 import { ProjectCard, ProjectModel, ProjectState, selectProjects } from '@entities/project';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import {projectListGrid} from './grid';
 
 
 @Component({
     selector: 'app-project-list',
-    imports: [AsyncPipe, ProjectCard, ProjectCreateFeature, projectListGrid],
-    template: `<div class="is-flex is-flex-direction-column is-gap-2">
-        <div class="is-flex is-align-items-center is-justify-content-space-between">
+    imports: [AsyncPipe, ProjectCard, ProjectCreateFeature],
+    template: `<div class="d-flex flex-column gap-4">
+        <div class="d-flex align-items-center justify-content-between">
             <app-projects-create-feature />
-            <button (click)="toggleViewMode()" class="button is-size-6">
+            <button (click)="toggleViewMode()" class="btn btn-outline-secondary btn-sm">
                 @if (viewMode() === 'grid') {
                     <i class="fa-solid fa-grip"></i>
                 } @else {
@@ -25,13 +24,15 @@ import {projectListGrid} from './grid';
 
         @if (projects | async; as projects) {
             @if (viewMode() == 'grid') {
-                <app-project-list--grid>
+                <div class="row">
                     @for (p of projects; track p.id) {
-                        <app-project-card [project]="p" />
+                        <div class="col-md-4 mb-4">
+                            <app-project-card [project]="p" />
+                        </div>
                     }
-                </app-project-list--grid>
+                </div>
             } @else {
-                <div class="is-flex is-flex-direction-column is-gap-2">
+                <div class="d-flex flex-column gap-4">
                     @for (p of projects; track p.id) {
                         <app-project-card [project]="p" />
                     }

@@ -7,7 +7,7 @@ import { actionColumnDelete, ColumnState } from '@entities/column';
     selector: 'app-column-delete-feature',
     imports: [],
     template: `
-        <button (click)="openDialog()" class="text-red-400 hover:underline cursor-pointer">
+        <button (click)="openDialog()" class="btn btn-link text-danger">
             delete
         </button>
     `,
@@ -33,7 +33,7 @@ export class ColumnDeleteFeature {
     template: `
         <h1 class="text-lg font-bold">Are you sure want to delete "{{ listName }}" list?</h1>
         <p class="mb-2">All data (tasks) related to that list will be deleted too</p>
-        <div class="is-flexgap-2">
+        <div class="d-flex gap-2">
             <button
                 (click)="confirm()"
                 class="bg-red-500 text-white rounded-lg px-2 py-1 cursor-pointer"

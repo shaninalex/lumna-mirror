@@ -53,7 +53,7 @@ export class BoardDeleteFeature {
     template: `
         <h1 class="text-lg font-bold">Are you sure want to delete board {{ boardName }}?</h1>
         <p class="mb-2">All data (tasks) related to that board will be deleted</p>
-        <div class="is-flexgap-2">
+        <div class="d-flex gap-2">
             <button
                 (click)="confirm()"
                 class="bg-red-500 text-white rounded-lg px-2 py-1 cursor-pointer"

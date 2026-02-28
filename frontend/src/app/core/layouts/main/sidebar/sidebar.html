@@ -1,32 +1,33 @@
 <div class="sidebar">
-    <div class="is-flex is-flex-direction-column is-gap-2">
+    <div class="d-flex flex-column gap-4">
         <a routerLink="/">
-            <figure class="image">
-                <img src="img/logo-h.svg" alt="" />
-            </figure>
+            <img src="img/logo-h.svg" alt="" class="img-fluid" />
         </a>
 
-        <aside class="menu">
-            <!-- <p class="menu-label">General</p> -->
-            <ul class="menu-list">
-                <li><a routerLink="/">Home</a></li>
-                <li><a routerLink="/projects">Projects</a></li>
-                <li><a routerLink="/calendar">Calendar</a></li>
-            </ul>
-        </aside>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page"  routerLink="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/projects">Projects</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/calendar">Calendar</a>
+            </li>
+        </ul>
     </div>
 
-    <div class="is-flexflex-col gap-1">
-        <aside class="menu">
-            <ul class="menu-list">
-                <li><a routerLink="/settings">Setting</a></li>
-            </ul>
-        </aside>
-        <ul class="text-gray-400 text-xs is-flex is-gap-1 is-size-7">
-            <li><a class="has-text-grey" href="#">About</a></li>
-            <li><a class="has-text-grey" href="#">Support</a></li>
-            <li><a class="has-text-grey" href="#">Feedback</a></li>
+    <div class="d-flex flex-column gap-1">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/settings">Setting</a>
+            </li>
         </ul>
+        <div class="d-flex gap-1">
+            <a class="text-body-secondary small" href="#">About</a>
+            <a class="text-body-secondary small" href="#">Support</a>
+            <a class="text-body-secondary small" href="#">Feedback</a>
+        </div>
         <div class="has-text-grey is-size-7">v0.21.0</div>
     </div>
 </div>

@@ -10,21 +10,22 @@ import { UiService } from '@shared/ui';
     selector: 'app-project-detail',
     imports: [RouterLink, BoardsList, AsyncPipe],
     template: `
-        <nav class="navbar mb-2">
-            <div class="navbar-menu">
-                <div class="navbar-start">
-                    <a class="navbar-item">Calendar</a>
-                    <a class="navbar-item">Documents</a>
-                    <a class="navbar-item">Invite members</a>
-                    <a class="navbar-item">Roles</a>
-                    <a class="navbar-item">Webhooks</a>
-                    <a class="navbar-item">Notifications</a>
-                    <a class="navbar-item">Emails</a>
-                    <a class="navbar-item">Integrations</a>
-                </div>
-
-                <div class="navbar-end">
-                    <a [routerLink]="['edit']" class="navbar-item">Edit</a>
+        <nav class="navbar navbar-expand-sm bg-body-tertiary mb-4">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse show">
+                    <ul class="navbar-nav me-auto flex-wrap">
+                        <li class="nav-item"><a class="nav-link" href="#">Calendar</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Documents</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Invite members</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Roles</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Webhooks</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Notifications</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Emails</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Integrations</a></li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a [routerLink]="['edit']" class="nav-link">Edit</a></li>
+                    </ul>
                 </div>
             </div>
         </nav>

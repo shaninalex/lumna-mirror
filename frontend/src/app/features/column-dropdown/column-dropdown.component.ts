@@ -6,14 +6,12 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 @Component({
     selector: 'app-column-dropdown-feature',
     template: `
-        <button [cdkMenuTriggerFor]="menu" class="card-header-icon">
-            <span class="icon">
-                <i class="fa-solid fa-ellipsis"></i>
-            </span>
+        <button [cdkMenuTriggerFor]="menu" class="btn btn-sm">
+            <i class="fa-solid fa-ellipsis"></i>
         </button>
 
         <ng-template #menu>
-            <div class="dropdown p-4" cdkMenu>
+            <div class="dropdown-menu d-block" cdkMenu>
                 <app-column-delete-feature [columnId]="column.id" [columnName]="column.title" />
             </div>
         </ng-template>

@@ -11,7 +11,7 @@ import { ProjectForm } from './components';
         <div>
             <button
                 (click)="newProject()"
-                class="button is-primary"
+                class="btn btn-primary"
             >
                 New project
             </button>

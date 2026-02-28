@@ -9,7 +9,7 @@ import { AsyncPipe } from '@angular/common';
     selector: 'app-theme-switcher',
     imports: [CdkMenuTrigger, CdkMenu, CdkMenuItem, AsyncPipe],
     template: `
-        <button class="button is-small" [cdkMenuTriggerFor]="theme">
+        <button class="btn btn-sm" [cdkMenuTriggerFor]="theme">
             @if (themeMode | async; as themeMode) {
                 @switch (themeMode) {
                     @case ('dark') {
@@ -25,14 +25,14 @@ import { AsyncPipe } from '@angular/common';
             }
         </button>
         <ng-template #theme>
-            <div class="dropdown p-4 is-flexflex-col" cdkMenu>
-                <button (click)="changeTheme('light')" class="cursor-pointer" cdkMenuItem>
+            <div class="dropdown-menu d-block" cdkMenu>
+                <button (click)="changeTheme('light')" class="dropdown-item" cdkMenuItem>
                     Light
                 </button>
-                <button (click)="changeTheme('dark')" class="cursor-pointer" cdkMenuItem>
+                <button (click)="changeTheme('dark')" class="dropdown-item" cdkMenuItem>
                     Dark
                 </button>
-                <button (click)="changeTheme('auto')" class="cursor-pointer" cdkMenuItem>
+                <button (click)="changeTheme('auto')" class="dropdown-item" cdkMenuItem>
                     Auto
                 </button>
             </div>

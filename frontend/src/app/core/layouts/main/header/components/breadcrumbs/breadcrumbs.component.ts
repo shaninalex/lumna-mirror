@@ -4,12 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
     selector: 'app-breadcrumbs',
     template: `
-        <nav class="breadcrumb has-bullet-separator is-small" aria-label="breadcrumbs">
-            <ul class="ml-0">
-                <li><a href="#">Lumna</a></li>
-                <li><a href="#">Development</a></li>
-                <li class="is-active"><a href="#">Create mock db cli command</a></li>
-            </ul>
+        <nav>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Library</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Data</li>
+            </ol>
         </nav>
     `,
 })

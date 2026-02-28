@@ -32,9 +32,9 @@ import { tap } from 'rxjs';
                     }
                 </div>
 
-                <div class="is-flexgap-2">
+                <div class="d-flex gap-2">
                     <button
-                        class="button is-small btn-primary"
+                        class="btn is-small btn-primary"
                         (click)="submit($event)"
                         [disabled]="columnForm().invalid()"
                     >
@@ -44,13 +44,13 @@ import { tap } from 'rxjs';
                             Create
                         }
                     </button>
-                    <button class="button is-small btn-secondary" (click)="this.openedForm.set(false)">
+                    <button class="btn is-small btn-secondary" (click)="this.openedForm.set(false)">
                         cancel
                     </button>
                 </div>
             </form>
         } @else {
-            <button class="button is-light" (click)="this.openedForm.set(true)">
+            <button class="btn btn-secondary btn-sm" (click)="this.openedForm.set(true)">
                 Create new column
             </button>
         }

@@ -12,12 +12,13 @@ import { AsyncPipe } from '@angular/common';
     imports: [BoardCreateFeature, RouterLink, AsyncPipe],
     template: `
         <h2 class="font-medium text-lg mb-4">Boards</h2>
+
         @if (boards | async; as boards) {
-            <div class="is-flex is-wrapped is-gap-1">
+            <div class="d-flex gap-2">
                 @for (board of boards; track board.id) {
-                    <a [routerLink]="['/projects', projectId, 'boards', board.id]" class="button is-primary">{{
-                        board.title
-                    }}</a>
+                    <a [routerLink]="['/projects', projectId, 'boards', board.id]" class="btn btn-primary">
+                        {{ board.title }}
+                    </a>
                 }
                 <app-board-create-feature [projectId]="projectId" />
             </div>
