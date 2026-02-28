@@ -11,7 +11,7 @@ import { ProjectForm } from './components';
         <div>
             <button
                 (click)="newProject()"
-                class="bg-teal-500 text-white rounded-lg px-4 py-2 cursor-pointer"
+                class="button is-primary"
             >
                 New project
             </button>

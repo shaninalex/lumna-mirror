@@ -12,7 +12,7 @@ import { UiService } from '@shared/ui';
     imports: [CdkMenu, CdkMenuTrigger, RouterLink, RouterOutlet, KanbanBoardFeature, AsyncPipe],
     template: `
         @if (board$ | async; as board) {
-            <div class="card bg-lime-200 dark:bg-lime-800 flex items-top justify-between mb-4">
+            <div class="card bg-lime-200 dark:bg-lime-800 is-flexitems-top is-justify-content-space-between mb-4">
                 <div>
                     <div class="font-medium">{{ board.title }}</div>
                 </div>

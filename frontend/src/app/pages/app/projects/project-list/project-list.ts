@@ -9,14 +9,14 @@ import { AsyncPipe, NgClass } from '@angular/common';
 @Component({
     selector: 'app-project-list',
     imports: [NgClass, AsyncPipe, ProjectCard, ProjectCreateFeature],
-    template: `<div class="flex flex-col gap-4">
+    template: `<div class="is-flexflex-col gap-4">
         <app-projects-create-feature />
 
         @if (projects | async; as projects) {
             <div
                 [ngClass]="{
                     'grid grid-cols-3 gap-6': viewMode() === 'grid',
-                    'flex flex-col gap-4': viewMode() === 'list',
+                    'is-flexflex-col gap-4': viewMode() === 'list',
                 }"
             >
                 @for (p of projects; track p.id) {
@@ -26,7 +26,7 @@ import { AsyncPipe, NgClass } from '@angular/common';
         }
 
         <div>
-            <button (click)="toggleViewMode()" class="btn btn-sm btn-secondary">
+            <button (click)="toggleViewMode()" class="button is-small btn-secondary">
                 @if (viewMode() === 'grid') {
                     <i class="fa-solid fa-grip"></i>
                 } @else {

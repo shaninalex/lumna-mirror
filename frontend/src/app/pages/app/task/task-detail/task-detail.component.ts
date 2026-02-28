@@ -8,7 +8,7 @@ import { AsyncPipe } from '@angular/common';
 @Component({
     selector: 'app-task-detail-page',
     template: `
-        <div class="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4" (click)="onBackdropClick($event)">
+        <div class="fixed inset-0 z-50 is-flexitems-start justify-center pt-16 px-4" (click)="onBackdropClick($event)">
             <div class="absolute inset-0 bg-black/50"></div>
             <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] overflow-y-auto p-6">
                 <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 cursor-pointer" (click)="close()">

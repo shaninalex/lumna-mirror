@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 @Component({
     selector: 'app-board-create-feature',
     imports: [],
-    template: ` <button class="btn btn-secondary" (click)="newBoard()">Create board</button> `,
+    template: ` <button class="button is-dark" (click)="newBoard()">Create board</button> `,
 })
 export class BoardCreateFeature {
     @Input() projectId: number;

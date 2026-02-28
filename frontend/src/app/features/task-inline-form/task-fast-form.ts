@@ -27,9 +27,9 @@ import { TaskState, actionTaskUpsert, actionTaskFailed, actionTaskCreate } from 
                     }
                 </div>
 
-                <div class="flex gap-2">
+                <div class="is-flexgap-2">
                     <button
-                        class="btn btn-sm btn-primary"
+                        class="button is-small btn-primary"
                         (click)="submit($event)"
                         [disabled]="taskForm().invalid()"
                     >
@@ -41,7 +41,7 @@ import { TaskState, actionTaskUpsert, actionTaskFailed, actionTaskCreate } from 
                     </button>
                     <button
                         type="button"
-                        class="btn btn-sm btn-secondary"
+                        class="button is-small btn-secondary"
                         (click)="this.openedForm.set(false)"
                     >
                         cancel
@@ -49,7 +49,7 @@ import { TaskState, actionTaskUpsert, actionTaskFailed, actionTaskCreate } from 
                 </div>
             </form>
         } @else {
-            <button class="btn btn-secondary btn-sm" (click)="this.openedForm.set(true)">
+            <button class="button is-small  is-dark" (click)="this.openedForm.set(true)">
                 add task
             </button>
         }

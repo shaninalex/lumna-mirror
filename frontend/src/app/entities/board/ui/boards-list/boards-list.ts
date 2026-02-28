@@ -14,9 +14,9 @@ import { AsyncPipe } from '@angular/common';
         <div class="bg-(--color-secondary) card">
             <h2 class="font-medium text-lg mb-4">Boards</h2>
             @if (boards | async; as boards) {
-                <nav class="flex flex-wrap gap-4">
+                <nav class="is-flexflex-wrap gap-4">
                     @for (board of boards; track board.id) {
-                        <a [routerLink]="['/projects', projectId, 'boards', board.id]" class="btn btn-primary">{{
+                        <a [routerLink]="['/projects', projectId, 'boards', board.id]" class="button is-primary">{{
                             board.title
                         }}</a>
                     }

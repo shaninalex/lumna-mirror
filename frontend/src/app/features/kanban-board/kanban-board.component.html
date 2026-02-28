@@ -1,10 +1,10 @@
 <div cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)">
-    <div class="flex items-start gap-4 overflow-x-auto w-full" cdkDropListGroup>
+    <div class="is-flexitems-start gap-4 overflow-x-auto w-full" cdkDropListGroup>
         @if (columnsWithTasks$ | async; as columns) {
             @for (c of columns; track c.id) {
                 <div cdkDrag class="card bg-surface-secondary w-[280px] shrink-0 kanban-column">
                     <!-- Column header -->
-                    <div class="flex items-center justify-between gap-2 mb-4">
+                    <div class="is-flexitems-center is-justify-content-space-between gap-2 mb-4">
                         <app-column-edit-name-feature [column]="c" />
 
                         <div>
@@ -21,7 +21,7 @@
 
                     <!-- Tasks -->
                     <div
-                        class="min-h-[100px] flex flex-col gap-2 mb-4"
+                        class="min-h-[100px] is-flexflex-col gap-2 mb-4"
                         cdkDropList
                         [cdkDropListData]="c.tasks"
                         (cdkDropListDropped)="dropTask($event, c)"

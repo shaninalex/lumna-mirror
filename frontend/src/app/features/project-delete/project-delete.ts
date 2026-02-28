@@ -56,7 +56,7 @@ export class ProjectDeleteFeature implements OnInit {
     template: `
         <h1 class="text-lg font-bold">Are you sure want to delete project {{ projectName }}?</h1>
         <p class="mb-2">All data related to that project will be deleted</p>
-        <div class="flex gap-2">
+        <div class="is-flexgap-2">
             <button
                 (click)="confirm()"
                 class="bg-red-500 text-white rounded-lg px-2 py-1 cursor-pointer"

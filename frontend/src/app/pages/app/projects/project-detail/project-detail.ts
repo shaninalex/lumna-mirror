@@ -11,7 +11,7 @@ import { UiService } from '@shared/ui';
     imports: [RouterLink, BoardsList, AsyncPipe],
     template: `
         <div class="bg-lime-200 dark:bg-lime-800 card">
-            <nav class="flex flex-wrap gap-4">
+            <nav class="is-flexflex-wrap gap-4">
                 <a class="hover:underline">Invite members</a>
                 <a class="hover:underline">Roles</a>
                 <a class="hover:underline">Webhooks</a>
@@ -33,7 +33,7 @@ import { UiService } from '@shared/ui';
             <a class="font-medium text-lg mb-4 hover:underline">Documents/Notes</a>
         </div>
 
-        <a [routerLink]="['edit']" class="btn btn-sm btn-primary">Edit</a>
+        <a [routerLink]="['edit']" class="button is-small btn-primary">Edit</a>
     `,
 })
 export class ProjectDetail {

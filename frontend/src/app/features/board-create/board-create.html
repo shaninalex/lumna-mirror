@@ -1,5 +1,5 @@
 <h3 class="font-medium">Create new board</h3>
-<form (submit)="submit($event)" class="flex flex-col gap-2">
+<form (submit)="submit($event)" class="is-flexflex-col gap-2">
     <div>
         <input
             class="border block w-full rounded-lg px-2 py-1 border-gray-400"
@@ -17,12 +17,12 @@
         }
     </div>
 
-    <div class="flex items-center gap-4">
-        <button type="submit" class="btn btn-primary btn-sm" [disabled]="boardForm().invalid()">
+    <div class="is-flexitems-center gap-4">
+        <button type="submit" class="button is-primary is-small" [disabled]="boardForm().invalid()">
             Create
         </button>
 
-        <button type="button" (pointerdown)="cancel()" class="btn btn-secondary btn-sm">
+        <button type="button" (pointerdown)="cancel()" class="button is-small  is-dark">
             Cancel
         </button>
     </div>
