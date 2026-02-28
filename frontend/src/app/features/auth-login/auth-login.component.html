@@ -1,23 +1,29 @@
 <form (submit)="onSubmit()" class="is-flexflex-col gap-2">
-    <input
-        class="input"
-        type="email"
-        id="email"
-        name="email"
-        [(ngModel)]="email"
-        required
-        placeholder="email"
-    />
-    <input
-        class="input"
-        type="password"
-        id="password"
-        name="password"
-        [(ngModel)]="password"
-        required
-        placeholder="password"
-    />
-    <div class="text-center">
+    <label class="label">Email</label>
+    <div class="control mb-4">
+        <input id="email" class="input" type="email"
+               placeholder="your@mail.org"
+               [formField]="loginForm.email" />
+        @if (loginForm.email().dirty() && loginForm.email().errors()) {
+            @for (error of loginForm.email().errors(); track error) {
+                <span class="help is-danger">{{ error.message }}</span>
+            }
+        }
+    </div>
+
+    <label class="label">Password</label>
+    <div class="control has-icon has-icon-right">
+        <input class="input" id="password" type="password"
+               placeholder="***"
+               [formField]="loginForm.password" />
+        @if (loginForm.password().dirty() && loginForm.password().errors()) {
+            @for (error of loginForm.password().errors(); track error) {
+                <span class="help is-danger">{{ error.message }}</span>
+            }
+        }
+    </div>
+    <hr>
+    <div class="control">
         <button type="submit" class="button is-primary">Login</button>
     </div>
 </form>

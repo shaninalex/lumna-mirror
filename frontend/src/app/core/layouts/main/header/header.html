@@ -9,7 +9,7 @@
 
         @if (user | async; as user) {
             <button [cdkMenuTriggerFor]="menu">
-                <div class="is-flex is-align-items-center">
+                <div class="is-flex is-align-items-center is-gap-1">
                     <div class="cell">
                         <span class="text-sm">{{ user.email }}</span>
                     </div>

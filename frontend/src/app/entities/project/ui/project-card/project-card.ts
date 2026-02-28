@@ -10,12 +10,11 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
         <div class="card">
             <div class="card-content">
                 <div class="is-flex is-justify-content-space-between">
-                    <a
-                        [routerLink]="['/projects', project.id]"
-                        class="is-flex is-justify-content-space-between is-align-items-center"
+                    <a [routerLink]="['/projects', project.id]" class="is-flex is-justify-content-space-between is-align-items-center is-size-5"
+                        style="color: inherit"
                     >
                         <i class="fa-regular fa-calendar-days"></i>
-                        <div>{{ project.title }}</div>
+                        <b>{{ project.title }}</b>
                     </a>
 
                     <button [cdkMenuTriggerFor]="menu">

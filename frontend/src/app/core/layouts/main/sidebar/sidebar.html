@@ -1,24 +1,32 @@
 <div class="sidebar">
-    <div class="is-flexflex-col gap-6">
+    <div class="is-flex is-flex-direction-column is-gap-2">
         <div class="text-center">
-            <img src="img/logo-h.svg" alt="" class="w-[127px] inline-block" />
+            <figure class="image">
+                <img src="img/logo-h.svg" alt="" />
+            </figure>
         </div>
-        <ul class="is-flexflex-col gap-2">
-            <li><a class="hover:underline" routerLink="/">Home</a></li>
-            <li><a class="hover:underline" routerLink="/projects">Projects</a></li>
-            <li><a class="hover:underline" routerLink="/calendar">Calendar</a></li>
-        </ul>
+
+        <aside class="menu">
+            <!-- <p class="menu-label">General</p> -->
+            <ul class="menu-list">
+                <li><a routerLink="/">Home</a></li>
+                <li><a routerLink="/projects">Projects</a></li>
+                <li><a routerLink="/calendar">Calendar</a></li>
+            </ul>
+        </aside>
     </div>
 
     <div class="is-flexflex-col gap-1">
-        <ul>
-            <li><a routerLink="/settings">Setting</a></li>
+        <aside class="menu">
+            <ul class="menu-list">
+                <li><a routerLink="/settings">Setting</a></li>
+            </ul>
+        </aside>
+        <ul class="text-gray-400 text-xs is-flex is-gap-1 is-size-7">
+            <li><a class="has-text-grey" href="#">About</a></li>
+            <li><a class="has-text-grey" href="#">Support</a></li>
+            <li><a class="has-text-grey" href="#">Feedback</a></li>
         </ul>
-        <ul class="text-gray-400 text-xs is-flexflex-wrap gap-1">
-            <li><a class="underline" href="#">About</a></li>
-            <li><a class="underline" href="#">Support</a></li>
-            <li><a class="underline" href="#">Feedback</a></li>
-        </ul>
-        <div class="text-gray-400 text-xs">v0.21.0</div>
+        <div class="has-text-grey is-size-7">v0.21.0</div>
     </div>
 </div>
