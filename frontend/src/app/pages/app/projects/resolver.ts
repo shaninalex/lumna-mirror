@@ -19,15 +19,4 @@ export const projectResolver: ResolveFn<ProjectModel | null> = (route: Activated
         filter(Boolean),
         take(1)
     );
-
-    // const store = inject(Store<ProjectState>);
-    // const projectId = Number(route.paramMap.get('id'));
-    // return store.select(selectProjectByID(projectId)).pipe(
-    //     tap((project) => {
-    //         if (!project) {
-    //             store.dispatch(actionProjectList());
-    //         }
-    //     }),
-    //     filter((project) => !!project),
-    // );
 };

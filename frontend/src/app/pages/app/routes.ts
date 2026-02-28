@@ -1,6 +1,4 @@
 import {Routes} from '@angular/router';
-
-
 import {authGuard} from './guards/auth.guard';
 import {DashboardContainer} from './container';
 import {Home} from '@pages/app/home';
@@ -27,10 +25,16 @@ export const routes: Routes = [
                 path: '',
                 component: Home,
                 title: 'Overview',
+                data: {
+                    breadcrumb: "Overview"
+                }
             },
             {
                 path: 'calendar',
                 component: Calendar,
+                data: {
+                    breadcrumb: "Calendar"
+                }
             },
             {
                 path: 'settings',
@@ -39,13 +43,18 @@ export const routes: Routes = [
                     {
                         path: '',
                         component: SettingsPage,
-                        data: {title: 'Settings page'},
+                        data: {
+                            breadcrumb: "Settings"
+                        },
                     },
                 ],
             },
             {
                 path: 'projects',
                 component: ProjectsContainer,
+                data: {
+                    breadcrumb: "Projects"
+                },
                 children: [
                     {
                         path: '',
@@ -56,6 +65,9 @@ export const routes: Routes = [
                         component: ProjectContainer,
                         resolve: {
                             project: projectResolver,
+                        },
+                        data: {
+                            breadcrumb: (data: any) => data['project']?.title
                         },
                         children: [
                             {
@@ -77,12 +89,18 @@ export const routes: Routes = [
                                         resolve: {
                                             board: boardResolver,
                                         },
+                                        data: {
+                                            breadcrumb: (data: any) => data['board']?.title
+                                        },
                                         children: [
                                             {
                                                 path: 'task/:taskId',
                                                 component: TaskDetailComponent,
                                                 resolve: {
                                                     task: taskResolver,
+                                                },
+                                                data: {
+                                                    breadcrumb: (data: any) => data['task']?.title
                                                 },
                                             },
                                         ],
