@@ -12,26 +12,26 @@ import { UiService } from '@shared/ui';
     imports: [CdkMenu, CdkMenuTrigger, RouterLink, RouterOutlet, KanbanBoardFeature, AsyncPipe],
     template: `
         @if (board$ | async; as board) {
-            <div class="card bg-lime-200 dark:bg-lime-800 is-flexitems-top is-justify-content-space-between mb-4">
-                <div>
-                    <div class="font-medium">{{ board.title }}</div>
-                </div>
-                <div>
-                    <button [cdkMenuTriggerFor]="menu" class="cursor-pointer">
-                        <i class="fa-solid fa-ellipsis"></i>
-                    </button>
+            <div class="card">
+                <div class="card-content is-flex is-justify-content-space-between">
+                    <div class="is-size-5 has-text-weight-bold">{{ board.title }}</div>
+                    <div>
+                        <button [cdkMenuTriggerFor]="menu" class="cursor-pointer">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
 
-                    <ng-template #menu>
-                        <div class="dropdown p-4" cdkMenu>
-                            <a [routerLink]="['/projects', board.project_id, 'boards', board.id, 'edit']">Edit</a>
-                        </div>
-                    </ng-template>
+                        <ng-template #menu>
+                            <div class="dropdown p-4" cdkMenu>
+                                <a [routerLink]="['/projects', board.project_id, 'boards', board.id, 'edit']">Edit</a>
+                            </div>
+                        </ng-template>
+                    </div>
                 </div>
             </div>
 
-            <app-kanban-board-feature [board]="board" />
+            <app-kanban-board-feature [board]="board"/>
         }
-        <router-outlet />
+        <router-outlet/>
     `,
 })
 export class BoardPage {

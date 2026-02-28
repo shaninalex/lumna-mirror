@@ -1,21 +1,21 @@
 <div cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)">
-    <div class="is-flexitems-start gap-4 overflow-x-auto w-full" cdkDropListGroup>
+    <div class="is-flex is-align-items-start is-gap-2" cdkDropListGroup>
         @if (columnsWithTasks$ | async; as columns) {
             @for (c of columns; track c.id) {
-                <div cdkDrag class="card bg-surface-secondary w-[280px] shrink-0 kanban-column">
+                <div cdkDrag class="card kanban-column">
                     <!-- Column header -->
-                    <div class="is-flexitems-center is-justify-content-space-between gap-2 mb-4">
-                        <app-column-edit-name-feature [column]="c" />
-
-                        <div>
-                            <button
-                                cdkDragHandle
-                                class="cursor-pointer text-gray-400 kanban-column-handler"
-                            >
-                                <i class="fa-regular fa-hand"></i>
+                    <div class="card-header">
+                        <div class="is-flex-grow-1">
+                            <app-column-edit-name-feature [column]="c"/>
+                        </div>
+                        <div class="is-flex is-align-items-start">
+                            <button cdkDragHandle class="card-header-icon kanban-column-handler px-0">
+                                <span class="icon">
+                                    <i class="fa-regular fa-hand"></i>
+                                </span>
                             </button>
 
-                            <app-column-dropdown-feature [column]="c" />
+                            <app-column-dropdown-feature [column]="c"/>
                         </div>
                     </div>
 
@@ -28,7 +28,7 @@
                     >
                         @for (task of c.tasks; track task.id) {
                             <div cdkDrag [cdkDragData]="task">
-                                <app-task-card [board_id]="board.id" [task]="task" />
+                                <app-task-card [board_id]="board.id" [task]="task"/>
                             </div>
                         }
                     </div>
@@ -41,7 +41,7 @@
                 </div>
             }
 
-            <app-new-column-form [board_id]="board.id" [columns_length]="columns.length" />
+            <app-new-column-form [board_id]="board.id" [columns_length]="columns.length"/>
         }
     </div>
 </div>

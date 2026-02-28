@@ -50,7 +50,7 @@ import { Store } from '@ngrx/store';
                 </div>
             </form>
         } @else {
-            <div class="font-medium cursor-pointer hover:underline" (click)="formOpen.set(true)">
+            <div class="card-header-title" (click)="formOpen.set(true)">
                 {{ column().title }}
             </div>
         }

@@ -4,7 +4,11 @@ import { UiService } from '@shared/ui';
 @Component({
     selector: 'app-calendar',
     template: `
-        <div class="bg-(--color-secondary) p-10 rounded-2xl">CALENDAR NOT IMPLEMENTED YET</div>
+        <article class="message is-info">
+            <div class="message-body">
+                NOT IMPLEMENTED
+            </div>
+        </article>
     `,
 })
 export class Calendar {
