@@ -54,20 +54,18 @@ export const routes: Routes = [
                     {
                         path: ':id',
                         component: ProjectContainer,
+                        resolve: {
+                            project: projectResolver,
+                        },
                         children: [
                             {
                                 path: '',
                                 component: ProjectDetail,
-                                resolve: {
-                                    project: projectResolver,
-                                },
+
                             },
                             {
                                 path: 'edit',
                                 component: ProjectEditPage,
-                                resolve: {
-                                    project: projectResolver,
-                                },
                             },
                             {
                                 path: 'boards/:id',

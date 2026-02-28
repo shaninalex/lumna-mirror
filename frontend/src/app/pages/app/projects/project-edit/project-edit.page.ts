@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {Component, inject, OnInit} from '@angular/core';
+import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
 import { ProjectModel } from '@entities/project';
 import { ProjectDeleteFeature, ProjectEditFeature } from '@features';
 import { UiService } from '@shared/ui';
@@ -17,11 +17,11 @@ import { filter, map, Observable, tap } from 'rxjs';
 })
 export class ProjectEditPage {
     private ui = inject(UiService);
-
     private route = inject(ActivatedRoute);
-    project$: Observable<ProjectModel> = this.route.data.pipe(
+
+    project$: Observable<ProjectModel> = this.route.parent!.data.pipe(
         filter((data) => !!data['project']),
         map((data) => data['project'] as ProjectModel),
-        tap((project) => this.ui.setPageTitle(`Edit project: ${project.title}`)),
+        tap((project) => this.ui.setPageTitle(`Project: ${project.title}`)),
     );
 }

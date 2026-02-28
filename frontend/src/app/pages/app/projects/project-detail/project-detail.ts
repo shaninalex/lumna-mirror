@@ -10,30 +10,28 @@ import { UiService } from '@shared/ui';
     selector: 'app-project-detail',
     imports: [RouterLink, BoardsList, AsyncPipe],
     template: `
-        <div class="bg-lime-200 dark:bg-lime-800 card">
-            <nav class="is-flexflex-wrap gap-4">
-                <a class="hover:underline">Invite members</a>
-                <a class="hover:underline">Roles</a>
-                <a class="hover:underline">Webhooks</a>
-                <a class="hover:underline">Notifications</a>
-                <a class="hover:underline">Emails</a>
-                <a class="hover:underline">Integrations</a>
-            </nav>
-        </div>
+        <nav class="navbar mb-2">
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item">Calendar</a>
+                    <a class="navbar-item">Documents</a>
+                    <a class="navbar-item">Invite members</a>
+                    <a class="navbar-item">Roles</a>
+                    <a class="navbar-item">Webhooks</a>
+                    <a class="navbar-item">Notifications</a>
+                    <a class="navbar-item">Emails</a>
+                    <a class="navbar-item">Integrations</a>
+                </div>
+
+                <div class="navbar-end">
+                    <a [routerLink]="['edit']" class="navbar-item">Edit</a>
+                </div>
+            </div>
+        </nav>
 
         @if (project$ | async; as project) {
             <app-boards-list [projectId]="project.id" />
         }
-
-        <div class="bg-amber-100 dark:bg-amber-800 card">
-            <a class="font-medium text-lg mb-4 hover:underline">Calendar</a>
-        </div>
-
-        <div class="bg-lime-100 dark:bg-lime-800 card">
-            <a class="font-medium text-lg mb-4 hover:underline">Documents/Notes</a>
-        </div>
-
-        <a [routerLink]="['edit']" class="button is-small btn-primary">Edit</a>
     `,
 })
 export class ProjectDetail {

@@ -11,15 +11,23 @@ import {
 } from '@entities/project';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-project-delete-feature',
     imports: [AsyncPipe],
     template: `
         @if (project$ | async; as project) {
-            <h2 class="mb-2">Danger</h2>
-            <button class="btn btn-danger" (click)="openDialog(project.title)">Delete</button>
+            <article class="message is-danger">
+                <div class="message-header">
+                    <p>Danger</p>
+                </div>
+                <div class="message-body">
+                    <p>This action will delete all project data</p>
+
+                    <button class="button is-danger" (click)="openDialog(project.title)">Delete</button>
+                </div>
+            </article>
         }
     `,
 })

@@ -8,6 +8,9 @@
     --color-layout-border: hsl(0, 0%, 15%);
 }
 
+.content li + li {
+    margin-top: 0;
+}
 
 @keyframes rotating {
     from {
