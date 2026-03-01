@@ -1,10 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ProjectState, ProjectModel, selectProjectByID } from '@entities/project';
-import { ProjectEditFeature, ProjectDeleteFeature } from '@features/index';
-import { Store } from '@ngrx/store';
+import {Component, inject, OnInit} from '@angular/core';
+import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
+import { ProjectModel } from '@entities/project';
+import { ProjectDeleteFeature, ProjectEditFeature } from '@features';
 import { UiService } from '@shared/ui';
-import { Observable, filter, switchMap, tap } from 'rxjs';
+import { filter, map, Observable, tap } from 'rxjs';
 
 @Component({
     selector: 'app-project-edit',
@@ -16,20 +15,13 @@ import { Observable, filter, switchMap, tap } from 'rxjs';
         <app-project-delete-feature [project$]="project$" />
     `,
 })
-export class ProjectEditPage implements OnInit {
-    private activatedRoute = inject(ActivatedRoute);
-    private store = inject(Store<ProjectState>);
+export class ProjectEditPage {
     private ui = inject(UiService);
-    project$: Observable<ProjectModel>;
+    private route = inject(ActivatedRoute);
 
-    ngOnInit() {
-        this.project$ = this.activatedRoute.params.pipe(
-            switchMap((params) =>
-                this.store.select(selectProjectByID(params['id'])).pipe(
-                    filter((project) => !!project),
-                    tap((project) => this.ui.setPageTitle(`Edit project: ${project.title}`)),
-                ),
-            ),
-        );
-    }
+    project$: Observable<ProjectModel> = this.route.parent!.data.pipe(
+        filter((data) => !!data['project']),
+        map((data) => data['project'] as ProjectModel),
+        tap((project) => this.ui.setPageTitle(`Project: ${project.title}`)),
+    );
 }

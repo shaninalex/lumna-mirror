@@ -13,21 +13,19 @@ import { TaskState, actionTaskUpsert, actionTaskFailed, actionTaskCreate } from 
             <form (submit)="submit($event)" class="w-full">
                 <div class="mb-2">
                     <input
-                        class="input w-full"
+                        class="form-control form-control-sm w-full"
                         placeholder="Column name"
                         [formField]="taskForm.title"
                         [autofocus]="true"
                     />
                     @if (taskForm.title().touched() && taskForm.title().errors().length) {
-                        <ul class="error-list">
-                            @for (error of taskForm.title().errors(); track error) {
-                                <li class="text-red-500 text-sm">{{ error.message }}</li>
-                            }
-                        </ul>
+                        @for (error of taskForm.title().errors(); track error) {
+                            <div class="text-danger small">{{ error.message }}</div>
+                        }
                     }
                 </div>
 
-                <div class="flex gap-2">
+                <div class="d-flex gap-2">
                     <button
                         class="btn btn-sm btn-primary"
                         (click)="submit($event)"
@@ -49,7 +47,7 @@ import { TaskState, actionTaskUpsert, actionTaskFailed, actionTaskCreate } from 
                 </div>
             </form>
         } @else {
-            <button class="btn btn-secondary btn-sm" (click)="this.openedForm.set(true)">
+            <button class="btn btn-sm btn-outline-secondary" (click)="this.openedForm.set(true)">
                 add task
             </button>
         }

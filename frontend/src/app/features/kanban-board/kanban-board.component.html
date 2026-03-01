@@ -1,47 +1,47 @@
 <div cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropColumn($event)">
-    <div class="flex items-start gap-4 overflow-x-scroll w-full" cdkDropListGroup>
+    <div class="d-flex align-items-start gap-4" cdkDropListGroup>
         @if (columnsWithTasks$ | async; as columns) {
             @for (c of columns; track c.id) {
-                <div cdkDrag class="card bg-surface-secondary w-[280px] shrink-0 kanban-column">
+                <div cdkDrag class="card kanban-column">
                     <!-- Column header -->
-                    <div class="flex items-center justify-between gap-2 mb-4">
-                        <app-column-edit-name-feature [column]="c" />
-
-                        <div>
-                            <button
-                                cdkDragHandle
-                                class="cursor-pointer text-gray-400 kanban-column-handler"
-                            >
-                                <i class="fa-regular fa-hand"></i>
+                    <div class="card-header d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <app-column-edit-name-feature [column]="c"/>
+                        </div>
+                        <div class="d-flex align-items-start">
+                            <button cdkDragHandle class="btn btn-sm kanban-column-handler">
+                                <span class="icon">
+                                    <i class="fa-regular fa-hand"></i>
+                                </span>
                             </button>
 
-                            <app-column-dropdown-feature [column]="c" />
+                            <app-column-dropdown-feature [column]="c"/>
                         </div>
                     </div>
 
                     <!-- Tasks -->
-                    <div
-                        class="min-h-[100px] flex flex-col gap-2 mb-4"
-                        cdkDropList
+                    <div class="p-3 d-flex flex-column gap-2" cdkDropList
                         [cdkDropListData]="c.tasks"
                         (cdkDropListDropped)="dropTask($event, c)"
                     >
                         @for (task of c.tasks; track task.id) {
                             <div cdkDrag [cdkDragData]="task">
-                                <app-task-card [task]="task" />
+                                <app-task-card [board_id]="board.id" [task]="task"/>
                             </div>
                         }
                     </div>
 
-                    <app-task-inline-form-feature
-                        [column_id]="c.id"
-                        [project_id]="board.id"
-                        [task_count]="c.tasks.length"
-                    />
+                    <div class="card-footer p-2">
+                        <app-task-inline-form-feature
+                            [column_id]="c.id"
+                            [project_id]="board.id"
+                            [task_count]="c.tasks.length"
+                        />
+                    </div>
                 </div>
             }
 
-            <app-new-column-form [board_id]="board.id" [columns_length]="columns.length" />
+            <app-new-column-form [board_id]="board.id" [columns_length]="columns.length"/>
         }
     </div>
 </div>

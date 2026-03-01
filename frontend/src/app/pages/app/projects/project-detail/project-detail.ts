@@ -1,56 +1,54 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ProjectModel, ProjectState, selectProjectByID } from '@entities/project';
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
+import { ProjectModel } from '@entities/project';
 import { BoardsList } from '@entities/board';
-import { filter, Observable, switchMap, tap } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { UiService } from '@shared/ui';
+import { filter, map, Observable, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { UiService } from '@shared/ui';
 
 @Component({
     selector: 'app-project-detail',
     imports: [RouterLink, BoardsList, AsyncPipe],
     template: `
-        <div class="bg-lime-200 dark:bg-lime-800 card">
-            <nav class="flex flex-wrap gap-4">
-                <a class="hover:underline">Invite members</a>
-                <a class="hover:underline">Roles</a>
-                <a class="hover:underline">Webhooks</a>
-                <a class="hover:underline">Notifications</a>
-                <a class="hover:underline">Emails</a>
-                <a class="hover:underline">Integrations</a>
-            </nav>
-        </div>
+        <nav class="navbar navbar-expand-sm bg-body-tertiary mb-4">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse show">
+                    <ul class="navbar-nav me-auto flex-wrap">
+                        <li class="nav-item"><a class="nav-link" href="#">Calendar</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Documents</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Invite members</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Roles</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Webhooks</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Notifications</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Emails</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Integrations</a></li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a [routerLink]="['edit']" class="nav-link">Edit</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
 
         @if (project$ | async; as project) {
             <app-boards-list [projectId]="project.id" />
         }
-
-        <div class="bg-amber-100 dark:bg-amber-800 card">
-            <a class="font-medium text-lg mb-4 hover:underline">Calendar</a>
-        </div>
-
-        <div class="bg-lime-100 dark:bg-lime-800 card">
-            <a class="font-medium text-lg mb-4 hover:underline">Documents/Notes</a>
-        </div>
-
-        <a [routerLink]="['edit']" class="btn btn-sm btn-primary">Edit</a>
     `,
 })
-export class ProjectDetail implements OnInit {
-    private ui = inject(UiService);
+export class ProjectDetail {
     private route = inject(ActivatedRoute);
-    private store = inject(Store<ProjectState>);
-    project$: Observable<ProjectModel>;
+    private ui = inject(UiService);
 
-    ngOnInit() {
-        this.project$ = this.route.params.pipe(
-            switchMap((params) =>
-                this.store.select(selectProjectByID(parseInt(params['id']))).pipe(
-                    filter((project) => !!project),
-                    tap((project) => this.ui.setPageTitle(`Project: ${project.title}`)),
-                ),
-            ),
-        );
-    }
+    project$: Observable<ProjectModel> = this.route.data.pipe(
+        filter((data) => !!data['project']),
+        map((data) => data['project'] as ProjectModel),
+        tap((project) => this.ui.setPageTitle(`Project: ${project.title}`)),
+    );
 }
+
+@Component({
+    selector: 'app-project-container',
+    imports: [RouterOutlet],
+    template: `<router-outlet />`,
+})
+export class ProjectContainer {}

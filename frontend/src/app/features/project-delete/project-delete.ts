@@ -11,15 +11,23 @@ import {
 } from '@entities/project';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-project-delete-feature',
     imports: [AsyncPipe],
     template: `
         @if (project$ | async; as project) {
-            <h2 class="mb-2">Danger</h2>
-            <button class="btn btn-danger" (click)="openDialog(project.title)">Delete</button>
+            <article class="message is-danger">
+                <div class="message-header">
+                    <p>Danger</p>
+                </div>
+                <div class="message-body">
+                    <p>This action will delete all project data</p>
+
+                    <button class="btn is-danger" (click)="openDialog(project.title)">Delete</button>
+                </div>
+            </article>
         }
     `,
 })
@@ -56,7 +64,7 @@ export class ProjectDeleteFeature implements OnInit {
     template: `
         <h1 class="text-lg font-bold">Are you sure want to delete project {{ projectName }}?</h1>
         <p class="mb-2">All data related to that project will be deleted</p>
-        <div class="flex gap-2">
+        <div class="d-flex gap-2">
             <button
                 (click)="confirm()"
                 class="bg-red-500 text-white rounded-lg px-2 py-1 cursor-pointer"

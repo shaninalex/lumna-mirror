@@ -9,3 +9,9 @@ export const selectTasksByColumns = (columns_id: number[]) =>
     createSelector(selectTasks, (tasks) =>
         tasks.filter((task) => columns_id.includes(task.column_id)),
     );
+
+export const selectTaskById = (task_id: number) => createSelector(
+    selectTaskFeature,
+    (state) => taskSelectors.selectEntities(state)[task_id] ?? null,
+)
+

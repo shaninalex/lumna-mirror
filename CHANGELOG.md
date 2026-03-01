@@ -1,3 +1,40 @@
+## 0.32.1 (2026-03-01)
+
+### Fix
+
+- **ui**: dynamic version in sidebar
+
+## 0.32.0 (2026-03-01)
+
+### Feat
+
+- activity logger ( beginner )
+- **ui**: task editing ( title, body )
+- **ui**: breadcrumbs
+- **ui**: kanban board
+- **ui**: kanban board [process]
+- **ui**: project detail, header, resolvers
+- **ui**: update styles for sidebar, project list, login page
+- **ui**: task detail page
+- **ui**: task id
+- **db**: project id for column and task
+- **ui**: blank task detail + resolver
+- **ui**: route resolvers fix
+- **ui**: route resolvers fix
+- **ui**: route resolvers fix
+- **ui**: route resolvers
+- **ui**: router store
+
+### Fix
+
+- **ui**: routes
+- **db**: add board id to task
+
+### Refactor
+
+- **ui**: bootstrap
+- **ui**: simplify routes
+
 ## 0.31.0 (2026-02-15)
 
 ### Feat

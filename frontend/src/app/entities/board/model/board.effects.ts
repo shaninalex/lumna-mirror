@@ -6,6 +6,7 @@ import {
     actionBoardCreate,
     actionBoardDelete,
     actionBoardDeleteSuccess,
+    actionBoardGet,
     actionBoardGetList,
     actionBoardPatch,
     actionBoardSetList,
@@ -60,6 +61,17 @@ export class BoardsEffects {
                     .pipe(
                         switchMap(() => of(actionBoardDeleteSuccess({ boardId: action.boardId }))),
                     ),
+            ),
+        ),
+    );
+
+    get_board$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionBoardGet),
+            exhaustMap((action) =>
+                this.boardApi
+                    .Get(action.boardId)
+                    .pipe(switchMap((board) => of(actionBoardUpsert({ board })))),
             ),
         ),
     );

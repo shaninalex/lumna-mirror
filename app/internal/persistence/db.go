@@ -38,6 +38,8 @@ func Migrate(db *gorm.DB) error {
 		&models.Task{},
 
 		&models.Job{},
+
+		&models.ActivityLog{},
 	)
 
 	if err != nil {

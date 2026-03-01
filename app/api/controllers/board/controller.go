@@ -26,6 +26,7 @@ func NewBoardController(
 
 func (s *BoardController) Register(router *gin.RouterGroup) {
 	router.POST("boards", s.Create)
+	router.GET("board/:boardId", s.Get)
 	router.PATCH("board/:boardId", s.Patch)
 	router.DELETE("board/:boardId", s.Delete)
 	router.PATCH("board/:boardId/order", s.ChangeOrder)

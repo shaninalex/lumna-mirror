@@ -1,24 +1,33 @@
 <div class="sidebar">
-    <div class="flex flex-col gap-6">
-        <div class="text-center">
-            <img src="img/logo-h.svg" alt="" class="w-[127px] inline-block" />
-        </div>
-        <ul class="flex flex-col gap-2">
-            <li><a class="hover:underline" routerLink="/">Home</a></li>
-            <li><a class="hover:underline" routerLink="/projects">Projects</a></li>
-            <li><a class="hover:underline" routerLink="/calendar">Calendar</a></li>
+    <div class="d-flex flex-column gap-4">
+        <a routerLink="/">
+            <img src="img/logo-h.svg" alt="" class="img-fluid" />
+        </a>
+
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page"  routerLink="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/projects">Projects</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/calendar">Calendar</a>
+            </li>
         </ul>
     </div>
 
-    <div class="flex flex-col gap-1">
-        <ul>
-            <li><a href="#">Setting</a></li>
+    <div class="d-flex flex-column gap-1">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/settings">Setting</a>
+            </li>
         </ul>
-        <ul class="text-gray-400 text-xs flex flex-wrap gap-1">
-            <li><a class="underline" href="#">About</a></li>
-            <li><a class="underline" href="#">Support</a></li>
-            <li><a class="underline" href="#">Feedback</a></li>
-        </ul>
-        <div class="text-gray-400 text-xs">v0.21.0</div>
+        <div class="d-flex gap-1">
+            <a class="text-body-secondary small" href="#">About</a>
+            <a class="text-body-secondary small" href="#">Support</a>
+            <a class="text-body-secondary small" href="#">Feedback</a>
+        </div>
+        <div class="text-secondary small">v{{ varsion }}</div>
     </div>
 </div>

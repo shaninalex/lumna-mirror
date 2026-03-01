@@ -17,7 +17,4 @@ database:
 secret_key: "a-string-secret-at-least-256-bits-long"
 
 api:
-  enabled: false
-
-html:
   enabled: true

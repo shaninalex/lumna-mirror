@@ -1,29 +1,41 @@
-import { Component, inject } from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { actionSessionAuthenticateStart } from '@core/store/session.actions';
 import { Store } from '@ngrx/store';
+import {form, required, email, FormField} from '@angular/forms/signals';
+
+interface LoginFormPayload {
+    email: string
+    password: string
+}
 
 @Component({
     selector: 'auth-login-feature',
-    imports: [FormsModule],
+    imports: [FormsModule, FormField],
     templateUrl: './auth-login.component.html',
 })
 export class AuthLoginFeature {
     private store = inject(Store);
-    email = 'test@test.com'; // just for developing
-    password = '111'; // just for developing
 
-    constructor() {
-        // subscribe to login errors effects
-        // to display them in form
-    }
+    loginFormModel = signal<LoginFormPayload>({
+        email: '',
+        password: '',
+    });
+
+    loginForm = form(this.loginFormModel, (schemaPath) => {
+        required(schemaPath.email, { message: "Email is required"});
+        required(schemaPath.password, { message: "Password is required"});
+        email(schemaPath.email, { message: "invalid email format"});
+    })
 
     onSubmit(): void {
-        this.store.dispatch(
-            actionSessionAuthenticateStart({
-                email: this.email,
-                password: this.password,
-            }),
-        );
+        if (!this.loginForm.email().errors().length && !this.loginForm.password().errors().length) {
+            this.store.dispatch(
+                actionSessionAuthenticateStart({
+                    email: this.loginForm.email().value(),
+                    password: this.loginForm.password().value(),
+                }),
+            );
+        }
     }
 }

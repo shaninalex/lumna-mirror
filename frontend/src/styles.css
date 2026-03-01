@@ -1,77 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import 'tailwindcss';
-
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
 :root {
-    --color-bg: var(--color-white);
-    --color-text: var(--color-slate-900);
-    --color-secondary: var(--color-gray-100);
-    --color-layout-border: var(--color-slate-200);
+    --color-layout-border: hsl(0, 0%, 90%);
 }
 
-[data-theme='dark'] {
-    --color-bg: var(--color-slate-800);
-    --color-text: var(--color-white);
-    --color-secondary: var(--color-slate-700);
-    --color-layout-border: var(--color-slate-700);
+[data-bs-theme='dark'] {
+    --color-layout-border: hsl(0, 0%, 25%);
 }
 
-body,
-html {
-    background-color: var(--color-bg);
-    color: var(--color-text);
-}
-
-.bg-surface-secondary {
-    background-color: var(--color-secondary);
-}
-
-.bg-surface {
-    background-color: var(--color-bg);
-}
-
-.modal {
-    background-color: var(--color-bg);
-    display: block;
-    padding: 1rem;
-    border-radius: var(--radius-2xl);
-    border: 1px solid var(--color-layout-border);
-}
-
-.dropdown {
-    @apply rounded-xl;
-    border: 1px solid var(--color-layout-border);
-    background-color: var(--color-bg);
-}
-
-.btn {
-    @apply cursor-pointer rounded-lg px-4 py-2 cursor-pointer inline-block disabled:opacity-75 disabled:pointer-events-none;
-}
-
-.btn.btn-sm {
-    @apply px-3 py-1;
-}
-
-.btn.btn-primary {
-    @apply bg-teal-500 text-white;
-}
-
-.btn.btn-danger {
-    @apply bg-red-500 text-white;
-}
-
-.btn.btn-secondary {
-    @apply bg-gray-300 dark:bg-slate-600 text-black hover:bg-gray-400 dark:text-white;
-}
-
-.card {
-    @apply p-4 rounded-xl mb-4;
-}
-
-.input {
-    @apply border block w-full rounded-lg px-2 py-1 border-gray-400 dark:border-slate-500;
+html, body {
+    font-size: 0.95rem;
 }
 
 @keyframes rotating {
@@ -97,9 +35,4 @@ html {
     -ms-animation: rotating 2s linear infinite;
     -o-animation: rotating 2s linear infinite;
     animation: rotating 2s linear infinite;
-}
-
-.link-disabled {
-    color: var(--color-secondary);
-    cursor: not-allowed;
 }

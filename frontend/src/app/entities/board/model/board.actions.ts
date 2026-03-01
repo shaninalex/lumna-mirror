@@ -1,6 +1,10 @@
 import { createAction, props } from '@ngrx/store';
 import { BoardModel, BoardPayloadModel } from '@entities/board';
 
+// Single
+export const actionBoardGet = createAction('[Board] get', props<{ boardId: number }>());
+// export const actionBoardSet = createAction('[Board] set', props<{ board: BoardModel }>());
+
 // LIST
 export const actionBoardGetList = createAction('[Board] get list', props<{ projectId: number }>());
 

@@ -8,11 +8,15 @@ import (
 )
 
 type TaskService struct {
-	db *gorm.DB
+	db             *gorm.DB
+	activityLogger *ActivityService
 }
 
-func NewTaskService(db *gorm.DB) *TaskService {
-	return &TaskService{db: db}
+func NewTaskService(db *gorm.DB, activityLogger *ActivityService) *TaskService {
+	return &TaskService{
+		db:             db,
+		activityLogger: activityLogger,
+	}
 }
 
 func (s *TaskService) GetTask(ctx context.Context, taskID uint) (*models.Task, error) {
@@ -43,13 +47,27 @@ type TaskPayload struct {
 }
 
 func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
+	column := &models.Column{}
+	result := s.db.WithContext(ctx).Where("id = ?", payload.ColumnID).First(&column)
+	if result.Error != nil {
+		return nil, result.Error
+	}
 	task := models.Task{
-		Title:    payload.Title,
-		Order:    payload.Order,
-		ColumnID: payload.ColumnID,
+		Title:     payload.Title,
+		Order:     payload.Order,
+		ColumnID:  column.ID,
+		ProjectID: column.ProjectID,
+		BoardID:   column.BoardID,
 	}
 	if result := s.db.WithContext(ctx).Create(&task); result.Error != nil {
 		return nil, result.Error
 	}
 	return &task, nil
+}
+
+func (s *TaskService) UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error {
+	if result := s.db.WithContext(ctx).Save(payload); result.Error != nil {
+		return result.Error
+	}
+	return nil
 }

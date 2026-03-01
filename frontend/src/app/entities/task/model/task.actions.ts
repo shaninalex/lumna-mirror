@@ -2,6 +2,8 @@ import { createAction, props } from '@ngrx/store';
 import { TaskModel, TaskPayloadModel } from './task.model';
 import { KanbanBoardChangeOrderPayload } from '@features/kanban-board/model';
 
+export const actionTaskGetTaskById = createAction('[Task] get task]', props<{task_id: number}>());
+
 // LIST
 export const actionTaskGetTasks = createAction('[Task] get tasks', props<{ board_id: number }>());
 
@@ -10,10 +12,10 @@ export const actionTaskSetTasks = createAction('[Task] set tasks', props<{ tasks
 // CREATE
 export const actionTaskCreate = createAction('[Task] create', props<{ data: TaskPayloadModel }>());
 
-// PATCH
-export const actionTaskPatch = createAction(
-    '[Task] patch',
-    props<{ task_id: number; data: TaskPayloadModel }>(),
+// Task changed
+export const actionTaskChange = createAction(
+    '[Task] change',
+    props<{ task_id: number; data: TaskModel }>(),
 );
 
 // CHANGE ORDER

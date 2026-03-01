@@ -1,15 +1,16 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TaskApi } from '../api/task.api';
 import {
+    actionTaskChange,
     actionTaskCreate,
     actionTaskFailed,
+    actionTaskGetTaskById,
     actionTaskGetTasks,
     actionTaskSetTasks,
     actionTaskUpsert,
 } from './task.actions';
 import { catchError, exhaustMap, map, of, switchMap } from 'rxjs';
-import { actionColumnSetList } from '@entities/column';
 import { actionKanbanColumnsLoaded } from '@features/kanban-board';
 
 @Injectable()
@@ -47,4 +48,26 @@ export class TaskEffects {
             ),
         ),
     );
+
+    task_get$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionTaskGetTaskById),
+            exhaustMap((action) =>
+                this.taskApi
+                    .Get(action.task_id)
+                    .pipe(switchMap((task) => of(actionTaskUpsert({ task })))),
+            ),
+        ),
+    );
+
+    task_change$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionTaskChange),
+            exhaustMap((action) =>
+                this.taskApi
+                    .Patch(action.task_id, action.data)
+                    .pipe(switchMap((task) => of(actionTaskUpsert({ task })))),
+            ),
+        )
+    )
 }

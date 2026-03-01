@@ -7,25 +7,28 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
     selector: 'app-project-card',
     imports: [RouterLink, CdkMenu, CdkMenuTrigger],
     template: `
-        <div class="bg-(--color-secondary) rounded-xl p-4 block">
-            <div class="flex justify-between">
-                <a
-                    [routerLink]="['/projects', project.id]"
-                    class="flex justify-between items-center"
-                >
-                    <i class="fa-regular fa-calendar-days"></i>
-                    <div>{{ project.title }}</div>
-                </a>
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a [routerLink]="['/projects', project.id]" class="text-decoration-none"
+                        style="color: inherit"
+                    >
+                        <h5 class="mb-0">
+                            <i class="fa-regular fa-calendar-days"></i>
+                            <b>{{ project.title }}</b>
+                        </h5>
+                    </a>
 
-                <button [cdkMenuTriggerFor]="menu">
-                    <i class="fa-solid fa-ellipsis"></i>
-                </button>
+                    <button [cdkMenuTriggerFor]="menu" class="btn btn-sm">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </button>
 
-                <ng-template #menu>
-                    <div class="dropdown p-4" cdkMenu>
-                        <a [routerLink]="['/projects', project.id, 'edit']">Edit</a>
-                    </div>
-                </ng-template>
+                    <ng-template #menu>
+                        <div class="dropdown-menu d-block" cdkMenu>
+                            <a [routerLink]="['/projects', project.id, 'edit']" class="dropdown-item">Edit</a>
+                        </div>
+                    </ng-template>
+                </div>
             </div>
         </div>
     `,

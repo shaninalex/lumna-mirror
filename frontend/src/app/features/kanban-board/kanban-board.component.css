@@ -1,3 +1,7 @@
+.kanban-column {
+    width: 280px;
+}
+
 .kanban-column:hover .kanban-column-handler {
     opacity: 1;
 }

@@ -1,17 +1,19 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthLoginFeature } from '@features/index';
 import { UiService } from '@shared/ui';
+import {RouterLink} from '@angular/router';
 
 @Component({
     selector: 'app-login',
-    imports: [AuthLoginFeature],
+    imports: [AuthLoginFeature, RouterLink],
     template: `
-        <auth-login-feature />
+        <h3 class="h3 mb-3">Login</h3>
 
-        <hr class="my-4 border-gray-300" />
-        <div class="text-center">
-            <a routerLink="#" class="text-gray-500 underline">Restore</a>
+        <div class="mb-3">
+            <auth-login-feature />
         </div>
+
+        <a routerLink="/">Forgot password</a>
     `,
 })
 export class Login implements OnInit {

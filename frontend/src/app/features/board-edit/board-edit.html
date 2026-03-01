@@ -1,19 +1,17 @@
 <form (submit)="submit($event)">
     <div class="mb-2">
-        <input class="input" placeholder="Project title" [formField]="boardForm.title" />
+        <input class="form-control" placeholder="Project title" [formField]="boardForm.title" />
         @if (boardForm.title().touched()) {
-            <ul class="error-list">
-                @for (error of boardForm.title().errors(); track error) {
-                    <li class="text-red-500 text-sm">{{ error.message }}</li>
-                }
-            </ul>
+            @for (error of boardForm.title().errors(); track error) {
+                <div class="text-danger small">{{ error.message }}</div>
+            }
         }
     </div>
 
     @if (errors()) {
         <ul class="mb-2">
             @for (error of errors(); track error) {
-                <li class="text-red-500 text-sm">{{ error }}</li>
+                <li class="text-danger small">{{ error }}</li>
             }
         </ul>
     }

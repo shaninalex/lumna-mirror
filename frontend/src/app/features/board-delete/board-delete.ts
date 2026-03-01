@@ -12,12 +12,15 @@ import { tap } from 'rxjs';
     selector: 'app-board-delete-feature',
     imports: [],
     template: `
-        <h2 class="mb-4">Danger</h2>
-        <button class="btn btn-danger" (click)="openDialog()">Delete</button>
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Danger</h4>
+            <p>This action will delete all tasks, comments and attachments in current board. Are you sure want to do this?</p>
+            <hr>
+            <button class="btn btn-danger" (click)="openDialog()">Delete</button>
+        </div>
     `,
 })
 export class BoardDeleteFeature {
-    @Input() projectId: number;
     @Input() boardId: number;
     @Input() boardTitle: string;
 
@@ -28,13 +31,13 @@ export class BoardDeleteFeature {
     private store = inject(Store<BoardState>);
 
     constructor() {
-        this.actions$
-            .pipe(
-                ofType(actionBoardDeleteSuccess),
-                takeUntilDestroyed(),
-                tap(() => this.router.navigate(['/projects', this.projectId])),
-            )
-            .subscribe();
+        // this.actions$
+        //     .pipe(
+        //         ofType(actionBoardDeleteSuccess),
+        //         takeUntilDestroyed(),
+        //         tap(() => this.router.navigate(['/projects', this.projectId])),
+        //     )
+        //     .subscribe();
     }
 
     openDialog(): void {
@@ -54,7 +57,7 @@ export class BoardDeleteFeature {
     template: `
         <h1 class="text-lg font-bold">Are you sure want to delete board {{ boardName }}?</h1>
         <p class="mb-2">All data (tasks) related to that board will be deleted</p>
-        <div class="flex gap-2">
+        <div class="d-flex gap-2">
             <button
                 (click)="confirm()"
                 class="bg-red-500 text-white rounded-lg px-2 py-1 cursor-pointer"

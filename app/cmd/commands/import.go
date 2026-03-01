@@ -120,9 +120,10 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 				fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
 				for li, _list := range _board.Columns {
 					column := models.Column{
-						Title:   _list.Title,
-						BoardID: board.ID,
-						Order:   uint(li),
+						Title:     _list.Title,
+						BoardID:   board.ID,
+						Order:     uint(li),
+						ProjectID: project.ID,
 					}
 					if result := database.Create(&column); result.Error != nil {
 						panic(result.Error)
@@ -130,10 +131,12 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 					fmt.Printf("\t\t%d. List: %s\n", li, column.Title)
 					for ti, _task := range _list.Tasks {
 						task := models.Task{
-							Title:    _task.Title,
-							ColumnID: column.ID,
-							Order:    uint(ti),
-							Body:     _task.Body,
+							Title:     _task.Title,
+							ColumnID:  column.ID,
+							Order:     uint(ti),
+							Body:      _task.Body,
+							ProjectID: project.ID,
+							BoardID:   board.ID,
 						}
 						if result := database.Create(&task); result.Error != nil {
 							panic(result.Error)

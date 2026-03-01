@@ -1,21 +1,8 @@
 <header class="header">
-    <div class="font-medium">{{ title() }}</div>
+    <app-breadcrumbs-widget />
 
-    <div>
-        <app-theme-switcher />
-        @if (user | async; as user) {
-            <button [cdkMenuTriggerFor]="menu">
-                <div class="flex items-center gap-3">
-                    <span class="text-sm">{{ user.email }}</span>
-                    <img src="img/7.png" alt="" class="rounded-full size-8" />
-                </div>
-            </button>
-
-            <ng-template #menu>
-                <div class="dropdown p-4" cdkMenu>
-                    <button (click)="logout()" class="cursor-pointer" cdkMenuItem>Sign out</button>
-                </div>
-            </ng-template>
-        }
+    <div class="d-flex align-items-center gap-2">
+        <app-theme-switcher/>
+        <app-user-menu />
     </div>
 </header>
