@@ -1,0 +1,30 @@
+<div class="modal fade show d-block" tabindex="-1" role="dialog" (click)="onBackdropClick($event)">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="me-auto">
+                    @if (task$ | async; as task) {
+                        <app-task-title-editor [title]="task.title" (onChange)="handleOnChangeTitle($event)" />
+                    }
+                </div>
+                <button class="btn btn-primary" [disabled]="!isChanged" (click)="save()">
+                    Save
+                </button>
+                <button
+                    type="button"
+                    class="btn-close ms-2"
+                    aria-label="Close"
+                    (click)="close()">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                @if (task$ | async; as task) {
+                    <app-task-body-editor [body]="task.body" (onChange)="handleOnChangeBody($event)" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-backdrop fade show" (click)="onBackdropClick($event)"></div>

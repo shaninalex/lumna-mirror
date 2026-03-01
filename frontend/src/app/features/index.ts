@@ -9,3 +9,4 @@ export { ColumnEditNameFeature } from './column-edit-name/column-edit-name';
 export { ColumnDropdownFeature } from './column-dropdown';
 export { TaskInlineFormFeature } from './task-inline-form';
 export { AuthLoginFeature } from './auth-login/auth-login.component';
+export { TaskDetailModalFeature } from './task-detail-modal'

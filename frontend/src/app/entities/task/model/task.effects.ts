@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TaskApi } from '../api/task.api';
 import {
+    actionTaskChange,
     actionTaskCreate,
     actionTaskFailed,
     actionTaskGetTaskById,
@@ -58,4 +59,15 @@ export class TaskEffects {
             ),
         ),
     );
+
+    task_change$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionTaskChange),
+            exhaustMap((action) =>
+                this.taskApi
+                    .Patch(action.task_id, action.data)
+                    .pipe(switchMap((task) => of(actionTaskUpsert({ task })))),
+            ),
+        )
+    )
 }

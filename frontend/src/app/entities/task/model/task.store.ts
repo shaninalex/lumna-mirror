@@ -2,6 +2,7 @@ import { TaskModel } from './task.model';
 import { createEntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import {
+    actionTaskChange,
     actionTaskChangeOrder,
     actionTaskDeleteSuccess,
     actionTaskSetTasks,
@@ -50,4 +51,9 @@ export const taskReducer = createReducer(
 
         return state;
     }),
+
+    on(actionTaskChange, (state, action) => taskAdapter.updateOne({
+        id: action.task_id,
+        changes: action.data,
+    }, state)),
 );

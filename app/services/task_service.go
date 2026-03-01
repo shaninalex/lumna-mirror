@@ -60,3 +60,10 @@ func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 	}
 	return &task, nil
 }
+
+func (s *TaskService) UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error {
+	if result := s.db.WithContext(ctx).Save(payload); result.Error != nil {
+		return result.Error
+	}
+	return nil
+}

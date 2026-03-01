@@ -12,10 +12,10 @@ export const actionTaskSetTasks = createAction('[Task] set tasks', props<{ tasks
 // CREATE
 export const actionTaskCreate = createAction('[Task] create', props<{ data: TaskPayloadModel }>());
 
-// PATCH
-export const actionTaskPatch = createAction(
-    '[Task] patch',
-    props<{ task_id: number; data: TaskPayloadModel }>(),
+// Task changed
+export const actionTaskChange = createAction(
+    '[Task] change',
+    props<{ task_id: number; data: TaskModel }>(),
 );
 
 // CHANGE ORDER

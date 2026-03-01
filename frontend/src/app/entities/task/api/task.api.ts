@@ -36,7 +36,7 @@ export class TaskApi {
             .pipe(map((response) => response.data));
     }
 
-    Patch(taskId: number, payload: TaskPayloadModel): Observable<TaskModel> {
+    Patch(taskId: number, payload: TaskModel): Observable<TaskModel> {
         return this.http
             .patch<
                 APIResponse<TaskModel>

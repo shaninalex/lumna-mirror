@@ -19,7 +19,7 @@ import { tap } from 'rxjs';
             <form (submit)="submit($event)" class="w-[280px]">
                 <div class="mb-2">
                     <input
-                        class="input w-full"
+                        class="form-control w-full"
                         placeholder="Column name"
                         [formField]="columnForm.title"
                     />

@@ -4,6 +4,7 @@ export interface TaskModel {
     project_id: number;
     title: string;
     order: number;
+    body: string;
     done: boolean;
     created_at: Date;
     updated_at: Date;
