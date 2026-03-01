@@ -16,7 +16,7 @@ import { UiService } from '@shared/ui';
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div class="fw-bold">{{ board.title }}</div>
                     <div>
-                        <button [cdkMenuTriggerFor]="menu" class="btn btn-sm">
+                        <button [cdkMenuTriggerFor]="menu" class="btn btn-sm btn-outline-secondary">
                             <i class="fa-solid fa-ellipsis"></i>
                         </button>
 

@@ -47,7 +47,7 @@ import { TaskState, actionTaskUpsert, actionTaskFailed, actionTaskCreate } from 
                 </div>
             </form>
         } @else {
-            <button class="btn btn-sm btn-secondary" (click)="this.openedForm.set(true)">
+            <button class="btn btn-sm btn-outline-secondary" (click)="this.openedForm.set(true)">
                 add task
             </button>
         }

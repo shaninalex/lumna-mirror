@@ -10,13 +10,13 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <a [routerLink]="['/projects', project.id]" class=""
+                    <a [routerLink]="['/projects', project.id]" class="text-decoration-none"
                         style="color: inherit"
                     >
-                        <h4 class="mb-0">
+                        <h5 class="mb-0">
                             <i class="fa-regular fa-calendar-days"></i>
                             <b>{{ project.title }}</b>
-                        </h4>
+                        </h5>
                     </a>
 
                     <button [cdkMenuTriggerFor]="menu" class="btn btn-sm">
