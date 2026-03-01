@@ -18,7 +18,6 @@ import (
 	"gitlab.com/shaninalex/lumna/app/internal/email"
 	"gitlab.com/shaninalex/lumna/app/internal/logger"
 	"gitlab.com/shaninalex/lumna/app/internal/persistence"
-	"gitlab.com/shaninalex/lumna/app/services"
 	"go.uber.org/dig"
 )
 
@@ -44,7 +43,7 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			_ = c.Provide(persistence.ProvideDB)
 			_ = c.Provide(bus.ProvideEventBus)
 			_ = c.Provide(logger.ProvideLogger)
-			_ = c.Provide(services.ProvideActivityService)
+			_ = c.Provide(logger.ProvideActivityService)
 			_ = c.Invoke(email.InvokeEmailQueue)
 			// Providing api module
 			_ = api.Module(c)

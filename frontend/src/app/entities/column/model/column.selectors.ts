@@ -18,3 +18,6 @@ export const selectColumnsByBoardId = (boardId: number) =>
     createSelector(selectColumns, (columns) =>
         columns.filter((b) => b.board_id === boardId).sort((a, b) => a.order - b.order),
     );
+
+export const selectColumnsById = (columnId: number) =>
+    createSelector(selectColumns, (columns) => columns.find((b) => b.id === columnId));

@@ -15,9 +15,15 @@ func (s *BoardController) ChangeOrder(c *gin.Context) {
 		return
 	}
 
-	if err := s.boardService.Reoder(c.Request.Context(), &payload); err != nil {
+	if err := s.boardService.Reorder(c.Request.Context(), &payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
+	}
+
+	if payload.Activity != nil {
+		if id, err := utils.GetUserID(c); err == nil {
+			s.activityService.Log(id, payload.Activity)
+		}
 	}
 
 	utils.Success(c, nil)

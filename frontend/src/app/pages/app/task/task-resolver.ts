@@ -9,7 +9,7 @@ export const taskResolver: ResolveFn<TaskModel | null> = (route: ActivatedRouteS
     const taskId = Number(route.paramMap.get('taskId'));
 
     return store.select(selectTaskById(taskId)).pipe(
-        tap((task: TaskModel | null) => {
+        tap((task: TaskModel | undefined) => {
             if (!task)
                 store.dispatch(actionTaskGetTaskById({ task_id: taskId }));
         }),
