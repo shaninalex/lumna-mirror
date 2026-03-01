@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/activity"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/board"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/column"
@@ -37,12 +38,13 @@ func HealthRoute(c *gin.Context) {
 type ApiDeps struct {
 	dig.In
 
-	AuthController    *auth.AuthController
-	BoardController   *board.BoardController
-	ColumnController  *column.ColumnController
-	ProjectController *project.ProjectController
-	TaskController    *task.TaskController
-	UserController    *user.UserController
+	AuthController     *auth.AuthController
+	BoardController    *board.BoardController
+	ColumnController   *column.ColumnController
+	ProjectController  *project.ProjectController
+	TaskController     *task.TaskController
+	UserController     *user.UserController
+	ActivityController *activity.ActivityController
 }
 
 func NewApi(deps ApiDeps) *gin.Engine {
@@ -63,6 +65,7 @@ func NewApi(deps ApiDeps) *gin.Engine {
 	deps.ProjectController.Register(private)
 	deps.TaskController.Register(private)
 	deps.UserController.Register(private)
+	deps.ActivityController.Register(private)
 
 	return router
 }

@@ -2,24 +2,28 @@ package board
 
 import (
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/internal/logger"
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
 type BoardController struct {
-	boardService  *services.BoardService
-	columnService *services.ColumnService
-	taskService   *services.TaskService
+	boardService   *services.BoardService
+	columnService  *services.ColumnService
+	taskService    *services.TaskService
+	activityLogger *logger.ActivityLogger
 }
 
 func NewBoardController(
 	boardService *services.BoardService,
 	columnService *services.ColumnService,
 	taskService *services.TaskService,
+	activityLogger *logger.ActivityLogger,
 ) *BoardController {
 	s := &BoardController{
-		boardService:  boardService,
-		columnService: columnService,
-		taskService:   taskService,
+		boardService:   boardService,
+		columnService:  columnService,
+		taskService:    taskService,
+		activityLogger: activityLogger,
 	}
 	return s
 }

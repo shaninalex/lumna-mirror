@@ -2,7 +2,7 @@
     <div class="d-flex align-items-start gap-4" cdkDropListGroup>
         @if (columnsWithTasks$ | async; as columns) {
             @for (c of columns; track c.id) {
-                <div cdkDrag class="card kanban-column">
+                <div cdkDrag [cdkDragData]="c" class="card kanban-column">
                     <!-- Column header -->
                     <div class="card-header d-flex align-items-center">
                         <div class="flex-grow-1">

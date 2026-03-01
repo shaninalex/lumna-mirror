@@ -36,7 +36,7 @@ import { Store } from '@ngrx/store';
                 }
             </form>
         } @else {
-            <div class="fw-bold small" (click)="formOpen.set(true)">{{ column().title }}</div>
+            <div class="fw-bold small" (click)="formOpen.set(true)">{{ column().title }} ( {{ column().id }} )</div>
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

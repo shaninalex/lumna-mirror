@@ -8,14 +8,12 @@ import (
 )
 
 type TaskService struct {
-	db             *gorm.DB
-	activityLogger *ActivityService
+	db *gorm.DB
 }
 
-func NewTaskService(db *gorm.DB, activityLogger *ActivityService) *TaskService {
+func NewTaskService(db *gorm.DB) *TaskService {
 	return &TaskService{
-		db:             db,
-		activityLogger: activityLogger,
+		db: db,
 	}
 }
 

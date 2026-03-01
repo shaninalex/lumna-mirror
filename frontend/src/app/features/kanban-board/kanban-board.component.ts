@@ -1,10 +1,10 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { BoardModel } from '@entities/board';
-import { actionColumnChangeOrder, ColumnModel, ColumnState } from '@entities/column';
-import { NewColumnForm } from '@features/kanban-board/components';
-import { ColumnEditNameFeature, TaskInlineFormFeature, ColumnDropdownFeature } from '@features';
-import { actionTaskChangeOrder, selectTasksByColumns, TaskModel, TaskState } from '@entities/task';
-import { TaskCard } from '@entities/task/ui/task-card/task-card';
+import {Component, inject, Input, OnInit} from '@angular/core';
+import {BoardModel} from '@entities/board';
+import {actionColumnChangeOrder, ColumnModel, ColumnState} from '@entities/column';
+import {NewColumnForm} from '@features/kanban-board/components';
+import {ColumnDropdownFeature, ColumnEditNameFeature, TaskInlineFormFeature} from '@features';
+import {actionTaskChangeOrder, selectTasksByColumns, TaskModel, TaskState} from '@entities/task';
+import {TaskCard} from '@entities/task/ui/task-card/task-card';
 import {
     CdkDrag,
     CdkDragDrop,
@@ -14,12 +14,12 @@ import {
     moveItemInArray,
     transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { KanbanApi } from './api/kanban.api';
-import { Store } from '@ngrx/store';
-import { actionKanbanLoadColumns, KanbanBoardChangeOrderPayload } from './model';
-import { selectColumnsByBoardId } from '@entities/column/model/column.selectors';
-import { Observable, combineLatest, map, switchMap, take, tap } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import {KanbanApi} from './api/kanban.api';
+import {Store} from '@ngrx/store';
+import {actionKanbanLoadColumns, KanbanBoardChangeOrderPayload} from './model';
+import {selectColumnsByBoardId, selectColumnsById} from '@entities/column/model/column.selectors';
+import {combineLatest, map, Observable, switchMap, take} from 'rxjs';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
     selector: 'app-kanban-board-feature',
@@ -54,7 +54,7 @@ export class KanbanBoardFeature implements OnInit {
     columnsWithTasks$!: Observable<(ColumnModel & { tasks: TaskModel[] })[]>;
 
     ngOnInit(): void {
-        this.columnStore.dispatch(actionKanbanLoadColumns({ boardId: this.board.id }));
+        this.columnStore.dispatch(actionKanbanLoadColumns({boardId: this.board.id}));
         this.columns$ = this.columnStore.select(selectColumnsByBoardId(this.board.id));
         this.tasks$ = this.columns$.pipe(
             switchMap((columns) =>
@@ -81,25 +81,27 @@ export class KanbanBoardFeature implements OnInit {
         const isSameList = event.previousContainer === event.container;
 
         if (isSameList) {
+            // move task in a single column ( just change the order )
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-
             const payload: KanbanBoardChangeOrderPayload = {
                 moveType: 'task',
                 columnId: column.id,
-                tasks: this._buildTasksPayload(event.container.data),
+                tasks: this._buildTasksPayload(event.container.data)
             };
-
+            const activityLog = this._logChangeTaskOrder(event.previousIndex, event.currentIndex, event.item.data.id)
+            if (activityLog) payload.activity = activityLog
             this.kanbanApi
                 .Patch(board.id, payload)
                 .subscribe(() => this.taskStore.dispatch(actionTaskChangeOrder(payload)));
         } else {
+            // move task between columns and change order
+            const activityLog = this._logMovingTaskBetweenColumns(event.item.data.column_id, column.id, event.item.data.id)
             transferArrayItem(
                 event.previousContainer.data,
                 event.container.data,
                 event.previousIndex,
                 event.currentIndex,
             );
-
             const payload: KanbanBoardChangeOrderPayload = {
                 moveType: 'task',
                 columns: [
@@ -113,7 +115,7 @@ export class KanbanBoardFeature implements OnInit {
                     },
                 ],
             };
-
+            if (activityLog) payload.activity = activityLog
             this.kanbanApi
                 .Patch(board.id, payload)
                 .subscribe(() => this.taskStore.dispatch(actionTaskChangeOrder(payload)));
@@ -137,10 +139,13 @@ export class KanbanBoardFeature implements OnInit {
                 columns: updatedColumns,
             };
 
+            const activityLog = this._logChangeColumnOrder(event.previousIndex, event.currentIndex, event.item.data.id)
+            if (activityLog) payload.activity = activityLog
+
             this.kanbanApi
                 .Patch(this.board.id, payload)
                 .subscribe(() =>
-                    this.columnStore.dispatch(actionColumnChangeOrder({ columns: updatedColumns })),
+                    this.columnStore.dispatch(actionColumnChangeOrder({columns: updatedColumns})),
                 );
         });
     }
@@ -150,5 +155,41 @@ export class KanbanBoardFeature implements OnInit {
             id: task.id,
             order: index,
         }));
+    }
+
+    private _getColumnById(columnId: number): ColumnModel | undefined {
+        return this.columnStore.selectSignal(selectColumnsById(columnId))()
+    }
+
+    private _logMovingTaskBetweenColumns(fromColumnId: number, toColumnId: number, taskId: number): any {
+        const fromColumn = this._getColumnById(fromColumnId)
+        const toColumn = this._getColumnById(toColumnId)
+        if (!fromColumn || !toColumn) return null
+        return {
+            entity_type: "task",
+            entity_id: taskId,
+            summary: `Move from "${fromColumn.title}" to "${toColumn.title}"`,
+            action: "update",
+        }
+    }
+
+    private _logChangeColumnOrder(previousIndex: number, currentIndex: number, columnId: number): any {
+        if (previousIndex === currentIndex) return null
+        return {
+            entity_type: "column",
+            entity_id: columnId,
+            summary: `Reorder from "${previousIndex}" to "${currentIndex}"`,
+            action: "reorder",
+        }
+    }
+
+    private _logChangeTaskOrder(previousIndex: number, currentIndex: number, taskId: number): any {
+        if (previousIndex === currentIndex) return null
+        return {
+            entity_type: "task",
+            entity_id: taskId,
+            summary: `Reorder from "${previousIndex}" to "${currentIndex}"`,
+            action: "reorder",
+        }
     }
 }

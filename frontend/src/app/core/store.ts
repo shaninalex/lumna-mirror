@@ -1,9 +1,10 @@
 import { routerReducer } from '@ngrx/router-store';
 
-import { userReducer, UserEffects } from '@entities/user';
+import { UserEffects, userReducer } from '@entities/user';
 import { ProjectEffects, projectReducer } from '@entities/project';
 import { BoardsEffects, boardReducer } from '@entities/board';
 import { ColumnEffects, columnReducer } from '@entities/column';
+import { ActivityEffects, activityReducer } from '@entities/activity';
 
 import { SessionEffects } from '@core/store/session.effects';
 import { sessionReducer } from '@core/store/session.store';
@@ -22,6 +23,7 @@ export const effects = [
     ColumnEffects,
     UserEffects,
     TaskEffects,
+    ActivityEffects,
 
     // Feature effects
     KanbanEffects,
@@ -34,6 +36,7 @@ export const reducers = {
     board: boardReducer,
     column: columnReducer,
     task: taskReducer,
+    activity: activityReducer,
 
     // -----
     router: routerReducer,

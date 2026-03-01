@@ -3,20 +3,18 @@ package services
 import (
 	"context"
 
-	"gitlab.com/shaninalex/lumna/app/internal/auth"
+	"gitlab.com/shaninalex/lumna/app/internal/logger"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gorm.io/gorm"
 )
 
 type BoardService struct {
-	db             *gorm.DB
-	activityLogger *ActivityService
+	db *gorm.DB
 }
 
-func NewBoardService(db *gorm.DB, activityLogger *ActivityService) *BoardService {
+func NewBoardService(db *gorm.DB) *BoardService {
 	return &BoardService{
-		db:             db,
-		activityLogger: activityLogger,
+		db: db,
 	}
 }
 
@@ -70,13 +68,14 @@ type KColumn struct {
 }
 
 type KanbanBoardChangeOrderPayload struct {
-	MoveType string    `json:"moveType"`
-	ColumnId *uint     `json:"columnId"`
-	Tasks    []KTask   `json:"tasks"`
-	Columns  []KColumn `json:"columns"`
+	MoveType string                     `json:"moveType"`
+	ColumnId *uint                      `json:"columnId"`
+	Tasks    []KTask                    `json:"tasks"`
+	Columns  []KColumn                  `json:"columns"`
+	Activity *logger.ActivityLogPayload `json:"activity"`
 }
 
-func (s *BoardService) Reoder(ctx context.Context, payload *KanbanBoardChangeOrderPayload) error {
+func (s *BoardService) Reorder(ctx context.Context, payload *KanbanBoardChangeOrderPayload) error {
 	if payload.MoveType == "task" {
 		// move in a single column
 		if payload.ColumnId != nil {
@@ -98,12 +97,6 @@ func (s *BoardService) Reoder(ctx context.Context, payload *KanbanBoardChangeOrd
 					if result.Error != nil {
 						return result.Error
 					}
-					s.activityLogger.Log(ctx, &models.ActivityLog{
-						IdentityID: auth.GetIdentityId(ctx),
-						EntityID:   task.Id,
-						EntityType: "task",
-						Action:     "reorder",
-					})
 				}
 			}
 		}

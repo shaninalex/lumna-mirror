@@ -15,4 +15,11 @@ export interface KanbanBoardChangeOrderPayload {
             order: number;
         }>;
     }>;
+
+    activity?: {
+        entity_type: string,
+        entity_id: number,
+        summary: string,
+        action: string,
+    }
 }

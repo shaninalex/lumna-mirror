@@ -12,6 +12,6 @@ export const selectTasksByColumns = (columns_id: number[]) =>
 
 export const selectTaskById = (task_id: number) => createSelector(
     selectTaskFeature,
-    (state) => taskSelectors.selectEntities(state)[task_id] ?? null,
+    (state) => taskSelectors.selectEntities(state)[task_id] ?? undefined,
 )
 
