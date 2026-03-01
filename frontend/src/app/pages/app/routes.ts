@@ -82,6 +82,9 @@ export const routes: Routes = [
                             {
                                 path: 'boards/:id',
                                 component: BoardContainer,
+                                resolve: {
+                                    board: boardResolver,
+                                },
                                 children: [
                                     {
                                         path: '',
@@ -108,9 +111,6 @@ export const routes: Routes = [
                                     {
                                         path: 'edit',
                                         component: BoardEditPage,
-                                        resolve: {
-                                            board: boardResolver,
-                                        },
                                     },
                                 ],
                             },

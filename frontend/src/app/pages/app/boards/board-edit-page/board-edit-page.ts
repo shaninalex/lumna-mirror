@@ -11,9 +11,9 @@ import { filter, map, Observable, tap } from 'rxjs';
     imports: [BoardEditFeature, BoardDeleteFeature, AsyncPipe],
     template: `
         @if (board$ | async; as board) {
-            <h1>Board "{{ board.title }}" Edit</h1>
+            <h4>Board "{{ board.title }}" Edit</h4>
             <app-board-edit-feature [board]="board" />
-            <div class="my-4 border-b border-gray-200"></div>
+            <hr />
             <app-board-delete-feature [boardId]="board.id" [boardTitle]="board.title" />
         }
     `,
@@ -23,7 +23,7 @@ export class BoardEditPage {
 
     route = inject(ActivatedRoute);
     projectId: number;
-    board$: Observable<BoardModel> = this.route.data.pipe(
+    board$: Observable<BoardModel> = this.route.parent!.data.pipe(
         filter((data) => !!data['board']),
         map((data) => data['board'] as BoardModel),
         tap((board) => this.ui.setPageTitle(`Edit board: ${board.title}`)),

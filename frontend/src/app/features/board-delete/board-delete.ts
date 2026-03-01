@@ -12,8 +12,12 @@ import { tap } from 'rxjs';
     selector: 'app-board-delete-feature',
     imports: [],
     template: `
-        <h2 class="mb-4">Danger</h2>
-        <button class="btn btn-danger" (click)="openDialog()">Delete</button>
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Danger</h4>
+            <p>This action will delete all tasks, comments and attachments in current board. Are you sure want to do this?</p>
+            <hr>
+            <button class="btn btn-danger" (click)="openDialog()">Delete</button>
+        </div>
     `,
 })
 export class BoardDeleteFeature {

@@ -36,7 +36,7 @@ export class ThemeManager {
     public applyTheme(theme: Theme) {
         this.theme$.next(theme);
         const resolvedTheme = theme === 'auto' ? this.getSystemTheme() : theme;
-        document.documentElement.setAttribute('data-theme', resolvedTheme);
+        document.documentElement.setAttribute('data-bs-theme', resolvedTheme);
         localStorage.setItem(this.storageKey, theme);
     }
 
