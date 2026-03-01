@@ -4,7 +4,8 @@ import {filter, Observable} from 'rxjs';
 import {actionTaskChange, TaskModel} from '@entities/task';
 import {AsyncPipe} from '@angular/common';
 
-import {TaskBodyEditorComponent, TaskTitleEditorComponent} from './components';
+import {TaskBodyEditorComponent, TaskChangeStatusComponent, TaskTitleEditorComponent} from './components';
+import {TaskActivityComponent} from '@features/task-detail-modal/components/task-activity/task-activity.component';
 
 
 @Component({
@@ -13,6 +14,8 @@ import {TaskBodyEditorComponent, TaskTitleEditorComponent} from './components';
         AsyncPipe,
         TaskBodyEditorComponent,
         TaskTitleEditorComponent,
+        TaskChangeStatusComponent,
+        TaskActivityComponent,
     ],
     templateUrl: './task-detail-modal.component.html'
 })
@@ -71,5 +74,7 @@ export class TaskDetailModalFeature implements  OnInit {
 
     private checkChanges(): void {
         this.isChanged = JSON.stringify(this.originalTask) !== JSON.stringify(this.editedTask);
+        console.log(JSON.stringify(this.originalTask))
+        console.log(JSON.stringify(this.editedTask))
     }
 }

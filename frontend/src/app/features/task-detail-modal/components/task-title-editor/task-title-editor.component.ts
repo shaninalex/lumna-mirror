@@ -9,7 +9,7 @@ import {form, FormField, required} from '@angular/forms/signals';
     ],
     template: `
         <input
-            class="form-control fw-bold form-control-lg"
+            class="form-control fw-bold "
             placeholder="Task title"
             [formField]="taskTitleForm.title"
             (blur)="onBlur()"
