@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, Observable, tap } from 'rxjs';
 import { TaskModel } from '@entities/task';
 import { UiService } from '@shared/ui';
-import { AsyncPipe } from '@angular/common';
 import {TaskDetailModalFeature} from '@features';
 
 @Component({

@@ -22,7 +22,7 @@ func (s *BoardController) ChangeOrder(c *gin.Context) {
 
 	if payload.Activity != nil {
 		if id, err := utils.GetUserID(c); err == nil {
-			s.activityService.Log(id, payload.Activity)
+			s.activityLogger.Log(id, payload.Activity)
 		}
 	}
 

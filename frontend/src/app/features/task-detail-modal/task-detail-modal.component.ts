@@ -74,7 +74,5 @@ export class TaskDetailModalFeature implements  OnInit {
 
     private checkChanges(): void {
         this.isChanged = JSON.stringify(this.originalTask) !== JSON.stringify(this.editedTask);
-        console.log(JSON.stringify(this.originalTask))
-        console.log(JSON.stringify(this.editedTask))
     }
 }

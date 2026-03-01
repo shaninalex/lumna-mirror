@@ -7,23 +7,23 @@ import (
 )
 
 type BoardController struct {
-	boardService    *services.BoardService
-	columnService   *services.ColumnService
-	taskService     *services.TaskService
-	activityService *logger.ActivityService
+	boardService   *services.BoardService
+	columnService  *services.ColumnService
+	taskService    *services.TaskService
+	activityLogger *logger.ActivityLogger
 }
 
 func NewBoardController(
 	boardService *services.BoardService,
 	columnService *services.ColumnService,
 	taskService *services.TaskService,
-	activityService *logger.ActivityService,
+	activityLogger *logger.ActivityLogger,
 ) *BoardController {
 	s := &BoardController{
-		boardService:    boardService,
-		columnService:   columnService,
-		taskService:     taskService,
-		activityService: activityService,
+		boardService:   boardService,
+		columnService:  columnService,
+		taskService:    taskService,
+		activityLogger: activityLogger,
 	}
 	return s
 }
