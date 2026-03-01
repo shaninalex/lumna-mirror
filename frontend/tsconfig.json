@@ -10,6 +10,8 @@
         "noFallthroughCasesInSwitch": true,
         "strictPropertyInitialization": false,
         "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
         "isolatedModules": true,
         "experimentalDecorators": true,
         "importHelpers": true,
