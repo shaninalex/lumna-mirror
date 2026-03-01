@@ -8,11 +8,15 @@ import (
 )
 
 type TaskService struct {
-	db *gorm.DB
+	db             *gorm.DB
+	activityLogger *ActivityService
 }
 
-func NewTaskService(db *gorm.DB) *TaskService {
-	return &TaskService{db: db}
+func NewTaskService(db *gorm.DB, activityLogger *ActivityService) *TaskService {
+	return &TaskService{
+		db:             db,
+		activityLogger: activityLogger,
+	}
 }
 
 func (s *TaskService) GetTask(ctx context.Context, taskID uint) (*models.Task, error) {

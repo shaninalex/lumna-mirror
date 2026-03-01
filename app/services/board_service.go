@@ -3,17 +3,20 @@ package services
 import (
 	"context"
 
+	"gitlab.com/shaninalex/lumna/app/internal/auth"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gorm.io/gorm"
 )
 
 type BoardService struct {
-	db *gorm.DB
+	db             *gorm.DB
+	activityLogger *ActivityService
 }
 
-func NewBoardService(db *gorm.DB) *BoardService {
+func NewBoardService(db *gorm.DB, activityLogger *ActivityService) *BoardService {
 	return &BoardService{
-		db: db,
+		db:             db,
+		activityLogger: activityLogger,
 	}
 }
 
@@ -86,14 +89,21 @@ func (s *BoardService) Reoder(ctx context.Context, payload *KanbanBoardChangeOrd
 			// move task between columns
 			for _, column := range payload.Columns {
 				for _, task := range column.Tasks {
-					if result := s.db.Model(&models.Task{}).
+					result := s.db.Model(&models.Task{}).
 						Where("id = ?", task.Id).
 						Updates(map[string]any{
 							"order":     task.Order,
 							"column_id": column.Id,
-						}); result.Error != nil {
+						})
+					if result.Error != nil {
 						return result.Error
 					}
+					s.activityLogger.Log(ctx, &models.ActivityLog{
+						IdentityID: auth.GetIdentityId(ctx),
+						EntityID:   task.Id,
+						EntityType: "task",
+						Action:     "reorder",
+					})
 				}
 			}
 		}
