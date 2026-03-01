@@ -18,29 +18,10 @@ import { Store } from '@ngrx/store';
     imports: [FormField, ClickOutsideDirective],
     template: `
         @if (formOpen()) {
-            <form (submit)="submit($event)" class="d-flex gap-2" (clickOutside)="formOpen.set(false)">
-                <div>
-                    <input
-                        class="input"
-                        placeholder="Project name"
-                        [formField]="listForm.title"
-                        autocomplete="off"
-                    />
-                    @if (listForm.title().touched() && listForm.title().errors().length) {
-                        <ul class="error-list">
-                            @for (error of listForm.title().errors(); track error) {
-                                <li class="text-red-500 text-sm">{{ error.message }}</li>
-                            }
-                        </ul>
-                    }
-                </div>
-
-                <div>
-                    <button
-                        type="submit"
-                        class="btn is-primary is-small"
-                        [disabled]="listForm().invalid()"
-                    >
+            <form (submit)="submit($event)" class="w-100" (clickOutside)="formOpen.set(false)">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm fw-bold" placeholder="Column name" autocomplete="off" [formField]="listForm.title">
+                    <button class="btn btn-sm btn-outline-primary" type="submit">
                         @if (loading()) {
                             <i class="fa-solid fa-spinner spin"></i>
                         } @else {
@@ -48,11 +29,14 @@ import { Store } from '@ngrx/store';
                         }
                     </button>
                 </div>
+                @if (listForm.title().touched() && listForm.title().errors().length) {
+                    @for (error of listForm.title().errors(); track error) {
+                        <div class="text-danger small">{{ error.message }}</div>
+                    }
+                }
             </form>
         } @else {
-            <div class="fw-bold" (click)="formOpen.set(true)">
-                <small>{{ column().title }}</small>
-            </div>
+            <div class="fw-bold small" (click)="formOpen.set(true)">{{ column().title }}</div>
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

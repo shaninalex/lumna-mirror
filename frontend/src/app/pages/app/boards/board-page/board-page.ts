@@ -21,7 +21,7 @@ import { UiService } from '@shared/ui';
                         </button>
 
                         <ng-template #menu>
-                            <div class="dropdown-menu d-block" cdkMenu>
+                            <div class="card card-body" cdkMenu>
                                 <a [routerLink]="['/projects', board.project_id, 'boards', board.id, 'edit']">Edit</a>
                             </div>
                         </ng-template>

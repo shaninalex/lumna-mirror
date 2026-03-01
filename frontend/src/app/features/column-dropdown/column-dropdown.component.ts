@@ -11,7 +11,7 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
         </button>
 
         <ng-template #menu>
-            <div class="dropdown-menu d-block" cdkMenu>
+            <div class="card" cdkMenu>
                 <app-column-delete-feature [columnId]="column.id" [columnName]="column.title" />
             </div>
         </ng-template>
