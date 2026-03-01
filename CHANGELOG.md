@@ -1,3 +1,9 @@
+## 0.32.1 (2026-03-01)
+
+### Fix
+
+- **ui**: dynamic version in sidebar
+
 ## 0.32.0 (2026-03-01)
 
 ### Feat
