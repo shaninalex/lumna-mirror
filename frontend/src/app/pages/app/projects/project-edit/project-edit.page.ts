@@ -11,7 +11,7 @@ import { filter, map, Observable, tap } from 'rxjs';
     template: `
         <h1>Project Edit</h1>
         <app-project-edit-feature [project$]="project$" />
-        <div class="border-b border-slate-200 dark:border-slate-700 my-4"></div>
+        <hr />
         <app-project-delete-feature [project$]="project$" />
     `,
 })

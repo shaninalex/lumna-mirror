@@ -9,10 +9,7 @@ import { ProjectForm } from './components';
     selector: 'app-projects-create-feature',
     template: `
         <div>
-            <button
-                (click)="newProject()"
-                class="btn btn-primary"
-            >
+            <button (click)="newProject()" class="btn btn-primary">
                 New project
             </button>
         </div>

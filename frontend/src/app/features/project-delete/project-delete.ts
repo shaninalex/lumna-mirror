@@ -18,16 +18,12 @@ import { Observable } from 'rxjs';
     imports: [AsyncPipe],
     template: `
         @if (project$ | async; as project) {
-            <article class="message is-danger">
-                <div class="message-header">
-                    <p>Danger</p>
-                </div>
-                <div class="message-body">
-                    <p>This action will delete all project data</p>
-
-                    <button class="btn is-danger" (click)="openDialog(project.title)">Delete</button>
-                </div>
-            </article>
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Danger!</h4>
+                <p>This action will delete all project data</p>
+                <hr>
+                <button class="btn btn-danger" (click)="openDialog(project.title)">Delete</button>
+            </div>
         }
     `,
 })
@@ -62,25 +58,23 @@ export class ProjectDeleteFeature implements OnInit {
 @Component({
     selector: 'app-project-delete-feature-dialog',
     template: `
-        <h1 class="text-lg font-bold">Are you sure want to delete project {{ projectName }}?</h1>
-        <p class="mb-2">All data related to that project will be deleted</p>
-        <div class="d-flex gap-2">
-            <button
-                (click)="confirm()"
-                class="bg-red-500 text-white rounded-lg px-2 py-1 cursor-pointer"
-            >
-                delete
-            </button>
-            <button
-                (click)="cancel()"
-                class="bg-gray-400 text-white rounded-lg px-2 py-1 cursor-pointer"
-            >
-                Cancel
-            </button>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="fw-bold">Are you sure want to delete project {{ projectName }}?</h5>
+                <p class="mb-2">All data related to that project will be deleted</p>
+                <div class="d-flex gap-2">
+                    <button (click)="confirm()" class="btn btn-danger">
+                        Delete
+                    </button>
+                    <button (click)="cancel()" class="btn btn-secondary">
+                        Cancel
+                    </button>
+                </div>
+            </div>
         </div>
+
     `,
     imports: [FormsModule],
-    host: { class: 'modal' },
 })
 export class DeleteProjectDialog {
     dialogRef = inject<DialogRef<boolean>>(DialogRef<boolean>);

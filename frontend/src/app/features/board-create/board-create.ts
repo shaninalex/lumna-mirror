@@ -33,7 +33,6 @@ export class BoardCreateFeature {
     selector: 'app-board-create-feature-form',
     imports: [FormField],
     templateUrl: './board-create.html',
-    host: { class: 'modal' },
 })
 export class BoardForm {
     dialogRef = inject<DialogRef<BoardPayloadModel>>(DialogRef<BoardPayloadModel>);
