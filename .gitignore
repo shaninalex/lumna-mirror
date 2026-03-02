@@ -8,9 +8,9 @@ var/
 frontend/node_modules
 
 config/config.yaml
-app/static/resources/*
-!app/static/resources/.gitkeep
-!app/static/resources/assets
+app/web/resources/*
+!app/web/resources/.gitkeep
+!app/web/resources/assets
 
 bin/*
 !bin/.gitkeep
@@ -24,3 +24,5 @@ cover.out
 .claude
 
 !.git/hooks/post-tag
+assets/*
+!assets/.gitkeep

@@ -1,11 +1,9 @@
 package config
 
 import (
-	"context"
 	"io"
 	"os"
 
-	"gitlab.com/shaninalex/lumna/app/internal"
 	"gopkg.in/yaml.v3"
 )
 
@@ -17,19 +15,12 @@ const (
 )
 
 type Serve struct {
-	Port int `yaml:"port"`
+	Port  int  `yaml:"port"`
+	Embed bool `yaml:"embed"`
 }
 
 type Database struct {
 	Url string `yaml:"url"`
-}
-
-type Api struct {
-	Enabled bool `yaml:"enabled"`
-}
-
-type Html struct {
-	Enabled bool `yaml:"enabled"`
 }
 
 // TODO: secure config from changing
@@ -38,8 +29,6 @@ type Config struct {
 	Serve     Serve       `yaml:"serve"`
 	Database  Database    `yaml:"database"`
 	SecretKey string      `yaml:"secret_key"`
-	API       Api         `yaml:"api"`
-	Html      Html        `yaml:"html"`
 }
 
 func ReadConfig(path string) *Config {
@@ -60,14 +49,6 @@ func ReadConfig(path string) *Config {
 	}
 
 	return &config
-}
-
-func GetConfig(ctx context.Context) *Config {
-	cnf, ok := ctx.Value(internal.ContextConfig).(*Config)
-	if !ok {
-		panic("config not found in context")
-	}
-	return cnf
 }
 
 func ProvideConfig(configPath string) func() *Config {

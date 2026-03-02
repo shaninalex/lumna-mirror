@@ -13,6 +13,8 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
 	"gitlab.com/shaninalex/lumna/app/api/middlewares"
+	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/web"
 	"go.uber.org/dig"
 )
 
@@ -47,12 +49,16 @@ type ApiDeps struct {
 	ActivityController *activity.ActivityController
 }
 
-func NewApi(deps ApiDeps) *gin.Engine {
+func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	// base API middlewares
 	router := ProvideRouter()
-	router.Use(gin.Recovery()) // <= write your onw recovery middleware
+	router.Use(gin.Recovery()) // TODO: write your onw recovery middleware
 	router.Use(middlewares.LoggingMiddleware())
 	router.Use(middlewares.CORSMiddleware())
+
+	if config.Serve.Embed {
+		web.RegisterEmbedRoute(router)
+	}
 
 	authGroup := router.Group("/api/v1/auth")
 	deps.AuthController.Register(authGroup)
