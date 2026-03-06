@@ -13,10 +13,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/api"
-	"gitlab.com/shaninalex/lumna/app/pkg/bus"
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/pkg/email"
 	"gitlab.com/shaninalex/lumna/app/pkg/logger"
+	"gitlab.com/shaninalex/lumna/app/pkg/obverser"
 	"gitlab.com/shaninalex/lumna/app/pkg/persistence"
 	"go.uber.org/dig"
 )
@@ -41,7 +41,7 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			})
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
-			_ = c.Provide(bus.ProvideEventBus)
+			_ = c.Provide(obverser.ProvideEventBus)
 			_ = c.Provide(logger.ProvideLogger)
 			_ = c.Provide(logger.ProvideActivityLogger)
 			_ = c.Invoke(email.InvokeEmailQueue) // delete

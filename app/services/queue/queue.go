@@ -35,8 +35,6 @@ type JobQueueService struct {
 }
 
 func (s *JobQueueService) init() {
-
-	// handlers require dependencies!
 	s.Register("send_email", email.ProvideSendEmailJob())
 }
 

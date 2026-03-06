@@ -7,10 +7,6 @@ import (
 	"gitlab.com/shaninalex/lumna/app/models"
 )
 
-type EmailSender interface {
-	Send(ctx context.Context, to, from, subject, html string) error
-}
-
 type EmailPayload struct {
 	To      string
 	From    string
@@ -19,7 +15,7 @@ type EmailPayload struct {
 }
 
 func ProvideSendEmailJob() *SendEmailJob {
-	return &SendEmailJob{}
+	return &SendEmailJob{} // <- new email service implementation
 }
 
 type SendEmailJob struct {
