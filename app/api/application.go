@@ -13,7 +13,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
 	"gitlab.com/shaninalex/lumna/app/api/middlewares"
-	"gitlab.com/shaninalex/lumna/app/internal/config"
+	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/web"
 	"go.uber.org/dig"
 )

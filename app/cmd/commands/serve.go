@@ -13,11 +13,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/api"
-	"gitlab.com/shaninalex/lumna/app/internal/bus"
-	"gitlab.com/shaninalex/lumna/app/internal/config"
-	"gitlab.com/shaninalex/lumna/app/internal/email"
-	"gitlab.com/shaninalex/lumna/app/internal/logger"
-	"gitlab.com/shaninalex/lumna/app/internal/persistence"
+	"gitlab.com/shaninalex/lumna/app/pkg/bus"
+	"gitlab.com/shaninalex/lumna/app/pkg/config"
+	"gitlab.com/shaninalex/lumna/app/pkg/email"
+	"gitlab.com/shaninalex/lumna/app/pkg/logger"
+	"gitlab.com/shaninalex/lumna/app/pkg/persistence"
 	"go.uber.org/dig"
 )
 

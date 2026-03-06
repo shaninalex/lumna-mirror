@@ -1,4 +1,4 @@
-package internal
+package pkg
 
 // ContextKey - context key.
 type ContextKey string

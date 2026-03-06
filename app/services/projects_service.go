@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"gitlab.com/shaninalex/lumna/app/internal"
-	"gitlab.com/shaninalex/lumna/app/internal/bus"
-	"gitlab.com/shaninalex/lumna/app/internal/logger"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg"
+	"gitlab.com/shaninalex/lumna/app/pkg/bus"
+	"gitlab.com/shaninalex/lumna/app/pkg/logger"
 	"gorm.io/gorm"
 )
 
@@ -34,7 +34,7 @@ func NewProjectService(
 }
 
 func (s *ProjectService) init() {
-	s.eventBus.Subscribe(internal.ProjectNewEvent, s.onNewProject)
+	s.eventBus.Subscribe(pkg.ProjectNewEvent, s.onNewProject)
 }
 
 func (s *ProjectService) onNewProject(ctx context.Context, data any) {
@@ -48,7 +48,7 @@ func (s *ProjectService) onNewProject(ctx context.Context, data any) {
 		s.logger.Log(fmt.Sprintf("Err: unable to parse project %s", err.Error()))
 	}
 
-	s.eventBus.Publish(ctx, internal.EmailSendEvent, p)
+	s.eventBus.Publish(ctx, pkg.EmailSendEvent, p)
 }
 
 func (s *ProjectService) Get(ctx context.Context, id uint) (*models.Project, error) {
@@ -75,7 +75,7 @@ func (s *ProjectService) Create(ctx context.Context, title string, userID uint) 
 		return nil, result.Error
 	}
 
-	s.eventBus.Publish(ctx, internal.ProjectNewEvent, project)
+	s.eventBus.Publish(ctx, pkg.ProjectNewEvent, project)
 	return project, nil
 }
 

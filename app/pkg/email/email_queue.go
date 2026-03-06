@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"gitlab.com/shaninalex/lumna/app/internal"
-	"gitlab.com/shaninalex/lumna/app/internal/bus"
-	"gitlab.com/shaninalex/lumna/app/internal/logger"
+	"gitlab.com/shaninalex/lumna/app/pkg"
+	"gitlab.com/shaninalex/lumna/app/pkg/bus"
+	"gitlab.com/shaninalex/lumna/app/pkg/logger"
 )
 
 type emailQueue struct {
@@ -37,7 +37,7 @@ func (s *emailQueue) addToEmailQueue(ctx context.Context, data any) {
 }
 
 func (s *emailQueue) init() {
-	s.bus.Subscribe(internal.EmailSendEvent, s.addToEmailQueue)
+	s.bus.Subscribe(pkg.EmailSendEvent, s.addToEmailQueue)
 	go func() {
 		fmt.Println("[EmailQueue] Start")
 		for {

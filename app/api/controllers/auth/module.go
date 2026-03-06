@@ -1,7 +1,7 @@
 package auth
 
 import (
-	authentication "gitlab.com/shaninalex/lumna/app/internal/auth"
+	authentication "gitlab.com/shaninalex/lumna/app/pkg/auth"
 	"gitlab.com/shaninalex/lumna/app/services"
 	"go.uber.org/dig"
 )

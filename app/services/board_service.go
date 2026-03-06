@@ -3,8 +3,8 @@ package services
 import (
 	"context"
 
-	"gitlab.com/shaninalex/lumna/app/internal/logger"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/logger"
 	"gorm.io/gorm"
 )
 

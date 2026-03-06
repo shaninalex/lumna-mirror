@@ -2,7 +2,7 @@ package board
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.com/shaninalex/lumna/app/internal/logger"
+	"gitlab.com/shaninalex/lumna/app/pkg/logger"
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 

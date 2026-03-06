@@ -2,7 +2,7 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.com/shaninalex/lumna/app/internal/auth"
+	"gitlab.com/shaninalex/lumna/app/pkg/auth"
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
