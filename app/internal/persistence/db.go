@@ -28,17 +28,20 @@ func ProvideDB(config *config.Config) *gorm.DB {
 
 func Migrate(db *gorm.DB) error {
 	err := db.AutoMigrate(
+		// users and permissions
 		&models.Identity{},
 		&models.Credential{},
 		&models.RefreshToken{},
+		&models.Invitation{},
 
+		// application
 		&models.Project{},
 		&models.Board{},
 		&models.Column{},
 		&models.Task{},
 
+		// monitoring and background tasks
 		&models.Job{},
-
 		&models.ActivityLog{},
 	)
 

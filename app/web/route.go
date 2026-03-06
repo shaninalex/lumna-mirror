@@ -22,7 +22,6 @@ func RegisterEmbedRoute(router *gin.Engine) {
 	}
 
 	fileServer := http.FileServer(http.FS(browserFS))
-
 	router.NoRoute(func(c *gin.Context) {
 		path := strings.TrimPrefix(c.Request.URL.Path, "/")
 		if path == "" {
