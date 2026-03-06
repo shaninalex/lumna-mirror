@@ -23,12 +23,19 @@ type Database struct {
 	Url string `yaml:"url"`
 }
 
-// TODO: secure config from changing
+type EmailConfig struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+}
+
 type Config struct {
 	Env       Environment `yaml:"env"`
 	Serve     Serve       `yaml:"serve"`
 	Database  Database    `yaml:"database"`
 	SecretKey string      `yaml:"secret_key"`
+	Email     EmailConfig `yaml:"email"`
 }
 
 func ReadConfig(path string) *Config {

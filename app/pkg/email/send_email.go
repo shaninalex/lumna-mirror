@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/config"
 )
 
 type EmailPayload struct {
@@ -12,10 +13,17 @@ type EmailPayload struct {
 	From    string
 	Subject string
 	Body    string
+	// TODO:
+	// - email type - to get proper template
+	// - then instead of body - use data
+	// - sender will use type and data to get email template from registry, build it with data and send
+	// - use templ for templates
 }
 
-func ProvideSendEmailJob() *SendEmailJob {
-	return &SendEmailJob{} // <- new email service implementation
+func ProvideSendEmailJobHandler(config *config.Config) *SendEmailJob {
+	return &SendEmailJob{
+		emailService: &EmailService{config: config},
+	}
 }
 
 type SendEmailJob struct {

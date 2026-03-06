@@ -25,5 +25,5 @@ func NewInvitationController(
 
 func (s *InvitationController) Register(router *gin.RouterGroup) {
 	router.GET("invitations", s.List)
-	//router.POST("invitations", s.Create)
+	router.POST("invitations", s.Create)
 }
