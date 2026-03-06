@@ -44,7 +44,7 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			_ = c.Provide(bus.ProvideEventBus)
 			_ = c.Provide(logger.ProvideLogger)
 			_ = c.Provide(logger.ProvideActivityLogger)
-			_ = c.Invoke(email.InvokeEmailQueue)
+			_ = c.Invoke(email.InvokeEmailQueue) // delete
 
 			// Providing api module
 			_ = api.Module(c)

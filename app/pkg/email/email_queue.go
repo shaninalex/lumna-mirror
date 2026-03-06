@@ -17,6 +17,8 @@ type emailQueue struct {
 	logger logger.Logger
 }
 
+// InvokeEmailQueue - email queue
+// deprecated - use global job queue instead
 func InvokeEmailQueue(
 	bus bus.EventBus,
 	logger logger.Logger,
