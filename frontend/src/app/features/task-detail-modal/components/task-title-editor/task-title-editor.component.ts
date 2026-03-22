@@ -13,6 +13,7 @@ import {form, FormField, required} from '@angular/forms/signals';
             placeholder="Task title"
             [formField]="taskTitleForm.title"
             (blur)="onBlur()"
+            (keyup)="onInputChange()"
         />
         @if (taskTitleForm.title().touched() && taskTitleForm.title().errors().length) {
             @for (error of taskTitleForm.title().errors(); track error) {
@@ -35,6 +36,11 @@ export class TaskTitleEditorComponent implements OnInit {
     }
 
     onBlur(): void {
+        if (this.taskTitleForm.title().errors().length) return
+        this.onChange.emit(this.taskTitleForm.title().value())
+    }
+
+    onInputChange(): void {
         if (this.taskTitleForm.title().errors().length) return
         this.onChange.emit(this.taskTitleForm.title().value())
     }
