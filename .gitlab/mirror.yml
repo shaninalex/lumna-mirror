@@ -23,4 +23,4 @@ mirror_to_github:
     - git remote add github git@github.com:shaninalex/lumna-mirror.git
 
     # push everything
-    - git push --force github HEAD:main
+    - git push --force github HEAD:refs/heads/main
