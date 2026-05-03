@@ -36,3 +36,10 @@ html, body {
     -o-animation: rotating 2s linear infinite;
     animation: rotating 2s linear infinite;
 }
+
+[data-bs-theme="dark"] .NgxEditor__Wrapper .NgxEditor__MenuBar,
+[data-bs-theme="dark"] .NgxEditor__Wrapper .NgxEditor {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    fill: var(--bs-body-color);
+}

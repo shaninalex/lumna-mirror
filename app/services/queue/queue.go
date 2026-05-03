@@ -66,7 +66,6 @@ func (s *JobQueueService) run() {
 				s.logger.Log(fmt.Sprintf("[JobQueueService] get jobs error: %v", err))
 				break
 			}
-			s.logger.Log("[JobQueueService] tick...")
 
 			for _, job := range jobs {
 				jobChan <- job

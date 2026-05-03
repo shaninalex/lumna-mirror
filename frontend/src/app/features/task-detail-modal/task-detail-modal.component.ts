@@ -17,7 +17,8 @@ import {TaskActivityComponent} from '@features/task-detail-modal/components/task
         TaskChangeStatusComponent,
         TaskActivityComponent,
     ],
-    templateUrl: './task-detail-modal.component.html'
+    templateUrl: './task-detail-modal.component.html',
+    styleUrl: './task-detail-modal.component.css',
 })
 export class TaskDetailModalFeature implements  OnInit {
     private store = inject(Store);
