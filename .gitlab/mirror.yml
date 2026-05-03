@@ -16,11 +16,8 @@ mirror_to_github:
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
 
   script:
-    - git config --global user.email "ci@example.com"
-    - git config --global user.name "GitLab CI"
-
-    # add github remote
-    - git remote add github git@github.com:shaninalex/lumna-mirror.git
-
-    # push everything
-    - git push --force github HEAD:refs/heads/main
+    - git remote add github git@github.com:shaninalex/lumna-mirror.git || true
+    - git fetch --unshallow || true
+    - git fetch --all --tags
+    - git checkout -B main origin/main
+    - git push --force github main:refs/heads/main
