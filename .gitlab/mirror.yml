@@ -1,0 +1,26 @@
+stages:
+  - mirror
+
+mirror_to_github:
+  stage: mirror
+  image: alpine:latest
+
+  only:
+    - main
+
+  before_script:
+    - apk add --no-cache git openssh
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+  script:
+    - git config --global user.email "ci@example.com"
+    - git config --global user.name "GitLab CI"
+
+    # add github remote
+    - git remote add github git@github.com:shaninalex/lumna.git
+
+    # push everything
+    - git push --force github main

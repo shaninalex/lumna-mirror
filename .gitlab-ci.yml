@@ -5,4 +5,4 @@ stages:
 
 include:
   - local: .gitlab/test.yml
-  # - local: .gitlab/release.yml
+  - local: .gitlab/mirror.yml

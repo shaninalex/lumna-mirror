@@ -1,5 +1,5 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ProjectModel } from '@entities/project';
 import { ProjectDeleteFeature, ProjectEditFeature } from '@features';
 import { UiService } from '@shared/ui';
@@ -10,9 +10,9 @@ import { filter, map, Observable, tap } from 'rxjs';
     imports: [ProjectEditFeature, ProjectDeleteFeature],
     template: `
         <h1>Project Edit</h1>
-        <app-project-edit-feature [project$]="project$" />
-        <hr />
-        <app-project-delete-feature [project$]="project$" />
+        <app-project-edit-feature [project$]="project$"/>
+        <hr/>
+        <app-project-delete-feature [project$]="project$"/>
     `,
 })
 export class ProjectEditPage {
