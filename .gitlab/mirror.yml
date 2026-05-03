@@ -20,7 +20,7 @@ mirror_to_github:
     - git config --global user.name "GitLab CI"
 
     # add github remote
-    - git remote add github git@github.com:shaninalex/lumna.git
+    - git remote add github git@github.com:shaninalex/lumna-mirror.git
 
     # push everything
     - git push --force github main
