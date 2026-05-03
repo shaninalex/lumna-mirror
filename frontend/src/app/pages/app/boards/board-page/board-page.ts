@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { BoardModel } from '@entities/board';
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
-import {CdkMenu , CdkMenuTrigger} from '@angular/cdk/menu';
+import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { KanbanBoardFeature } from '@features/kanban-board';
 import { filter, map, Observable, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -22,16 +22,25 @@ import { UiService } from '@shared/ui';
 
                         <ng-template #menu>
                             <div class="card card-body" cdkMenu>
-                                <a [routerLink]="['/projects', board.project_id, 'boards', board.id, 'edit']">Edit</a>
+                                <a
+                                    [routerLink]="[
+                                        '/projects',
+                                        board.project_id,
+                                        'boards',
+                                        board.id,
+                                        'edit',
+                                    ]"
+                                    >Edit</a
+                                >
                             </div>
                         </ng-template>
                     </div>
                 </div>
             </div>
 
-            <app-kanban-board-feature [board]="board"/>
+            <app-kanban-board-feature [board]="board" />
         }
-        <router-outlet/>
+        <router-outlet />
     `,
 })
 export class BoardPage {

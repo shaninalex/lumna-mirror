@@ -37,7 +37,7 @@ func (s *BoardService) Delete(ctx context.Context, boardID uint) error {
 }
 
 func (s *BoardService) Update(ctx context.Context, board *models.Board) error {
-	return s.db.WithContext(ctx).Model(&models.Board{}).Save(board).Error
+	return s.db.WithContext(ctx).Where("id = ?", board.ID).Model(&models.Board{}).Save(board).Error
 }
 
 func (s *BoardService) Get(ctx context.Context, boardID uint) (*models.Board, error) {

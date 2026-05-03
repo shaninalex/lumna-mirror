@@ -16,9 +16,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api"
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/pkg/logger"
-	"gitlab.com/shaninalex/lumna/app/pkg/obverser"
 	"gitlab.com/shaninalex/lumna/app/pkg/persistence"
-	"gitlab.com/shaninalex/lumna/app/services/queue"
 	"go.uber.org/dig"
 )
 
@@ -42,12 +40,9 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			})
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
-			_ = c.Provide(obverser.ProvideEventBus)
+
 			_ = c.Provide(logger.ProvideLogger)
 			_ = c.Provide(logger.ProvideActivityLogger)
-
-			// start global queue
-			_ = c.Invoke(queue.ProvideJobQueueService)
 
 			// Providing api module
 			_ = api.Module(c)
