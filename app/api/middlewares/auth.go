@@ -9,8 +9,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
-	"gitlab.com/shaninalex/lumna/app/internal"
-	"gitlab.com/shaninalex/lumna/app/internal/auth"
+	"gitlab.com/shaninalex/lumna/app/pkg"
+	"gitlab.com/shaninalex/lumna/app/pkg/auth"
 )
 
 var (
@@ -50,7 +50,7 @@ func AuthMiddleware(c *gin.Context) {
 	}
 
 	ctx := c.Request.Context()
-	ctx = context.WithValue(ctx, internal.ContextIdentity, uint(userID))
+	ctx = context.WithValue(ctx, pkg.ContextIdentity, uint(userID))
 	// fill request context with values here
 
 	c.Set("userID", uint(userID))

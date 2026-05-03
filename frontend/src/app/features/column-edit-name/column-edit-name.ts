@@ -5,7 +5,6 @@ import {
     actionColumnUpsert,
     ColumnState,
     ColumnModel,
-    ColumnPayloadModel,
 } from '@entities/column';
 import { FormField, form, required } from '@angular/forms/signals';
 import { ClickOutsideDirective } from '@shared/directives';
@@ -36,7 +35,7 @@ import { Store } from '@ngrx/store';
                 }
             </form>
         } @else {
-            <div class="fw-bold small" (click)="formOpen.set(true)">{{ column().title }} ( {{ column().id }} )</div>
+            <div class="fw-bold small" (click)="formOpen.set(true)">{{ column().title }}</div>
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

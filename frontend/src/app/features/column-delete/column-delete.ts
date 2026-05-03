@@ -31,25 +31,18 @@ export class ColumnDeleteFeature {
 @Component({
     selector: 'app-column-delete-feature-dialog',
     template: `
-        <h1 class="text-lg font-bold">Are you sure want to delete "{{ listName }}" list?</h1>
-        <p class="mb-2">All data (tasks) related to that list will be deleted too</p>
-        <div class="d-flex gap-2">
-            <button
-                (click)="confirm()"
-                class="bg-red-500 text-white rounded-lg px-2 py-1 cursor-pointer"
-            >
-                delete
-            </button>
-            <button
-                (click)="cancel()"
-                class="bg-gray-400 text-white rounded-lg px-2 py-1 cursor-pointer"
-            >
-                Cancel
-            </button>
+        <div class="card">
+            <div class="card-body">
+                <div class="fw-bold">Are you sure want to delete "{{ listName }}" list?</div>
+                <p class="mb-2">All data (tasks) related to that list will be deleted too</p>
+                <div class="d-flex gap-2">
+                    <button (click)="confirm()" class="btn btn-danger">Delete</button>
+                    <button (click)="cancel()" class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
         </div>
     `,
     imports: [],
-    host: { class: 'modal' },
 })
 export class DeleteColumnDialog {
     dialogRef = inject<DialogRef<boolean>>(DialogRef<boolean>);

@@ -34,7 +34,6 @@ export class TaskDetailModalFeature implements  OnInit {
             .subscribe(task => {
                 this.originalTask = task;
                 this.editedTask = structuredClone(task); // deep clone
-                // this.checkChanges();
             });
     }
 
@@ -63,12 +62,12 @@ export class TaskDetailModalFeature implements  OnInit {
     }
 
     handleOnChangeBody(body: string): void {
-        this.editedTask.body = body;
+        this.editedTask = {...this.editedTask, body };
         this.checkChanges();
     }
 
     handleOnChangeTitle(title: string): void {
-        this.editedTask.title = title;
+        this.editedTask = {...this.editedTask, title };
         this.checkChanges();
     }
 

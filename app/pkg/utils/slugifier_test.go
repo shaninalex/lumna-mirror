@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/shaninalex/lumna/app/internal/utils"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 )
 
 func Test_Slugify(t *testing.T) {

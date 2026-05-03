@@ -7,6 +7,7 @@ env: development
 serve:
   # port of the server
   port: 8000
+  embed: false
 
 database:
   # database connection path
@@ -16,5 +17,8 @@ database:
 # for jwt signing and verification
 secret_key: "a-string-secret-at-least-256-bits-long"
 
-api:
-  enabled: true
+email:
+  host: "mail.google.com"
+  port: 587
+  username: "email@example.com"
+  password: "password"

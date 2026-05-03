@@ -2,6 +2,7 @@ package commands
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,11 +14,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/api"
-	"gitlab.com/shaninalex/lumna/app/internal/bus"
-	"gitlab.com/shaninalex/lumna/app/internal/config"
-	"gitlab.com/shaninalex/lumna/app/internal/email"
-	"gitlab.com/shaninalex/lumna/app/internal/logger"
-	"gitlab.com/shaninalex/lumna/app/internal/persistence"
+	"gitlab.com/shaninalex/lumna/app/pkg/config"
+	"gitlab.com/shaninalex/lumna/app/pkg/logger"
+	"gitlab.com/shaninalex/lumna/app/pkg/obverser"
+	"gitlab.com/shaninalex/lumna/app/pkg/persistence"
+	"gitlab.com/shaninalex/lumna/app/services/queue"
 	"go.uber.org/dig"
 )
 
@@ -41,10 +42,13 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			})
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
-			_ = c.Provide(bus.ProvideEventBus)
+			_ = c.Provide(obverser.ProvideEventBus)
 			_ = c.Provide(logger.ProvideLogger)
 			_ = c.Provide(logger.ProvideActivityLogger)
-			_ = c.Invoke(email.InvokeEmailQueue)
+
+			// start global queue
+			_ = c.Invoke(queue.ProvideJobQueueService)
+
 			// Providing api module
 			_ = api.Module(c)
 
@@ -56,7 +60,7 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 
 				log.Printf("Run server on :%d\n", config.Serve.Port)
 				go func() {
-					if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+					if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 						log.Fatalf("listen: %s\n", err)
 					}
 				}()

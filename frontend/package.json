@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration production --output-path ../app/static/resources/frontend",
+    "build": "ng build --configuration production --output-path ../assets",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
