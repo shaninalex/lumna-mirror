@@ -34,14 +34,6 @@ func (s *ColumnService) Get(ctx context.Context, columnID uint) (*models.Column,
 	return s.columnRepository.GetByID(ctx, columnID)
 }
 
-// Replaced with update
-//func (s *ColumnService) Reorder(ctx context.Context, columnID uint, order uint) error {
-//	// TODO: get pointer of a struct and change it
-//	return s.db.WithContext(ctx).Model(&models.Column{}).
-//		Where("id = ?", columnID).
-//		Update("order", order).Error
-//}
-
 type ColumnUpdate struct {
 	BoardId uint   `json:"board_id"`
 	Order   uint   `json:"order"`
@@ -49,6 +41,7 @@ type ColumnUpdate struct {
 }
 
 func (s *ColumnService) Create(ctx context.Context, payload ColumnUpdate) (*models.Column, error) {
+	// NOTE: may be instead of ColumnUpdate use models.Column?
 	board, err := s.boardRepository.GetByID(ctx, payload.BoardId)
 	if err != nil {
 		return nil, err

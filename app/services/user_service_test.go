@@ -15,7 +15,7 @@ func Test_IdentityService_Identity(t *testing.T) {
 	defer testutils.ClearDB(db)
 
 	user := testutils.User(models.Identity{FullName: "test", Email: "test@test.com", Active: true}, db)
-	service := services.NewUserService(repositories.NewGGormBoardRepository(db))
+	service := services.NewUserService(repositories.NewGormIdentityRepository(db))
 	idn, err := service.Identity(ctx, user.ID)
 	assert.NoError(t, err)
 	assert.NotNil(t, idn)
