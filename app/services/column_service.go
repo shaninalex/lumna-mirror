@@ -5,22 +5,18 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/repositories"
-	"gorm.io/gorm"
 )
 
 type ColumnService struct {
-	db               *gorm.DB
 	columnRepository repositories.ColumnRepository
 	boardRepository  repositories.BoardRepository
 }
 
 func NewColumnService(
-	db *gorm.DB,
 	boardRepository repositories.BoardRepository,
 	columnRepository repositories.ColumnRepository,
 ) *ColumnService {
 	return &ColumnService{
-		db:               db,
 		boardRepository:  boardRepository,
 		columnRepository: columnRepository,
 	}

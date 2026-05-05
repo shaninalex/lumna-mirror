@@ -4,26 +4,19 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gorm.io/gorm"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
 type ActivityLogService struct {
-	db *gorm.DB
+	repository repositories.ActivityLogRepository
 }
 
-func NewActivityLogService(db *gorm.DB) *ActivityLogService {
+func NewActivityLogService(repository repositories.ActivityLogRepository) *ActivityLogService {
 	return &ActivityLogService{
-		db: db,
+		repository: repository,
 	}
 }
 
 func (s *ActivityLogService) GetLog(ctx context.Context, entityType string, entityId uint) ([]models.ActivityLog, error) {
-	var logs []models.ActivityLog
-	if result := s.db.WithContext(ctx).
-		Where("entity_type = ? AND entity_id = ?", entityType, entityId).
-		Find(&logs).
-		Order("created_at DESC"); result.Error != nil {
-		return nil, result.Error
-	}
-	return logs, nil
+	return s.repository.ListByEntity(ctx, entityType, entityId)
 }

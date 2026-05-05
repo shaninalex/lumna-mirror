@@ -5,16 +5,24 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/pkg/logger"
-	"gorm.io/gorm"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
 type BoardService struct {
-	db *gorm.DB
+	boardRepository  repositories.BoardRepository
+	taskRepository   repositories.TaskRepository
+	columnRepository repositories.ColumnRepository
 }
 
-func NewBoardService(db *gorm.DB) *BoardService {
+func NewBoardService(
+	boardRepository repositories.BoardRepository,
+	taskRepository repositories.TaskRepository,
+	columnRepository repositories.ColumnRepository,
+) *BoardService {
 	return &BoardService{
-		db: db,
+		boardRepository:  boardRepository,
+		taskRepository:   taskRepository,
+		columnRepository: columnRepository,
 	}
 }
 
@@ -23,37 +31,20 @@ func (s *BoardService) Create(ctx context.Context, projectID uint, title string)
 		ProjectID: projectID,
 		Title:     title,
 	}
-	if result := s.db.WithContext(ctx).Create(&board); result.Error != nil {
-		return nil, result.Error
-	}
-	return &board, nil
+	return s.boardRepository.Create(ctx, &board)
 }
 
 func (s *BoardService) Delete(ctx context.Context, boardID uint) error {
-	if result := s.db.WithContext(ctx).Where("id = ?", boardID).Delete(&models.Board{}); result.Error != nil {
-		return result.Error
-	}
-	return nil
+	return s.boardRepository.Delete(ctx, boardID)
 }
 
 func (s *BoardService) Update(ctx context.Context, board *models.Board) error {
-	return s.db.WithContext(ctx).Where("id = ?", board.ID).Model(&models.Board{}).Save(board).Error
+	_, err := s.boardRepository.Update(ctx, board)
+	return err
 }
 
 func (s *BoardService) Get(ctx context.Context, boardID uint) (*models.Board, error) {
-	board := &models.Board{}
-	if result := s.db.WithContext(ctx).
-		Preload("Columns", func(tx *gorm.DB) *gorm.DB {
-			return tx.Order("\"order\" ASC")
-		}).
-		Preload("Columns.Tasks", func(tx *gorm.DB) *gorm.DB {
-			return tx.Order("\"order\" ASC")
-		}).
-		Where("id = ?", boardID).
-		First(&board); result.Error != nil {
-		return nil, result.Error
-	}
-	return board, nil
+	return s.boardRepository.GetByID(ctx, boardID)
 }
 
 type KTask struct {
@@ -80,22 +71,21 @@ func (s *BoardService) Reorder(ctx context.Context, payload *KanbanBoardChangeOr
 		// move in a single column
 		if payload.ColumnId != nil {
 			for _, task := range payload.Tasks {
-				if result := s.db.Model(&models.Task{}).Where("id = ?", task.Id).Update("order", task.Order); result.Error != nil {
-					return result.Error
+				if err := s.taskRepository.UpdateFields(ctx, task.Id, map[string]any{
+					"order": task.Order,
+				}); err != nil {
+					return err
 				}
 			}
 		} else {
 			// move task between columns
 			for _, column := range payload.Columns {
 				for _, task := range column.Tasks {
-					result := s.db.Model(&models.Task{}).
-						Where("id = ?", task.Id).
-						Updates(map[string]any{
-							"order":     task.Order,
-							"column_id": column.Id,
-						})
-					if result.Error != nil {
-						return result.Error
+					if err := s.taskRepository.UpdateFields(ctx, task.Id, map[string]any{
+						"order":     task.Order,
+						"column_id": column.Id,
+					}); err != nil {
+						return err
 					}
 				}
 			}
@@ -103,8 +93,8 @@ func (s *BoardService) Reorder(ctx context.Context, payload *KanbanBoardChangeOr
 	} else {
 		// move column between each other
 		for _, column := range payload.Columns {
-			if result := s.db.Model(&models.Column{}).Where("id = ?", column.Id).Update("order", column.Order); result.Error != nil {
-				return result.Error
+			if err := s.columnRepository.UpdateFields(ctx, column.Id, map[string]any{"order": column.Order}); err != nil {
+				return err
 			}
 		}
 	}

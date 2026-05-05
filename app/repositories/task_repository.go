@@ -12,6 +12,7 @@ type TaskRepository interface {
 	Reorder(ctx context.Context, taskID uint, columnID uint, order uint) error
 	Create(ctx context.Context, task *models.Task) error
 	Update(ctx context.Context, task *models.Task) error
+	UpdateFields(ctx context.Context, taskID uint, updates map[string]any) error
 }
 
 type GormTaskRepository struct {
@@ -57,4 +58,11 @@ func (r *GormTaskRepository) Update(ctx context.Context, task *models.Task) erro
 	return r.db.WithContext(ctx).
 		Save(task).
 		Error
+}
+
+func (r *GormTaskRepository) UpdateFields(ctx context.Context, taskID uint, updates map[string]any) error {
+	result := r.db.WithContext(ctx).Model(&models.Task{}).
+		Where("id = ?", taskID).
+		Updates(updates)
+	return result.Error
 }

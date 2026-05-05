@@ -7,7 +7,7 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
-	"gorm.io/gorm"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
 var (
@@ -22,25 +22,22 @@ type InvitationManager interface {
 	List(ctx context.Context) ([]models.Invitation, error)
 }
 
-func ProvideInvitationService(db *gorm.DB) *InvitationService {
-	return &InvitationService{db: db}
+func ProvideInvitationService(repository repositories.InvitationRepository) *InvitationService {
+	return &InvitationService{repository: repository}
 }
 
 type InvitationService struct {
-	db *gorm.DB
+	repository repositories.InvitationRepository
 }
 
 func (s *InvitationService) List(ctx context.Context) ([]models.Invitation, error) {
-	invitations := []models.Invitation{}
-	if result := s.db.WithContext(ctx).Find(&invitations); result.Error != nil {
-		return nil, result.Error
-	}
-	return invitations, nil
+	return s.repository.List(ctx)
 }
 
 func (s *InvitationService) Create(ctx context.Context, email, role string) (*models.Invitation, string, error) {
-
-	// token -> send in email, tokenHash -> save in db
+	// NOTE:
+	// token -> send in email,
+	// tokenHash -> save in db
 	token, tokenHash, err := utils.GenerateToken()
 	if err != nil {
 		return nil, "", err
@@ -53,7 +50,7 @@ func (s *InvitationService) Create(ctx context.Context, email, role string) (*mo
 		TokenHash:  tokenHash,
 		ValidUntil: time.Now().Add(defaultValidUntil),
 	}
-	if err := s.db.WithContext(ctx).Create(&invitation).Error; err != nil {
+	if err = s.repository.Create(ctx, invitation); err != nil {
 		return nil, "", err
 	}
 	return invitation, token, nil
@@ -61,10 +58,9 @@ func (s *InvitationService) Create(ctx context.Context, email, role string) (*mo
 
 func (s *InvitationService) Accept(ctx context.Context, token string) error {
 	tokenHash := utils.HashToken(token)
-	var invitation models.Invitation
 
-	if err := s.db.WithContext(ctx).Where("token_hash = ?", tokenHash).
-		First(&invitation).Error; err != nil {
+	invitation, err := s.repository.GetByHash(ctx, tokenHash)
+	if err != nil {
 		return err
 	}
 
@@ -72,26 +68,17 @@ func (s *InvitationService) Accept(ctx context.Context, token string) error {
 		return errors.New("invitation invalid or expired")
 	}
 
-	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		// can create user
-		invitation.State = models.InvitationStateAccepted
-		if err := tx.Save(&invitation).Error; err != nil {
-			return err
-		}
-		return nil
-	})
+	invitation.State = models.InvitationStateAccepted
+	return s.repository.Update(ctx, invitation)
 }
 
 func (s *InvitationService) Delete(ctx context.Context, invitationId uint) error {
-	if result := s.db.WithContext(ctx).Where("invitation_id = ?", invitationId).Delete(&models.Invitation{}); result.RowsAffected == 0 {
-		return errors.New("invitation not found")
-	}
-	return nil
+	return s.repository.Delete(ctx, invitationId)
 }
 
 func (s *InvitationService) Reset(ctx context.Context, invitationId uint) (string, error) {
-	var invitation models.Invitation
-	if err := s.db.WithContext(ctx).First(&invitation, invitationId).Error; err != nil {
+	invitation, err := s.repository.GetById(ctx, invitationId)
+	if err != nil {
 		return "", err
 	}
 
@@ -101,7 +88,7 @@ func (s *InvitationService) Reset(ctx context.Context, invitationId uint) (strin
 	}
 
 	invitation.Reset(time.Now().Add(defaultValidUntil), tokenHash)
-	if err := s.db.WithContext(ctx).Save(&invitation).Error; err != nil {
+	if err := s.repository.Update(ctx, invitation); err != nil {
 		return "", err
 	}
 

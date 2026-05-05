@@ -10,6 +10,7 @@ import (
 type ColumnRepository interface {
 	Create(ctx context.Context, column models.Column) (*models.Column, error)
 	Update(ctx context.Context, column *models.Column) (*models.Column, error)
+	UpdateFields(ctx context.Context, columnID uint, updates map[string]any) error
 	Delete(ctx context.Context, id uint) error
 	GetByID(ctx context.Context, columnID uint) (*models.Column, error)
 	FilterByBoard(ctx context.Context, boardId uint) []models.Column
@@ -66,4 +67,11 @@ func (r *GormColumnRepository) Delete(ctx context.Context, id uint) error {
 		return result.Error
 	}
 	return nil
+}
+
+func (r *GormColumnRepository) UpdateFields(ctx context.Context, columnID uint, updates map[string]any) error {
+	result := r.db.WithContext(ctx).Model(&models.Column{}).
+		Where("id = ?", columnID).
+		Updates(updates)
+	return result.Error
 }
