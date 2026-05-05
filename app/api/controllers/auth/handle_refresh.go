@@ -29,7 +29,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 		return
 	}
 
-	dbRefreshToken, err := s.authTokenService.BetByHash(c.Request.Context(), auth.ToHashToken(refreshCookie))
+	dbRefreshToken, err := s.authTokenService.GetByHash(c.Request.Context(), auth.ToHashToken(refreshCookie))
 	if dbRefreshToken == nil {
 		utils.Error(c, http.StatusBadRequest, ErrorAuthRefreshToken)
 		return
@@ -59,7 +59,7 @@ func (s *AuthController) handleRefresh(c *gin.Context) {
 		ExpiresAt:  refreshExp,
 	}
 
-	if err := s.authTokenService.RewriteRefreshToken(c.Request.Context(), rt.IdentityID, &rt); err != nil {
+	if err := s.authTokenService.CreateRefreshToken(c.Request.Context(), rt.IdentityID, &rt); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}

@@ -1,0 +1,27 @@
+package services_test
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/testutils"
+)
+
+func Test_IdentityService_Identity(t *testing.T) {
+	ctx, db := testutils.SetupTest()
+	defer testutils.ClearDB(db)
+
+	user := testutils.User(models.Identity{FullName: "test", Email: "test@test.com", Active: true}, db)
+
+	service := services.NewUserService(db)
+	idn, err := service.Identity(ctx, user.ID)
+	assert.NoError(t, err)
+	assert.NotNil(t, idn)
+
+	var identity models.Identity
+	result := db.WithContext(ctx).Where("id = ?", idn.ID).First(&identity)
+	assert.NoError(t, result.Error)
+	assert.Equal(t, identity.ID, idn.ID)
+}

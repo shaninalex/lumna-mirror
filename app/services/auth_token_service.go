@@ -17,8 +17,8 @@ func NewAuthTokenService(db *gorm.DB) *AuthTokenService {
 	}
 }
 
-func (s *AuthTokenService) RewriteRefreshToken(ctx context.Context, idenitityId uint, rt *models.RefreshToken) error {
-	if result := s.db.WithContext(ctx).Where("identity_id = ?", idenitityId).Delete(&models.RefreshToken{}); result.Error != nil {
+func (s *AuthTokenService) CreateRefreshToken(ctx context.Context, identityID uint, rt *models.RefreshToken) error {
+	if result := s.db.WithContext(ctx).Where("identity_id = ?", identityID).Delete(&models.RefreshToken{}); result.Error != nil {
 		return result.Error
 	}
 
@@ -29,11 +29,11 @@ func (s *AuthTokenService) RewriteRefreshToken(ctx context.Context, idenitityId 
 	return nil
 }
 
-func (s *AuthTokenService) DeleteRefreshToken(ctx context.Context, idenitityId uint) error {
-	return s.db.WithContext(ctx).Where("identity_id = ?", idenitityId).Delete(&models.RefreshToken{}).Error
+func (s *AuthTokenService) DeleteRefreshToken(ctx context.Context, identityID uint) error {
+	return s.db.WithContext(ctx).Where("identity_id = ?", identityID).Delete(&models.RefreshToken{}).Error
 }
 
-func (s *AuthTokenService) BetByHash(ctx context.Context, hash string) (*models.RefreshToken, error) {
+func (s *AuthTokenService) GetByHash(ctx context.Context, hash string) (*models.RefreshToken, error) {
 	rt := models.RefreshToken{}
 	if result := s.db.WithContext(ctx).Preload("Identity").Where("hash = ?", hash).First(&rt); result.Error != nil {
 		return nil, result.Error

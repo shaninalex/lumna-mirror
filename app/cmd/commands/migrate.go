@@ -22,7 +22,7 @@ func NewMigrateRootCmd() *cobra.Command {
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
 
-			if err := c.Invoke(persistence.Migrate); err != nil {
+			if err := c.Invoke(persistence.ApplyMigrations); err != nil {
 				panic(err)
 			}
 		},

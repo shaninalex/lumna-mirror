@@ -19,10 +19,6 @@ type Serve struct {
 	Embed bool `yaml:"embed"`
 }
 
-type Database struct {
-	Url string `yaml:"url"`
-}
-
 type EmailConfig struct {
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`

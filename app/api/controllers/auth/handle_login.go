@@ -51,7 +51,7 @@ func (s *AuthController) handleLogin(c *gin.Context) {
 		ExpiresAt:  refreshExp,
 	}
 
-	if err := s.authTokenService.RewriteRefreshToken(c.Request.Context(), identity.ID, &rt); err != nil {
+	if err := s.authTokenService.CreateRefreshToken(c.Request.Context(), identity.ID, &rt); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
