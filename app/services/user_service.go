@@ -4,23 +4,19 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gorm.io/gorm"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
 type UserService struct {
-	db *gorm.DB
+	repository repositories.IdentityRepository
 }
 
-func NewUserService(db *gorm.DB) *UserService {
+func NewUserService(repository repositories.IdentityRepository) *UserService {
 	return &UserService{
-		db: db,
+		repository: repository,
 	}
 }
 
 func (s *UserService) Identity(ctx context.Context, userID uint) (*models.Identity, error) {
-	identity := models.Identity{}
-	if result := s.db.WithContext(ctx).First(&identity, "id = ?", userID); result.Error != nil {
-		return nil, result.Error
-	}
-	return &identity, nil
+	return s.repository.GetIdentityByID(ctx, userID)
 }

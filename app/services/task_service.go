@@ -4,35 +4,30 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gorm.io/gorm"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
 type TaskService struct {
-	db *gorm.DB
+	repository       repositories.TaskRepository
+	columnRepository repositories.ColumnRepository
 }
 
-func NewTaskService(db *gorm.DB) *TaskService {
+func NewTaskService(
+	repository repositories.TaskRepository,
+	columnRepository repositories.ColumnRepository,
+) *TaskService {
 	return &TaskService{
-		db: db,
+		repository:       repository,
+		columnRepository: columnRepository,
 	}
 }
 
 func (s *TaskService) GetTask(ctx context.Context, taskID uint) (*models.Task, error) {
-	task := &models.Task{}
-	if result := s.db.WithContext(ctx).Where("id = ?", taskID).First(&task); result.Error != nil {
-		return nil, result.Error
-	}
-	return task, nil
+	return s.repository.GetByID(ctx, taskID)
 }
 
 func (s *TaskService) ReorderTask(ctx context.Context, taskID uint, boardListID uint, order uint) error {
-	return s.db.WithContext(ctx).
-		Model(&models.Task{}).
-		Where("id = ?", taskID).
-		Updates(map[string]any{
-			"board_list_id": boardListID,
-			"order":         order,
-		}).Error
+	return s.repository.Reorder(ctx, taskID, boardListID, order)
 }
 
 // TaskPayload - used to create/partial update task
@@ -45,10 +40,9 @@ type TaskPayload struct {
 }
 
 func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
-	column := &models.Column{}
-	result := s.db.WithContext(ctx).Where("id = ?", payload.ColumnID).First(&column)
-	if result.Error != nil {
-		return nil, result.Error
+	column, err := s.columnRepository.GetByID(ctx, payload.ColumnID)
+	if err != nil {
+		return nil, err
 	}
 	task := models.Task{
 		Title:     payload.Title,
@@ -57,15 +51,13 @@ func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		ProjectID: column.ProjectID,
 		BoardID:   column.BoardID,
 	}
-	if result := s.db.WithContext(ctx).Create(&task); result.Error != nil {
-		return nil, result.Error
+
+	if err := s.repository.Create(ctx, &task); err != nil {
+		return nil, err
 	}
 	return &task, nil
 }
 
 func (s *TaskService) UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error {
-	if result := s.db.WithContext(ctx).Save(payload); result.Error != nil {
-		return result.Error
-	}
-	return nil
+	return s.repository.Update(ctx, payload)
 }
