@@ -8,18 +8,11 @@ import (
 )
 
 type Column struct {
-	ID    uint   `gorm:"primaryKey" json:"id"`
-	Title string `gorm:"not null" json:"title"`
-	Order uint   `json:"order"`
-
-	BoardID uint  `gorm:"not null;index" json:"board_id"`
-	Board   Board `json:"-"`
-
-	ProjectID uint    `gorm:"not null;index" json:"project_id"`
-	Project   Project `json:"-"`
-
-	Tasks []Task `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"tasks"`
-
+	ID        uint      `gorm:"primaryKey" json:"id"`
+	Title     string    `gorm:"not null" json:"title"`
+	Order     uint      `json:"order"`
+	BoardID   uint      `gorm:"not null;index" json:"board_id"`
+	ProjectID uint      `gorm:"not null;index" json:"project_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

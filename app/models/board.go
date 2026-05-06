@@ -8,12 +8,9 @@ import (
 )
 
 type Board struct {
-	ID        uint   `gorm:"primaryKey" json:"id"`
-	Title     string `gorm:"not null" json:"title"`
-	ProjectID uint   `gorm:"not null;index" json:"project_id"`
-
-	Columns []Column `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"-"`
-
+	ID        uint      `gorm:"primaryKey" json:"id"`
+	Title     string    `gorm:"not null" json:"title"`
+	ProjectID uint      `gorm:"not null;index" json:"project_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

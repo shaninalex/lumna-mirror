@@ -7,16 +7,14 @@ import (
 )
 
 type RefreshToken struct {
-	ID         uint     `gorm:"primaryKey"`
-	IdentityID uint     `gorm:"not null;index"`
-	Identity   Identity `gorm:"foreignKey:IdentityID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	// Hashed refresh token
-	Hash      string `gorm:"type:text;not null;uniqueIndex"`
-	ClientID  string
-	Scopes    string
-	ExpiresAt time.Time `gorm:"not null;index"`
-	Revoked   bool      `gorm:"not null;default:false"`
-	CreatedAt time.Time `gorm:"not null"`
+	ID         uint   `gorm:"primaryKey"`
+	IdentityID uint   `gorm:"not null;index"`
+	Hash       string `gorm:"type:text;not null;uniqueIndex"`
+	ClientID   string
+	Scopes     string
+	ExpiresAt  time.Time `gorm:"not null;index"`
+	Revoked    bool      `gorm:"not null;default:false"`
+	CreatedAt  time.Time `gorm:"not null"`
 }
 
 func (u *RefreshToken) BeforeCreate(tx *gorm.DB) error {

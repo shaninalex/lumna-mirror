@@ -15,15 +15,9 @@ type Task struct {
 	Body      string    `json:"body"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-
-	ColumnID uint   `gorm:"not null;index" json:"column_id"`
-	Column   Column `json:"-"`
-
-	ProjectID uint    `gorm:"not null;index" json:"project_id"`
-	Project   Project `json:"-"`
-
-	BoardID uint  `gorm:"not null;index" json:"board_id"`
-	Board   Board `json:"-"`
+	ColumnID  uint      `gorm:"not null;index" json:"column_id"`
+	ProjectID uint      `gorm:"not null;index" json:"project_id"`
+	BoardID   uint      `gorm:"not null;index" json:"board_id"`
 }
 
 func (s *Task) BeforeCreate(tx *gorm.DB) error {
