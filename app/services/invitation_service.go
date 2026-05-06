@@ -22,7 +22,7 @@ type InvitationManager interface {
 	List(ctx context.Context) ([]models.Invitation, error)
 }
 
-func ProvideInvitationService(repository repositories.InvitationRepository) *InvitationService {
+func ProvideInvitationService(repository repositories.InvitationRepository) InvitationManager {
 	return &InvitationService{repository: repository}
 }
 

@@ -20,7 +20,7 @@ type GormInvitationRepository struct {
 	db *gorm.DB
 }
 
-func NewGormInvitationRepository(db *gorm.DB) *GormInvitationRepository {
+func NewGormInvitationRepository(db *gorm.DB) InvitationRepository {
 	return &GormInvitationRepository{db: db}
 }
 

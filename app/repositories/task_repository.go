@@ -19,7 +19,7 @@ type GormTaskRepository struct {
 	db *gorm.DB
 }
 
-func NewGormTaskRepository(db *gorm.DB) *GormTaskRepository {
+func NewGormTaskRepository(db *gorm.DB) TaskRepository {
 	return &GormTaskRepository{db: db}
 }
 

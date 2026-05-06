@@ -7,12 +7,12 @@ import (
 )
 
 type InvitationController struct {
-	invitationService *services.InvitationService
+	invitationService services.InvitationManager
 	logger            logger.Logger
 }
 
 func NewInvitationController(
-	invitationService *services.InvitationService,
+	invitationService services.InvitationManager,
 	logger logger.Logger,
 ) *InvitationController {
 	s := &InvitationController{

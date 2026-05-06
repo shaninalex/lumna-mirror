@@ -16,6 +16,10 @@ type ActivityLogRepository interface {
 	Delete(ctx context.Context, id uint) error
 }
 
+func NewGormActivityLogRepository(db *gorm.DB) ActivityLogRepository {
+	return &GormActivityLogRepository{db: db}
+}
+
 type GormActivityLogRepository struct {
 	db *gorm.DB
 }
@@ -29,10 +33,6 @@ func (r *GormActivityLogRepository) ListByEntity(ctx context.Context, entityType
 		return nil, result.Error
 	}
 	return logs, nil
-}
-
-func NewGormActivityLogRepository(db *gorm.DB) *GormActivityLogRepository {
-	return &GormActivityLogRepository{db: db}
 }
 
 func (r *GormActivityLogRepository) List(ctx context.Context) ([]models.ActivityLog, error) {

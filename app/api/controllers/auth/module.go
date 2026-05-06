@@ -8,6 +8,12 @@ import (
 )
 
 func Module(c *dig.Container) error {
+	if err := c.Provide(repositories.NewGormCredentialRepository); err != nil {
+		panic(err)
+	}
+	if err := c.Provide(repositories.NewGormIdentityRepository); err != nil {
+		panic(err)
+	}
 	if err := c.Provide(authentication.NewEmailAuthProvider); err != nil {
 		panic(err)
 	}
