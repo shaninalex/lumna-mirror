@@ -16,9 +16,6 @@ type Board struct {
 }
 
 func (s *Board) BeforeCreate(tx *gorm.DB) error {
-	// if s.ID == uuid.Nil {
-	// 	s.ID = uuid.New()
-	// }
 	if s.CreatedAt.IsZero() {
 		s.CreatedAt = time.Now()
 	}

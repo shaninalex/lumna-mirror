@@ -42,7 +42,10 @@ func (r *GormColumnRepository) GetByID(ctx context.Context, id uint) (*models.Co
 
 func (r *GormColumnRepository) FilterByBoard(ctx context.Context, boardId uint) []models.Column {
 	var columns []models.Column
-	if result := r.db.WithContext(ctx).Preload("Tasks").Where("board_id = ?", boardId).Find(&columns); result.Error != nil {
+	if result := r.db.WithContext(ctx).
+		//Preload("Tasks").
+		Where("board_id = ?", boardId).
+		Find(&columns); result.Error != nil {
 		return []models.Column{}
 	}
 	return columns

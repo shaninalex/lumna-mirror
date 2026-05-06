@@ -2,12 +2,11 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gorm.io/gorm"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
 type PasswordCredentials struct {
@@ -26,12 +25,17 @@ func (s *PasswordCredentials) Validate() error {
 }
 
 type EmailAuthProvider struct {
-	db *gorm.DB
+	credentialRepository repositories.CredentialRepository
+	identityRepository   repositories.IdentityRepository
 }
 
-func NewEmailAuthProvider(db *gorm.DB) *EmailAuthProvider {
+func NewEmailAuthProvider(
+	credentialRepository repositories.CredentialRepository,
+	identityRepository repositories.IdentityRepository,
+) *EmailAuthProvider {
 	s := &EmailAuthProvider{
-		db: db,
+		credentialRepository: credentialRepository,
+		identityRepository:   identityRepository,
 	}
 	return s
 }
@@ -40,24 +44,24 @@ func (s *EmailAuthProvider) Name() string {
 	return "local"
 }
 
-var UserNotFoundError = errors.New("user not found")
-
 func (s *EmailAuthProvider) Authenticate(ctx context.Context, payload *PasswordCredentials) (*models.Identity, error) {
-	credentials := models.Credential{}
-	if result := s.db.WithContext(ctx).Preload("Identity").First(&credentials, "email = ?", payload.Email); result.Error != nil {
-		if result.Error.Error() == "record not found" {
-			return nil, UserNotFoundError
-		}
-		return nil, result.Error
-	}
-
-	if credentials.PasswordHash == nil {
-		return nil, fmt.Errorf("invalid credentials")
-	}
-
-	if err := ValidatePassword(*credentials.PasswordHash, payload.Password); err != nil {
+	credential, err := s.credentialRepository.GetByEmail(ctx, payload.Email)
+	if err != nil {
 		return nil, err
 	}
 
-	return &credentials.Identity, nil
+	if credential.PasswordHash == nil {
+		return nil, fmt.Errorf("invalid credentials")
+	}
+
+	if err := ValidatePassword(*credential.PasswordHash, payload.Password); err != nil {
+		return nil, err
+	}
+
+	identity, err := s.identityRepository.GetIdentityByID(ctx, credential.IdentityID)
+	if err != nil {
+		return nil, err
+	}
+
+	return identity, nil
 }

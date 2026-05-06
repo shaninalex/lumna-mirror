@@ -27,7 +27,7 @@ func (r *GormProjectRepository) GetByID(ctx context.Context, id uint) (*models.P
 	var project models.Project
 
 	err := r.db.WithContext(ctx).
-		Preload("Boards").
+		//Preload("Boards").
 		Where("id = ?", id).
 		First(&project).
 		Error
@@ -43,7 +43,7 @@ func (r *GormProjectRepository) List(ctx context.Context) ([]models.Project, err
 	var projects []models.Project
 
 	err := r.db.WithContext(ctx).
-		Preload("Boards").
+		//Preload("Boards").
 		Find(&projects).
 		Error
 

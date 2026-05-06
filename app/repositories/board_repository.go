@@ -26,12 +26,12 @@ func NewGormBoardRepository(db *gorm.DB) BoardRepository {
 func (s *GormBoardRepository) GetByID(ctx context.Context, id uint) (*models.Board, error) {
 	board := &models.Board{}
 	if result := s.db.WithContext(ctx).
-		Preload("Columns", func(tx *gorm.DB) *gorm.DB {
-			return tx.Order("\"order\" ASC")
-		}).
-		Preload("Columns.Tasks", func(tx *gorm.DB) *gorm.DB {
-			return tx.Order("\"order\" ASC")
-		}).
+		//Preload("Columns", func(tx *gorm.DB) *gorm.DB {
+		//	return tx.Order("\"order\" ASC")
+		//}).
+		//Preload("Columns.Tasks", func(tx *gorm.DB) *gorm.DB {
+		//	return tx.Order("\"order\" ASC")
+		//}).
 		Where("id = ?", id).
 		First(&board); result.Error != nil {
 		return nil, result.Error
