@@ -10,9 +10,16 @@ serve:
   embed: false
 
 database:
-  # database connection path
+  # One of this. Both defined = panics at connection
+  postgres:
+    host: localhost
+    database: postgres
+    user: postgres
+    password: postgres
+    port: 5432
   # if it's SQLite3 file - use absolute system path
-  url: "lumna.db?cache=shared&mode=rwc"
+  sqlite:
+    url: "<absolute path>/lumna.db?cache=shared&mode=rwc"
 
 # for jwt signing and verification
 secret_key: "a-string-secret-at-least-256-bits-long"

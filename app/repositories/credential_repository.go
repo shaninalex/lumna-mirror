@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gorm.io/gorm"
 )
 
@@ -26,7 +27,9 @@ var UserNotFoundError = errors.New("user not found")
 
 func (s *GormCredentialRepository) GetByEmail(ctx context.Context, email string) (*models.Credential, error) {
 	credentials := models.Credential{}
-	if result := s.db.WithContext(ctx).First(&credentials, "email = ?", email); result.Error != nil {
+	if result := s.db.WithContext(ctx).
+		Where(&models.Credential{Email: utils.Pointer(email)}).
+		First(&credentials); result.Error != nil {
 		if result.Error.Error() == "record not found" {
 			return nil, UserNotFoundError
 		}
