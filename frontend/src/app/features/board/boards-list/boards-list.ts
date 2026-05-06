@@ -1,8 +1,8 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { BoardCreateFeature } from '@features/board-create';
+import { BoardCreateFeature } from '@features/board/board-create';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { BoardModel, BoardState } from '@entities/board';
+import { actionBoardGetList, BoardModel, BoardState } from '@entities/board';
 import { Observable } from 'rxjs';
 import { selectBoardsByProjectId } from '@entities/board/model/board.selectors';
 import { AsyncPipe } from '@angular/common';
@@ -28,9 +28,10 @@ import { AsyncPipe } from '@angular/common';
 export class BoardsList implements OnInit {
     @Input() projectId: number;
     private store = inject(Store<BoardState>);
-    boards: Observable<BoardModel[]>;
+    boards: Observable<BoardModel[]>
 
     ngOnInit() {
         this.boards = this.store.select(selectBoardsByProjectId(this.projectId));
+        this.store.dispatch(actionBoardGetList({ projectId: this.projectId }))
     }
 }

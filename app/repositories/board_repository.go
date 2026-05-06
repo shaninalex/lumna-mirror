@@ -12,6 +12,7 @@ type BoardRepository interface {
 	Create(ctx context.Context, board *models.Board) (*models.Board, error)
 	Update(ctx context.Context, board *models.Board) (*models.Board, error)
 	Delete(ctx context.Context, id uint) error
+	ListByProjectId(ctx context.Context, projectId uint) ([]*models.Board, error) // TODO: make proper filter request. Or not, not sure if it needed
 }
 type GormBoardRepository struct {
 	db *gorm.DB
@@ -26,12 +27,6 @@ func NewGormBoardRepository(db *gorm.DB) BoardRepository {
 func (s *GormBoardRepository) GetByID(ctx context.Context, id uint) (*models.Board, error) {
 	board := &models.Board{}
 	if result := s.db.WithContext(ctx).
-		//Preload("Columns", func(tx *gorm.DB) *gorm.DB {
-		//	return tx.Order("\"order\" ASC")
-		//}).
-		//Preload("Columns.Tasks", func(tx *gorm.DB) *gorm.DB {
-		//	return tx.Order("\"order\" ASC")
-		//}).
 		Where("id = ?", id).
 		First(&board); result.Error != nil {
 		return nil, result.Error
@@ -58,4 +53,14 @@ func (s *GormBoardRepository) Delete(ctx context.Context, id uint) error {
 		return result.Error
 	}
 	return nil
+}
+
+func (s *GormBoardRepository) ListByProjectId(ctx context.Context, projectId uint) ([]*models.Board, error) {
+	boards := make([]*models.Board, 0)
+	if result := s.db.WithContext(ctx).
+		Where("project_id = ?", projectId).
+		Find(&boards); result.Error != nil {
+		return nil, result.Error
+	}
+	return boards, nil
 }

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { ProjectModel } from '@entities/project';
-import { BoardsList } from '@entities/board';
+import { BoardsList } from '@features/board';
 import { filter, map, Observable, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { UiService } from '@shared/ui';

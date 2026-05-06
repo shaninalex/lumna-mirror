@@ -46,6 +46,9 @@ func (s *BoardService) Update(ctx context.Context, board *models.Board) error {
 func (s *BoardService) Get(ctx context.Context, boardID uint) (*models.Board, error) {
 	return s.boardRepository.GetByID(ctx, boardID)
 }
+func (s *BoardService) List(ctx context.Context, projectID uint) ([]*models.Board, error) {
+	return s.boardRepository.ListByProjectId(ctx, projectID)
+}
 
 type KTask struct {
 	Id    uint `json:"id"`

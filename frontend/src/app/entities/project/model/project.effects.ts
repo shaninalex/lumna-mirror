@@ -58,18 +58,18 @@ export class ProjectEffects {
                     .pipe(switchMap(() => of(actionProjectDeleteSuccess({ project_id: action.project_id })))))
     ))
 
-    set_boards$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(actionProjectsSetList),
-            map((data) => {
-                const boards: BoardModel[] = [];
-                for (let i = 0; i < data.projects.length; i++) {
-                    for (let bi = 0; bi < data.projects[i].boards.length; bi++) {
-                        boards.push(data.projects[i].boards[bi]);
-                    }
-                }
-                return actionBoardSetList({ boards });
-            }),
-        ),
-    );
+    // set_boards$ = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType(actionProjectsSetList),
+    //         map((data) => {
+    //             const boards: BoardModel[] = [];
+    //             for (let i = 0; i < data.projects.length; i++) {
+    //                 for (let bi = 0; bi < data.projects[i].boards.length; bi++) {
+    //                     boards.push(data.projects[i].boards[bi]);
+    //                 }
+    //             }
+    //             return actionBoardSetList({ boards });
+    //         }),
+    //     ),
+    // );
 }

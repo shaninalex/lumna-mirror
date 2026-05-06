@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { APIResponse } from '@shared/models';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BoardModel, BoardPayloadModel } from '../model/board.model';
 
 @Injectable({
@@ -11,10 +11,12 @@ export class BoardApi {
     http = inject(HttpClient);
 
     List(projectId: number): Observable<BoardModel[]> {
+        let params = new HttpParams();
+        params = params.set('project_id', projectId);
         return this.http
             .get<
                 APIResponse<BoardModel[]>
-            >(`/api/v1/project/${projectId}/boards`, { withCredentials: true })
+            >(`/api/v1/boards`, { params: params, withCredentials: true })
             .pipe(map((response) => response.data));
     }
 

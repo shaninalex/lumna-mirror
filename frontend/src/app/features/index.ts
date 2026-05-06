@@ -1,9 +1,9 @@
 export { ProjectEditFeature } from './project-edit/project-edit.component';
 export { ProjectDeleteFeature } from './project-delete/project-delete';
 export { ProjectCreateFeature } from './project-create';
-export { BoardCreateFeature } from './board-create/board-create';
-export { BoardEditFeature } from './board-edit/board-edit';
-export { BoardDeleteFeature } from './board-delete/board-delete';
+export { BoardCreateFeature } from '@features/board/board-create/board-create';
+export { BoardEditFeature } from '@features/board/board-edit/board-edit';
+export { BoardDeleteFeature } from '@features/board/board-delete/board-delete';
 export { ColumnDeleteFeature } from './column-delete/column-delete';
 export { ColumnEditNameFeature } from './column-edit-name/column-edit-name';
 export { ColumnDropdownFeature } from './column-dropdown';
