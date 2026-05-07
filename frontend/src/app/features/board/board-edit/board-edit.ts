@@ -1,22 +1,22 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal } from "@angular/core";
 import {
     actionBoardFailed,
     actionBoardPatch,
     actionBoardUpsert,
     BoardModel,
     BoardPayloadModel,
-    BoardState,
-} from '@entities/board';
-import { FormField, form, required } from '@angular/forms/signals';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Actions, ofType } from '@ngrx/effects';
-import { tap } from 'rxjs';
-import { Store } from '@ngrx/store';
+    BoardState
+} from "@entities/board";
+import { FormField, form, required } from "@angular/forms/signals";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Actions, ofType } from "@ngrx/effects";
+import { tap } from "rxjs";
+import { Store } from "@ngrx/store";
 
 @Component({
-    selector: 'app-board-edit-feature',
+    selector: "app-board-edit-feature",
     imports: [FormField],
-    templateUrl: './board-edit.html',
+    templateUrl: "./board-edit.html"
 })
 export class BoardEditFeature {
     board = input<BoardModel>();
@@ -26,10 +26,10 @@ export class BoardEditFeature {
 
     boardFormModel = signal<BoardPayloadModel>({
         project_id: 0,
-        title: '',
+        title: ""
     });
     boardForm = form(this.boardFormModel, (schemaPath) => {
-        required(schemaPath.title, { message: 'Name is required' });
+        required(schemaPath.title, { message: "Name is required" });
     });
     loading = signal(false);
     errors = signal<string[]>([]);
@@ -41,7 +41,7 @@ export class BoardEditFeature {
                 this.boardId = b.id;
                 this.boardFormModel.set({
                     project_id: b.project_id,
-                    title: b.title,
+                    title: b.title
                 });
             }
         });
@@ -53,7 +53,7 @@ export class BoardEditFeature {
                 tap((data) => {
                     this.errors.set([data.error.toString()]);
                     this.loading.set(false);
-                }),
+                })
             )
             .subscribe();
 
@@ -61,7 +61,7 @@ export class BoardEditFeature {
             .pipe(
                 ofType(actionBoardUpsert),
                 takeUntilDestroyed(),
-                tap(() => this.loading.set(false)),
+                tap(() => this.loading.set(false))
             )
             .subscribe();
     }
@@ -70,6 +70,8 @@ export class BoardEditFeature {
         event.preventDefault();
         this.loading.set(true);
         const formData = this.boardFormModel();
-        this.store.dispatch(actionBoardPatch({ boardId: this.boardId, data: formData }));
+        this.store.dispatch(
+            actionBoardPatch({ boardId: this.boardId, data: formData })
+        );
     }
 }
