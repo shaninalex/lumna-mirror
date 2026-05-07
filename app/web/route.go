@@ -10,7 +10,7 @@ import (
 )
 
 func RegisterEmbedRoute(router *gin.Engine) {
-	static := lumna.StaticFS()
+	static := lumna.StaticFS("resources/assets")
 	if static == nil {
 		return
 	}

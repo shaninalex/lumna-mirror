@@ -24,5 +24,5 @@ cover.out
 .claude
 
 !.git/hooks/post-tag
-assets/*
-!assets/.gitkeep
+resources/assets/*
+!resources/assets/.gitkeep
