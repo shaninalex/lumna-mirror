@@ -1,6 +1,6 @@
-import { inject, Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { TaskApi } from '../api/task.api';
+import { inject, Injectable } from "@angular/core";
+import { Actions, createEffect, ofType } from "@ngrx/effects";
+import { TaskApi } from "../api/task.api";
 import {
     actionTaskChange,
     actionTaskCreate,
@@ -8,10 +8,10 @@ import {
     actionTaskGetTaskById,
     actionTaskGetTasks,
     actionTaskSetTasks,
-    actionTaskUpsert,
-} from './task.actions';
-import { catchError, exhaustMap, map, of, switchMap } from 'rxjs';
-import { actionKanbanColumnsLoaded } from '@features/kanban-board';
+    actionTaskUpsert
+} from "./task.actions";
+import { catchError, EMPTY, exhaustMap, map, of, switchMap } from "rxjs";
+import { actionKanbanColumnsLoaded } from "@features/kanban-board";
 
 @Injectable()
 export class TaskEffects {
@@ -19,12 +19,21 @@ export class TaskEffects {
     private taskApi = inject(TaskApi);
 
     // listen for kanban effect to load columns
-    set_list$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(actionKanbanColumnsLoaded),
-            map((action) => actionTaskSetTasks({ tasks: action.tasks })),
-        ),
-    );
+    // set_list$ = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType(actionKanbanBoardLoaded),
+    //         exhaustMap((action) => {
+    //             return of(EMPTY)
+    //         })
+    //             // this.taskApi
+    //             //     .List(action.columns)
+    //             //     .pipe(
+    //             //         switchMap((tasks) => of(actionTaskSetTasks({ tasks })))
+    //             //     )
+    //         )
+    //         // map((action) => actionTaskSetTasks({ tasks: action.tasks }))
+    //     )
+    // );
 
     task_list$ = createEffect(() =>
         this.actions$.pipe(
@@ -32,9 +41,11 @@ export class TaskEffects {
             exhaustMap((action) =>
                 this.taskApi
                     .List(action.board_id)
-                    .pipe(switchMap((tasks) => of(actionTaskSetTasks({ tasks })))),
-            ),
-        ),
+                    .pipe(
+                        switchMap((tasks) => of(actionTaskSetTasks({ tasks })))
+                    )
+            )
+        )
     );
 
     task_create$ = createEffect(() =>
@@ -43,10 +54,10 @@ export class TaskEffects {
             exhaustMap((action) =>
                 this.taskApi.Create(action.data).pipe(
                     switchMap((task) => of(actionTaskUpsert({ task }))),
-                    catchError((error) => of(actionTaskFailed({ error }))),
-                ),
-            ),
-        ),
+                    catchError((error) => of(actionTaskFailed({ error })))
+                )
+            )
+        )
     );
 
     task_get$ = createEffect(() =>
@@ -55,9 +66,9 @@ export class TaskEffects {
             exhaustMap((action) =>
                 this.taskApi
                     .Get(action.task_id)
-                    .pipe(switchMap((task) => of(actionTaskUpsert({ task })))),
-            ),
-        ),
+                    .pipe(switchMap((task) => of(actionTaskUpsert({ task }))))
+            )
+        )
     );
 
     task_change$ = createEffect(() =>
@@ -66,8 +77,8 @@ export class TaskEffects {
             exhaustMap((action) =>
                 this.taskApi
                     .Patch(action.task_id, action.data)
-                    .pipe(switchMap((task) => of(actionTaskUpsert({ task })))),
-            ),
+                    .pipe(switchMap((task) => of(actionTaskUpsert({ task }))))
+            )
         )
-    )
+    );
 }

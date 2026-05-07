@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { APIResponse } from '@shared/models';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ApiColumnModel, ColumnModel, ColumnPayloadModel } from '../model/column.model';
+import { ColumnModel, ColumnPayloadModel } from '@entities/column';
 
 @Injectable({
     providedIn: 'root',
@@ -10,11 +10,11 @@ import { ApiColumnModel, ColumnModel, ColumnPayloadModel } from '../model/column
 export class ColumnsApi {
     http = inject(HttpClient);
 
-    List(boardId: number): Observable<ApiColumnModel[]> {
+    List(boardId: number): Observable<ColumnModel[]> {
         const params = new HttpParams().set('board_id', boardId);
         return this.http
             .get<
-                APIResponse<ApiColumnModel[]>
+                APIResponse<ColumnModel[]>
             >(`/api/v1/columns`, { params, withCredentials: true })
             .pipe(map((response) => response.data));
     }

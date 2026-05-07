@@ -17,6 +17,7 @@ func NewTaskController(taskService *services.TaskService) *TaskController {
 
 func (s *TaskController) Register(router *gin.RouterGroup) {
 	router.POST("tasks", s.handleCreateTask)
+	router.GET("tasks", s.handleListTask)
 	router.GET("task/:taskId", s.handleGetTask)
 	router.PATCH("task/:taskId", s.handlePatchTask)
 }

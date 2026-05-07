@@ -16,10 +16,12 @@ export interface KanbanBoardChangeOrderPayload {
         }>;
     }>;
 
+    // This should be removed.
+    // Activity have to be generated on backend side.
     activity?: {
-        entity_type: string,
-        entity_id: number,
-        summary: string,
-        action: string,
-    }
+        entity_type: string;
+        entity_id: number;
+        summary: string;
+        action: string;
+    };
 }

@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ColumnsApi } from '../api/columns.api';
+import { Injectable, inject } from "@angular/core";
+import { Actions, createEffect, ofType } from "@ngrx/effects";
+import { ColumnsApi } from "../api/columns.api";
 import {
     actionColumnCreate,
     actionColumnDelete,
@@ -8,10 +8,10 @@ import {
     actionColumnGetList,
     actionColumnPatch,
     actionColumnSetList,
-    actionColumnUpsert,
-} from './column.actions';
-import { exhaustMap, map, of, switchMap } from 'rxjs';
-import { actionKanbanColumnsLoaded } from '@features/kanban-board/model/shared.actions';
+    actionColumnUpsert
+} from "./column.actions";
+import { exhaustMap, map, of, switchMap } from "rxjs";
+import { actionKanbanColumnsLoaded } from "@features/kanban-board/model/shared.actions";
 
 @Injectable()
 export class ColumnEffects {
@@ -22,8 +22,8 @@ export class ColumnEffects {
     set_list$ = createEffect(() =>
         this.actions$.pipe(
             ofType(actionKanbanColumnsLoaded),
-            map((action) => actionColumnSetList({ columns: action.columns })),
-        ),
+            map((action) => actionColumnSetList({ columns: action.columns }))
+        )
     );
 
     create_column$ = createEffect(() =>
@@ -32,9 +32,13 @@ export class ColumnEffects {
             exhaustMap((action) =>
                 this.columnsApi
                     .Create(action.data)
-                    .pipe(switchMap((column) => of(actionColumnUpsert({ column })))),
-            ),
-        ),
+                    .pipe(
+                        switchMap((column) =>
+                            of(actionColumnUpsert({ column }))
+                        )
+                    )
+            )
+        )
     );
 
     patch_column$ = createEffect(() =>
@@ -43,23 +47,29 @@ export class ColumnEffects {
             exhaustMap((action) =>
                 this.columnsApi
                     .Patch(action.columnId, action.data)
-                    .pipe(switchMap((column) => of(actionColumnUpsert({ column })))),
-            ),
-        ),
+                    .pipe(
+                        switchMap((column) =>
+                            of(actionColumnUpsert({ column }))
+                        )
+                    )
+            )
+        )
     );
 
     delete_column$ = createEffect(() =>
         this.actions$.pipe(
             ofType(actionColumnDelete),
             exhaustMap((action) =>
-                this.columnsApi
-                    .Delete(action.columnId)
-                    .pipe(
-                        switchMap(() =>
-                            of(actionColumnDeleteSuccess({ columnId: action.columnId })),
-                        ),
-                    ),
-            ),
-        ),
+                this.columnsApi.Delete(action.columnId).pipe(
+                    switchMap(() =>
+                        of(
+                            actionColumnDeleteSuccess({
+                                columnId: action.columnId
+                            })
+                        )
+                    )
+                )
+            )
+        )
     );
 }

@@ -8,6 +8,7 @@ import (
 )
 
 type TaskRepository interface {
+	List(ctx context.Context, query map[string]any) ([]*models.Task, error)
 	GetByID(ctx context.Context, taskID uint) (*models.Task, error)
 	Reorder(ctx context.Context, taskID uint, columnID uint, order uint) error
 	Create(ctx context.Context, task *models.Task) error
@@ -23,15 +24,21 @@ func NewGormTaskRepository(db *gorm.DB) TaskRepository {
 	return &GormTaskRepository{db: db}
 }
 
+func (r *GormTaskRepository) List(ctx context.Context, query map[string]any) ([]*models.Task, error) {
+	var tasks []*models.Task
+	if err := r.db.Where(query).Find(&tasks).Error; err != nil {
+		return nil, err
+	}
+	return tasks, nil
+}
+
 func (r *GormTaskRepository) GetByID(ctx context.Context, taskID uint) (*models.Task, error) {
 	var task models.Task
 
-	err := r.db.WithContext(ctx).
+	if err := r.db.WithContext(ctx).
 		Where("id = ?", taskID).
 		First(&task).
-		Error
-
-	if err != nil {
+		Error; err != nil {
 		return nil, err
 	}
 

@@ -22,6 +22,10 @@ func NewTaskService(
 	}
 }
 
+func (s *TaskService) List(ctx context.Context, query map[string]any) ([]*models.Task, error) {
+	return s.repository.List(ctx, query)
+}
+
 func (s *TaskService) GetTask(ctx context.Context, taskID uint) (*models.Task, error) {
 	return s.repository.GetByID(ctx, taskID)
 }

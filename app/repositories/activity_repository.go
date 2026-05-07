@@ -52,12 +52,10 @@ func (r *GormActivityLogRepository) List(ctx context.Context) ([]models.Activity
 
 func (r *GormActivityLogRepository) GetByID(ctx context.Context, id uint) (*models.ActivityLog, error) {
 	var log models.ActivityLog
-
 	err := r.db.WithContext(ctx).
 		Where("id = ?", id).
 		First(&log).
 		Error
-
 	if err != nil {
 		return nil, err
 	}
