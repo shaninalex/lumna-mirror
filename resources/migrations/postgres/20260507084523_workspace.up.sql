@@ -1,11 +1,12 @@
 CREATE TABLE workspaces
 (
-    id         integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    title      text      NOT NULL,
-    active     boolean   NOT NULL DEFAULT true,
-    owner_id   integer   NOT NULL REFERENCES identities (id),
-    created_at timestamp NOT NULL DEFAULT NOW(),
-    updated_at timestamp
+    id          integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title       text      NOT NULL,
+    active      boolean   NOT NULL DEFAULT true,
+    owner_id    integer   NOT NULL REFERENCES identities (id),
+    owner_email text      NOT NULL,
+    created_at  timestamp NOT NULL DEFAULT now(),
+    updated_at  timestamp
 );
 
 ALTER TABLE invitations

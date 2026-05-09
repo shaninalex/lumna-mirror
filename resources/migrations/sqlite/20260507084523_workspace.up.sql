@@ -1,11 +1,12 @@
 CREATE TABLE workspaces
 (
-    id         integer PRIMARY KEY AUTOINCREMENT,
-    title      text NOT NULL,
-    active     numeric,
-    owner_id   integer NOT NULL REFERENCES identities(id),
-    created_at datetime DEFAULT CURRENT_TIMESTAMP,
-    updated_at datetime
+    id          integer PRIMARY KEY AUTOINCREMENT,
+    title       text    NOT NULL,
+    active      numeric,
+    owner_id    integer NOT NULL REFERENCES identities (id),
+    owner_email text    NOT NULL,
+    created_at  datetime DEFAULT CURRENT_TIMESTAMP,
+    updated_at  datetime
 );
 
 ALTER TABLE invitations

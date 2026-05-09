@@ -19,9 +19,11 @@ import (
 	"go.uber.org/dig"
 )
 
-func ProvideRouter() *gin.Engine {
+func ProvideRouter(conf *config.Config) *gin.Engine {
 	router := gin.New()
-	gin.SetMode(gin.ReleaseMode)
+	if conf.Env != "development" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	router.RedirectTrailingSlash = false
 	router.RedirectFixedPath = false
@@ -53,7 +55,7 @@ type ApiDeps struct {
 
 func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	// base API middlewares
-	router := ProvideRouter()
+	router := ProvideRouter(config)
 	router.Use(gin.Recovery()) // TODO: write your onw recovery middleware
 	router.Use(middlewares.LoggingMiddleware())
 	router.Use(middlewares.CORSMiddleware())

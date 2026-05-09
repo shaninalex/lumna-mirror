@@ -8,16 +8,19 @@ import (
 )
 
 type Task struct {
-	ID        uint      `gorm:"primaryKey" json:"id"`
-	Title     string    `gorm:"not null" json:"title"`
-	Order     uint      `json:"order"`
-	Done      bool      `json:"done"`
-	Body      string    `json:"body"`
+	ID    uint   `gorm:"primaryKey" json:"id"`
+	Title string `gorm:"not null" json:"title"`
+	Order uint   `json:"order"`
+	Done  bool   `json:"done"`
+	Body  string `json:"body"`
+
+	ColumnID    uint `gorm:"not null;index" json:"column_id"`
+	BoardID     uint `gorm:"not null;index" json:"board_id"`
+	ProjectID   uint `gorm:"not null;index" json:"project_id"`
+	WorkspaceID uint `gorm:"not null;index" json:"workspace_id"`
+
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	ColumnID  uint      `gorm:"not null;index" json:"column_id"`
-	ProjectID uint      `gorm:"not null;index" json:"project_id"`
-	BoardID   uint      `gorm:"not null;index" json:"board_id"`
 }
 
 func (s *Task) BeforeCreate(tx *gorm.DB) error {
