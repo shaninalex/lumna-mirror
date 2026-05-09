@@ -17,6 +17,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/pkg/logger"
 	"gitlab.com/shaninalex/lumna/app/pkg/persistence"
+	"gitlab.com/shaninalex/lumna/app/repositories"
 	"go.uber.org/dig"
 )
 
@@ -46,6 +47,7 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 
 			// Providing api module
 			_ = api.Module(c)
+			_ = repositories.Module(c)
 
 			err = c.Invoke(func(router *gin.Engine, config *config.Config, ctx context.Context) {
 				srv := &http.Server{

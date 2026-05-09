@@ -19,6 +19,7 @@ func NewRootCmd() (cmd *cobra.Command) {
 	cmd.AddCommand(commands.NewBoardsRootCmd())
 	cmd.AddCommand(commands.NewColumnsRootCmd())
 	cmd.AddCommand(commands.NewImportRootCmd())
+	cmd.AddCommand(commands.NewExportRootCmd())
 
 	cmd.PersistentFlags().String("config", "", "Configuration path. Required.")
 	_ = cmd.MarkPersistentFlagRequired("config")

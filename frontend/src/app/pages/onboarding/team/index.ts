@@ -1,0 +1,1 @@
+export { TeamOnboardingPage } from './team'
