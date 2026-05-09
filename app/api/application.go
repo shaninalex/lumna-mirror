@@ -10,6 +10,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/controllers/board"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/column"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/invitation"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/onboarding"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
@@ -51,12 +52,13 @@ type ApiDeps struct {
 	UserController       *user.UserController
 	ActivityController   *activity.ActivityController
 	InvitationController *invitation.InvitationController
+	OnboardingController *onboarding.OnboardingController
 }
 
 func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	// base API middlewares
 	router := ProvideRouter(config)
-	router.Use(gin.Recovery()) // TODO: write your onw recovery middleware
+	router.Use(gin.Recovery()) // TODO: write your own recovery middleware
 	router.Use(middlewares.LoggingMiddleware())
 	router.Use(middlewares.CORSMiddleware())
 
@@ -66,6 +68,7 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 
 	authGroup := router.Group("/api/v1/auth")
 	deps.AuthController.Register(authGroup)
+	deps.OnboardingController.Register(router.Group("/api/v1/onboarding"))
 
 	private := router.Group("/api/v1")
 	private.Use(middlewares.AuthMiddleware)

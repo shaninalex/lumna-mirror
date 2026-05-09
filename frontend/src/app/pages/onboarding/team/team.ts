@@ -1,6 +1,7 @@
-import { Component, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { email, form, FormField, required } from "@angular/forms/signals";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { OnboardingApiService, TeamPageModel } from '@features/onboarding';
 
 @Component({
     selector: "app-team-onboarding",
@@ -12,42 +13,42 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
                 <div class="d-flex flex-column gap-4">
                     <form (submit)="onSubmit()">
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
+                        <div class="input-group">
                             <input
                                 type="email"
                                 [formField]="teamForm.email"
                                 class="form-control"
                                 placeholder="name@example.com"
                             />
-                            @if (
-                                teamForm.email().dirty() &&
-                                teamForm.email().errors()
+                            <button class="input-group-text" type="button" (click)="addEmail()">+</button>
+                        </div>
+                        @if (
+                            teamForm.email().dirty() &&
+                            teamForm.email().errors()
+                        ) {
+                            @for (
+                                error of teamForm.email().errors();
+                                track error
                             ) {
-                                @for (
-                                    error of teamForm.email().errors();
-                                    track error
-                                ) {
-                                    <div class="text-danger small">
-                                        {{ error.message }}
-                                    </div>
-                                }
+                                <div class="text-danger small">
+                                    {{ error.message }}
+                                </div>
                             }
-                        </div>
-                        <div>
-                            <button class="btn btn-primary" type="submit">
-                                Add
-                            </button>
-                        </div>
-                    </form>
+                        }
 
-                    @if (teamEmails.length > 0) {
-                        <ul class="list-group">
-                            @for (email of teamEmails; track $index) {
-                                <li class="list-group-item">{{ email }}</li>
-                            }
-                        </ul>
-                    }
+                        @if (teamEmails.length > 0) {
+                            <ul class="list-group">
+                                @for (email of teamEmails; track $index) {
+                                    <li class="list-group-item">{{ email }}</li>
+                                }
+                            </ul>
+                        }
+                    </form>
+                    <div>
+                        <button class="btn btn-primary" type="submit">
+                            Submit
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -57,9 +58,11 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
                 Skip
             </button>
         </div>
-    `
+    `,
+    providers: [OnboardingApiService],
 })
 export class TeamOnboardingPage {
+    api = inject(OnboardingApiService);
     teamModel = signal({ email: "" });
     teamForm = form(this.teamModel, (schemaPath) => {
         required(schemaPath.email, { message: "Email is required" });
@@ -67,8 +70,15 @@ export class TeamOnboardingPage {
     });
     teamEmails: string[] = [];
 
-    onSubmit() {
+    addEmail() {
         this.teamEmails.push(this.teamForm.email().value());
         this.teamForm.email().value.set("");
+    }
+
+    onSubmit(): void {
+        const data: TeamPageModel = {
+            emails: this.teamEmails,
+        }
+        this.api.team(data)
     }
 }

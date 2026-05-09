@@ -1,12 +1,12 @@
 import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { WorkspacePageModel } from "../model";
+import { TeamPageModel, WorkspacePageModel } from "../model";
 import { map, Observable } from "rxjs";
 import { APIResponse } from "@shared/models";
 import { TeamOnboardingPage } from "@pages/onboarding/team";
 
 @Injectable()
-export class OnboardingApiClient {
+export class OnboardingApiService {
     http = inject(HttpClient);
 
     workspace(payload: WorkspacePageModel): Observable<any> {
@@ -17,7 +17,7 @@ export class OnboardingApiClient {
             .pipe(map((response) => response.data));
     }
 
-    team(payload: TeamOnboardingPage): Observable<any> {
+    team(payload: TeamPageModel): Observable<any> {
         return this.http
             .post<
                 APIResponse<any>

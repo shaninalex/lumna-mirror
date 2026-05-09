@@ -2,11 +2,12 @@
     <div class="card-body">
         <h1>Create workspace</h1>
 
-        <form action="">
+        <form (submit)="onSubmit()">
             <div class="mb-3">
                 <label class="form-label">Workspace title</label>
                 <input
                     type="text"
+                    [formField]="workspaceForm.title"
                     class="form-control"
                     placeholder="Workspace title"
                 />
@@ -15,6 +16,7 @@
                 <label class="form-label">Email address</label>
                 <input
                     type="email"
+                    [formField]="workspaceForm.email"
                     class="form-control"
                     placeholder="name@example.com"
                 />
