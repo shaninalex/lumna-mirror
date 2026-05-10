@@ -1,7 +1,8 @@
 import { Component, inject, signal } from "@angular/core";
 import { email, form, FormField, required } from "@angular/forms/signals";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { OnboardingApiService, TeamPageModel } from '@features/onboarding';
+import { OnboardingApiService, TeamPageModel } from "@features/onboarding";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "app-team-onboarding",
@@ -20,21 +21,18 @@ import { OnboardingApiService, TeamPageModel } from '@features/onboarding';
                                 class="form-control"
                                 placeholder="name@example.com"
                             />
-                            <button class="input-group-text" type="button" (click)="addEmail()">+</button>
+                            <button
+                                class="input-group-text"
+                                type="button"
+                                (click)="addEmail()"
+                                [disabled]="
+                                    teamForm.email().dirty() &&
+                                    teamForm.email().errors()
+                                "
+                            >
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
                         </div>
-                        @if (
-                            teamForm.email().dirty() &&
-                            teamForm.email().errors()
-                        ) {
-                            @for (
-                                error of teamForm.email().errors();
-                                track error
-                            ) {
-                                <div class="text-danger small">
-                                    {{ error.message }}
-                                </div>
-                            }
-                        }
 
                         @if (teamEmails.length > 0) {
                             <ul class="list-group">
@@ -43,12 +41,12 @@ import { OnboardingApiService, TeamPageModel } from '@features/onboarding';
                                 }
                             </ul>
                         }
+                        <div class="mt-3">
+                            <button class="btn btn-primary" type="submit">
+                                Submit
+                            </button>
+                        </div>
                     </form>
-                    <div>
-                        <button class="btn btn-primary" type="submit">
-                            Submit
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -59,10 +57,12 @@ import { OnboardingApiService, TeamPageModel } from '@features/onboarding';
             </button>
         </div>
     `,
-    providers: [OnboardingApiService],
+    providers: [OnboardingApiService]
 })
 export class TeamOnboardingPage {
     api = inject(OnboardingApiService);
+    router = inject(Router);
+
     teamModel = signal({ email: "" });
     teamForm = form(this.teamModel, (schemaPath) => {
         required(schemaPath.email, { message: "Email is required" });
@@ -77,8 +77,11 @@ export class TeamOnboardingPage {
 
     onSubmit(): void {
         const data: TeamPageModel = {
-            emails: this.teamEmails,
-        }
-        this.api.team(data)
+            emails: this.teamEmails
+        };
+        this.api.team(data).subscribe((data) => {
+            console.log(data);
+            this.router.navigateByUrl("/onboarding/pending");
+        });
     }
 }

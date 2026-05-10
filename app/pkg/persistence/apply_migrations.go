@@ -20,11 +20,12 @@ import (
 )
 
 func ApplyMigrations(c *config.Config) error {
+	db := ProvideDB(c)
 	switch config.DetectDatabase(c.Database) {
 	case config.DatabaseTypePostgres:
-		return MigratePostgres(ProvideDB(c))
+		return MigratePostgres(db)
 	case config.DatabaseTypeSQLite:
-		return MigrateSQLite(ProvideDB(c))
+		return MigrateSQLite(db)
 	default:
 		panic("driver not supported")
 	}

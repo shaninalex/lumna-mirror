@@ -20,3 +20,7 @@ func NewUserService(repository repositories.IdentityRepository) *UserService {
 func (s *UserService) Identity(ctx context.Context, userID uint) (*models.Identity, error) {
 	return s.repository.GetIdentityByID(ctx, userID)
 }
+
+func (s *UserService) List(ctx context.Context) ([]*models.Identity, error) {
+	return s.repository.List(ctx)
+}

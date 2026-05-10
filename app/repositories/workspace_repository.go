@@ -8,12 +8,12 @@ import (
 )
 
 type WorkspaceRepository interface {
-	List(ctx context.Context, query map[string]any) ([]*models.WorkspaceModel, error)
-	GetByID(ctx context.Context, taskID uint) (*models.WorkspaceModel, error)
-	Create(ctx context.Context, task *models.WorkspaceModel) error
-	Update(ctx context.Context, taskID uint, updates map[string]any) error
+	List(ctx context.Context, query map[string]any) ([]*models.Workspace, error)
+	GetByID(ctx context.Context, workspaceID uint) (*models.Workspace, error)
+	Create(ctx context.Context, workspace *models.Workspace) error
+	Update(ctx context.Context, workspaceID uint, updates map[string]any) error
 	// Before implement this method - we should understand what exactly will be deleted
-	// ScheduleDelete(ctx context.Context, taskID uint) error
+	// ScheduleDelete(ctx context.Context, workspaceID uint) error
 }
 
 type GormWorkspaceRepository struct {
@@ -24,16 +24,16 @@ func NewGormWorkspaceRepository(db *gorm.DB) WorkspaceRepository {
 	return &GormWorkspaceRepository{db: db}
 }
 
-func (s *GormWorkspaceRepository) List(ctx context.Context, query map[string]any) ([]*models.WorkspaceModel, error) {
-	var workspaces []*models.WorkspaceModel
+func (s *GormWorkspaceRepository) List(ctx context.Context, query map[string]any) ([]*models.Workspace, error) {
+	var workspaces []*models.Workspace
 	if err := s.db.Where(query).Find(&workspaces).Error; err != nil {
 		return nil, err
 	}
 	return workspaces, nil
 }
 
-func (s *GormWorkspaceRepository) GetByID(ctx context.Context, workspaceId uint) (*models.WorkspaceModel, error) {
-	var workspace models.WorkspaceModel
+func (s *GormWorkspaceRepository) GetByID(ctx context.Context, workspaceId uint) (*models.Workspace, error) {
+	var workspace models.Workspace
 	if err := s.db.WithContext(ctx).
 		Where("id = ?", workspaceId).
 		First(&workspace).
@@ -43,14 +43,14 @@ func (s *GormWorkspaceRepository) GetByID(ctx context.Context, workspaceId uint)
 	return &workspace, nil
 }
 
-func (s *GormWorkspaceRepository) Create(ctx context.Context, workspace *models.WorkspaceModel) error {
+func (s *GormWorkspaceRepository) Create(ctx context.Context, workspace *models.Workspace) error {
 	return s.db.WithContext(ctx).
 		Create(workspace).
 		Error
 }
 
 func (s *GormWorkspaceRepository) Update(ctx context.Context, workspaceId uint, updates map[string]any) error {
-	result := s.db.WithContext(ctx).Model(&models.WorkspaceModel{}).
+	result := s.db.WithContext(ctx).Model(&models.Workspace{}).
 		Where("id = ?", workspaceId).
 		Updates(updates)
 	return result.Error

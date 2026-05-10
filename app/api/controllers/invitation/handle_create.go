@@ -8,8 +8,9 @@ import (
 )
 
 type InvitationCreatePayload struct {
-	Email string `json:"email" binding:"required"`
-	Role  string `json:"role" binding:"required"`
+	Email       string `json:"email" binding:"required"`
+	Role        string `json:"role" binding:"required"`
+	WorkspaceId uint   `json:"workspace_id"`
 }
 
 func (s *InvitationController) Create(c *gin.Context) {
@@ -20,7 +21,7 @@ func (s *InvitationController) Create(c *gin.Context) {
 		return
 	}
 
-	invitation, _, err := s.invitationService.Create(c.Request.Context(), payload.Email, payload.Role)
+	invitation, _, err := s.invitationService.Create(c.Request.Context(), payload.WorkspaceId, payload.Email, payload.Role)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 	}

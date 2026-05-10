@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type WorkspaceModel struct {
+type Workspace struct {
 	ID         uint       `gorm:"primaryKey" json:"id"`
 	Title      string     `json:"title"`
 	Active     bool       `json:"active"`

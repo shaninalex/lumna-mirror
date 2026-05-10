@@ -22,7 +22,7 @@ func ProvideTestDB() *gorm.DB {
 }
 
 func Migrate(db *gorm.DB) error {
-	return persistence.ApplyMigrations(db)
+	return persistence.ApplyMigrations(ProvideTestConfig())
 }
 
 func ProvideTestConfig() *config.Config {

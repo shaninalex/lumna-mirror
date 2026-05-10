@@ -9,6 +9,7 @@ import (
 
 type IdentityRepository interface {
 	GetIdentityByID(ctx context.Context, userID uint) (*models.Identity, error)
+	List(ctx context.Context) ([]*models.Identity, error)
 }
 
 type GormIdentityRepository struct {
@@ -33,4 +34,16 @@ func (r *GormIdentityRepository) GetIdentityByID(ctx context.Context, userID uin
 	}
 
 	return &identity, nil
+}
+
+func (r *GormIdentityRepository) List(ctx context.Context) ([]*models.Identity, error) {
+	var identities []*models.Identity
+	err := r.db.WithContext(ctx).
+		Find(&identities).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+	return identities, nil
 }

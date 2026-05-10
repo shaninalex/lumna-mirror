@@ -3,11 +3,23 @@ import { HttpClient } from "@angular/common/http";
 import { TeamPageModel, WorkspacePageModel } from "../model";
 import { map, Observable } from "rxjs";
 import { APIResponse } from "@shared/models";
-import { TeamOnboardingPage } from "@pages/onboarding/team";
+
+export enum OnboardingState {
+    WORKSPACES,
+    COMPLETED
+}
 
 @Injectable()
 export class OnboardingApiService {
     http = inject(HttpClient);
+
+    state(): Observable<OnboardingState> {
+        return this.http
+            .get<
+                APIResponse<any>
+            >(`/api/v1/onboarding/state`, { withCredentials: true })
+            .pipe(map((response) => response.data));
+    }
 
     workspace(payload: WorkspacePageModel): Observable<any> {
         return this.http
