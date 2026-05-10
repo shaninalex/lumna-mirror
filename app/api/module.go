@@ -10,6 +10,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/workspace"
 	"go.uber.org/dig"
 )
 
@@ -23,6 +24,7 @@ func Module(c *dig.Container) error {
 	_ = activity.Module(c)
 	_ = invitation.Module(c)
 	_ = onboarding.Module(c)
+	_ = workspace.Module(c)
 
 	_ = c.Provide(NewApi)
 

@@ -15,11 +15,13 @@
         {
             "title": "Second workspace",
             "owner_email": "test@test.com",
+            "active": true,
             "projects": []
         },
         {
             "title": "Lumna",
             "owner_email": "test@test.com",
+            "active": true,
             "projects": [
                 {
                     "title": "Lumna project",

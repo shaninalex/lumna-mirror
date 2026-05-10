@@ -28,6 +28,7 @@ type MockDbDataSchema struct {
 	Workspaces []struct {
 		Title    string `json:"title"`
 		Email    string `json:"email"`
+		Active   bool   `json:"active"`
 		Projects []struct {
 			Title  string `json:"title"`
 			Boards []struct {
@@ -110,6 +111,7 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 			wp := models.Workspace{
 				Title:      wpd.Title,
 				OwnerEmail: wpd.Email,
+				Active:     wpd.Active,
 			}
 			if result := database.Create(&wp); result.Error != nil {
 				panic(result.Error)
