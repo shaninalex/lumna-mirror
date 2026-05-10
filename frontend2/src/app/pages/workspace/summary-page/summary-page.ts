@@ -1,0 +1,391 @@
+import { Component } from "@angular/core";
+
+@Component({
+    selector: "app-workspace-summary-page",
+    imports: [],
+    template: `
+        <div class="min-h-screen bg-zinc-100 text-zinc-900">
+            <main class="mx-auto p-6">
+                <!-- Stats -->
+                <section class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div
+                        class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm"
+                    >
+                        <p class="text-sm text-zinc-500">Total Projects</p>
+
+                        <div class="mt-3 flex items-end justify-between">
+                            <h2 class="text-3xl font-bold">12</h2>
+
+                            <span
+                                class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700"
+                            >
+                                +2 this month
+                            </span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm"
+                    >
+                        <p class="text-sm text-zinc-500">Active Boards</p>
+
+                        <div class="mt-3 flex items-end justify-between">
+                            <h2 class="text-3xl font-bold">28</h2>
+
+                            <span
+                                class="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700"
+                            >
+                                5 active sprints
+                            </span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm"
+                    >
+                        <p class="text-sm text-zinc-500">Team Members</p>
+
+                        <div class="mt-3 flex items-end justify-between">
+                            <h2 class="text-3xl font-bold">17</h2>
+
+                            <span
+                                class="rounded-full bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700"
+                            >
+                                3 admins
+                            </span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm"
+                    >
+                        <p class="text-sm text-zinc-500">Open Issues</p>
+
+                        <div class="mt-3 flex items-end justify-between">
+                            <h2 class="text-3xl font-bold">146</h2>
+
+                            <span
+                                class="rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700"
+                            >
+                                34 high priority
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="grid gap-6 xl:grid-cols-3">
+                    <!-- Left -->
+                    <div class="space-y-6 xl:col-span-2">
+                        <!-- Projects -->
+                        <section
+                            class="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm"
+                        >
+                            <div
+                                class="flex items-center justify-between border-b border-zinc-200 px-5 py-4"
+                            >
+                                <div>
+                                    <h2 class="text-lg font-semibold">
+                                        Projects
+                                    </h2>
+
+                                    <p class="text-sm text-zinc-500">
+                                        Recently active projects
+                                    </p>
+                                </div>
+
+                                <button
+                                    class="text-sm font-medium text-blue-600 hover:text-blue-700"
+                                >
+                                    View All
+                                </button>
+                            </div>
+
+                            <div class="divide-y divide-zinc-200">
+                                <!-- Project -->
+                                <div
+                                    class="flex items-center justify-between px-5 py-4 hover:bg-zinc-50"
+                                >
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white"
+                                        >
+                                            LM
+                                        </div>
+
+                                        <div>
+                                            <h3 class="font-medium">
+                                                Lumna Core
+                                            </h3>
+
+                                            <p class="text-sm text-zinc-500">
+                                                42 open issues • 2 active boards
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <span
+                                        class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700"
+                                    >
+                                        Active
+                                    </span>
+                                </div>
+
+                                <!-- Project -->
+                                <div
+                                    class="flex items-center justify-between px-5 py-4 hover:bg-zinc-50"
+                                >
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-600 text-sm font-bold text-white"
+                                        >
+                                            API
+                                        </div>
+
+                                        <div>
+                                            <h3 class="font-medium">
+                                                Public API
+                                            </h3>
+
+                                            <p class="text-sm text-zinc-500">
+                                                17 open issues • 1 active sprint
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <span
+                                        class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700"
+                                    >
+                                        Planning
+                                    </span>
+                                </div>
+
+                                <!-- Project -->
+                                <div
+                                    class="flex items-center justify-between px-5 py-4 hover:bg-zinc-50"
+                                >
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="flex h-12 w-12 items-center justify-center rounded-xl bg-pink-600 text-sm font-bold text-white"
+                                        >
+                                            UX
+                                        </div>
+
+                                        <div>
+                                            <h3 class="font-medium">UI Kit</h3>
+
+                                            <p class="text-sm text-zinc-500">
+                                                8 open issues • Design system
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <span
+                                        class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700"
+                                    >
+                                        In Progress
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Activity -->
+                        <section
+                            class="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm"
+                        >
+                            <div class="border-b border-zinc-200 px-5 py-4">
+                                <h2 class="text-lg font-semibold">
+                                    Recent Activity
+                                </h2>
+
+                                <p class="text-sm text-zinc-500">
+                                    Latest workspace updates
+                                </p>
+                            </div>
+
+                            <div class="divide-y divide-zinc-200">
+                                <div class="flex gap-4 px-5 py-4">
+                                    <div
+                                        class="mt-1 h-3 w-3 rounded-full bg-green-500"
+                                    ></div>
+
+                                    <div>
+                                        <p class="text-sm font-medium">
+                                            Sprint 12 was started in Lumna Core
+                                        </p>
+
+                                        <p class="mt-1 text-xs text-zinc-500">
+                                            15 minutes ago
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-4 px-5 py-4">
+                                    <div
+                                        class="mt-1 h-3 w-3 rounded-full bg-blue-500"
+                                    ></div>
+
+                                    <div>
+                                        <p class="text-sm font-medium">
+                                            Alex invited 2 new members
+                                        </p>
+
+                                        <p class="mt-1 text-xs text-zinc-500">
+                                            2 hours ago
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-4 px-5 py-4">
+                                    <div
+                                        class="mt-1 h-3 w-3 rounded-full bg-purple-500"
+                                    ></div>
+
+                                    <div>
+                                        <p class="text-sm font-medium">
+                                            Board permissions updated
+                                        </p>
+
+                                        <p class="mt-1 text-xs text-zinc-500">
+                                            Yesterday
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Right -->
+                    <div class="space-y-6">
+                        <!-- Quick Actions -->
+                        <section
+                            class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm"
+                        >
+                            <h2 class="text-lg font-semibold">Quick Actions</h2>
+                            <div class="mt-4 space-y-3">
+                                <button
+                                    class="flex w-full items-center justify-between rounded-lg border border-zinc-200 px-4 py-3 text-left hover:bg-zinc-50"
+                                >
+                                    <span class="text-sm font-medium">
+                                        Create Board
+                                    </span>
+
+                                    <span class="text-zinc-400"> → </span>
+                                </button>
+
+                                <button
+                                    class="flex w-full items-center justify-between rounded-lg border border-zinc-200 px-4 py-3 text-left hover:bg-zinc-50"
+                                >
+                                    <span class="text-sm font-medium">
+                                        Manage Roles
+                                    </span>
+
+                                    <span class="text-zinc-400"> → </span>
+                                </button>
+
+                                <button
+                                    class="flex w-full items-center justify-between rounded-lg border border-zinc-200 px-4 py-3 text-left hover:bg-zinc-50"
+                                >
+                                    <span class="text-sm font-medium">
+                                        Workspace Settings
+                                    </span>
+
+                                    <span class="text-zinc-400"> → </span>
+                                </button>
+                            </div>
+                        </section>
+
+                        <!-- Members -->
+                        <section
+                            class="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm"
+                        >
+                            <div class="border-b border-zinc-200 px-5 py-4">
+                                <h2 class="text-lg font-semibold">
+                                    Workspace Members
+                                </h2>
+
+                                <p class="text-sm text-zinc-500">
+                                    Online collaborators
+                                </p>
+                            </div>
+
+                            <div class="space-y-4 p-5">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white"
+                                        >
+                                            AS
+                                        </div>
+
+                                        <div>
+                                            <p class="text-sm font-medium">
+                                                Alex Shanin
+                                            </p>
+
+                                            <p class="text-xs text-zinc-500">
+                                                Workspace Owner
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <span
+                                        class="h-3 w-3 rounded-full bg-green-500"
+                                    ></span>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-600 text-sm font-semibold text-white"
+                                        >
+                                            MK
+                                        </div>
+
+                                        <div>
+                                            <p class="text-sm font-medium">
+                                                Maria Kovalenko
+                                            </p>
+
+                                            <p class="text-xs text-zinc-500">
+                                                Frontend Developer
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <span
+                                        class="h-3 w-3 rounded-full bg-green-500"
+                                    ></span>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 text-sm font-semibold text-white"
+                                        >
+                                            DK
+                                        </div>
+
+                                        <div>
+                                            <p class="text-sm font-medium">
+                                                Dmytro Koval
+                                            </p>
+
+                                            <p class="text-xs text-zinc-500">
+                                                Backend Engineer
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <span
+                                        class="h-3 w-3 rounded-full bg-zinc-300"
+                                    ></span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </main>
+        </div>
+    `
+})
+export class SummaryPage {}

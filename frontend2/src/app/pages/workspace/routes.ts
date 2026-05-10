@@ -1,8 +1,8 @@
 import { Routes } from "@angular/router";
 import { WorkspaceWrapper } from "./wrapper";
-import { WorkspaceSummary } from "./summary";
 import { BoardPage } from "./board-page";
 import { BacklogPage } from "./backlog-page";
+import { SummaryPage } from "./summary-page";
 
 export const routes: Routes = [
     {
@@ -16,7 +16,7 @@ export const routes: Routes = [
             },
             {
                 path: "summary",
-                component: WorkspaceSummary
+                component: SummaryPage
             },
             {
                 path: "board",

@@ -3,6 +3,281 @@ import { Component } from "@angular/core";
 @Component({
     selector: "app-backlog-page",
     imports: [],
-    template: ` <p>backlog-page works!</p> `
+    template: `
+        <div class="min-h-screen bg-zinc-100 text-zinc-900">
+            <main class="mx-auto max-w-7xl p-6">
+                <section
+                    class="mb-6 flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between"
+                >
+                    <div class="flex flex-1 items-center gap-3">
+                        <input
+                            type="text"
+                            placeholder="Search backlog..."
+                            class="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm outline-none focus:border-blue-500"
+                        />
+
+                        <button
+                            class="rounded-md border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-50"
+                        >
+                            Filters
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-sm">
+                        <span
+                            class="rounded-full bg-zinc-200 px-3 py-1 text-zinc-700"
+                        >
+                            All Issues
+                        </span>
+
+                        <span
+                            class="rounded-full bg-blue-100 px-3 py-1 text-blue-700"
+                        >
+                            Sprint 12
+                        </span>
+                    </div>
+                </section>
+
+                <!-- Sprint -->
+                <section
+                    class="mb-8 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm"
+                >
+                    <div
+                        class="flex items-center justify-between border-b border-zinc-200 bg-zinc-50 px-5 py-4"
+                    >
+                        <div>
+                            <h2 class="text-lg font-semibold">Sprint 12</h2>
+                            <p class="text-sm text-zinc-500">
+                                14 issues • 32 story points
+                            </p>
+                        </div>
+
+                        <button
+                            class="rounded-md border border-zinc-300 px-3 py-2 text-sm hover:bg-white"
+                        >
+                            Complete Sprint
+                        </button>
+                    </div>
+
+                    <div class="divide-y divide-zinc-200">
+                        <!-- Task -->
+                        <div
+                            class="flex items-start gap-4 px-5 py-4 hover:bg-zinc-50"
+                        >
+                            <div
+                                class="mt-1 h-3 w-3 rounded-full bg-green-500"
+                            ></div>
+
+                            <div class="flex-1">
+                                <div class="mb-1 flex items-center gap-2">
+                                    <span
+                                        class="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700"
+                                    >
+                                        LUM-142
+                                    </span>
+
+                                    <h3 class="font-medium">
+                                        Implement drag and drop for backlog
+                                        items
+                                    </h3>
+                                </div>
+
+                                <p class="text-sm text-zinc-500">
+                                    Add sortable drag-n-drop support between
+                                    backlog and sprint sections.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-2 text-xs">
+                                <span
+                                    class="rounded bg-yellow-100 px-2 py-1 text-yellow-700"
+                                >
+                                    In Progress
+                                </span>
+
+                                <span class="rounded bg-zinc-200 px-2 py-1">
+                                    5 SP
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Task -->
+                        <div
+                            class="flex items-start gap-4 px-5 py-4 hover:bg-zinc-50"
+                        >
+                            <div
+                                class="mt-1 h-3 w-3 rounded-full bg-red-500"
+                            ></div>
+
+                            <div class="flex-1">
+                                <div class="mb-1 flex items-center gap-2">
+                                    <span
+                                        class="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700"
+                                    >
+                                        LUM-143
+                                    </span>
+
+                                    <h3 class="font-medium">
+                                        Add sprint statistics widget
+                                    </h3>
+                                </div>
+
+                                <p class="text-sm text-zinc-500">
+                                    Show completed tasks, velocity and remaining
+                                    workload.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-2 text-xs">
+                                <span
+                                    class="rounded bg-zinc-200 px-2 py-1 text-zinc-700"
+                                >
+                                    Todo
+                                </span>
+
+                                <span class="rounded bg-zinc-200 px-2 py-1">
+                                    3 SP
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Task -->
+                        <div
+                            class="flex items-start gap-4 px-5 py-4 hover:bg-zinc-50"
+                        >
+                            <div
+                                class="mt-1 h-3 w-3 rounded-full bg-purple-500"
+                            ></div>
+
+                            <div class="flex-1">
+                                <div class="mb-1 flex items-center gap-2">
+                                    <span
+                                        class="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700"
+                                    >
+                                        LUM-144
+                                    </span>
+
+                                    <h3 class="font-medium">
+                                        Workspace role permissions
+                                    </h3>
+                                </div>
+
+                                <p class="text-sm text-zinc-500">
+                                    Create base RBAC structure for workspaces
+                                    and projects.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-2 text-xs">
+                                <span
+                                    class="rounded bg-green-100 px-2 py-1 text-green-700"
+                                >
+                                    Done
+                                </span>
+
+                                <span class="rounded bg-zinc-200 px-2 py-1">
+                                    8 SP
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Backlog -->
+                <section
+                    class="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm"
+                >
+                    <div class="border-b border-zinc-200 bg-zinc-50 px-5 py-4">
+                        <h2 class="text-lg font-semibold">Backlog</h2>
+                        <p class="text-sm text-zinc-500">
+                            Prioritized issues not assigned to sprint
+                        </p>
+                    </div>
+
+                    <div class="divide-y divide-zinc-200">
+                        <!-- Task -->
+                        <div
+                            class="flex items-start gap-4 px-5 py-4 hover:bg-zinc-50"
+                        >
+                            <div
+                                class="mt-1 h-3 w-3 rounded-full bg-orange-500"
+                            ></div>
+
+                            <div class="flex-1">
+                                <div class="mb-1 flex items-center gap-2">
+                                    <span
+                                        class="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700"
+                                    >
+                                        LUM-145
+                                    </span>
+
+                                    <h3 class="font-medium">
+                                        Dark mode support
+                                    </h3>
+                                </div>
+
+                                <p class="text-sm text-zinc-500">
+                                    Add application-wide dark mode using
+                                    Tailwind classes.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-2 text-xs">
+                                <span
+                                    class="rounded bg-zinc-200 px-2 py-1 text-zinc-700"
+                                >
+                                    Todo
+                                </span>
+
+                                <span class="rounded bg-zinc-200 px-2 py-1">
+                                    2 SP
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Task -->
+                        <div
+                            class="flex items-start gap-4 px-5 py-4 hover:bg-zinc-50"
+                        >
+                            <div
+                                class="mt-1 h-3 w-3 rounded-full bg-pink-500"
+                            ></div>
+
+                            <div class="flex-1">
+                                <div class="mb-1 flex items-center gap-2">
+                                    <span
+                                        class="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700"
+                                    >
+                                        LUM-146
+                                    </span>
+
+                                    <h3 class="font-medium">
+                                        Slack integration prototype
+                                    </h3>
+                                </div>
+
+                                <p class="text-sm text-zinc-500">
+                                    Send notifications when issue status
+                                    changes.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-2 text-xs">
+                                <span
+                                    class="rounded bg-zinc-200 px-2 py-1 text-zinc-700"
+                                >
+                                    Todo
+                                </span>
+
+                                <span class="rounded bg-zinc-200 px-2 py-1">
+                                    13 SP
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    `
 })
 export class BacklogPage {}
