@@ -11,74 +11,85 @@
             ]
         }
     ],
-    "projects": [
+    "workspaces": [
+        {
+            "title": "Second workspace",
+            "owner_email": "test@test.com",
+            "projects": []
+        },
         {
             "title": "Lumna",
-            "boards": [
+            "owner_email": "test@test.com",
+            "projects": [
                 {
-                    "title": "development",
-                    "columns": [
+                    "title": "Lumna project",
+                    "boards": [
                         {
-                            "title": "TODO",
-                            "order": 0,
-                            "tasks": [
+                            "title": "development",
+                            "columns": [
                                 {
-                                    "title": "Create mock db cli command",
+                                    "title": "TODO",
                                     "order": 0,
-                                    "body": "### Important\n\nRepellendus qui voluptas vel facilis iure rem. Nostrum nostrum dolores dolores. Qui quis eos corporis. Ipsam et doloribus natus."
+                                    "tasks": [
+                                        {
+                                            "title": "Create mock db cli command",
+                                            "order": 0,
+                                            "body": "### Important\n\nRepellendus qui voluptas vel facilis iure rem. Nostrum nostrum dolores dolores. Qui quis eos corporis. Ipsam et doloribus natus."
+                                        },
+                                        {
+                                            "title": "custom UI",
+                                            "order": 1,
+                                            "body": "Consequatur corrupti suscipit vero nisi quam et nisi enim. \n\n- Aut mollitia qui at nemo qui omnis. \n- Nostrum dolorem sit magni quam ut debitis cum."
+                                        }
+                                    ]
                                 },
                                 {
-                                    "title": "custom UI",
-                                    "order": 1,
-                                    "body": "Consequatur corrupti suscipit vero nisi quam et nisi enim. \n\n- Aut mollitia qui at nemo qui omnis. \n- Nostrum dolorem sit magni quam ut debitis cum."
+                                    "title": "IN PROGRESS",
+                                    "order": 0,
+                                    "tasks": [
+                                        {
+                                            "title": "create mock database",
+                                            "order": 0,
+                                            "body": "Voluptas porro adipisci qui. Non non fugit iusto dolores quod quos sint. Ab ab aut unde. Et est illo iste incidunt eos aut enim."
+                                        }
+                                    ]
+                                },
+                                {
+                                    "title": "DONE",
+                                    "order": 0,
+                                    "tasks": [
+                                        {
+                                            "title": "remove angular frontend",
+                                            "order": 0,
+                                            "body": "Et quia vitae est omnis aut et et. Eos expedita rerum commodi et laboriosam voluptas et. Odio cupiditate suscipit necessitatibus omnis sit. Dolor provident est dolore ut nam et perspiciatis et. Fuga consequatur repudiandae et qui dolorem. Occaecati voluptatem omnis impedit molestias consequatur odit quam."
+                                        }
+                                    ]
                                 }
                             ]
                         },
                         {
-                            "title": "IN PROGRESS",
-                            "order": 0,
-                            "tasks": [
+                            "title": "marketing",
+                            "columns": [
                                 {
-                                    "title": "create mock database",
+                                    "title": "TODO",
                                     "order": 0,
-                                    "body": "Voluptas porro adipisci qui. Non non fugit iusto dolores quod quos sint. Ab ab aut unde. Et est illo iste incidunt eos aut enim."
-                                }
-                            ]
-                        },
-                        {
-                            "title": "DONE",
-                            "order": 0,
-                            "tasks": [
-                                {
-                                    "title": "remove angular frontend",
-                                    "order": 0,
-                                    "body": "Et quia vitae est omnis aut et et. Eos expedita rerum commodi et laboriosam voluptas et. Odio cupiditate suscipit necessitatibus omnis sit. Dolor provident est dolore ut nam et perspiciatis et. Fuga consequatur repudiandae et qui dolorem. Occaecati voluptatem omnis impedit molestias consequatur odit quam."
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "title": "marketing",
-                    "columns": [
-                        {
-                            "title": "TODO",
-                            "order": 0,
-                            "tasks": [
-                                {
-                                    "title": "Open gitlab repository",
-                                    "order": 0,
-                                    "body": "Possimus impedit sed asperiores labore voluptas. Quasi neque porro magnam voluptatem. Voluptas et quod qui vel quam praesentium non. Unde voluptatum recusandae esse nobis nemo non et. Autem ex reprehenderit doloremque. Voluptatum sunt hic laudantium."
-                                },
-                                {
-                                    "title": "public website",
-                                    "order": 1,
-                                    "body": "Consequatur corrupti suscipit vero nisi quam et nisi enim. Aut mollitia qui at nemo qui omnis. Nostrum dolorem sit magni quam ut debitis cum."
-                                },
-                                {
-                                    "title": "buy a domain",
-                                    "order": 2,
-                                    "body": "Et quia vitae est omnis aut et et. Eos expedita rerum commodi et laboriosam voluptas et. Odio cupiditate suscipit necessitatibus omnis sit. Dolor provident est dolore ut nam et perspiciatis et. Fuga consequatur repudiandae et qui dolorem. Occaecati voluptatem omnis impedit molestias consequatur odit quam."
+                                    "tasks": [
+                                        {
+                                            "title": "Open gitlab repository",
+                                            "order": 0,
+                                            "body": "Possimus impedit sed asperiores labore voluptas. Quasi neque porro magnam voluptatem. Voluptas et quod qui vel quam praesentium non. Unde voluptatum recusandae esse nobis nemo non et. Autem ex reprehenderit doloremque. Voluptatum sunt hic laudantium."
+                                        },
+                                        {
+                                            "title": "public website",
+                                            "order": 1,
+                                            "body": "Consequatur corrupti suscipit vero nisi quam et nisi enim. Aut mollitia qui at nemo qui omnis. Nostrum dolorem sit magni quam ut debitis cum."
+                                        },
+                                        {
+                                            "title": "buy a domain",
+                                            "order": 2,
+                                            "body": "Et quia vitae est omnis aut et et. Eos expedita rerum commodi et laboriosam voluptas et. Odio cupiditate suscipit necessitatibus omnis sit. Dolor provident est dolore ut nam et perspiciatis et. Fuga consequatur repudiandae et qui dolorem. Occaecati voluptatem omnis impedit molestias consequatur odit quam."
+                                        }
+                                    ]
                                 }
                             ]
                         }

@@ -25,21 +25,25 @@ type MockDbDataSchema struct {
 			Password string `json:"password"`
 		} `json:"credentials"`
 	} `json:"identities"`
-	Projects []struct {
-		Title  string `json:"title"`
-		Boards []struct {
-			Title   string `json:"title"`
-			Columns []struct {
-				Title string `json:"title"`
-				Order int    `json:"order"`
-				Tasks []struct {
+	Workspaces []struct {
+		Title    string `json:"title"`
+		Email    string `json:"email"`
+		Projects []struct {
+			Title  string `json:"title"`
+			Boards []struct {
+				Title   string `json:"title"`
+				Columns []struct {
 					Title string `json:"title"`
 					Order int    `json:"order"`
-					Body  string `json:"body"`
-				} `json:"tasks"`
-			} `json:"columns"`
-		} `json:"boards"`
-	} `json:"projects"`
+					Tasks []struct {
+						Title string `json:"title"`
+						Order int    `json:"order"`
+						Body  string `json:"body"`
+					} `json:"tasks"`
+				} `json:"columns"`
+			} `json:"boards"`
+		} `json:"projects"`
+	} `json:"workspaces"`
 }
 
 func NewImportRootCmd() *cobra.Command {
@@ -102,46 +106,59 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 			}
 		}
 
-		// create projects
-		for pidx, _project := range payload.Projects {
-			project := models.Project{Title: _project.Title}
-			if result := database.Create(&project); result.Error != nil {
+		for _, wpd := range payload.Workspaces {
+			wp := models.Workspace{
+				Title:      wpd.Title,
+				OwnerEmail: wpd.Email,
+			}
+			if result := database.Create(&wp); result.Error != nil {
 				panic(result.Error)
 			}
-			fmt.Printf("%d. Project: %s\n", pidx, project.Title)
-			for bi, _board := range _project.Boards {
-				board := models.Board{
-					Title:     _board.Title,
-					ProjectID: project.ID,
-				}
-				if result := database.Create(&board); result.Error != nil {
+
+			// create projects
+			for pidx, _project := range wpd.Projects {
+				project := models.Project{Title: _project.Title, WorkspaceID: wp.ID}
+				if result := database.Create(&project); result.Error != nil {
 					panic(result.Error)
 				}
-				fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
-				for li, _list := range _board.Columns {
-					column := models.Column{
-						Title:     _list.Title,
-						BoardID:   board.ID,
-						Order:     uint(li),
-						ProjectID: project.ID,
+				fmt.Printf("%d. Project: %s\n", pidx, project.Title)
+				for bi, _board := range _project.Boards {
+					board := models.Board{
+						Title:       _board.Title,
+						ProjectID:   project.ID,
+						WorkspaceID: wp.ID,
 					}
-					if result := database.Create(&column); result.Error != nil {
+					if result := database.Create(&board); result.Error != nil {
 						panic(result.Error)
 					}
-					fmt.Printf("\t\t%d. List: %s\n", li, column.Title)
-					for ti, _task := range _list.Tasks {
-						task := models.Task{
-							Title:     _task.Title,
-							ColumnID:  column.ID,
-							Order:     uint(ti),
-							Body:      _task.Body,
-							ProjectID: project.ID,
-							BoardID:   board.ID,
+					fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
+					for li, _list := range _board.Columns {
+						column := models.Column{
+							Title:       _list.Title,
+							BoardID:     board.ID,
+							Order:       uint(li),
+							ProjectID:   project.ID,
+							WorkspaceID: wp.ID,
 						}
-						if result := database.Create(&task); result.Error != nil {
+						if result := database.Create(&column); result.Error != nil {
 							panic(result.Error)
 						}
-						fmt.Printf("\t\t\t%d. Task: %s\n", ti, task.Title)
+						fmt.Printf("\t\t%d. List: %s\n", li, column.Title)
+						for ti, _task := range _list.Tasks {
+							task := models.Task{
+								Title:       _task.Title,
+								ColumnID:    column.ID,
+								Order:       uint(ti),
+								Body:        _task.Body,
+								ProjectID:   project.ID,
+								BoardID:     board.ID,
+								WorkspaceID: wp.ID,
+							}
+							if result := database.Create(&task); result.Error != nil {
+								panic(result.Error)
+							}
+							fmt.Printf("\t\t\t%d. Task: %s\n", ti, task.Title)
+						}
 					}
 				}
 			}
