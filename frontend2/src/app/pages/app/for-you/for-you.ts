@@ -5,7 +5,7 @@ import { RouterLink } from "@angular/router";
     selector: "app-for-you",
     imports: [RouterLink],
     template: `
-        <div class="mb-4 flex items-start gap-4">
+        <div class="mb-4 flex items-start gap-2">
             <a
                 routerLink="/app/workspace/1"
                 class="border rounded p-4 hover:underline"

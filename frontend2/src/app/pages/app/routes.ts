@@ -8,16 +8,6 @@ export const routes: Routes = [
     {
         path: "app",
         component: ApplicationWrapper,
-        children: [
-            {
-                path: "",
-                component: WorkspacesList
-            },
-            {
-                path: "for-you",
-                component: ForYou
-            },
-            ...workspaceRouters
-        ]
+        children: [...workspaceRouters]
     }
 ];

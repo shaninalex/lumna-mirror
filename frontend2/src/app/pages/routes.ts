@@ -4,10 +4,12 @@ import { routes as appRoutes } from "./app";
 import { routes as authRoutes } from "./auth";
 import { routes as staticRoutes } from "./static";
 import { routes as systemRoutes } from "./system";
+import { routes as workspacesRoutes } from "./workspaces";
 
 export const routes: Routes = [
     ...authRoutes,
     ...appRoutes,
+    ...workspacesRoutes,
     ...staticRoutes,
     ...systemRoutes
 ];
