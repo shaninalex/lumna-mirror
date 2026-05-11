@@ -10,11 +10,6 @@ export const routes: Routes = [
         component: WorkspaceWrapper,
         children: [
             {
-                path: "",
-                pathMatch: "full",
-                redirectTo: "/404"
-            },
-            {
                 path: "summary",
                 component: SummaryPage
             },

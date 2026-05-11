@@ -1,1 +1,1 @@
-export type { WorkspaceModel } from "./model";
+export type { WorkspaceModel } from "./workspace/model";

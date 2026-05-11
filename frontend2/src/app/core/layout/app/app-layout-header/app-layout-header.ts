@@ -6,9 +6,7 @@ import { Component } from "@angular/core";
     styleUrl: "./header.css",
     template: `
         <header class="header">
-            <a routerLink="/app/for-you" class="mb-4">
-                <img src="img/logo-h.svg" />
-            </a>
+            <div>Header</div>
         </header>
     `
 })
