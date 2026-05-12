@@ -6,7 +6,7 @@ import { RouterLink } from "@angular/router";
     imports: [RouterLink],
     template: `
         <div class="p-4">
-            <p>Latest assignments,</p>
+            <p>Latest assignments</p>
             <div class="mb-4 flex items-start gap-2">
                 <a
                     routerLink="/app/lumna-1"
@@ -22,7 +22,9 @@ import { RouterLink } from "@angular/router";
                 </a>
             </div>
             <div>
-                <a routerLink="/workspaces" class="underline">View all</a>
+                <a routerLink="/workspaces" class="underline">
+                    View all workspaces
+                </a>
             </div>
         </div>
     `

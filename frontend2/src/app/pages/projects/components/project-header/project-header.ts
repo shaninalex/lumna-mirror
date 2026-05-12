@@ -17,27 +17,34 @@ import { RouterLink, RouterLinkActive } from "@angular/router";
                 </div>
             </div>
             <nav class="flex gap-4">
-                <a
-                    routerLink="/app/lumna-1/project/lumna-new-frontend-13/summary"
-                    [routerLinkActive]="['underline', 'text-blue-500']"
-                    class="hover:underline"
-                >
-                    Summary
-                </a>
-                <a
-                    routerLink="/app/lumna-1/project/lumna-new-frontend-13/backlog"
-                    [routerLinkActive]="['underline', 'text-blue-500']"
-                    class="hover:underline"
-                >
-                    Backlog
-                </a>
-                <a
-                    routerLink="/app/lumna-1/project/lumna-new-frontend-13/board"
-                    [routerLinkActive]="['underline', 'text-blue-500']"
-                    class="hover:underline"
-                >
-                    Board
-                </a>
+                <div>
+                    <a
+                        routerLink="/app/lumna-1/project/lumna-new-frontend-13/summary"
+                        [routerLinkActive]="['underline', 'text-blue-500']"
+                        class="hover:underline"
+                    >
+                        Summary
+                    </a>
+                </div>
+                <div>
+                    <a
+                        routerLink="/app/lumna-1/project/lumna-new-frontend-13/backlog"
+                        [routerLinkActive]="['underline', 'text-blue-500']"
+                        class="hover:underline"
+                    >
+                        Backlog
+                    </a>
+                </div>
+
+                <div>
+                    <a
+                        routerLink="/app/lumna-1/project/lumna-new-frontend-13/board"
+                        [routerLinkActive]="['underline', 'text-blue-500']"
+                        class="hover:underline"
+                    >
+                        Board
+                    </a>
+                </div>
             </nav>
         </div>
     `

@@ -5,6 +5,11 @@ import { ApplicationWrapper } from "./wrapper";
 
 export const routes: Routes = [
     {
+        path: "",
+        pathMatch: "full",
+        redirectTo: "/app"
+    },
+    {
         path: "app",
         component: ApplicationWrapper,
         children: [
