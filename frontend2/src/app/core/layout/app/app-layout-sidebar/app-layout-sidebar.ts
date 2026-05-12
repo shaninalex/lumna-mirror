@@ -1,11 +1,5 @@
-import { Component, inject, OnInit } from "@angular/core";
-import {
-    NavigationEnd,
-    Router,
-    RouterLink,
-    Event,
-    NavigationStart
-} from "@angular/router";
+import { Component } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import { DashboardDropdown } from "./components";
 
 @Component({
@@ -57,15 +51,4 @@ import { DashboardDropdown } from "./components";
         </nav>
     </div>`
 })
-export class AppLayoutSidebar {
-    private readonly router = inject(Router);
-
-    constructor() {
-        this.router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                // Navigation completed
-                console.log("Navigation completed:", event);
-            }
-        });
-    }
-}
+export class AppLayoutSidebar {}
