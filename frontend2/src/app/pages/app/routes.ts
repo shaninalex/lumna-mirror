@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
 import { ForYou } from "./for-you/for-you";
-import { WorkspaceList, routes as workspacesRoutes } from "@pages/workspaces";
+import { routes as workspacesRoutes } from "@pages/workspaces";
 import { ApplicationWrapper } from "./wrapper";
 
 export const routes: Routes = [
