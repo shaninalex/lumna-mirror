@@ -1,5 +1,11 @@
-import { Component } from "@angular/core";
-import { RouterLink } from "@angular/router";
+import { Component, inject, OnInit } from "@angular/core";
+import {
+    NavigationEnd,
+    Router,
+    RouterLink,
+    Event,
+    NavigationStart
+} from "@angular/router";
 import { DashboardDropdown } from "./components";
 
 @Component({
@@ -9,6 +15,7 @@ import { DashboardDropdown } from "./components";
     template: ` <div class="sidebar">
         <div class="flex gap-2 flex-col">
             <app-dashboard-dropdown />
+
             <div class="text-slate-500 text-sm">Projects</div>
             <nav class="flex gap-2 flex-col">
                 <a
@@ -30,8 +37,35 @@ import { DashboardDropdown } from "./components";
             >
                 view all
             </a>
+
             <hr class="border-slate-200" />
+
+            <nav class="flex gap-2 flex-col">
+                <a
+                    routerLink="/app/lumna-1/project/lumna-new-frontend-13"
+                    class="block hover:underline"
+                >
+                    Settings
+                </a>
+            </nav>
         </div>
+
+        <nav class="flex gap-2 flex-col">
+            <div>
+                <button class="block hover:underline">Profile</button>
+            </div>
+        </nav>
     </div>`
 })
-export class AppLayoutSidebar {}
+export class AppLayoutSidebar {
+    private readonly router = inject(Router);
+
+    constructor() {
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                // Navigation completed
+                console.log("Navigation completed:", event);
+            }
+        });
+    }
+}
