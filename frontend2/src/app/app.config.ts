@@ -5,7 +5,14 @@ import {
 import { provideRouter } from "@angular/router";
 
 import { routes } from "@pages";
+import { provideStore } from "@ngrx/store";
+import { provideEffects } from "@ngrx/effects";
 
 export const appConfig: ApplicationConfig = {
-    providers: [provideBrowserGlobalErrorListeners(), provideRouter(routes)]
+    providers: [
+        provideBrowserGlobalErrorListeners(),
+        provideRouter(routes),
+        provideStore(),
+        provideEffects()
+    ]
 };

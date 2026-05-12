@@ -11,17 +11,26 @@ import { DashboardDropdown } from "./components";
             <app-dashboard-dropdown />
             <nav class="flex gap-2 flex-col">
                 <div class="text-slate-500 text-sm">Projects</div>
-                <a routerLink="/app/project/1" class="block hover:underline">
+                <a
+                    routerLink="/app/lumna-1/project/lumna-new-frontend-13"
+                    class="block hover:underline"
+                >
                     Project A
                 </a>
-                <a routerLink="/app/project/2" class="block hover:underline">
+                <a
+                    routerLink="/app/lumna-1/project/sdondford-22"
+                    class="block hover:underline"
+                >
                     Project B
                 </a>
-                <a routerLink="/app/project/3" class="block hover:underline">
+                <a
+                    routerLink="/app/lumna-1/project/exelunatic-33"
+                    class="block hover:underline"
+                >
                     Project C
                 </a>
                 <a
-                    routerLink="/app/projects"
+                    routerLink="/app/lumna-1/projects"
                     class="text-slate-500 text-xs hover:underline"
                 >
                     view all

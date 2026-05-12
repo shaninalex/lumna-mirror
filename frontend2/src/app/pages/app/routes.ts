@@ -1,13 +1,23 @@
 import { Routes } from "@angular/router";
 import { ForYou } from "./for-you/for-you";
-import { routes as workspaceRouters } from "../workspace";
+import { WorkspaceList, routes as workspacesRoutes } from "@pages/workspaces";
 import { ApplicationWrapper } from "./wrapper";
-import { WorkspacesList } from "./workspaces";
 
 export const routes: Routes = [
     {
         path: "app",
         component: ApplicationWrapper,
-        children: [...workspaceRouters]
+        children: [
+            {
+                path: "",
+                pathMatch: "full",
+                component: ForYou
+            },
+            {
+                path: "for-you",
+                component: ForYou
+            },
+            ...workspacesRoutes
+        ]
     }
 ];

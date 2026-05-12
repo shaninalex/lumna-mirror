@@ -1,14 +1,17 @@
 import { Routes } from "@angular/router";
-import { WorkspaceWrapper } from "./wrapper";
-import { BoardPage } from "./board-page";
-import { BacklogPage } from "./backlog-page";
-import { SummaryPage } from "./summary-page";
+import { ProjectWrapper } from "./wrapper";
+import { BoardPage, SummaryPage, BacklogPage, ProjectListPage } from "./pages/";
 
 export const routes: Routes = [
     {
-        path: ":workspace_slug",
-        component: WorkspaceWrapper,
+        path: "project/:slug",
+        component: ProjectWrapper,
         children: [
+            {
+                path: "",
+                pathMatch: "full",
+                redirectTo: "summary"
+            },
             {
                 path: "summary",
                 component: SummaryPage
@@ -22,5 +25,9 @@ export const routes: Routes = [
                 component: BacklogPage
             }
         ]
+    },
+    {
+        path: "projects",
+        component: ProjectListPage
     }
 ];
