@@ -6,11 +6,13 @@ import { ProjectEffects, projectReducer } from "@entities/project";
 import { ListEffects, listReducer } from "@entities/list";
 
 import { SessionEffects, sessionReducer } from "./session";
+import { ApplicationEffects } from "./app";
 
 export const effects = [
     // Core app effects
     // RouterEffects,
     SessionEffects,
+    ApplicationEffects,
 
     // Entity effects
     WorkspaceEffects,

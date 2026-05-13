@@ -1,7 +1,8 @@
 import {
     ApplicationConfig,
     provideBrowserGlobalErrorListeners,
-    isDevMode
+    isDevMode,
+    provideAppInitializer
 } from "@angular/core";
 import { provideRouter } from "@angular/router";
 
@@ -10,7 +11,7 @@ import { provideStore } from "@ngrx/store";
 import { provideEffects } from "@ngrx/effects";
 import { provideRouterStore } from "@ngrx/router-store";
 
-import { reducers, effects } from "@core";
+import { reducers, effects, ApplicationInit } from "@core";
 import { provideStoreDevtools } from "@ngrx/store-devtools";
 
 export const appConfig: ApplicationConfig = {
@@ -20,6 +21,7 @@ export const appConfig: ApplicationConfig = {
         provideStore(reducers),
         provideEffects(effects),
         provideRouterStore(),
-        provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
+        provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+        provideAppInitializer(ApplicationInit)
     ]
 };
