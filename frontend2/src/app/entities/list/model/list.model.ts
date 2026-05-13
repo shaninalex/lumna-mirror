@@ -1,4 +1,4 @@
-export interface List {
+export interface ListModel {
     id: number;
     title: string;
     statuses: Status[];
