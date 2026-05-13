@@ -1,10 +1,5 @@
 import { Routes } from "@angular/router";
-import {
-    WorkspaceDetailSummary,
-    WorkspaceDetailWrapper,
-    WorkspaceList
-} from "./pages";
-import { routes as projectRoutes } from "@pages/projects";
+import { WorkspaceDetailSummary, WorkspaceDetailWrapper } from "./pages";
 
 export const routes: Routes = [
     {
@@ -15,14 +10,11 @@ export const routes: Routes = [
                 path: "",
                 component: WorkspaceDetailSummary
             },
-            ...projectRoutes
+            {
+                path: "",
+                loadChildren: () =>
+                    import("@pages/projects").then((m) => m.routes)
+            }
         ]
-    }
-];
-
-export const routesWorkspaceRoot = [
-    {
-        path: "workspaces",
-        component: WorkspaceList
     }
 ];

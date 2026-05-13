@@ -1,15 +1,22 @@
 import { Routes } from "@angular/router";
 
-import { routes as appRoutes } from "./app";
 import { routes as authRoutes } from "./auth";
-import { routes as staticRoutes } from "./static";
-import { routes as systemRoutes } from "./system";
-import { routesWorkspaceRoot } from "./workspaces";
 
 export const routes: Routes = [
     ...authRoutes,
-    ...appRoutes,
-    ...routesWorkspaceRoot,
-    ...staticRoutes,
-    ...systemRoutes
+
+    {
+        path: "",
+        loadChildren: () => import("./app/routes").then((m) => m.routes)
+    },
+
+    {
+        path: "",
+        loadChildren: () => import("./static/routes").then((m) => m.routes)
+    },
+
+    {
+        path: "",
+        loadChildren: () => import("./system/routes").then((m) => m.routes)
+    }
 ];

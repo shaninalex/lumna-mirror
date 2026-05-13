@@ -2,6 +2,8 @@ export interface List {
     id: number;
     title: string;
     statuses: Status[];
+    project_id: number;
+    workspace_id: number;
 }
 
 // Task status. By default each list have "todo", "in progress", "done" statuses

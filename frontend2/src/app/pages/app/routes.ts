@@ -1,6 +1,5 @@
 import { Routes } from "@angular/router";
 import { ForYou } from "./for-you/for-you";
-import { routes as workspacesRoutes } from "@pages/workspaces";
 import { ApplicationWrapper } from "./wrapper";
 
 export const routes: Routes = [
@@ -22,7 +21,23 @@ export const routes: Routes = [
                 path: "for-you",
                 component: ForYou
             },
-            ...workspacesRoutes
+            {
+                path: "",
+                loadChildren: () =>
+                    import("@pages/workspaces/routes").then((m) => m.routes)
+            }
+        ]
+    },
+    {
+        path: "workspaces",
+        children: [
+            {
+                path: "",
+                loadComponent: () =>
+                    import("@pages/workspaces/pages/workspace-list/workspace-list").then(
+                        (m) => m.WorkspaceList
+                    )
+            }
         ]
     }
 ];
