@@ -5,9 +5,12 @@ import { TaskEffects, taskReducer } from "@entities/task";
 import { ProjectEffects, projectReducer } from "@entities/project";
 import { ListEffects, listReducer } from "@entities/list";
 
+import { SessionEffects, sessionReducer } from "./session";
+
 export const effects = [
     // Core app effects
     // RouterEffects,
+    SessionEffects,
 
     // Entity effects
     WorkspaceEffects,
@@ -23,5 +26,6 @@ export const reducers = {
     task: taskReducer,
 
     // -----
+    session: sessionReducer,
     router: routerReducer
 };

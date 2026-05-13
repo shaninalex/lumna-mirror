@@ -1,7 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
+html,
+body {
+    font-size: 14px;
+}
 
 .dropdown-base {
     @apply bg-white shadow-xs rounded p-2 border border-slate-200;
@@ -9,4 +13,16 @@
 
 .line-divider {
     @apply border-b border-slate-200;
+}
+
+.form-control {
+    @apply block border border-slate-300 px-3 py-1 rounded w-full;
+}
+
+.btn {
+    @apply inline-block border border-slate-300 px-3 py-1 rounded hover:bg-slate-300 cursor-pointer;
+}
+
+a {
+    @apply hover:underline;
 }
