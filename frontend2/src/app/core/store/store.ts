@@ -8,6 +8,7 @@ import { UserEffects, userReducer } from "@entities/user";
 
 import { SessionEffects, sessionReducer } from "./session";
 import { ApplicationEffects } from "./app";
+import { appReducer } from "./app/app.store";
 
 export const effects = [
     // Core app effects
@@ -32,5 +33,6 @@ export const reducers = {
     // -----
     session: sessionReducer,
     // router: routerReducer,
-    user: userReducer
+    user: userReducer,
+    application: appReducer
 };

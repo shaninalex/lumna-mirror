@@ -1,14 +1,17 @@
 import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { DashboardDropdown } from "./components";
+import { DashboardDropdown, ToggleSidebar } from "./components";
 
 @Component({
     selector: "app-app-layout-sidebar",
-    imports: [RouterLink, DashboardDropdown],
+    imports: [RouterLink, DashboardDropdown, ToggleSidebar],
     styleUrl: "./sidebar.css",
     template: ` <div class="sidebar">
         <div class="flex gap-2 flex-col">
-            <app-dashboard-dropdown />
+            <div class="flex gap-2 items-center justify-between">
+                <app-dashboard-dropdown />
+                <app-toggle-sidebar />
+            </div>
 
             <div class="text-slate-500 text-sm">Projects</div>
             <nav class="flex gap-2 flex-col">
