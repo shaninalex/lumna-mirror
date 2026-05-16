@@ -7,11 +7,11 @@ import (
 	"gitlab.com/shaninalex/lumna"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/activity"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/column"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/invitation"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/list"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/onboarding"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/status"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/workspace"
@@ -47,7 +47,7 @@ type ApiDeps struct {
 
 	AuthController       *auth.AuthController
 	BoardController      *list.ListController
-	ColumnController     *column.ColumnController
+	StatusController     *status.StatusController
 	ProjectController    *project.ProjectController
 	TaskController       *task.TaskController
 	UserController       *user.UserController
@@ -76,7 +76,7 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	private.Use(middlewares.AuthMiddleware)
 
 	deps.BoardController.Register(private)
-	deps.ColumnController.Register(private)
+	deps.StatusController.Register(private)
 	deps.ProjectController.Register(private)
 	deps.TaskController.Register(private)
 	deps.UserController.Register(private)
