@@ -9,14 +9,15 @@ import { provideRouter } from "@angular/router";
 import { routes } from "@pages";
 import { provideStore } from "@ngrx/store";
 import { provideEffects } from "@ngrx/effects";
-import { provideRouterStore } from "@ngrx/router-store";
 
-import { reducers, effects, ApplicationInit } from "@core";
+import { reducers, effects, ApplicationInit, sessionInterceptor } from "@core";
 import { provideStoreDevtools } from "@ngrx/store-devtools";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(),
+        provideHttpClient(withInterceptors([sessionInterceptor])),
         provideRouter(routes),
         provideStore(reducers),
         provideEffects(effects),

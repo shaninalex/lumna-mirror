@@ -5,6 +5,7 @@ import { SessionApi } from "./session.api";
 import {
     actionSessionAuthenticatedSuccessfull,
     actionSessionAuthenticateStart,
+    actionSessionFailed,
     actionSessionLoggedOut,
     actionSessionLoggingOut
 } from "./session.actions";
@@ -71,6 +72,16 @@ export class SessionEffects {
         () => {
             return this.actions$.pipe(
                 ofType(actionSessionLoggedOut.type),
+                map(() => this.router.navigateByUrl("/auth/login"))
+            );
+        },
+        { dispatch: false }
+    );
+
+    authenticate_failed$ = createEffect(
+        () => {
+            return this.actions$.pipe(
+                ofType(actionSessionFailed),
                 map(() => this.router.navigateByUrl("/auth/login"))
             );
         },
