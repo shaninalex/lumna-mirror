@@ -4,6 +4,7 @@ import { WorkspaceEffects, workspaceReducer } from "@entities/workspace";
 import { TaskEffects, taskReducer } from "@entities/task";
 import { ProjectEffects, projectReducer } from "@entities/project";
 import { ListEffects, listReducer } from "@entities/list";
+import { UserEffects, userReducer } from "@entities/user";
 
 import { SessionEffects, sessionReducer } from "./session";
 import { ApplicationEffects } from "./app";
@@ -15,6 +16,7 @@ export const effects = [
     ApplicationEffects,
 
     // Entity effects
+    UserEffects,
     WorkspaceEffects,
     ProjectEffects,
     ListEffects,
@@ -29,5 +31,6 @@ export const reducers = {
 
     // -----
     session: sessionReducer,
-    router: routerReducer
+    // router: routerReducer,
+    user: userReducer
 };

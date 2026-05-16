@@ -20,7 +20,7 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes),
         provideStore(reducers),
         provideEffects(effects),
-        provideRouterStore(),
+        // provideRouterStore(),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideAppInitializer(ApplicationInit)
     ]
