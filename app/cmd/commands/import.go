@@ -125,7 +125,7 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 				}
 				fmt.Printf("%d. Project: %s\n", pidx, project.Title)
 				for bi, _board := range _project.Boards {
-					board := models.Board{
+					board := models.List{
 						Title:       _board.Title,
 						ProjectID:   project.ID,
 						WorkspaceID: wp.ID,
@@ -135,9 +135,9 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 					}
 					fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
 					for li, _list := range _board.Columns {
-						column := models.Column{
+						column := models.Status{
 							Title:       _list.Title,
-							BoardID:     board.ID,
+							ListID:      board.ID,
 							Order:       uint(li),
 							ProjectID:   project.ID,
 							WorkspaceID: wp.ID,
@@ -153,7 +153,7 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 								Order:       uint(ti),
 								Body:        _task.Body,
 								ProjectID:   project.ID,
-								BoardID:     board.ID,
+								ListID:      board.ID,
 								WorkspaceID: wp.ID,
 							}
 							if result := database.Create(&task); result.Error != nil {

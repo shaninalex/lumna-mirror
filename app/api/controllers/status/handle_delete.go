@@ -1,4 +1,4 @@
-package column
+package status
 
 import (
 	"net/http"
@@ -8,14 +8,14 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 )
 
-func (s *ColumnController) Delete(c *gin.Context) {
-	columnId, err := strconv.Atoi(c.Param("columnId"))
+func (s *StatusController) Delete(c *gin.Context) {
+	statusId, err := strconv.Atoi(c.Param("statusId"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	if err := s.columnService.Delete(c.Request.Context(), uint(columnId)); err != nil {
+	if err := s.statusService.Delete(c.Request.Context(), uint(statusId)); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}

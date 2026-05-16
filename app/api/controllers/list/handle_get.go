@@ -1,4 +1,4 @@
-package board
+package list
 
 import (
 	"net/http"
@@ -8,18 +8,18 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 )
 
-func (s *BoardController) List(c *gin.Context) {
-	projectId, err := strconv.Atoi(c.Query("project_id"))
+func (s *ListController) Get(c *gin.Context) {
+	listId, err := strconv.Atoi(c.Param("listId"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	board, err := s.boardService.List(c.Request.Context(), uint(projectId))
+	list, err := s.listService.Get(c.Request.Context(), uint(listId))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	utils.Success(c, board)
+	utils.Success(c, list)
 }

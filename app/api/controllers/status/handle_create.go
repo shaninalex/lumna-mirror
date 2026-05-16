@@ -1,4 +1,4 @@
-package column
+package status
 
 import (
 	"net/http"
@@ -8,15 +8,15 @@ import (
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-func (s *ColumnController) Create(c *gin.Context) {
-	payload := services.ColumnUpdate{}
+func (s *StatusController) Create(c *gin.Context) {
+	payload := services.StatusUpdate{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	board, err := s.columnService.Create(c.Request.Context(), payload)
+	board, err := s.statusService.Create(c.Request.Context(), payload)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 	}

@@ -10,7 +10,7 @@ import (
 type TaskRepository interface {
 	List(ctx context.Context, query map[string]any) ([]*models.Task, error)
 	GetByID(ctx context.Context, taskID uint) (*models.Task, error)
-	Reorder(ctx context.Context, taskID uint, columnID uint, order uint) error
+	Reorder(ctx context.Context, taskID uint, statusID uint, order uint) error
 	Create(ctx context.Context, task *models.Task) error
 	Update(ctx context.Context, task *models.Task) error
 	UpdateFields(ctx context.Context, taskID uint, updates map[string]any) error
@@ -45,12 +45,12 @@ func (r *GormTaskRepository) GetByID(ctx context.Context, taskID uint) (*models.
 	return &task, nil
 }
 
-func (r *GormTaskRepository) Reorder(ctx context.Context, taskID uint, columnID uint, order uint) error {
+func (r *GormTaskRepository) Reorder(ctx context.Context, taskID uint, statusID uint, order uint) error {
 	return r.db.WithContext(ctx).
 		Model(&models.Task{}).
 		Where("id = ?", taskID).
 		Updates(map[string]any{
-			"column_id": columnID,
+			"status_id": statusID,
 			"order":     order,
 		}).Error
 }

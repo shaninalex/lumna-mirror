@@ -1,4 +1,4 @@
-package board
+package list
 
 import (
 	"net/http"
@@ -8,17 +8,17 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 )
 
-func (s *BoardController) Delete(c *gin.Context) {
-	boardId, err := strconv.Atoi(c.Param("boardId"))
+func (s *ListController) Delete(c *gin.Context) {
+	listId, err := strconv.Atoi(c.Param("listId"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	if err := s.boardService.Delete(c.Request.Context(), uint(boardId)); err != nil {
+	if err := s.listService.Delete(c.Request.Context(), uint(listId)); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	utils.Success(c, nil, "Board deleted")
+	utils.Success(c, nil, "List deleted")
 }

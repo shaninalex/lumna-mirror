@@ -1,4 +1,4 @@
-package column
+package status
 
 import (
 	"errors"
@@ -13,13 +13,13 @@ var (
 	ErrorNoBoardProvided = errors.New("no board_id provided or it's invalid")
 )
 
-func (s *ColumnController) List(c *gin.Context) {
+func (s *StatusController) List(c *gin.Context) {
 	boardId, err := strconv.Atoi(c.Query("board_id"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, ErrorNoBoardProvided)
 		return
 	}
 
-	columns := s.columnService.Filter(c.Request.Context(), uint(boardId))
-	utils.Success(c, columns)
+	statuss := s.statusService.Filter(c.Request.Context(), uint(boardId))
+	utils.Success(c, statuss)
 }

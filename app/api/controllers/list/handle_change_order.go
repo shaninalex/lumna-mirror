@@ -1,4 +1,4 @@
-package board
+package list
 
 import (
 	"net/http"
@@ -8,14 +8,14 @@ import (
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-func (s *BoardController) ChangeOrder(c *gin.Context) {
-	var payload services.KanbanBoardChangeOrderPayload
+func (s *ListController) ChangeOrder(c *gin.Context) {
+	var payload services.KanbanListChangeOrderPayload
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	if err := s.boardService.Reorder(c.Request.Context(), &payload); err != nil {
+	if err := s.listService.Reorder(c.Request.Context(), &payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}

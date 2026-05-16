@@ -1,4 +1,4 @@
-package board
+package list
 
 import (
 	"net/http"
@@ -7,7 +7,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 )
 
-func (s *BoardController) Create(c *gin.Context) {
+func (s *ListController) Create(c *gin.Context) {
 	payload := struct {
 		ProjectId uint   `json:"project_id"`
 		Title     string `json:"title"`
@@ -18,10 +18,10 @@ func (s *BoardController) Create(c *gin.Context) {
 		return
 	}
 
-	board, err := s.boardService.Create(c.Request.Context(), payload.ProjectId, payload.Title)
+	list, err := s.listService.Create(c.Request.Context(), payload.ProjectId, payload.Title)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 	}
 
-	utils.Success(c, board)
+	utils.Success(c, list)
 }

@@ -9,16 +9,16 @@ import (
 
 type TaskService struct {
 	repository       repositories.TaskRepository
-	columnRepository repositories.ColumnRepository
+	statusRepository repositories.StatusRepository
 }
 
 func NewTaskService(
 	repository repositories.TaskRepository,
-	columnRepository repositories.ColumnRepository,
+	statusRepository repositories.StatusRepository,
 ) *TaskService {
 	return &TaskService{
 		repository:       repository,
-		columnRepository: columnRepository,
+		statusRepository: statusRepository,
 	}
 }
 
@@ -30,8 +30,8 @@ func (s *TaskService) GetTask(ctx context.Context, taskID uint) (*models.Task, e
 	return s.repository.GetByID(ctx, taskID)
 }
 
-func (s *TaskService) ReorderTask(ctx context.Context, taskID uint, boardListID uint, order uint) error {
-	return s.repository.Reorder(ctx, taskID, boardListID, order)
+func (s *TaskService) ReorderTask(ctx context.Context, taskID uint, listListID uint, order uint) error {
+	return s.repository.Reorder(ctx, taskID, listListID, order)
 }
 
 // TaskPayload - used to create/partial update task
@@ -40,20 +40,20 @@ type TaskPayload struct {
 	Title     string `json:"title"`
 	Order     uint   `json:"order"`
 	ProjectID uint   `json:"project_id"`
-	ColumnID  uint   `json:"column_id"`
+	ColumnID  uint   `json:"status_id"`
 }
 
 func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
-	column, err := s.columnRepository.GetByID(ctx, payload.ColumnID)
+	status, err := s.statusRepository.GetByID(ctx, payload.ColumnID)
 	if err != nil {
 		return nil, err
 	}
 	task := models.Task{
 		Title:     payload.Title,
 		Order:     payload.Order,
-		ColumnID:  column.ID,
-		ProjectID: column.ProjectID,
-		BoardID:   column.BoardID,
+		ColumnID:  status.ID,
+		ProjectID: status.ProjectID,
+		ListID:   status.ListID,
 	}
 
 	if err := s.repository.Create(ctx, &task); err != nil {

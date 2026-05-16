@@ -1,4 +1,4 @@
-package board
+package list
 
 import (
 	"net/http"
@@ -8,8 +8,8 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 )
 
-func (s *BoardController) Patch(c *gin.Context) {
-	boardId, err := strconv.Atoi(c.Param("boardId"))
+func (s *ListController) Patch(c *gin.Context) {
+	listId, err := strconv.Atoi(c.Param("listId"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
@@ -24,18 +24,18 @@ func (s *BoardController) Patch(c *gin.Context) {
 		return
 	}
 
-	board, err := s.boardService.Get(c.Request.Context(), uint(boardId))
+	list, err := s.listService.Get(c.Request.Context(), uint(listId))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	board.Title = payload.Title
+	list.Title = payload.Title
 
-	if err := s.boardService.Update(c.Request.Context(), board); err != nil {
+	if err := s.listService.Update(c.Request.Context(), list); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	utils.Success(c, board)
+	utils.Success(c, list)
 }

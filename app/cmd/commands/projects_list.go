@@ -38,7 +38,7 @@ func projectsList(db *gorm.DB) {
 
 	for i, p := range projects {
 		fmt.Println(i, p.String())
-		boards := make([]models.Board, 0)
+		boards := make([]models.List, 0)
 		if err := db.Find(&boards).Where("project_id = ?", p.ID).Find(&boards); err != nil {
 			continue
 		}

@@ -15,7 +15,7 @@ type Task struct {
 	Body  string `json:"body"`
 
 	ColumnID    uint `gorm:"not null;index" json:"column_id"`
-	BoardID     uint `gorm:"not null;index" json:"board_id"`
+	ListID     uint `gorm:"not null;index" json:"board_id"`
 	ProjectID   uint `gorm:"not null;index" json:"project_id"`
 	WorkspaceID uint `gorm:"not null;index" json:"workspace_id"`
 

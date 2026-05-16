@@ -1,4 +1,4 @@
-package column
+package status
 
 import (
 	"gitlab.com/shaninalex/lumna/app/services"
@@ -6,8 +6,8 @@ import (
 )
 
 func Module(c *dig.Container) error {
-	_ = c.Provide(services.NewColumnService)
+	_ = c.Provide(services.NewStatusService)
 
-	_ = c.Provide(NewColumnController)
+	_ = c.Provide(NewStatusController)
 	return nil
 }

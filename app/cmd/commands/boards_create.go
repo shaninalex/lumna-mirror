@@ -34,7 +34,7 @@ func NewBoardsCreateCmd() *cobra.Command {
 			if err != nil {
 				panic(err)
 			}
-			board := models.Board{
+			board := models.List{
 				Title:     title,
 				ProjectID: uint(ownerID),
 			}
@@ -49,7 +49,7 @@ func NewBoardsCreateCmd() *cobra.Command {
 	return cmd
 }
 
-func createBoard(board models.Board) func(db *gorm.DB) {
+func createBoard(board models.List) func(db *gorm.DB) {
 	return func(db *gorm.DB) {
 		if result := db.Create(&board); result.Error != nil {
 			panic(result.Error)

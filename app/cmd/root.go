@@ -17,7 +17,7 @@ func NewRootCmd() (cmd *cobra.Command) {
 	cmd.AddCommand(commands.NewIdentitiesRootCmd())
 	cmd.AddCommand(commands.NewProjectsRootCmd())
 	cmd.AddCommand(commands.NewBoardsRootCmd())
-	cmd.AddCommand(commands.NewColumnsRootCmd())
+	cmd.AddCommand(commands.NewStatusRootCmd())
 	cmd.AddCommand(commands.NewImportRootCmd())
 	cmd.AddCommand(commands.NewExportRootCmd())
 

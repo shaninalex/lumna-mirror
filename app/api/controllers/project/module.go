@@ -9,7 +9,7 @@ import (
 func Module(c *dig.Container) error {
 	_ = c.Provide(repositories.NewGormProjectRepository)
 	_ = c.Provide(services.NewProjectService)
-	_ = c.Provide(services.NewBoardService)
+	_ = c.Provide(services.NewListService)
 
 	_ = c.Provide(NewProjectsController)
 	return nil

@@ -7,12 +7,12 @@ import (
 
 type ProjectController struct {
 	projectService *services.ProjectService
-	boardService   *services.BoardService
+	boardService   *services.ListService
 }
 
 func NewProjectsController(
 	projectService *services.ProjectService,
-	boardService *services.BoardService,
+	boardService *services.ListService,
 ) *ProjectController {
 	s := &ProjectController{
 		projectService: projectService,

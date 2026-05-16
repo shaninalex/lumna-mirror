@@ -7,9 +7,9 @@ import (
 	"gitlab.com/shaninalex/lumna"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/activity"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/board"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/column"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/invitation"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/list"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/onboarding"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
@@ -46,7 +46,7 @@ type ApiDeps struct {
 	dig.In
 
 	AuthController       *auth.AuthController
-	BoardController      *board.BoardController
+	BoardController      *list.ListController
 	ColumnController     *column.ColumnController
 	ProjectController    *project.ProjectController
 	TaskController       *task.TaskController

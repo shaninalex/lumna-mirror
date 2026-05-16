@@ -12,10 +12,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewColumnCreateCmd() *cobra.Command {
+func NewStatusCreateCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create [board_id] [title]",
-		Short: "Create column",
+		Use:   "create [list_id] [title]",
+		Short: "Create status",
 		Args:  cobra.MinimumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			c := dig.New()
@@ -26,14 +26,14 @@ func NewColumnCreateCmd() *cobra.Command {
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
 
-			boardID, err := strconv.Atoi(args[0])
+			listId, err := strconv.Atoi(args[0])
 			if err != nil {
 				panic(err)
 			}
 			title := args[1]
-			column := models.Column{
-				Title:   title,
-				BoardID: uint(boardID),
+			column := models.Status{
+				Title:  title,
+				ListID: uint(listId),
 			}
 			if err := c.Invoke(createColumn(column)); err != nil {
 				panic(err)
@@ -44,7 +44,7 @@ func NewColumnCreateCmd() *cobra.Command {
 	return cmd
 }
 
-func createColumn(column models.Column) func(db *gorm.DB) {
+func createColumn(column models.Status) func(db *gorm.DB) {
 	return func(db *gorm.DB) {
 
 		if result := db.Create(&column); result.Error != nil {

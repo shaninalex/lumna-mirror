@@ -1,4 +1,4 @@
-package column
+package status
 
 import (
 	"net/http"
@@ -9,31 +9,31 @@ import (
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-func (s *ColumnController) Patch(c *gin.Context) {
-	columnId, err := strconv.Atoi(c.Param("columnId"))
+func (s *StatusController) Patch(c *gin.Context) {
+	statusId, err := strconv.Atoi(c.Param("status_id"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
-	payload := services.ColumnUpdate{}
+	payload := services.StatusUpdate{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	column, err := s.columnService.Get(c.Request.Context(), uint(columnId))
+	status, err := s.statusService.Get(c.Request.Context(), uint(statusId))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	column.Title = payload.Title
+	status.Title = payload.Title
 
-	if _, err := s.columnService.Update(c.Request.Context(), column); err != nil {
+	if _, err := s.statusService.Update(c.Request.Context(), status); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	utils.Success(c, column)
+	utils.Success(c, status)
 }
