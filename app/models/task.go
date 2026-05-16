@@ -14,8 +14,8 @@ type Task struct {
 	Done  bool   `json:"done"`
 	Body  string `json:"body"`
 
-	ColumnID    uint `gorm:"not null;index" json:"column_id"`
-	ListID     uint `gorm:"not null;index" json:"board_id"`
+	StatusID    uint `gorm:"not null;index" json:"column_id"`
+	ListID      uint `gorm:"not null;index" json:"board_id"`
 	ProjectID   uint `gorm:"not null;index" json:"project_id"`
 	WorkspaceID uint `gorm:"not null;index" json:"workspace_id"`
 

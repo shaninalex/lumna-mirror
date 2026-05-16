@@ -96,12 +96,11 @@ CREATE TABLE statuses
     id         integer PRIMARY KEY AUTOINCREMENT,
     title      text    NOT NULL,
     `order`    integer,
-    list_id   integer NOT NULL,
-    project_id integer NOT NULL,
+    list_id   integer NOT NULL REFERENCES lists (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    project_id integer NOT NULL REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    workspace_id INTEGER REFERENCES workspaces (id),
     created_at datetime,
-    updated_at datetime,
-    CONSTRAINT fk_status_project FOREIGN KEY (project_id) REFERENCES projects (id),
-    CONSTRAINT fk_status_list FOREIGN KEY (list_id) REFERENCES list (id) ON DELETE CASCADE ON UPDATE CASCADE
+    updated_at datetime
 );
 CREATE INDEX idx_columns_project_id ON statuses (project_id);
 CREATE INDEX idx_columns_list_id ON statuses (list_id);
@@ -120,7 +119,7 @@ CREATE TABLE tasks
     list_id    integer NOT NULL,
     workspace_id INTEGER REFERENCES workspaces (id),
     CONSTRAINT fk_tasks_project FOREIGN KEY (project_id) REFERENCES projects (id),
-    CONSTRAINT fk_tasks_list FOREIGN KEY (list_id) REFERENCES list (id),
+    CONSTRAINT fk_tasks_list FOREIGN KEY (list_id) REFERENCES lists (id),
     CONSTRAINT fk_tasks_status FOREIGN KEY (status_id) REFERENCES statuses (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE INDEX idx_tasks_list_id ON tasks (list_id);

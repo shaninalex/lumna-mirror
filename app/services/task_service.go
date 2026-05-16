@@ -51,9 +51,9 @@ func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 	task := models.Task{
 		Title:     payload.Title,
 		Order:     payload.Order,
-		ColumnID:  status.ID,
+		StatusID:  status.ID,
 		ProjectID: status.ProjectID,
-		ListID:   status.ListID,
+		ListID:    status.ListID,
 	}
 
 	if err := s.repository.Create(ctx, &task); err != nil {

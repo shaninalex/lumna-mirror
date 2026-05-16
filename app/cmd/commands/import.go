@@ -16,6 +16,16 @@ import (
 	"gorm.io/gorm"
 )
 
+// TODO: flatten datatype:
+// {
+// 	"identities": [],
+// 	"workspaces": [],
+// 	"projects": [],
+// 	"lists": [],
+// 	"statuses": [],
+// 	"tasks": [],
+// }
+
 type MockDbDataSchema struct {
 	Identities []struct {
 		FullName    string `json:"full_name"`
@@ -30,10 +40,10 @@ type MockDbDataSchema struct {
 		Email    string `json:"email"`
 		Active   bool   `json:"active"`
 		Projects []struct {
-			Title  string `json:"title"`
-			Boards []struct {
-				Title   string `json:"title"`
-				Columns []struct {
+			Title string `json:"title"`
+			Lists []struct {
+				Title    string `json:"title"`
+				Statuses []struct {
 					Title string `json:"title"`
 					Order int    `json:"order"`
 					Tasks []struct {
@@ -41,8 +51,8 @@ type MockDbDataSchema struct {
 						Order int    `json:"order"`
 						Body  string `json:"body"`
 					} `json:"tasks"`
-				} `json:"columns"`
-			} `json:"boards"`
+				} `json:"statuses"`
+			} `json:"lists"`
 		} `json:"projects"`
 	} `json:"workspaces"`
 }
@@ -124,36 +134,36 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 					panic(result.Error)
 				}
 				fmt.Printf("%d. Project: %s\n", pidx, project.Title)
-				for bi, _board := range _project.Boards {
-					board := models.List{
-						Title:       _board.Title,
+				for li, _list := range _project.Lists {
+					list := models.List{
+						Title:       _list.Title,
 						ProjectID:   project.ID,
 						WorkspaceID: wp.ID,
 					}
-					if result := database.Create(&board); result.Error != nil {
+					if result := database.Create(&list); result.Error != nil {
 						panic(result.Error)
 					}
-					fmt.Printf("\t%d. Board: %s\n", bi, board.Title)
-					for li, _list := range _board.Columns {
-						column := models.Status{
+					fmt.Printf("\t%d. List: %s\n", li, list.Title)
+					for li, _list := range _list.Statuses {
+						status := models.Status{
 							Title:       _list.Title,
-							ListID:      board.ID,
+							ListID:      list.ID,
 							Order:       uint(li),
 							ProjectID:   project.ID,
 							WorkspaceID: wp.ID,
 						}
-						if result := database.Create(&column); result.Error != nil {
+						if result := database.Create(&status); result.Error != nil {
 							panic(result.Error)
 						}
-						fmt.Printf("\t\t%d. List: %s\n", li, column.Title)
+						fmt.Printf("\t\t%d. Status: %s\n", li, status.Title)
 						for ti, _task := range _list.Tasks {
 							task := models.Task{
 								Title:       _task.Title,
-								ColumnID:    column.ID,
+								StatusID:    status.ID,
 								Order:       uint(ti),
 								Body:        _task.Body,
 								ProjectID:   project.ID,
-								ListID:      board.ID,
+								ListID:      list.ID,
 								WorkspaceID: wp.ID,
 							}
 							if result := database.Create(&task); result.Error != nil {

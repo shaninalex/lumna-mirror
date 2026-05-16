@@ -25,10 +25,10 @@
             "projects": [
                 {
                     "title": "Lumna project",
-                    "boards": [
+                    "lists": [
                         {
                             "title": "development",
-                            "columns": [
+                            "statuses": [
                                 {
                                     "title": "TODO",
                                     "order": 0,
