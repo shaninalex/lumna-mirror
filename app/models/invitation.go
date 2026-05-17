@@ -23,14 +23,13 @@ var (
 )
 
 type Invitation struct {
-	ID          uint            `gorm:"primaryKey" json:"id"`
-	Email       string          `gorm:"unique" json:"email"`
-	TokenHash   string          `gorm:"uniqueIndex" json:"-"`
-	State       InvitationState `json:"state"`
-	Role        string          `json:"role"`
-	WorkspaceID uint            `gorm:"not null;index" json:"workspace_id"`
-	CreatedAt   time.Time       `gorm:"not null" json:"created_at"`
-	ValidUntil  time.Time       `gorm:"not null" json:"valid_until"`
+	ID         uint            `gorm:"primaryKey" json:"id"`
+	Email      string          `gorm:"unique" json:"email"`
+	TokenHash  string          `gorm:"uniqueIndex" json:"-"`
+	State      InvitationState `json:"state"`
+	Role       string          `json:"role"`
+	CreatedAt  time.Time       `gorm:"not null" json:"created_at"`
+	ValidUntil time.Time       `gorm:"not null" json:"valid_until"`
 }
 
 // BeforeCreate set's created at time

@@ -15,14 +15,11 @@ func Test_InvitationService_Create(t *testing.T) {
 	db := testutils.ProvideTestDB()
 	_ = testutils.Migrate(db)
 	s := ProvideInvitationService(repositories.NewGormInvitationRepository(db))
-	wps := NewWorkspaceService(repositories.NewGormWorkspaceRepository(db))
 	ctx := context.Background()
 
 	defer testutils.ClearDB(db)
 
-	wp, _ := wps.Create(ctx, "test")
-
-	invitation, emailLink, err := s.Create(ctx, wp.ID, "test@test.com", "user")
+	invitation, emailLink, err := s.Create(ctx, "test@test.com", "user")
 	assert.NoError(t, err)
 	assert.NotNil(t, invitation)
 	assert.NotEmpty(t, emailLink)

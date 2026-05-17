@@ -1,8 +1,9 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { inject, Injectable } from "@angular/core";
 import { actionUserClear, actionUserGet, actionUserSet } from "./user.actions";
-import { exhaustMap, of, switchMap, tap } from "rxjs";
+import { catchError, exhaustMap, map, of, tap } from "rxjs";
 import { UserApi } from "../api/user.service";
+import { actionSessionFailed } from "@core/store/session/session.actions";
 
 @Injectable()
 export class UserEffects {
@@ -13,9 +14,10 @@ export class UserEffects {
         this.actions$.pipe(
             ofType(actionUserGet),
             exhaustMap(() =>
-                this.api
-                    .me()
-                    .pipe(switchMap((user) => of(actionUserSet({ user }))))
+                this.api.me().pipe(
+                    map((user) => actionUserSet({ user })),
+                    catchError(() => of(actionSessionFailed()))
+                )
             )
         )
     );

@@ -26,7 +26,6 @@ func NewOnboardingController(
 }
 
 func (s *OnboardingController) Register(router *gin.RouterGroup) {
-	router.GET("state", s.workspaceExistsMiddleware(), s.handlerCheckState)
-	router.POST("workspace", s.workspaceExistsMiddleware(), s.handlerWorkspace)
-	router.POST("team", s.teammatesExistsMiddleware(), s.handlerTeam)
+	router.GET("state", s.handlerCheckState) // s.workspaceExistsMiddleware(), )
+	router.POST("user", s.handlerUser)       // s.workspaceExistsMiddleware(), )
 }

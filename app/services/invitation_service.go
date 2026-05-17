@@ -16,7 +16,7 @@ var (
 )
 
 type InvitationManager interface {
-	Create(ctx context.Context, workspaceId uint, email, role string) (*models.Invitation, string, error)
+	Create(ctx context.Context, email, role string) (*models.Invitation, string, error)
 	Accept(ctx context.Context, token string) error
 	Delete(ctx context.Context, invitationId uint) error
 	Reset(ctx context.Context, invitationId uint) (string, error)
@@ -35,7 +35,7 @@ func (s *InvitationService) List(ctx context.Context) ([]models.Invitation, erro
 	return s.repository.List(ctx)
 }
 
-func (s *InvitationService) Create(ctx context.Context, workspaceId uint, email, role string) (*models.Invitation, string, error) {
+func (s *InvitationService) Create(ctx context.Context, email, role string) (*models.Invitation, string, error) {
 	if email == "" || role == "" {
 		return nil, "", errors.New("invalid data")
 	}
@@ -51,12 +51,11 @@ func (s *InvitationService) Create(ctx context.Context, workspaceId uint, email,
 		return nil, "", err
 	}
 	invitation := &models.Invitation{
-		Email:       email,
-		Role:        role,
-		WorkspaceID: workspaceId,
-		State:       models.InvitationStatePending,
-		TokenHash:   tokenHash,
-		ValidUntil:  time.Now().Add(defaultValidUntil),
+		Email:      email,
+		Role:       role,
+		State:      models.InvitationStatePending,
+		TokenHash:  tokenHash,
+		ValidUntil: time.Now().Add(defaultValidUntil),
 	}
 	if err = s.repository.Create(ctx, invitation); err != nil {
 		return nil, "", err
