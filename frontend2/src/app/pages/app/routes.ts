@@ -2,20 +2,22 @@ import { Routes } from "@angular/router";
 import { ForYou } from "./for-you/for-you";
 import { ApplicationWrapper } from "./wrapper";
 import { provideWorkspaceFeature } from "@entities/workspace";
+import { provideTaskFeature } from "@entities/task";
+import { provideListFeature } from "@entities/list";
+import { provideProjectFeature } from "@entities/project";
 
 export const routes: Routes = [
     {
         path: "",
-        // canActivate: [authBootstrapGuard],
-        providers: [provideWorkspaceFeature()],
+        providers: [
+            provideWorkspaceFeature(),
+            provideProjectFeature(),
+            provideListFeature(),
+            provideTaskFeature()
+        ],
         children: [
             {
                 path: "",
-                pathMatch: "full",
-                redirectTo: "/app"
-            },
-            {
-                path: "app",
                 component: ApplicationWrapper,
                 children: [
                     {

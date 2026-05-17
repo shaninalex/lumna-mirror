@@ -3,10 +3,12 @@ import * as SessionActions from './session.actions';
 
 type SessionState = {
     authenticated: boolean;
+    checked: boolean;
 };
 
 const initialState: SessionState = {
     authenticated: false,
+    checked: false,
 };
 
 export const sessionReducer = createReducer(
@@ -14,9 +16,11 @@ export const sessionReducer = createReducer(
     on(
         SessionActions.actionSessionAuthenticatedSuccessfull,
         SessionActions.actionSessionAuthenticated,
-        (state, action) => ({
-            authenticated: true,
-        }),
+        () => ({ authenticated: true, checked: true }),
     ),
-    on(SessionActions.actionSessionLoggedOut, (state, action) => ({ authenticated: false })),
+    on(
+        SessionActions.actionSessionLoggedOut,
+        SessionActions.actionSessionFailed,
+        () => ({ authenticated: false, checked: true })
+    ),
 );

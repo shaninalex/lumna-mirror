@@ -4,7 +4,7 @@ import { LoginPage } from "./pages";
 
 export const routes: Routes = [
     {
-        path: "auth",
+        path: "",
         component: AuthWrapper,
         children: [
             {

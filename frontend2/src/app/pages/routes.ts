@@ -1,12 +1,21 @@
 import { Routes } from "@angular/router";
 
-import { routes as authRoutes } from "./auth";
+import { authCanActivate } from "@core";
 
 export const routes: Routes = [
-    ...authRoutes,
+    {
+        path: "auth",
+        loadChildren: () => import("./auth/routes").then((m) => m.routes)
+    },
 
     {
         path: "",
+        pathMatch: "full",
+        redirectTo: "/app"
+    },
+    {
+        path: "app",
+        canMatch: [authCanActivate],
         loadChildren: () => import("./app/routes").then((m) => m.routes)
     },
 

@@ -4,9 +4,7 @@ import { finalize, map, Observable, shareReplay } from "rxjs";
 import { UserModel } from "@entities/user";
 import { APIResponse } from "@shared/models";
 
-@Injectable({
-    providedIn: "root"
-})
+@Injectable()
 export class SessionApi {
     private http = inject(HttpClient);
     private refreshRequest$: Observable<void> | null = null;
