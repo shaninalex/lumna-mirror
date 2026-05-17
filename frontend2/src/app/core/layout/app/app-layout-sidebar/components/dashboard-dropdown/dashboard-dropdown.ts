@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { CdkMenu, CdkMenuTrigger } from "@angular/cdk/menu";
+import { CdkMenu, CdkMenuTrigger, CdkMenuItem } from "@angular/cdk/menu";
 import {
     WorkspaceLabel,
     WorkspaceModel,
@@ -8,9 +8,18 @@ import {
 
 @Component({
     selector: "app-dashboard-dropdown",
-    imports: [CdkMenuTrigger, CdkMenu, WorkspaceLabel, SwitchWorkspaces], // CdkMenuItem
+    imports: [
+        CdkMenuTrigger,
+        CdkMenu,
+        CdkMenuItem,
+        WorkspaceLabel,
+        SwitchWorkspaces
+    ],
     template: `
-        <button [cdkMenuTriggerFor]="dashboardDropdown">
+        <button
+            [cdkMenuTriggerFor]="dashboardDropdown"
+            class="inline-block cursor-pointer p-1 rounded hover:bg-slate-300 cursor-pointer;"
+        >
             <app-workspace-label [workspace]="workspace" size="sm" />
         </button>
         <ng-template #dashboardDropdown>
@@ -18,8 +27,8 @@ import {
                 <app-workspace-label [workspace]="workspace" size="md" />
                 <div class="line-divider"></div>
                 <ul>
-                    <li>Settings</li>
-                    <li>Members</li>
+                    <li cdkMenuItem>Settings</li>
+                    <li cdkMenuItem>Members</li>
                 </ul>
                 <div class="line-divider"></div>
                 <app-switch-workspaces />
@@ -35,8 +44,4 @@ export class DashboardDropdown {
         title: "Lumna",
         icon: "/img/project.svg"
     };
-
-    textChanged(): void {
-        console.log("on click");
-    }
 }

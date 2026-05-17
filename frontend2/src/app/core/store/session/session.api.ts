@@ -43,11 +43,4 @@ export class SessionApi {
 
         return this.refreshRequest$;
     }
-    // refresh(): Observable<void> {
-    //     return this.http
-    //         .get<
-    //             APIResponse<void>
-    //         >(`/api/v1/auth/refresh`, { withCredentials: true })
-    //         .pipe(map((response) => response.data));
-    // }
 }

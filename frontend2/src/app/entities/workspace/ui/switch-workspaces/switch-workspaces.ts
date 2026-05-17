@@ -1,56 +1,52 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { WorkspaceModel } from "@entities/workspace";
+import { CdkMenuItem } from "@angular/cdk/menu";
+import { selectWorkspaceList } from "@entities/workspace/model/workspace.selectors";
+import { Store } from "@ngrx/store";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-switch-workspaces",
-    imports: [RouterLink],
+    imports: [RouterLink, CdkMenuItem, AsyncPipe],
     template: `
-        <div>
-            <div class="flex flex-col gap-2">
-                @for (workspace of workspaces; track $index) {
-                    <a
-                        [routerLink]="['/app', workspace.slug]"
-                        class="flex items-center gap-2"
-                    >
-                        <div>
-                            <img
-                                src="/img/project.svg"
-                                alt=""
-                                class="rounded w-5 h-5"
-                            />
-                        </div>
-                        <div class="leading-none">
-                            <div class="font-bold">
-                                {{ workspace.title }}
+        @if (workspaces$ | async; as workspaces) {
+            <div>
+                <div class="flex flex-col gap-2">
+                    @for (workspace of workspaces; track $index) {
+                        <a
+                            [routerLink]="['/app', workspace.slug]"
+                            class="flex items-center gap-2"
+                            cdkMenuItem
+                        >
+                            <div>
+                                <img
+                                    src="/img/project.svg"
+                                    alt=""
+                                    class="rounded w-5 h-5"
+                                />
                             </div>
-                        </div>
-                    </a>
-                }
-            </div>
+                            <div class="leading-none">
+                                <div class="font-bold">
+                                    {{ workspace.title }}
+                                </div>
+                            </div>
+                        </a>
+                    }
+                </div>
 
-            <a
-                routerLink="/workspaces"
-                class="text-slate-500 text-xs hover:underline"
-            >
-                view all
-            </a>
-        </div>
+                <a
+                    cdkMenuItem
+                    routerLink="/workspaces"
+                    class="text-slate-500 text-xs hover:underline"
+                >
+                    view all
+                </a>
+            </div>
+        }
     `
 })
 export class SwitchWorkspaces {
-    workspaces: WorkspaceModel[] = [
-        {
-            id: 1,
-            slug: "lumna-1",
-            title: "Lumna",
-            icon: "/img/project.svg"
-        },
-        {
-            id: 2,
-            slug: "new-frontend-1",
-            title: "NewTestproject",
-            icon: "/img/project.svg"
-        }
-    ];
+    private store = inject(Store);
+    workspaces$ = this.store.select(selectWorkspaceList);
 }

@@ -13,6 +13,8 @@ import { provideEffects } from "@ngrx/effects";
 import { reducers, effects, ApplicationInit, sessionInterceptor } from "@core";
 import { provideStoreDevtools } from "@ngrx/store-devtools";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import { provideRouterStore } from "@ngrx/router-store";
+import { provideWorkspaceFeature } from "@entities/workspace";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -21,7 +23,8 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes),
         provideStore(reducers),
         provideEffects(effects),
-        // provideRouterStore(),
+        provideRouterStore(),
+
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideAppInitializer(ApplicationInit)
     ]

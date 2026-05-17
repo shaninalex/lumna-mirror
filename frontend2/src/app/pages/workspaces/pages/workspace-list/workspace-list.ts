@@ -1,9 +1,12 @@
-import { Component } from "@angular/core";
+import { AsyncPipe } from "@angular/common";
+import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { WorkspaceLabel, WorkspaceModel } from "@entities/workspace";
+import { selectWorkspaceList } from "@entities/workspace/model/workspace.selectors";
+import { Store } from "@ngrx/store";
 
 @Component({
     selector: "app-workspace-list",
+    imports: [RouterLink, AsyncPipe],
     template: `
         <div class="p-4 h-screen flex flex-col justify-between">
             <div>
@@ -12,32 +15,34 @@ import { WorkspaceLabel, WorkspaceModel } from "@entities/workspace";
                     This is the list of all your workspaces ( or workspaces you
                     have permissions ).
                 </p>
-                <div class="flex flex-col gap-4">
-                    @for (workspace of workspaces; track $index) {
-                        <a [routerLink]="['/app', workspace.slug]">
-                            <app-workspace-label [workspace]="workspace" />
-                        </a>
-                    }
-                </div>
+
+                @if (workspaces$ | async; as workspaces) {
+                    <div class="flex flex-col gap-4 mb-6">
+                        @for (workspace of workspaces; track $index) {
+                            <a
+                                [routerLink]="['/app', workspace.slug]"
+                                class="flex items-center gap-2"
+                            >
+                                <img
+                                    src="/img/project.svg"
+                                    alt=""
+                                    class="w-10 h-10 rounded"
+                                />
+                                <span class="font-bold">
+                                    {{ workspace.title }}
+                                </span>
+                            </a>
+                        }
+                    </div>
+                }
+
+                <a href="#" class="btn">Create</a>
             </div>
             <div class="hover:underline">Profile</div>
         </div>
-    `,
-    imports: [WorkspaceLabel, RouterLink]
+    `
 })
 export class WorkspaceList {
-    workspaces: WorkspaceModel[] = [
-        {
-            id: 1,
-            slug: "lumna-1",
-            title: "Lumna",
-            icon: "/img/project.svg"
-        },
-        {
-            id: 2,
-            slug: "new-frontend-1",
-            title: "NewTestproject",
-            icon: "/img/project.svg"
-        }
-    ];
+    private store = inject(Store);
+    workspaces$ = this.store.select(selectWorkspaceList);
 }

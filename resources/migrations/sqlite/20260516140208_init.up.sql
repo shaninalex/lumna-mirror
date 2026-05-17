@@ -57,12 +57,11 @@ CREATE TABLE invitations
 );
 CREATE UNIQUE INDEX idx_invitations_token_hash ON invitations (token_hash);
 
-
-
 CREATE TABLE workspaces
 (
-    id          integer PRIMARY KEY AUTOINCREMENT,
+    id          integer  PRIMARY KEY AUTOINCREMENT,
     title       text     NOT NULL,
+    slug        VARCHAR  NOT NULL,
     active      numeric,
     owner_email text     NULL,
     created_at  datetime DEFAULT CURRENT_TIMESTAMP,

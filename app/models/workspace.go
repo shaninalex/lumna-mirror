@@ -4,6 +4,7 @@ import "time"
 
 type Workspace struct {
 	ID         uint       `gorm:"primaryKey" json:"id"`
+	Slug       string     `gorm:"slug" json:"slug"`
 	Title      string     `json:"title"`
 	Active     bool       `json:"active"`
 	OwnerEmail string     `json:"owner_email"`

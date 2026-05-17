@@ -1,5 +1,3 @@
-import { routerReducer } from "@ngrx/router-store";
-
 import { WorkspaceEffects, workspaceReducer } from "@entities/workspace";
 import { TaskEffects, taskReducer } from "@entities/task";
 import { ProjectEffects, projectReducer } from "@entities/project";
@@ -18,14 +16,14 @@ export const effects = [
 
     // Entity effects
     UserEffects,
-    WorkspaceEffects,
+    // WorkspaceEffects,
     ProjectEffects,
     ListEffects,
     TaskEffects
 ];
 
 export const reducers = {
-    workspace: workspaceReducer,
+    // workspace: workspaceReducer,
     project: projectReducer,
     list: listReducer,
     task: taskReducer,

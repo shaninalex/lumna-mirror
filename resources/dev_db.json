@@ -14,12 +14,14 @@
     "workspaces": [
         {
             "title": "Second workspace",
+            "slug": "second-workspace",
             "owner_email": "test@test.com",
             "active": true,
             "projects": []
         },
         {
             "title": "Lumna",
+            "slug": "lumna",
             "owner_email": "test@test.com",
             "active": true,
             "projects": [

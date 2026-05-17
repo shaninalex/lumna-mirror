@@ -61,6 +61,7 @@ CREATE TABLE workspaces
 (
     id          SERIAL PRIMARY KEY,
     title       VARCHAR NOT NULL,
+    slug        VARCHAR NOT NULL,
     active      NUMERIC,
     owner_email VARCHAR NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
