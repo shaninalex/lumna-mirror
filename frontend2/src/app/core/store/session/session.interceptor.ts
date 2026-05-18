@@ -2,22 +2,12 @@ import {
     HttpRequest,
     HttpHandlerFn,
     HttpEvent,
-    HttpClient,
     HttpErrorResponse,
     HttpInterceptorFn
 } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { Store } from "@ngrx/store";
-import {
-    BehaviorSubject,
-    catchError,
-    EMPTY,
-    filter,
-    Observable,
-    switchMap,
-    take,
-    throwError
-} from "rxjs";
+import { catchError, Observable, switchMap, throwError } from "rxjs";
 import { actionSessionFailed, SessionApi } from ".";
 
 export const sessionInterceptor: HttpInterceptorFn = (

@@ -7,11 +7,16 @@ import (
 	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
+type UserManager interface {
+	Identity(ctx context.Context, userID uint) (*models.Identity, error)
+	List(ctx context.Context) ([]*models.Identity, error)
+}
+
 type UserService struct {
 	repository repositories.IdentityRepository
 }
 
-func NewUserService(repository repositories.IdentityRepository) *UserService {
+func NewUserService(repository repositories.IdentityRepository) UserManager {
 	return &UserService{
 		repository: repository,
 	}

@@ -19,7 +19,7 @@ func Test_InvitationService_Create(t *testing.T) {
 
 	defer testutils.ClearDB(db)
 
-	invitation, emailLink, err := s.Create(ctx, "test@test.com", "user")
+	invitation, emailLink, err := s.Create(ctx, "test@test.com", "user", nil)
 	assert.NoError(t, err)
 	assert.NotNil(t, invitation)
 	assert.NotEmpty(t, emailLink)

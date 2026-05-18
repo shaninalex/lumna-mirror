@@ -1,9 +1,10 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { inject, Injectable } from "@angular/core";
 import { actionUserClear, actionUserGet, actionUserSet } from "./user.actions";
-import { catchError, exhaustMap, map, of, tap } from "rxjs";
+import { catchError, exhaustMap, map, of, switchMap, tap } from "rxjs";
 import { UserApi } from "../api/user.service";
 import { actionSessionFailed } from "@core/store/session/session.actions";
+import { Error } from "@shared/models";
 
 @Injectable()
 export class UserEffects {

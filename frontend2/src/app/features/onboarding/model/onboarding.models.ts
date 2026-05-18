@@ -8,3 +8,9 @@ export interface UserOnboardingModel {
     first_name: string;
     last_name: string;
 }
+
+export enum InvitationProcessState {
+    VALIDATING,
+    SUCCESS,
+    FAILED
+}

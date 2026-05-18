@@ -6,7 +6,6 @@ import { UserOnboardingModel } from "@features/onboarding/model";
 @Component({
     selector: "app-user-form-feature",
     imports: [FormField],
-    providers: [OnboardingApiService],
     template: `
         <form (submit)="onSubmit($event)">
             <div class="mb-3">

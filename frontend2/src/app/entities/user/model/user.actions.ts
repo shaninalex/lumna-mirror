@@ -1,5 +1,6 @@
-import { createAction, props } from '@ngrx/store';
-import { UserModel } from './user.model';
+import { createAction, props } from "@ngrx/store";
+import { UserModel } from "./user.model";
+import { Error } from "@shared/models";
 
 /**
  * Dispatched to request loading the current user.
@@ -7,7 +8,7 @@ import { UserModel } from './user.model';
  * Typically handled by an effect that performs an API call
  * to fetch the authenticated user's data.
  */
-export const actionUserGet = createAction('[User] Get');
+export const actionUserGet = createAction("[User] Get");
 
 /**
  * Dispatched to clear all user-related state.
@@ -15,7 +16,7 @@ export const actionUserGet = createAction('[User] Get');
  * Commonly used on logout, session expiration,
  * or when resetting the application state.
  */
-export const actionUserClear = createAction('[User] Clear');
+export const actionUserClear = createAction("[User] Clear");
 
 /**
  * Dispatched when user data has been successfully loaded.
@@ -26,4 +27,7 @@ export const actionUserClear = createAction('[User] Clear');
  * @payload
  * - user: UserModel containing user details
  */
-export const actionUserSet = createAction('[User] Set', props<{ user: UserModel }>());
+export const actionUserSet = createAction(
+    "[User] Set",
+    props<{ user: UserModel }>()
+);

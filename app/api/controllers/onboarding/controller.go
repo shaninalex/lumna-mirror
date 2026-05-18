@@ -8,24 +8,25 @@ import (
 type OnboardingController struct {
 	workspaceManager  services.WorkspaceManager
 	invitationManager services.InvitationManager
-	user              *services.UserService
+	userManager       services.UserManager
 }
 
 func NewOnboardingController(
 	workspaceManager services.WorkspaceManager,
 	invitationManager services.InvitationManager,
-	user *services.UserService,
+	userManager services.UserManager,
 ) *OnboardingController {
 	s := &OnboardingController{
 		workspaceManager:  workspaceManager,
 		invitationManager: invitationManager,
-		user:              user,
+		userManager:       userManager,
 	}
 
 	return s
 }
 
 func (s *OnboardingController) Register(router *gin.RouterGroup) {
-	router.GET("state", s.handlerCheckState) // s.workspaceExistsMiddleware(), )
-	router.POST("user", s.handlerUser)       // s.workspaceExistsMiddleware(), )
+	router.GET("state", s.handlerCheckState)
+	router.POST("user", s.handlerUser)
+	router.GET("invitation", s.ValidateInvitation)
 }

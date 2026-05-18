@@ -16,8 +16,9 @@ var (
 )
 
 type InvitationManager interface {
-	Create(ctx context.Context, email, role string) (*models.Invitation, string, error)
+	Create(ctx context.Context, email, role string, meta map[string]any) (*models.Invitation, string, error)
 	Accept(ctx context.Context, token string) error
+	Validate(ctx context.Context, token string) error
 	Delete(ctx context.Context, invitationId uint) error
 	Reset(ctx context.Context, invitationId uint) (string, error)
 	List(ctx context.Context) ([]models.Invitation, error)
@@ -35,7 +36,7 @@ func (s *InvitationService) List(ctx context.Context) ([]models.Invitation, erro
 	return s.repository.List(ctx)
 }
 
-func (s *InvitationService) Create(ctx context.Context, email, role string) (*models.Invitation, string, error) {
+func (s *InvitationService) Create(ctx context.Context, email, role string, meta map[string]any) (*models.Invitation, string, error) {
 	if email == "" || role == "" {
 		return nil, "", errors.New("invalid data")
 	}
@@ -57,6 +58,9 @@ func (s *InvitationService) Create(ctx context.Context, email, role string) (*mo
 		TokenHash:  tokenHash,
 		ValidUntil: time.Now().Add(defaultValidUntil),
 	}
+	if meta != nil {
+		invitation.Meta = meta
+	}
 	if err = s.repository.Create(ctx, invitation); err != nil {
 		return nil, "", err
 	}
@@ -76,6 +80,21 @@ func (s *InvitationService) Accept(ctx context.Context, token string) error {
 	}
 
 	invitation.State = models.InvitationStateAccepted
+	return s.repository.Update(ctx, invitation)
+}
+
+func (s *InvitationService) Validate(ctx context.Context, token string) error {
+	tokenHash := utils.HashToken(token)
+	invitation, err := s.repository.GetByHash(ctx, tokenHash)
+	if err != nil {
+		return err
+	}
+
+	if !invitation.IsValid() {
+		return errors.New("invitation invalid or expired")
+	}
+
+	invitation.State = models.InvitationStateValidated
 	return s.repository.Update(ctx, invitation)
 }
 

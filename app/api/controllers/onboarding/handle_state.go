@@ -20,7 +20,7 @@ func (s *OnboardingController) handlerCheckState(c *gin.Context) {
 		return
 	}
 
-	users, err := s.user.List(c.Request.Context())
+	users, err := s.userManager.List(c.Request.Context())
 	if err != nil {
 		utils.Error(c, http.StatusInternalServerError, err)
 		return

@@ -89,8 +89,8 @@ export class SessionEffects {
     authenticate_failed$ = createEffect(
         () => {
             return this.actions$.pipe(
-                ofType(actionSessionFailed),
-                map(() => this.router.navigateByUrl("/auth/login"))
+                ofType(actionSessionFailed)
+                // map(() => this.router.navigateByUrl("/auth/login"))
             );
         },
         { dispatch: false }

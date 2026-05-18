@@ -12,7 +12,7 @@ type APIResponse[T any] struct {
 	Data     T        `json:"data,omitempty"`
 	Messages []string `json:"messages,omitempty"`
 
-	Errors []string `json:"errors,omitempty"`
+	Errors []ApiError `json:"errors,omitempty"`
 }
 
 // NewAPIResponse - new api response.
@@ -45,9 +45,40 @@ func ReturnJSON(c *gin.Context, status int, data any, params ...any) {
 		case string:
 			resp.Messages = append(resp.Messages, v)
 		case error:
-			resp.Errors = append(resp.Errors, v.Error())
+			resp.Errors = append(resp.Errors, FromError(v))
 		}
 	}
 
 	c.JSON(status, resp)
+}
+
+func FromError(err error) ApiError {
+	s := ApiError{
+		message: err.Error(),
+		code:    "GENERIC_ERROR",
+	}
+	return s
+}
+
+func NewApiError(message, code string, meta any) ApiError {
+	s := ApiError{
+		message: message,
+		code:    code,
+	}
+
+	if meta != nil {
+		s.meta = meta
+	}
+
+	return s
+}
+
+type ApiError struct {
+	message string
+	meta    any
+	code    string
+}
+
+func (s ApiError) Error() string {
+	return s.message
 }

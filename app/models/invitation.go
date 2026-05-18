@@ -18,6 +18,10 @@ var (
 	// InvitationStateAccepted when user confirms invitation successfully
 	InvitationStateAccepted = InvitationState("accepted")
 
+	// InvitationStateValidated when user open invitation link and validate the token
+	// after that token will be used to confirm user accepting details
+	InvitationStateValidated = InvitationState("validated")
+
 	// InvitationStateRevoked manually revoked and invitation receiver unable to use that inv. link anymore
 	InvitationStateRevoked = InvitationState("revoked")
 )
@@ -30,6 +34,7 @@ type Invitation struct {
 	Role       string          `json:"role"`
 	CreatedAt  time.Time       `gorm:"not null" json:"created_at"`
 	ValidUntil time.Time       `gorm:"not null" json:"valid_until"`
+	Meta       map[string]any  `gorm:"null" json:"meta"`
 }
 
 // BeforeCreate set's created at time

@@ -52,7 +52,6 @@ interface LoginFormPayload {
                     }
                 }
             </div>
-            <hr class="mb-3 border-slate-300" />
             <div>
                 <button type="submit" class="btn">Login</button>
             </div>

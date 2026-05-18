@@ -25,7 +25,7 @@ func (s *OnboardingController) workspaceExistsMiddleware() gin.HandlerFunc {
 
 func (s *OnboardingController) teammatesExistsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		users, err := s.user.List(c.Request.Context())
+		users, err := s.userManager.List(c.Request.Context())
 		if err != nil {
 			utils.Error(c, http.StatusInternalServerError, err)
 			return

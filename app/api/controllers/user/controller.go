@@ -6,12 +6,17 @@ import (
 )
 
 type UserController struct {
-	userService *services.UserService
+	userService       services.UserManager
+	invitationManager services.InvitationManager
 }
 
-func NewUserController(userService *services.UserService) *UserController {
+func NewUserController(
+	userService services.UserManager,
+	invitationManager services.InvitationManager,
+) *UserController {
 	s := &UserController{
-		userService: userService,
+		userService:       userService,
+		invitationManager: invitationManager,
 	}
 
 	return s

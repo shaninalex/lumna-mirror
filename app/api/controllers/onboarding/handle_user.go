@@ -20,15 +20,9 @@ func (s *OnboardingController) handlerUser(c *gin.Context) {
 		return
 	}
 
-	var errs []error
-
-	inv, _, err := s.invitationManager.Create(c.Request.Context(), data.Email, "member")
+	inv, _, err := s.invitationManager.Create(c.Request.Context(), data.Email, "member", nil)
 	if err != nil {
-		errs = append(errs, err)
-	}
-
-	if len(errs) > 0 {
-		utils.Error(c, http.StatusBadRequest, errs[0])
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 

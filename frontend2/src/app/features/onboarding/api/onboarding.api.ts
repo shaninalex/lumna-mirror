@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { map, Observable } from "rxjs";
 import { APIResponse } from "@shared/models";
 import { OnboardingState, UserOnboardingModel } from "../model";
@@ -21,6 +21,15 @@ export class OnboardingApiService {
             .post<
                 APIResponse<any>
             >(`/api/v1/onboarding/user`, payload, { withCredentials: true })
+            .pipe(map((response) => response.data));
+    }
+
+    invitationValidateToken(token: string): Observable<any> {
+        const params = new HttpParams().append("token", token);
+        return this.http
+            .get<
+                APIResponse<any>
+            >(`/api/v1/onboarding/invitation`, { params, withCredentials: true })
             .pipe(map((response) => response.data));
     }
 }

@@ -1,8 +1,12 @@
 import { Component } from "@angular/core";
-import { OnboardingApiService, UserFormFeature } from "@features";
+import {
+    provideOnboardingFeature,
+    UserFormFeature
+} from "@features/onboarding";
 
 @Component({
     selector: "app-onboarding-page",
+    providers: [provideOnboardingFeature()],
     imports: [UserFormFeature],
     template: ` <div class="h-screen flex items-center justify-center">
         <div>

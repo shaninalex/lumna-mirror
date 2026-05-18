@@ -46,13 +46,15 @@ CREATE INDEX idx_refresh_tokens_identity_id ON refresh_tokens (identity_id);
 -- invitations definition
 CREATE TABLE invitations
 (
-    id          integer PRIMARY KEY AUTOINCREMENT,
+    id          integer     PRIMARY KEY AUTOINCREMENT,
     email       text,
     token_hash  text,
     state       text,
     role        text,
-    created_at  datetime NOT NULL,
-    valid_until datetime NOT NULL,
+    created_at  datetime    NOT NULL,
+    valid_until datetime    NOT NULL,
+    meta        text        NULL,
+
     CONSTRAINT uni_invitations_email UNIQUE (email)
 );
 CREATE UNIQUE INDEX idx_invitations_token_hash ON invitations (token_hash);
