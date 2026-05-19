@@ -1,27 +1,13 @@
-# Application working mode:
-# development - additional logging, things can work in mock or local way
-# production - more
-# testing - most of the things working in mocking way
-env: development
+env: testing
 
 serve:
-  # port of the server
   port: 8000
   embed: false
 
 database:
-  # One of this. Both defined = panics at connection
-  postgres:
-    host: localhost
-    database: postgres
-    user: postgres
-    password: postgres
-    port: 5432
-  # if it's SQLite3 file - use absolute system path
   sqlite:
-    url: "<absolute path>/lumna.db?cache=shared&mode=rwc"
+    url: "file::memory:?cache=shared"
 
-# for jwt signing and verification
 secret_key: "a-string-secret-at-least-256-bits-long"
 
 email:

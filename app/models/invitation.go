@@ -34,7 +34,7 @@ type Invitation struct {
 	Role       string          `json:"role"`
 	CreatedAt  time.Time       `gorm:"not null" json:"created_at"`
 	ValidUntil time.Time       `gorm:"not null" json:"valid_until"`
-	Meta       map[string]any  `gorm:"null" json:"meta"`
+	Meta       any             `gorm:"type:text;null" json:"meta"`
 }
 
 // BeforeCreate set's created at time

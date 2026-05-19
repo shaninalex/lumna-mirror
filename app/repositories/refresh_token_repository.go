@@ -45,7 +45,6 @@ func (r *GormRefreshTokenRepository) GetByHash(
 	var rt models.RefreshToken
 
 	err := r.db.WithContext(ctx).
-		//Preload("Identity").
 		Where("hash = ?", hash).
 		First(&rt).
 		Error
