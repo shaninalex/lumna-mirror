@@ -19,7 +19,7 @@ import { Error } from "@shared/models";
         @if (success()) {
             <div class="text-green-600 mb-3">
                 We sent invite on
-                {{ onboardingForm.email().value() }} email.
+                {{ onboardingForm.email().value() }}
             </div>
         } @else {
             <form (submit)="onSubmit($event)">
@@ -62,7 +62,7 @@ import { Error } from "@shared/models";
         }
     `
 })
-export class UserFormFeature implements OnInit {
+export class UserFormFeature {
     private store = inject(Store);
     private actions$ = inject(Actions);
     private destroyRef = inject(DestroyRef);
@@ -70,25 +70,22 @@ export class UserFormFeature implements OnInit {
     errors = signal<Error[]>([]);
     success = signal(false);
 
-    ngOnInit() {
+    constructor() {
         this.actions$
             .pipe(
-                ofType(
-                    actionOnboardingCreateInviteSuccess,
-                    actionOnboardingCreateInviteFailed
-                ),
-                tap((action) => {
-                    if (
-                        action.type === actionOnboardingCreateInviteSuccess.type
-                    ) {
-                        this.success.set(true);
-                    }
+                ofType(actionOnboardingCreateInviteSuccess),
+                tap(() => {
+                    this.success.set(true);
+                }),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe();
 
-                    if (
-                        action.type === actionOnboardingCreateInviteFailed.type
-                    ) {
-                        this.errors.set(action.error);
-                    }
+        this.actions$
+            .pipe(
+                ofType(actionOnboardingCreateInviteFailed),
+                tap(({ error }) => {
+                    this.errors.set(error);
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )
