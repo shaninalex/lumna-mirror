@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/pkg/persistence"
 	"gorm.io/gorm"
 )
@@ -23,16 +22,6 @@ func ProvideTestDB() *gorm.DB {
 
 func Migrate(db *gorm.DB) error {
 	return persistence.ApplyMigrations(ProvideTestConfig())
-}
-
-func ProvideTestConfig() *config.Config {
-	return &config.Config{
-		Database: config.Database{
-			SQlite: &config.DatabaseSqlite{
-				Url: "file::memory:?cache=shared",
-			},
-		},
-	}
 }
 
 var tablesToClean = []string{"identities", "credentials"}

@@ -19,15 +19,17 @@ import (
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
 )
 
-func ApplyMigrations(c *config.Config) error {
-	db := ProvideDB(c)
-	switch config.DetectDatabase(c.Database) {
-	case config.DatabaseTypePostgres:
-		return MigratePostgres(db)
-	case config.DatabaseTypeSQLite:
+func ApplyMigrations(conf *config.Config) error {
+	db := ProvideDB(conf)
+
+	typ := DatabaseType(conf.String("database.type"))
+	switch typ {
+	case DatabaseTypeSQLite:
 		return MigrateSQLite(db)
+	case DatabaseTypePostgres:
+		return MigratePostgres(db)
 	default:
-		panic("driver not supported")
+		panic("database type not supported")
 	}
 }
 

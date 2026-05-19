@@ -5,8 +5,8 @@ serve:
   embed: false
 
 database:
-  sqlite:
-    url: "file::memory:?cache=shared"
+  type: "sqlite"
+  url: "file::memory:?cache=shared"
 
 secret_key: "a-string-secret-at-least-256-bits-long"
 

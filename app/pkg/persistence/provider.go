@@ -1,7 +1,8 @@
 package persistence
 
 import (
-	"fmt"
+	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
@@ -9,20 +10,30 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
-func ProvideDB(config *config.Config) *gorm.DB {
-	return connect(config.Database)
+type DatabaseType string
+
+var (
+	DatabaseTypeSQLite   DatabaseType = "sqlite"
+	DatabaseTypePostgres DatabaseType = "postgres"
+)
+
+func ProvideDB(conf *config.Config) *gorm.DB {
+	return connect(conf)
 }
 
-func connect(conf config.Database) *gorm.DB {
+func connect(conf *config.Config) *gorm.DB {
 	var db *gorm.DB
 
-	if config.DetectDatabase(conf) == config.DatabaseTypeSQLite {
+	typ := DatabaseType(conf.String("database.type"))
+	switch typ {
+	case DatabaseTypeSQLite:
 		db = connectSqlite(conf)
-	} else if config.DetectDatabase(conf) == config.DatabaseTypePostgres {
+	case DatabaseTypePostgres:
 		db = connectPG(conf)
-	} else {
+	default:
 		panic("database type not supported")
 	}
 
@@ -38,10 +49,10 @@ func connect(conf config.Database) *gorm.DB {
 	return db
 }
 
-func connectSqlite(conf config.Database) *gorm.DB {
+func connectSqlite(conf *config.Config) *gorm.DB {
 	db, err := gorm.Open(
-		sqlite.Open(conf.SQlite.Url),
-		&gorm.Config{},
+		sqlite.Open(conf.String("database.url")),
+		connectionOptions(conf),
 	)
 
 	if err != nil {
@@ -60,23 +71,42 @@ func connectSqlite(conf config.Database) *gorm.DB {
 	return db
 }
 
-func connectPG(conf config.Database) *gorm.DB {
-	dsn := fmt.Sprintf(
-		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		conf.Postgres.Host,
-		conf.Postgres.Port,
-		conf.Postgres.User,
-		conf.Postgres.Password,
-		conf.Postgres.Database,
-	)
+func connectPG(conf *config.Config) *gorm.DB {
+	// dsn := fmt.Sprintf(
+	// 	"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+	// 	conf.Postgres.Host,
+	// 	conf.Postgres.Port,
+	// 	conf.Postgres.User,
+	// 	conf.Postgres.Password,
+	// 	conf.Postgres.Database,
+	// )
 
 	db, err := gorm.Open(
-		postgres.Open(dsn),
-		&gorm.Config{},
+		postgres.Open(conf.String("database.url")),
+		connectionOptions(conf),
 	)
 
 	if err != nil {
 		panic("failed to connect postgres database: " + err.Error())
 	}
 	return db
+}
+
+func connectionOptions(conf *config.Config) *gorm.Config {
+	opt := &gorm.Config{}
+	if conf.Env() != config.EnvironmentDev && conf.Env() != config.EnvironmentTest {
+		opt.Logger = silentLogger()
+	}
+	return opt
+}
+
+func silentLogger() logger.Interface {
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			LogLevel: logger.Silent,
+		},
+	)
+
+	return newLogger
 }

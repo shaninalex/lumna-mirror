@@ -1,57 +1,44 @@
 package config
 
 import (
-	"io"
-	"os"
+	"fmt"
 
-	"gopkg.in/yaml.v3"
+	"github.com/spf13/viper"
 )
 
 type Environment string
 
 const (
 	EnvironmentDev  Environment = "dev"
-	EnvironmentTest Environment = "test"
+	EnvironmentTest Environment = "testing"
 )
 
-type Serve struct {
-	Port  int  `yaml:"port"`
-	Embed bool `yaml:"embed"`
-}
-
-type EmailConfig struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
-}
-
 type Config struct {
-	Env       Environment `yaml:"env"`
-	Serve     Serve       `yaml:"serve"`
-	Database  Database    `yaml:"database"`
-	SecretKey string      `yaml:"secret_key"`
-	Email     EmailConfig `yaml:"email"`
+	v *viper.Viper
 }
+
+func (s *Config) Env() Environment { return Environment(s.String("env")) }
+
+func (s *Config) Int(param string) int { return s.v.GetInt(param) }
+
+func (s *Config) String(param string) string { return s.v.GetString(param) }
+
+func (s *Config) Bool(param string) bool { return s.v.GetBool(param) }
+
+func (s *Config) StringSlice(param string) []string { return s.v.GetStringSlice(param) }
 
 func ReadConfig(path string) *Config {
-	f, err := os.Open(path)
-	if err != nil {
-		panic(err)
+	s := &Config{
+		v: viper.New(),
 	}
-	defer f.Close()
-
-	b, err := io.ReadAll(f)
-	if err != nil {
-		panic(err)
+	s.v.SetConfigFile(path)
+	if err := s.v.ReadInConfig(); err != nil {
+		panic(fmt.Errorf("Can't open config file. %s \n", err))
 	}
-
-	var config Config
-	if err := yaml.Unmarshal(b, &config); err != nil {
-		panic(err)
+	if err := s.v.Unmarshal(s); err != nil {
+		panic(fmt.Errorf("Can't unmarshal config. %s \n", err))
 	}
-
-	return &config
+	return s
 }
 
 func ProvideConfig(configPath string) func() *Config {

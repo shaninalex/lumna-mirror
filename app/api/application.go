@@ -23,7 +23,7 @@ import (
 
 func ProvideRouter(conf *config.Config) *gin.Engine {
 	router := gin.New()
-	if conf.Env != "development" {
+	if conf.Env() != "development" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
@@ -64,7 +64,7 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	router.Use(middlewares.LoggingMiddleware())
 	router.Use(middlewares.CORSMiddleware())
 
-	if config.Serve.Embed {
+	if config.Bool("serve.embed") {
 		web.RegisterEmbedRoute(router)
 	}
 
