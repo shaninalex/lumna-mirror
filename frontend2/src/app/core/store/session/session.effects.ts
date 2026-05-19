@@ -1,8 +1,9 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { inject, Injectable } from "@angular/core";
-import { catchError, EMPTY, exhaustMap, map } from "rxjs";
+import { catchError, EMPTY, exhaustMap, map, of } from "rxjs";
 import { SessionApi } from "./session.api";
 import {
+    actionLoginFailed,
     actionSessionAuthenticated,
     actionSessionAuthenticatedSuccessfull,
     actionSessionAuthenticateStart,
@@ -12,6 +13,8 @@ import {
 } from "./session.actions";
 import { actionUserClear, actionUserSet } from "@entities/user";
 import { Router } from "@angular/router";
+import { HttpErrorResponse } from "@angular/common/http";
+import { fromErrorResponse } from "@shared/models";
 
 @Injectable()
 export class SessionEffects {
@@ -27,7 +30,13 @@ export class SessionEffects {
                     map((user) =>
                         actionSessionAuthenticatedSuccessfull({ user: user })
                     ),
-                    catchError(() => EMPTY) // TODO: handle auth errors
+                    catchError((err: HttpErrorResponse) =>
+                        of(
+                            actionLoginFailed({
+                                errors: fromErrorResponse(err)
+                            })
+                        )
+                    )
                 )
             )
         );

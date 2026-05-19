@@ -54,31 +54,31 @@ func ReturnJSON(c *gin.Context, status int, data any, params ...any) {
 
 func FromError(err error) ApiError {
 	s := ApiError{
-		message: err.Error(),
-		code:    "GENERIC_ERROR",
+		Message: err.Error(),
+		Code:    "GENERIC_ERROR",
 	}
 	return s
 }
 
 func NewApiError(message, code string, meta any) ApiError {
 	s := ApiError{
-		message: message,
-		code:    code,
+		Message: message,
+		Code:    code,
 	}
 
 	if meta != nil {
-		s.meta = meta
+		s.Meta = meta
 	}
 
 	return s
 }
 
 type ApiError struct {
-	message string
-	meta    any
-	code    string
+	Message string `json:"message"`
+	Meta    any    `json:"meta"`
+	Code    string `json:"code"`
 }
 
 func (s ApiError) Error() string {
-	return s.message
+	return s.Message
 }

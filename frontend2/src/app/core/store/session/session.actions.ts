@@ -1,5 +1,6 @@
 import { createAction, props } from "@ngrx/store";
 import { UserModel } from "@entities/user";
+import { Error } from "@shared/models";
 
 export const actionSessionAuthenticateStart = createAction(
     "[Session] start authenticate",
@@ -9,6 +10,11 @@ export const actionSessionAuthenticateStart = createAction(
 export const actionSessionAuthenticatedSuccessfull = createAction(
     "[Session] authenticated successfull",
     props<{ user: UserModel }>()
+);
+
+export const actionLoginFailed = createAction(
+    "[Session] login failed",
+    props<{ errors: Error[] }>()
 );
 
 export const actionSessionAuthenticated = createAction(

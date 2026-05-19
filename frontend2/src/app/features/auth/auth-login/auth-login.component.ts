@@ -1,8 +1,11 @@
 import { Component, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { actionSessionAuthenticateStart } from "@core/store";
+import { actionLoginFailed, actionSessionAuthenticateStart } from "@core/store";
 import { Store } from "@ngrx/store";
 import { form, required, email, FormField } from "@angular/forms/signals";
+import { Actions, ofType } from "@ngrx/effects";
+import { map } from "rxjs";
+import { AsyncPipe } from "@angular/common";
 
 interface LoginFormPayload {
     email: string;
@@ -11,7 +14,7 @@ interface LoginFormPayload {
 
 @Component({
     selector: "auth-login-feature",
-    imports: [FormsModule, FormField],
+    imports: [FormsModule, FormField, AsyncPipe],
     template: `
         <form (submit)="onSubmit()">
             <div class="mb-3">
@@ -52,6 +55,11 @@ interface LoginFormPayload {
                     }
                 }
             </div>
+            @if (errors$ | async; as errors) {
+                @for (error of errors; track error) {
+                    <div class="text-red-600 mb-3">{{ error.message }}</div>
+                }
+            }
             <div>
                 <button type="submit" class="btn">Login</button>
             </div>
@@ -60,6 +68,11 @@ interface LoginFormPayload {
 })
 export class AuthLoginFeature {
     private store = inject(Store);
+    private actions$ = inject(Actions);
+    errors$ = this.actions$.pipe(
+        ofType(actionLoginFailed),
+        map((action) => action.errors)
+    );
 
     loginFormModel = signal<LoginFormPayload>({
         email: "",
