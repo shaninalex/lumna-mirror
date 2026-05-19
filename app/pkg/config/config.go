@@ -6,6 +6,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+type Interface interface {
+	Env() Environment
+	Int(param string) int
+	String(param string) string
+	Bool(param string) bool
+	StringSlice(param string) []string
+}
+
 type Environment string
 
 const (

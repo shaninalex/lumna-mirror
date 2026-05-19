@@ -24,5 +24,15 @@ func (s *OnboardingController) ValidateInvitation(c *gin.Context) {
 		return
 	}
 
-	utils.Success(c, nil)
+	invitation, err := s.invitationManager.Get(c.Request.Context(), token)
+	if err != nil {
+		utils.Error(c, http.StatusBadRequest, utils.NewApiError(
+			fmt.Sprintf("invlid token: %s", err.Error()),
+			"ERROR_INVITATION_INVALID_TOKEN",
+			nil,
+		))
+		return
+	}
+
+	utils.Success(c, invitation)
 }

@@ -1,6 +1,7 @@
 package onboarding
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,11 +21,17 @@ func (s *OnboardingController) handlerUser(c *gin.Context) {
 		return
 	}
 
-	inv, _, err := s.invitationManager.Create(c.Request.Context(), data.Email, "member", nil)
+	inv, token, err := s.invitationManager.Create(c.Request.Context(), data.Email, "member", map[string]any{
+		"first_name": data.FirstName,
+		"last_name":  data.LastName,
+	})
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
+
+	fmt.Println(inv)
+	fmt.Println("Email link token: ", token)
 
 	utils.Success(c, inv)
 }

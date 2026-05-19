@@ -11,8 +11,8 @@ export class ApplicationEffects {
     appInit$ = createEffect(
         () =>
             this.actions$.pipe(
-                ofType(actionApplicationInit),
-                tap((action) => console.log(action))
+                ofType(actionApplicationInit)
+                // tap((action) => console.log(action))
                 // exhaustMap(() => of(actionUserGet()))
             ),
         { dispatch: false }

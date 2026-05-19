@@ -1,6 +1,11 @@
 export enum OnboardingState {
-    WORKSPACES,
+    DISABLED,
+    ALLOWED,
     COMPLETED
+}
+
+export interface OnboardingStateResponse {
+    state: OnboardingState;
 }
 
 export interface UserOnboardingModel {

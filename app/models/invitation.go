@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
@@ -27,14 +28,14 @@ var (
 )
 
 type Invitation struct {
-	ID         uint            `gorm:"primaryKey" json:"id"`
-	Email      string          `gorm:"unique" json:"email"`
-	TokenHash  string          `gorm:"uniqueIndex" json:"-"`
-	State      InvitationState `json:"state"`
-	Role       string          `json:"role"`
-	CreatedAt  time.Time       `gorm:"not null" json:"created_at"`
-	ValidUntil time.Time       `gorm:"not null" json:"valid_until"`
-	Meta       any             `gorm:"type:text;null" json:"meta"`
+	ID         uint              `gorm:"primaryKey" json:"id"`
+	Email      string            `gorm:"unique" json:"email"`
+	TokenHash  string            `gorm:"uniqueIndex" json:"-"`
+	State      InvitationState   `json:"state"`
+	Role       string            `json:"role"`
+	CreatedAt  time.Time         `gorm:"not null" json:"created_at"`
+	ValidUntil time.Time         `gorm:"not null" json:"valid_until"`
+	Meta       datatypes.JSONMap `gorm:"type:json" json:"meta"`
 }
 
 // BeforeCreate set's created at time

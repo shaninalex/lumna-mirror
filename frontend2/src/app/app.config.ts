@@ -20,6 +20,7 @@ import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { provideRouterStore } from "@ngrx/router-store";
 import { provideUserFeature } from "@entities/user";
 import { provideSessionFeature } from "@core/store/session/provider";
+import { provideOnboardingFeature } from "@features/onboarding";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -34,6 +35,7 @@ export const appConfig: ApplicationConfig = {
         provideApplicationFeature(),
         provideSessionFeature(),
         provideUserFeature(),
+        provideOnboardingFeature(),
 
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
         provideAppInitializer(ApplicationInit)

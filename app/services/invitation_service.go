@@ -17,6 +17,7 @@ var (
 
 type InvitationManager interface {
 	Create(ctx context.Context, email, role string, meta map[string]any) (*models.Invitation, string, error)
+	Get(ctx context.Context, hash string) (*models.Invitation, error)
 	Accept(ctx context.Context, token string) error
 	Validate(ctx context.Context, token string) error
 	Delete(ctx context.Context, invitationId uint) error
@@ -96,6 +97,14 @@ func (s *InvitationService) Validate(ctx context.Context, token string) error {
 
 	invitation.State = models.InvitationStateValidated
 	return s.repository.Update(ctx, invitation)
+}
+
+func (s *InvitationService) Get(ctx context.Context, token string) (*models.Invitation, error) {
+	invitation, err := s.repository.GetByHash(ctx, utils.HashToken(token))
+	if err != nil {
+		return nil, err
+	}
+	return invitation, nil
 }
 
 func (s *InvitationService) Delete(ctx context.Context, invitationId uint) error {

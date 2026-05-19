@@ -2,24 +2,25 @@ import { inject, Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { map, Observable } from "rxjs";
 import { APIResponse } from "@shared/models";
-import { OnboardingState, UserOnboardingModel } from "../model";
+import { OnboardingStateResponse, UserOnboardingModel } from "../model";
+import { InvitationModel } from "@entities/invitation";
 
 @Injectable()
 export class OnboardingApiService {
     private http = inject(HttpClient);
 
-    state(): Observable<OnboardingState> {
+    state(): Observable<OnboardingStateResponse> {
         return this.http
             .get<
-                APIResponse<any>
+                APIResponse<OnboardingStateResponse>
             >(`/api/v1/onboarding/state`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
-    user(payload: UserOnboardingModel): Observable<any> {
+    user(payload: UserOnboardingModel): Observable<InvitationModel> {
         return this.http
             .post<
-                APIResponse<any>
+                APIResponse<InvitationModel>
             >(`/api/v1/onboarding/user`, payload, { withCredentials: true })
             .pipe(map((response) => response.data));
     }

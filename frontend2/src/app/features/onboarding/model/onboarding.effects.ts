@@ -1,11 +1,14 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { inject, Injectable } from "@angular/core";
 import {
+    actionOnboardingCreateInvite,
+    actionOnboardingCreateInviteFailed,
+    actionOnboardingCreateInviteSuccess,
     actionOnboardingValidateInviteFailed,
     actionOnboardingValidateInviteSuccess,
     actionOnboardingValidateInviteToken
 } from "./onboarding.actions";
-import { catchError, exhaustMap, map, of, switchMap, tap } from "rxjs";
+import { catchError, exhaustMap, map, of, tap } from "rxjs";
 import { OnboardingApiService } from "../api/onboarding.api";
 import { Error } from "@shared/models";
 
@@ -24,6 +27,27 @@ export class OnboardingEffects {
                         of(
                             actionOnboardingValidateInviteFailed({
                                 error: err as Error
+                            })
+                        )
+                    )
+                )
+            )
+        )
+    );
+
+    onboarding_init$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionOnboardingCreateInvite),
+            exhaustMap((action) =>
+                this.api.user(action.payload).pipe(
+                    tap((action) => console.log(action)),
+                    map((invitation) =>
+                        actionOnboardingCreateInviteSuccess({ invitation })
+                    ),
+                    catchError((err) =>
+                        of(
+                            actionOnboardingCreateInviteFailed({
+                                error: err as Error[]
                             })
                         )
                     )

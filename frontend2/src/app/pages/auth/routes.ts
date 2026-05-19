@@ -12,7 +12,7 @@ export const routes: Routes = [
                 component: LoginPage
             },
             {
-                path: "accept-invite",
+                path: "accept-invite/:token",
                 component: AcceptInvitePage
             }
         ]

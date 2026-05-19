@@ -7,17 +7,19 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 )
 
+type OnboardingState string
+
+var (
+	OnboardingStateDisabled  OnboardingState = "DISABLED"
+	OnboardingStateAllowed   OnboardingState = "ALLOWED"
+	OnboardingStateCompleted OnboardingState = "COMPLETED"
+)
+
 func (s *OnboardingController) handlerCheckState(c *gin.Context) {
-	wp, err := s.workspaceManager.List(c.Request.Context())
-	if err != nil {
-		utils.Error(c, http.StatusInternalServerError, err)
-		return
-	}
-	if len(wp) == 0 {
+	if s.config.Bool("onboarding.allowed") {
 		utils.Success(c, map[string]any{
-			"state": "WORKSPACES",
+			"state": OnboardingStateDisabled,
 		})
-		return
 	}
 
 	users, err := s.userManager.List(c.Request.Context())
@@ -26,14 +28,14 @@ func (s *OnboardingController) handlerCheckState(c *gin.Context) {
 		return
 	}
 	if len(users) == 0 {
-		// That mean that workspace was created but owner do not accept invite and do not create a user
+		// No users exists in application, onboarding allowed.
 		utils.Success(c, map[string]any{
-			"state": "COMPLETED",
+			"state": OnboardingStateAllowed,
 		})
 		return
 	}
 
 	utils.Success(c, map[string]any{
-		"state": "COMPLETED",
+		"state": OnboardingStateCompleted,
 	})
 }
