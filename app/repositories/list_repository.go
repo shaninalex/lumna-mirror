@@ -14,6 +14,7 @@ type ListRepository interface {
 	Delete(ctx context.Context, id uint) error
 	ListByProjectId(ctx context.Context, projectId uint) ([]*models.List, error) // TODO: make proper filter request. Or not, not sure if it needed
 }
+
 type GormListRepository struct {
 	db *gorm.DB
 }

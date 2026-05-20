@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/auth"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
+	"gitlab.com/shaninalex/lumna/app/services/auth"
 	"gorm.io/gorm"
 )
 

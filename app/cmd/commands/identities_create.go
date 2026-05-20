@@ -7,10 +7,10 @@ import (
 
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/auth"
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/pkg/persistence"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
+	"gitlab.com/shaninalex/lumna/app/services/auth"
 	"go.uber.org/dig"
 	"gorm.io/gorm"
 )

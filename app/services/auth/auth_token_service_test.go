@@ -1,4 +1,4 @@
-package services_test
+package auth_test
 
 import (
 	"testing"
@@ -6,9 +6,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/auth"
 	"gitlab.com/shaninalex/lumna/app/repositories"
-	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/services/auth"
 	"gitlab.com/shaninalex/lumna/testutils"
 )
 
@@ -17,7 +16,7 @@ func Test_AuthTokenService_Create(t *testing.T) {
 	defer testutils.ClearDB(db)
 
 	user := testutils.User(models.Identity{FullName: "test", Email: "test@test.com", Active: true}, db)
-	ts := services.NewAuthTokenService(
+	ts := auth.NewAuthTokenService(
 		repositories.NewGormRefreshTokenRepository(db),
 	)
 
@@ -54,7 +53,7 @@ func Test_AuthTokenService_Delete(t *testing.T) {
 
 	user := testutils.User(models.Identity{FullName: "test", Email: "test@test.com", Active: true}, db)
 
-	ts := services.NewAuthTokenService(
+	ts := auth.NewAuthTokenService(
 		repositories.NewGormRefreshTokenRepository(db),
 	)
 	_, toDB, _ := auth.GenerateRefreshToken()

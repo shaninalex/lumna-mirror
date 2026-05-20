@@ -24,7 +24,6 @@ func (s *ActivityLog) BeforeCreate(tx *gorm.DB) error {
 	}
 
 	// build summary
-
 	return nil
 }
 

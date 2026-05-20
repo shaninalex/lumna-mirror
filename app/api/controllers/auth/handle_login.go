@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/auth"
+	"gitlab.com/shaninalex/lumna/app/services/auth"
 )
 
 func (s *AuthController) handleLogin(c *gin.Context) {
