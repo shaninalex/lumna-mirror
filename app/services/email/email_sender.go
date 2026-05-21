@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+	"fmt"
 
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	gomail "gopkg.in/gomail.v2"
@@ -22,15 +23,18 @@ func (s *EmailService) Send(ctx context.Context, to, from, subject, html string)
 	msg.SetHeader("Subject", subject)
 	msg.SetBody("text/html", html)
 
-	n := gomail.NewDialer(
+	dialer := gomail.NewDialer(
 		s.config.String("email.host"),
 		s.config.Int("email.port"),
 		s.config.String("email.username"),
 		s.config.String("email.password"),
 	)
 
-	if err := n.DialAndSend(msg); err != nil {
-		return err
+	if err := dialer.DialAndSend(msg); err != nil {
+		fmt.Println("Error:", err)
+		panic(err)
+	} else {
+		fmt.Println("Email sent successfully!")
 	}
 
 	return nil

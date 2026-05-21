@@ -1,0 +1,13 @@
+{
+    "from_email": "test@test.com",
+    "to_email": "test@test.com",
+    "subject": "subject",
+    "body": "body",
+    "format": "format",
+    "sender_name": "sender_name",
+    "headers": "headers",
+    "status": "pending",
+    "cc": "cc",
+    "bcc": "bcc",
+    "reply_to": "test@test.com"
+}

@@ -13,7 +13,7 @@ type EmailRepository interface {
 	Get(context.Context, uint) (*models.Email, error)
 	Update(context.Context, *models.Email) error
 	Delete(context.Context, uint) error
-	Create(context.Context, models.Email) error
+	Create(context.Context, *models.Email) error
 }
 
 type GormEmailRepository struct {
@@ -25,8 +25,8 @@ func NewGormEmailRepository(db *gorm.DB) EmailRepository {
 }
 
 // Create implements [EmailRepository].
-func (g *GormEmailRepository) Create(ctx context.Context, email models.Email) error {
-	return g.db.WithContext(ctx).Create(&email).Error
+func (g *GormEmailRepository) Create(ctx context.Context, email *models.Email) error {
+	return g.db.WithContext(ctx).Create(email).Error
 }
 
 // Delete implements [EmailRepository].

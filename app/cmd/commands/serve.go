@@ -18,6 +18,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/pkg/logger"
 	"gitlab.com/shaninalex/lumna/app/pkg/persistence"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/services/email"
 	"go.uber.org/dig"
 )
 
@@ -41,15 +42,14 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			})
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
-
 			_ = c.Provide(logger.ProvideLogger)
 			_ = c.Provide(logger.ProvideActivityLogger)
 
-			// Providing api module
 			_ = api.Module(c)
 			_ = repositories.Module(c)
+			_ = email.Module(c)
 
-			err = c.Invoke(func(router *gin.Engine, config *config.Config, ctx context.Context) {
+			err = c.Invoke(func(router *gin.Engine, config *config.Config, ctx context.Context, _ *email.EmailQueue) {
 				srv := &http.Server{
 					Addr:    fmt.Sprintf(":%d", config.Int("serve.port")),
 					Handler: router,
