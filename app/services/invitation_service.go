@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/mail"
 	"time"
 
@@ -68,12 +69,15 @@ func (s *InvitationService) Create(ctx context.Context, email, role string, meta
 		return nil, "", err
 	}
 
-	t := templates.NewEmailInvitationEmailTemplate(invitation.Email, token)
+	t := templates.NewEmailInvitationEmailTemplate(
+		invitation.Email,
+		fmt.Sprintf("http://localhost:8081/auth/accept-invite/%s", token), // Build server url
+	)
 
 	eml := &models.Email{
 		ToEmail:   invitation.Email,
 		FromEmail: "your@server.host", // from settings somewhere ?
-		Body:      t.Build(),
+		Body:      t.HTML(),
 		Subject:   "You have been invited",
 	}
 

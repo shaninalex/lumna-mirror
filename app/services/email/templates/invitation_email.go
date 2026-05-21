@@ -30,6 +30,6 @@ func (s *EmailInvitation) receiverConfirmationLink() string {
 	return s.link
 }
 
-func (s *EmailInvitation) Build() string {
+func (s *EmailInvitation) HTML() string {
 	return utils.TemplToString(context.Background(), s.template())
 }
