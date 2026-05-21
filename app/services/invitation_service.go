@@ -9,6 +9,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/services/email/templates"
 )
 
 var (
@@ -30,7 +31,8 @@ func ProvideInvitationService(repository repositories.InvitationRepository) Invi
 }
 
 type InvitationService struct {
-	repository repositories.InvitationRepository
+	repository      repositories.InvitationRepository
+	emailRepository repositories.EmailRepository
 }
 
 func (s *InvitationService) List(ctx context.Context) ([]models.Invitation, error) {
@@ -65,6 +67,20 @@ func (s *InvitationService) Create(ctx context.Context, email, role string, meta
 	if err = s.repository.Create(ctx, invitation); err != nil {
 		return nil, "", err
 	}
+
+	t := templates.NewEmailInvitationEmailTemplate(invitation.Email, token)
+
+	eml := &models.Email{
+		ToEmail:   invitation.Email,
+		FromEmail: "your@server.host", // from settings somewhere ?
+		Body:      t.Build(),
+		Subject:   "You have been invited",
+	}
+
+	if err = s.emailRepository.Create(ctx, eml); err != nil {
+		return nil, "", err
+	}
+
 	return invitation, token, nil
 }
 
@@ -128,4 +144,9 @@ func (s *InvitationService) Reset(ctx context.Context, invitationId uint) (strin
 	}
 
 	return token, nil
+}
+
+func (s *InvitationService) createInvitationEmail(ctx context.Context, invitation *models.Invitation) {
+	// save email obj
+
 }
