@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
-	"gitlab.com/shaninalex/lumna/app/pkg/persistence"
+	"gitlab.com/shaninalex/lumna/app/services/persistence"
 )
 
 func NewMigrateApplyCmd() *cobra.Command {

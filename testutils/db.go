@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"gitlab.com/shaninalex/lumna/app/pkg/persistence"
+	"gitlab.com/shaninalex/lumna/app/services/persistence"
 	"gorm.io/gorm"
 )
 
