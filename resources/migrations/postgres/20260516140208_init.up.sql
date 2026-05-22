@@ -53,6 +53,8 @@ CREATE TABLE invitations
     role        VARCHAR,
     created_at  TIMESTAMP NOT NULL,
     valid_until TIMESTAMP NOT NULL,
+    meta        TEXT        NULL,
+
     CONSTRAINT uni_invitations_email UNIQUE (email)
 );
 CREATE UNIQUE INDEX idx_invitations_token_hash ON invitations (token_hash);

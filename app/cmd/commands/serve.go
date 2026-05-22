@@ -16,6 +16,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api"
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/pkg/logger"
+	"gitlab.com/shaninalex/lumna/app/pkg/observer"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 	"gitlab.com/shaninalex/lumna/app/services/email"
 	"gitlab.com/shaninalex/lumna/app/services/persistence"
@@ -41,6 +42,7 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 				return appContext
 			})
 			_ = c.Provide(config.ProvideConfig(configPath))
+			_ = c.Provide(observer.ProvideEventBus)
 			_ = c.Provide(persistence.ProvideDB)
 			_ = c.Provide(logger.ProvideLogger)
 			_ = c.Provide(logger.ProvideActivityLogger)

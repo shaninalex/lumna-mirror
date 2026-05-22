@@ -1,7 +1,8 @@
-package obverser
+package observer
 
 import (
 	"context"
+	"fmt"
 )
 
 type Event string
@@ -37,6 +38,7 @@ func (s *observer) Publish(ctx context.Context, event Event, data any) {
 	}
 
 	for _, subscriber := range subscribers {
+		fmt.Println("[BUS] publish ", event)
 		subscriber(ctx, data)
 	}
 }

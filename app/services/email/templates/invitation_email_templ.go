@@ -34,9 +34,9 @@ func (s *EmailInvitation) template() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(s.email())
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(s.receiverEmail())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/services/email/templates/invitation_email.templ`, Line: 12, Col: 19}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/services/email/templates/invitation_email.templ`, Line: 12, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -47,9 +47,9 @@ func (s *EmailInvitation) template() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(s.link())
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(s.receiverConfirmationLink())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/services/email/templates/invitation_email.templ`, Line: 13, Col: 18}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/services/email/templates/invitation_email.templ`, Line: 13, Col: 38}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {

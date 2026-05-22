@@ -17,5 +17,6 @@ CREATE TABLE emails
     bcc         VARCHAR,
     reply_to    VARCHAR,
     sent_at     DATETIME,
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    meta        text        NULL
 );

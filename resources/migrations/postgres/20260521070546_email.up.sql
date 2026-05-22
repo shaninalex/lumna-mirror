@@ -1,6 +1,6 @@
 CREATE TABLE emails
 (
-    id          SERIAL PRIMARY KEY,
+    id          SERIAL      PRIMARY KEY,
     from_email  VARCHAR,
     to_email    VARCHAR,
     subject     VARCHAR,
@@ -17,5 +17,6 @@ CREATE TABLE emails
     bcc         VARCHAR,
     reply_to    VARCHAR,
     sent_at     TIMESTAMP,  -- Converted DATETIME to TIMESTAMP
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at  TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    meta        TEXT        NULL
 );

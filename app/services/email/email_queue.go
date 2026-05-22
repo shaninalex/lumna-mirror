@@ -6,13 +6,15 @@ import (
 	"time"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/observer"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
 const (
-	workersNumber = 2
-	queueBuffer   = 100
-	tickInterval  = 1 * time.Second
+	workersNumber                      = 2
+	queueBuffer                        = 100
+	tickInterval                       = 1 * time.Second
+	EventEmailQueueSent observer.Event = "EMAIL_QUEUE_SENT"
 )
 
 type EmailQueue struct {
@@ -21,15 +23,22 @@ type EmailQueue struct {
 	repository repositories.EmailRepository
 	sender     EmailSender
 	jobs       chan models.Email
+	bus        observer.Observer
 }
 
-func NewEmailQueue(ctx context.Context, repository repositories.EmailRepository, sender EmailSender) *EmailQueue {
+func NewEmailQueue(
+	ctx context.Context,
+	repository repositories.EmailRepository,
+	sender EmailSender,
+	bus observer.Observer,
+) *EmailQueue {
 	s := &EmailQueue{
 		ctx:        ctx,
 		workers:    workersNumber,
 		repository: repository,
 		sender:     sender,
 		jobs:       make(chan models.Email, queueBuffer),
+		bus:        bus,
 	}
 
 	s.process()
@@ -72,6 +81,8 @@ func (s *EmailQueue) handle(email models.Email) {
 	if err := s.repository.Update(s.ctx, &email); err != nil {
 		fmt.Printf("[EmailQueue] update error id=%d: %v\n", email.ID, err)
 	}
+
+	s.bus.Publish(s.ctx, EventEmailQueueSent, email)
 }
 
 func (s *EmailQueue) processQueue() {

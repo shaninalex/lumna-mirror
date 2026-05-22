@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/observer"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 	"gitlab.com/shaninalex/lumna/testutils"
@@ -14,7 +15,11 @@ import (
 func Test_InvitationService_Create(t *testing.T) {
 	db := testutils.ProvideTestDB()
 	_ = testutils.Migrate(db)
-	s := ProvideInvitationService(repositories.NewGormInvitationRepository(db))
+	s := ProvideInvitationService(
+		repositories.NewGormInvitationRepository(db),
+		repositories.NewGormEmailRepository(db),
+		observer.ProvideEventBus(),
+	)
 	ctx := context.Background()
 
 	defer testutils.ClearDB(db)

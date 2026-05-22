@@ -26,6 +26,7 @@ func NewGormEmailRepository(db *gorm.DB) EmailRepository {
 
 // Create implements [EmailRepository].
 func (g *GormEmailRepository) Create(ctx context.Context, email *models.Email) error {
+	email.Status = models.EmailStatusPending
 	return g.db.WithContext(ctx).Create(email).Error
 }
 

@@ -8,10 +8,16 @@ import (
 	"time"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/observer"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/services/email"
 	"gitlab.com/shaninalex/lumna/app/services/email/templates"
 )
+
+type InvitationEmailMeta struct {
+	InvitationID uint `json:"invitation_id"`
+}
 
 var (
 	defaultValidUntil = 1 * time.Hour
@@ -19,7 +25,7 @@ var (
 
 type InvitationManager interface {
 	Create(ctx context.Context, email, role string, meta map[string]any) (*models.Invitation, string, error)
-	Get(ctx context.Context, hash string) (*models.Invitation, error)
+	Get(ctx context.Context, hash string) (*models.Invitation, error) // TODO: rename into GetByHash
 	Accept(ctx context.Context, token string) error
 	Validate(ctx context.Context, token string) error
 	Delete(ctx context.Context, invitationId uint) error
@@ -27,13 +33,28 @@ type InvitationManager interface {
 	List(ctx context.Context) ([]models.Invitation, error)
 }
 
-func ProvideInvitationService(repository repositories.InvitationRepository) InvitationManager {
-	return &InvitationService{repository: repository}
+func ProvideInvitationService(
+	repository repositories.InvitationRepository,
+	emailRepository repositories.EmailRepository,
+	bus observer.Observer,
+) InvitationManager {
+	s := &InvitationService{
+		repository:      repository,
+		emailRepository: emailRepository,
+		bus:             bus,
+	}
+	s.init()
+	return s
 }
 
 type InvitationService struct {
 	repository      repositories.InvitationRepository
 	emailRepository repositories.EmailRepository
+	bus             observer.Observer
+}
+
+func (s *InvitationService) init() {
+	s.bus.Subscribe(email.EventEmailQueueSent, s.handleEventInvitationEmailSent)
 }
 
 func (s *InvitationService) List(ctx context.Context) ([]models.Invitation, error) {
@@ -71,14 +92,20 @@ func (s *InvitationService) Create(ctx context.Context, email, role string, meta
 
 	t := templates.NewEmailInvitationEmailTemplate(
 		invitation.Email,
-		fmt.Sprintf("http://localhost:8081/auth/accept-invite/%s", token), // Build server url
+		fmt.Sprintf("http://localhost:4200/auth/accept-invite/%s", token), // Build server url
 	)
+
+	metaMap, err := models.MetaToMap(InvitationEmailMeta{InvitationID: invitation.ID})
+	if err != nil {
+		return nil, "", err
+	}
 
 	eml := &models.Email{
 		ToEmail:   invitation.Email,
 		FromEmail: "your@server.host", // from settings somewhere ?
 		Body:      t.HTML(),
 		Subject:   "You have been invited",
+		Meta:      metaMap,
 	}
 
 	if err = s.emailRepository.Create(ctx, eml); err != nil {
@@ -150,7 +177,27 @@ func (s *InvitationService) Reset(ctx context.Context, invitationId uint) (strin
 	return token, nil
 }
 
-func (s *InvitationService) createInvitationEmail(ctx context.Context, invitation *models.Invitation) {
-	// save email obj
+func (s *InvitationService) handleEventInvitationEmailSent(ctx context.Context, data any) {
+	m, ok := data.(models.MetaContaing)
+	if !ok {
+		return
+	}
 
+	var meta InvitationEmailMeta
+	if err := models.MapToMeta(m.GetMeta(), &meta); err != nil {
+		return
+	}
+	if meta.InvitationID == 0 {
+		return
+	}
+
+	inv, err := s.repository.GetById(ctx, meta.InvitationID)
+	if err != nil {
+		return
+	}
+
+	inv.State = models.InvitationStateSent
+	if err = s.repository.Update(ctx, inv); err != nil {
+		return
+	}
 }
