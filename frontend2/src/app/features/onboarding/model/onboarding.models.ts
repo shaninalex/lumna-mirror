@@ -15,7 +15,7 @@ export interface UserOnboardingModel {
 }
 
 export enum InvitationProcessState {
-    VALIDATING,
+    PENDING,
     SUCCESS,
     FAILED
 }
