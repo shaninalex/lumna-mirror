@@ -3,6 +3,7 @@ package observer
 import (
 	"context"
 	"fmt"
+	"sync"
 )
 
 type Event string
@@ -17,6 +18,7 @@ type Observer interface {
 var _ Observer = (*observer)(nil)
 
 type observer struct {
+	mu     sync.RWMutex
 	events map[Event][]EventHandlerFunc
 }
 
@@ -28,17 +30,21 @@ func ProvideEventBus() Observer {
 }
 
 func (s *observer) Subscribe(event Event, callback EventHandlerFunc) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	s.events[event] = append(s.events[event], callback)
 }
 
 func (s *observer) Publish(ctx context.Context, event Event, data any) {
-	subscribers, ok := s.events[event]
-	if !ok {
+	s.mu.RLock()
+	subscribers := s.events[event]
+	s.mu.RUnlock()
+	if len(subscribers) == 0 {
 		return
 	}
 
+	fmt.Println("[BUS] publish ", event)
 	for _, subscriber := range subscribers {
-		fmt.Println("[BUS] publish ", event)
-		subscriber(ctx, data)
+		go subscriber(ctx, data)
 	}
 }
