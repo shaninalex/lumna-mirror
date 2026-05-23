@@ -22,7 +22,9 @@ export class OnboardingEffects {
             ofType(actionOnboardingValidateInviteToken),
             exhaustMap((action) =>
                 this.api.invitationValidateToken(action.token).pipe(
-                    map(() => actionOnboardingValidateInviteSuccess()),
+                    map((invitation) =>
+                        actionOnboardingValidateInviteSuccess({ invitation })
+                    ),
                     catchError((err) =>
                         of(
                             actionOnboardingValidateInviteFailed({

@@ -19,3 +19,13 @@ export enum InvitationProcessState {
     SUCCESS,
     FAILED
 }
+
+export interface OnboardingContinue {
+    email: string;
+    state: string;
+    role: string;
+    meta: {
+        first_name: string;
+        last_name: string;
+    };
+}

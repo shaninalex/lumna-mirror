@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, signal } from "@angular/core";
+import { Component, inject, Input, OnInit, signal, input } from "@angular/core";
 import { AsyncPipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { form, required, validate, FormField } from "@angular/forms/signals";
@@ -11,6 +11,7 @@ import {
     AcceptInviteUserRegistrationForm,
     actionUserInviteRegister
 } from "@entities/user";
+import { OnboardingContinue } from "@features/onboarding";
 
 @Component({
     selector: "app-register-form-feature",
@@ -147,6 +148,7 @@ import {
 })
 export class RegisterForm implements OnInit {
     @Input({ required: true }) invitationToken!: string;
+    invitation = input<OnboardingContinue>();
 
     private store = inject(Store);
     private actions$ = inject(Actions);
@@ -203,6 +205,11 @@ export class RegisterForm implements OnInit {
 
     ngOnInit() {
         this.registerForm.invitation_token().value.set(this.invitationToken);
+        const v = this.invitation();
+        if (v) {
+            this.registerForm.first_name().value.set(v.meta.first_name);
+            this.registerForm.last_name().value.set(v.meta.last_name);
+        }
     }
 
     onSubmit(): void {

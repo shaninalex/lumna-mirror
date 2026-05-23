@@ -7,7 +7,10 @@ import {
     signal
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { InvitationProcessState } from "@features/onboarding";
+import {
+    InvitationProcessState,
+    OnboardingContinue
+} from "@features/onboarding";
 import {
     actionOnboardingValidateInviteFailed,
     actionOnboardingValidateInviteSuccess,
@@ -32,7 +35,10 @@ import { RegisterForm } from "@features/auth";
                 </div>
             }
             @case (InvitationProcessState.SUCCESS) {
-                <app-register-form-feature [invitationToken]="token" />
+                <app-register-form-feature
+                    [invitationToken]="token"
+                    [invitation]="invitation()"
+                />
             }
         }
     `,
@@ -41,6 +47,7 @@ import { RegisterForm } from "@features/auth";
 export class AcceptInviteFeature implements OnInit {
     @Input() token: string;
     process = signal<InvitationProcessState>(InvitationProcessState.PENDING);
+    invitation = signal<OnboardingContinue | undefined>(undefined);
 
     public readonly InvitationProcessState: typeof InvitationProcessState =
         InvitationProcessState;
@@ -66,7 +73,10 @@ export class AcceptInviteFeature implements OnInit {
             .pipe(
                 ofType(actionOnboardingValidateInviteSuccess),
                 takeUntilDestroyed(this.destroyRef),
-                tap(() => this.process.set(InvitationProcessState.SUCCESS))
+                tap((action) => {
+                    this.invitation.set(action.invitation);
+                    this.process.set(InvitationProcessState.SUCCESS);
+                })
             )
             .subscribe();
     }

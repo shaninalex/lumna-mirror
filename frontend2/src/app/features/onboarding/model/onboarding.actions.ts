@@ -1,7 +1,7 @@
 import { InvitationModel } from "@entities/invitation";
 import { createAction, props } from "@ngrx/store";
 import { Error } from "@shared/models";
-import { UserOnboardingModel } from "./onboarding.models";
+import { OnboardingContinue, UserOnboardingModel } from "./onboarding.models";
 
 /**
  * Dispatched when user opens invite user link with token
@@ -48,7 +48,8 @@ export const actionOnboardingValidateInviteToken = createAction(
  * And user now proceed with invitation process ( provide user details )
  */
 export const actionOnboardingValidateInviteSuccess = createAction(
-    "[Onboarding] Validate invite success"
+    "[Onboarding] Validate invite success",
+    props<{ invitation: OnboardingContinue }>()
 );
 
 /**
