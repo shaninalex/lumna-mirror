@@ -31,6 +31,7 @@ func NewOnboardingController(
 
 func (s *OnboardingController) Register(router *gin.RouterGroup) {
 	router.POST("", s.handlerInit)
+	router.POST("create", s.handlerCreate)
 	router.GET("state", s.handlerCheckState)
 	router.GET("invitation", s.ValidateInvitation)
 }
