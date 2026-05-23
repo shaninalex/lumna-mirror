@@ -36,32 +36,32 @@ func SetupView(data SetupViewData) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta name=\"viewport\" content=\"initial-scale=1.0, width=device-width\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><script src=\"https://cdn.tailwindcss.com\"></script></head><body class=\"min-h-screen bg-zinc-100 text-zinc-900\"><div class=\"flex min-h-screen items-center justify-center p-6\"><div class=\"w-full max-w-md rounded-2xl bg-white p-8 shadow-xl ring-1 ring-zinc-200\"><div class=\"mb-8\"><h1 class=\"text-2xl font-semibold tracking-tight\">Initial admin setup</h1><p class=\"mt-2 text-sm text-zinc-500\">Create the first administrator account for this instance.</p></div><form action=\"/setup\" method=\"post\" class=\"space-y-5\"><div><label class=\"mb-1 block text-sm font-medium\">Email</label> <input name=\"email\" type=\"email\" placeholder=\"john@example.com\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta name=\"viewport\" content=\"initial-scale=1.0, width=device-width\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><style>\n\t\t\t\t:root {\n\t\t\t\t\tfont-family: Inter, system-ui, sans-serif;\n\t\t\t\t}\n\n\t\t\t\t* {\n\t\t\t\t\tbox-sizing: border-box;\n\t\t\t\t}\n\n\t\t\t\tbody {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tmin-height: 100vh;\n\t\t\t\t\tbackground: #f4f4f5;\n\t\t\t\t\tcolor: #18181b;\n\t\t\t\t}\n\n\t\t\t\t.page {\n\t\t\t\t\tmin-height: 100vh;\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: center;\n\t\t\t\t\tpadding: 24px;\n\t\t\t\t}\n\n\t\t\t\t.card {\n\t\t\t\t\twidth: 100%;\n\t\t\t\t\tmax-width: 480px;\n\t\t\t\t\tbackground: white;\n\t\t\t\t\tborder-radius: 24px;\n\t\t\t\t\tpadding: 32px;\n\t\t\t\t\tbox-shadow:\n\t\t\t\t\t\t0 10px 15px -3px rgb(0 0 0 / 0.1),\n\t\t\t\t\t\t0 4px 6px -4px rgb(0 0 0 / 0.1);\n\t\t\t\t\tborder: 1px solid #e4e4e7;\n\t\t\t\t}\n\n\t\t\t\t.title {\n\t\t\t\t\tfont-size: 28px;\n\t\t\t\t\tfont-weight: 600;\n\t\t\t\t\tletter-spacing: -0.025em;\n\t\t\t\t\tmargin: 0;\n\t\t\t\t}\n\n\t\t\t\t.subtitle {\n\t\t\t\t\tmargin-top: 8px;\n\t\t\t\t\tfont-size: 14px;\n\t\t\t\t\tcolor: #71717a;\n\t\t\t\t}\n\n\t\t\t\t.form {\n\t\t\t\t\tmargin-top: 32px;\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\tflex-direction: column;\n\t\t\t\t\tgap: 20px;\n\t\t\t\t}\n\n\t\t\t\t.row {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: 1fr 1fr;\n\t\t\t\t\tgap: 16px;\n\t\t\t\t}\n\n\t\t\t\t.field {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\tflex-direction: column;\n\t\t\t\t}\n\n\t\t\t\t.label {\n\t\t\t\t\tfont-size: 14px;\n\t\t\t\t\tfont-weight: 500;\n\t\t\t\t\tmargin-bottom: 6px;\n\t\t\t\t}\n\n\t\t\t\t.input {\n\t\t\t\t\twidth: 100%;\n\t\t\t\t\tborder: 1px solid #d4d4d8;\n\t\t\t\t\tborder-radius: 10px;\n\t\t\t\t\tpadding: 10px 12px;\n\t\t\t\t\tfont-size: 14px;\n\t\t\t\t\toutline: none;\n\t\t\t\t\ttransition:\n\t\t\t\t\t\tborder-color 0.15s ease,\n\t\t\t\t\t\tbox-shadow 0.15s ease;\n\t\t\t\t\tbackground: white;\n\t\t\t\t}\n\n\t\t\t\t.input:focus {\n\t\t\t\t\tborder-color: #18181b;\n\t\t\t\t\tbox-shadow: 0 0 0 3px #e4e4e7;\n\t\t\t\t}\n\n\t\t\t\t.error {\n\t\t\t\t\tmargin-top: 6px;\n\t\t\t\t\tfont-size: 13px;\n\t\t\t\t\tcolor: #dc2626;\n\t\t\t\t}\n\n\t\t\t\t.error-box {\n\t\t\t\t\tborder: 1px solid #fecaca;\n\t\t\t\t\tbackground: #fef2f2;\n\t\t\t\t\tcolor: #b91c1c;\n\t\t\t\t\tpadding: 12px;\n\t\t\t\t\tborder-radius: 10px;\n\t\t\t\t\tfont-size: 14px;\n\t\t\t\t}\n\n\t\t\t\t.submit {\n\t\t\t\t\twidth: 100%;\n\t\t\t\t\tborder: none;\n\t\t\t\t\tborder-radius: 10px;\n\t\t\t\t\tbackground: #18181b;\n\t\t\t\t\tcolor: white;\n\t\t\t\t\tpadding: 12px 16px;\n\t\t\t\t\tfont-size: 14px;\n\t\t\t\t\tfont-weight: 500;\n\t\t\t\t\tcursor: pointer;\n\t\t\t\t\ttransition:\n\t\t\t\t\t\tbackground 0.15s ease,\n\t\t\t\t\t\ttransform 0.05s ease;\n\t\t\t\t}\n\n\t\t\t\t.submit:hover {\n\t\t\t\t\tbackground: #27272a;\n\t\t\t\t}\n\n\t\t\t\t.submit:active {\n\t\t\t\t\ttransform: scale(0.99);\n\t\t\t\t}\n\n\t\t\t\t@media (max-width: 640px) {\n\t\t\t\t\t.card {\n\t\t\t\t\t\tpadding: 24px;\n\t\t\t\t\t}\n\n\t\t\t\t\t.row {\n\t\t\t\t\t\tgrid-template-columns: 1fr;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t</style></head><body><div class=\"page\"><div class=\"card\"><div><h1 class=\"title\">Initial admin setup</h1><p class=\"subtitle\">Create the first administrator account for this instance.</p></div><form action=\"/setup\" method=\"post\" class=\"form\"><div class=\"field\"><label class=\"label\">Email</label> <input name=\"email\" type=\"email\" placeholder=\"john@example.com\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(data.Email)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 43, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 181, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" autocomplete=\"off\" class=\"w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-zinc-900 focus:ring-2 focus:ring-zinc-200\"> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" autocomplete=\"off\" class=\"input\"> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if msg, ok := data.Errors["email"]; ok {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<p class=\"mt-1 text-sm text-red-600\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<p class=\"error\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(msg)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 49, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 187, Col: 30}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -72,32 +72,32 @@ func SetupView(data SetupViewData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><div class=\"grid grid-cols-2 gap-4\"><div><label class=\"mb-1 block text-sm font-medium\">First name</label> <input name=\"first_name\" type=\"text\" placeholder=\"John\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><div class=\"row\"><div class=\"field\"><label class=\"label\">First name</label> <input name=\"first_name\" type=\"text\" placeholder=\"John\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(data.FirstName)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 63, Col: 31}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 201, Col: 31}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" class=\"w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-zinc-900 focus:ring-2 focus:ring-zinc-200\"> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" class=\"input\"> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if msg, ok := data.Errors["first_name"]; ok {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<p class=\"mt-1 text-sm text-red-600\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<p class=\"error\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(msg)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 68, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 206, Col: 31}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -108,32 +108,32 @@ func SetupView(data SetupViewData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><div><label class=\"mb-1 block text-sm font-medium\">Last name</label> <input name=\"last_name\" type=\"text\" placeholder=\"Doe\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><div class=\"field\"><label class=\"label\">Last name</label> <input name=\"last_name\" type=\"text\" placeholder=\"Doe\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(data.LastName)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 81, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 219, Col: 30}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" class=\"w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-zinc-900 focus:ring-2 focus:ring-zinc-200\"> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" class=\"input\"> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if msg, ok := data.Errors["last_name"]; ok {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<p class=\"mt-1 text-sm text-red-600\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<p class=\"error\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(msg)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 86, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 224, Col: 31}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -144,19 +144,19 @@ func SetupView(data SetupViewData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></div><div><label class=\"mb-1 block text-sm font-medium\">Password</label> <input name=\"password\" type=\"password\" placeholder=\"••••••••\" class=\"w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-zinc-900 focus:ring-2 focus:ring-zinc-200\"> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></div><div class=\"field\"><label class=\"label\">Password</label> <input name=\"password\" type=\"password\" placeholder=\"••••••••\" class=\"input\"> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if msg, ok := data.Errors["password"]; ok {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<p class=\"mt-1 text-sm text-red-600\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<p class=\"error\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(msg)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 104, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 242, Col: 30}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -167,19 +167,19 @@ func SetupView(data SetupViewData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div><div><label class=\"mb-1 block text-sm font-medium\">Confirm password</label> <input name=\"password_confirm\" type=\"password\" placeholder=\"••••••••\" class=\"w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-zinc-900 focus:ring-2 focus:ring-zinc-200\"> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div><div class=\"field\"><label class=\"label\">Confirm password</label> <input name=\"password_confirm\" type=\"password\" placeholder=\"••••••••\" class=\"input\"> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if msg, ok := data.Errors["password_confirm"]; ok {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<p class=\"mt-1 text-sm text-red-600\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<p class=\"error\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(msg)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 121, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 259, Col: 30}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -195,14 +195,14 @@ func SetupView(data SetupViewData) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if msg, ok := data.Errors["general"]; ok {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"error-box\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(msg)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 127, Col: 13}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/web/setup/templates/setup.templ`, Line: 265, Col: 13}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -213,7 +213,7 @@ func SetupView(data SetupViewData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"pt-2\"><button type=\"submit\" class=\"w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-800 active:scale-[0.99]\">Create administrator</button></div></form></div></div></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div><button type=\"submit\" class=\"submit\">Create administrator</button></div></form></div></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
