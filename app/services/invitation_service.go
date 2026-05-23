@@ -24,8 +24,8 @@ var (
 )
 
 type InvitationManager interface {
-	Create(ctx context.Context, email, role string, meta map[string]any) (*models.Invitation, string, error)
-	Get(ctx context.Context, hash string) (*models.Invitation, error) // TODO: rename into GetByHash
+	Create(ctx context.Context, email, role string, meta map[string]any) (*models.Invitation, string, error) // TODO: no need to return token string
+	Get(ctx context.Context, hash string) (*models.Invitation, error)                                        // TODO: rename into GetByHash
 	Accept(ctx context.Context, token string) error
 	Validate(ctx context.Context, token string) error
 	Delete(ctx context.Context, invitationId uint) error

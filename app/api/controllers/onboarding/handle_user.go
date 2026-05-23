@@ -1,7 +1,6 @@
 package onboarding
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,14 +13,14 @@ type OnboardingUserPage struct {
 	LastName  string `json:"last_name"`
 }
 
-func (s *OnboardingController) handlerUser(c *gin.Context) {
+func (s *OnboardingController) handlerInit(c *gin.Context) {
 	var data OnboardingUserPage
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	inv, token, err := s.invitationManager.Create(c.Request.Context(), data.Email, "member", map[string]any{
+	inv, _, err := s.invitationManager.Create(c.Request.Context(), data.Email, "member", map[string]any{
 		"first_name": data.FirstName,
 		"last_name":  data.LastName,
 	})
@@ -29,9 +28,6 @@ func (s *OnboardingController) handlerUser(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
-
-	fmt.Println(inv)
-	fmt.Println("Email link token: ", token)
 
 	utils.Success(c, inv)
 }

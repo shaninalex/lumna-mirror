@@ -17,11 +17,11 @@ export class OnboardingApiService {
             .pipe(map((response) => response.data));
     }
 
-    user(payload: UserOnboardingModel): Observable<InvitationModel> {
+    initialize(payload: UserOnboardingModel): Observable<InvitationModel> {
         return this.http
             .post<
                 APIResponse<InvitationModel>
-            >(`/api/v1/onboarding/user`, payload, { withCredentials: true })
+            >(`/api/v1/onboarding`, payload, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 

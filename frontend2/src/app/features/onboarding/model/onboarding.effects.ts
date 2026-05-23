@@ -39,8 +39,7 @@ export class OnboardingEffects {
         this.actions$.pipe(
             ofType(actionOnboardingCreateInvite),
             exhaustMap((action) =>
-                this.api.user(action.payload).pipe(
-                    tap((action) => console.log(action)),
+                this.api.initialize(action.payload).pipe(
                     map((invitation) =>
                         actionOnboardingCreateInviteSuccess({ invitation })
                     ),
