@@ -9,7 +9,6 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/invitation"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/list"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/onboarding"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/status"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
@@ -18,6 +17,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/middlewares"
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/web"
+	"gitlab.com/shaninalex/lumna/app/web/setup"
 	"go.uber.org/dig"
 )
 
@@ -53,7 +53,6 @@ type ApiDeps struct {
 	UserController       *user.UserController
 	ActivityController   *activity.ActivityController
 	InvitationController *invitation.InvitationController
-	OnboardingController *onboarding.OnboardingController
 	WorkspaceController  *workspace.WorkspaceController
 }
 
@@ -64,13 +63,14 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	router.Use(middlewares.LoggingMiddleware())
 	router.Use(middlewares.CORSMiddleware())
 
+	setup.RegisterSetupRoute(router, config)
+
 	if config.Bool("serve.embed") {
 		web.RegisterEmbedRoute(router)
 	}
 
 	authGroup := router.Group("/api/v1/auth")
 	deps.AuthController.Register(authGroup)
-	deps.OnboardingController.Register(router.Group("/api/v1/onboarding"))
 
 	private := router.Group("/api/v1")
 	private.Use(middlewares.AuthMiddleware)

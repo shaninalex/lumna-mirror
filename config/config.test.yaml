@@ -3,6 +3,7 @@ env: testing
 serve:
   port: 8000
   embed: false
+  setup: true
 
 database:
   type: "sqlite"

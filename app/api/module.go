@@ -5,7 +5,6 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/invitation"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/list"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/onboarding"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/status"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
@@ -23,7 +22,6 @@ func Module(c *dig.Container) error {
 	_ = user.Module(c)
 	_ = activity.Module(c)
 	_ = invitation.Module(c)
-	_ = onboarding.Module(c)
 	_ = workspace.Module(c)
 
 	_ = c.Provide(NewApi)

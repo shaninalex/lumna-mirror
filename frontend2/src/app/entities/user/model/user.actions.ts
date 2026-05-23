@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { UserModel, AcceptInviteUserRegistrationForm } from "./user.model";
+import { UserModel } from "./user.model";
 
 /**
  * Dispatched to request loading the current user.
@@ -29,15 +29,4 @@ export const actionUserClear = createAction("[User] Clear");
 export const actionUserSet = createAction(
     "[User] Set",
     props<{ user: UserModel }>()
-);
-
-/**
- * Dispatched when user submit invitation registration form.
- *
- * @payload
- * - user: AcceptInviteUserRegistrationForm invitation registration process form data
- */
-export const actionUserInviteRegister = createAction(
-    "[User] invite register",
-    props<{ data: AcceptInviteUserRegistrationForm }>()
 );
