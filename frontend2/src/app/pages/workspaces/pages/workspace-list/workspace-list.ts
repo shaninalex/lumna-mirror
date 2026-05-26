@@ -36,7 +36,7 @@ import { Store } from "@ngrx/store";
                     </div>
                 }
 
-                <a href="#" class="btn">Create</a>
+                <a routerLink="/app/workspaces/create" class="btn">Create</a>
             </div>
             <div class="hover:underline">Profile</div>
         </div>

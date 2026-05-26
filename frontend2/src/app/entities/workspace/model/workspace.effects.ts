@@ -1,12 +1,17 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { EMPTY, exhaustMap, of, switchMap } from "rxjs";
+import { catchError, EMPTY, exhaustMap, of, switchMap } from "rxjs";
 import {
+    actionWorkspaceCreate,
+    actionWorkspaceCreateFailed,
+    actionWorkspaceCreateSuccess,
     actionWorkspaceGetList,
     actionWorkspaceSetList
 } from "./workspace.actions";
 import { routerNavigatedAction } from "@ngrx/router-store";
 import { WorkspaceApi } from "../api";
+import { HttpErrorResponse } from "@angular/common/http";
+import { fromErrorResponse } from "@shared/models";
 
 @Injectable()
 export class WorkspaceEffects {
@@ -39,6 +44,30 @@ export class WorkspaceEffects {
                             of(actionWorkspaceSetList({ list }))
                         )
                     )
+            )
+        )
+    );
+
+    workspace_create$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionWorkspaceCreate),
+            exhaustMap((action) =>
+                this.api.create(action.data).pipe(
+                    switchMap((workspace) =>
+                        of(
+                            actionWorkspaceCreateSuccess({
+                                data: workspace
+                            })
+                        )
+                    ),
+                    catchError((err: HttpErrorResponse) =>
+                        of(
+                            actionWorkspaceCreateFailed({
+                                errors: fromErrorResponse(err)
+                            })
+                        )
+                    )
+                )
             )
         )
     );

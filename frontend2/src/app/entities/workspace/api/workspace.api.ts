@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { WorkspaceModel } from "../model/workspace.model";
+import { WorkspaceCreateModel, WorkspaceModel } from "../model/workspace.model";
 import { APIResponse } from "@shared/models";
 import { HttpClient } from "@angular/common/http";
 
@@ -13,6 +13,14 @@ export class WorkspaceApi {
             .get<
                 APIResponse<WorkspaceModel[]>
             >(`/api/v1/workspaces`, { withCredentials: true })
+            .pipe(map((response) => response.data));
+    }
+
+    create(data: WorkspaceCreateModel): Observable<WorkspaceModel> {
+        return this.http
+            .post<
+                APIResponse<WorkspaceModel>
+            >(`/api/v1/workspaces`, data, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 }

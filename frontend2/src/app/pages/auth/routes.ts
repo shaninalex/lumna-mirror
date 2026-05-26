@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
 import { AuthWrapper } from "./wrapper";
-import { AcceptInvitePage, LoginPage } from "./pages";
+import { LoginPage } from "./pages";
 
 export const routes: Routes = [
     {
@@ -10,10 +10,6 @@ export const routes: Routes = [
             {
                 path: "login",
                 component: LoginPage
-            },
-            {
-                path: "accept-invite/:token",
-                component: AcceptInvitePage
             }
         ]
     }

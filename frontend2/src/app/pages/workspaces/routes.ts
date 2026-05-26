@@ -1,5 +1,10 @@
 import { Routes } from "@angular/router";
-import { WorkspaceDetailSummary, WorkspaceDetailWrapper } from "./pages";
+import {
+    WorkspaceDetailSummary,
+    WorkspaceDetailWrapper,
+    WorkspaceList
+} from "./pages";
+import { WorkspaceCreatePage } from "./pages/workspace-create-page";
 
 export const routes: Routes = [
     {
@@ -16,5 +21,16 @@ export const routes: Routes = [
                     import("@pages/projects").then((m) => m.routes)
             }
         ]
+    }
+];
+
+export const workspacesListRoutes: Routes = [
+    {
+        path: "",
+        component: WorkspaceList
+    },
+    {
+        path: "create",
+        component: WorkspaceCreatePage
     }
 ];

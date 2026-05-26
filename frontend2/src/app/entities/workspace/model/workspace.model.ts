@@ -4,3 +4,7 @@ export interface WorkspaceModel {
     title: string;
     icon: string;
 }
+
+export interface WorkspaceCreateModel {
+    title: string;
+}

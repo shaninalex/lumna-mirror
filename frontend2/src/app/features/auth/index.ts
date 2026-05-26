@@ -1,2 +1,1 @@
 export * from "./auth-login";
-export * from "./register-form";

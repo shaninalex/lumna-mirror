@@ -17,6 +17,13 @@ export const routes: Routes = [
         ],
         children: [
             {
+                path: "workspaces",
+                loadChildren: () =>
+                    import("@pages/workspaces/routes").then(
+                        (m) => m.workspacesListRoutes
+                    )
+            },
+            {
                 path: "",
                 component: ApplicationWrapper,
                 children: [
@@ -34,18 +41,6 @@ export const routes: Routes = [
                         loadChildren: () =>
                             import("@pages/workspaces/routes").then(
                                 (m) => m.routes
-                            )
-                    }
-                ]
-            },
-            {
-                path: "workspaces",
-                children: [
-                    {
-                        path: "",
-                        loadComponent: () =>
-                            import("@pages/workspaces/pages/workspace-list/workspace-list").then(
-                                (m) => m.WorkspaceList
                             )
                     }
                 ]

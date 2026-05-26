@@ -1,3 +1,3 @@
-export { routes } from "./routes";
+export { routes, workspacesListRoutes } from "./routes";
 
 export * from "./pages";
