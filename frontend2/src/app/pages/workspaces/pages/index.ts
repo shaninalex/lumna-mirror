@@ -1,3 +1,3 @@
 export { WorkspaceDetailSummary } from "./workspace-detail-summary";
 export { WorkspaceList } from "./workspace-list";
-export { WorkspaceDetailWrapper } from "./workspace-detail-wrapper";
+export { WorkspaceCreatePage } from "./workspace-create-page";

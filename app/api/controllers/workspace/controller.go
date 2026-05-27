@@ -19,4 +19,5 @@ func NewWorkspaceController(workspaceManager services.WorkspaceManager) *Workspa
 
 func (s *WorkspaceController) Register(router *gin.RouterGroup) {
 	router.GET("workspaces", s.handlerList)
+	router.POST("workspaces", s.handlerCreate)
 }

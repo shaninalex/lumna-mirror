@@ -1,15 +1,12 @@
 import { Routes } from "@angular/router";
-import {
-    WorkspaceDetailSummary,
-    WorkspaceDetailWrapper,
-    WorkspaceList
-} from "./pages";
+import { WorkspaceDetailSummary, WorkspaceList } from "./pages";
 import { WorkspaceCreatePage } from "./pages/workspace-create-page";
+import { ApplicationWrapper } from "@pages/app/wrapper";
 
 export const routes: Routes = [
     {
         path: ":workspace-slug",
-        component: WorkspaceDetailWrapper,
+        component: ApplicationWrapper,
         children: [
             {
                 path: "",

@@ -25,7 +25,6 @@ export const routes: Routes = [
             },
             {
                 path: "",
-                component: ApplicationWrapper,
                 children: [
                     {
                         path: "",

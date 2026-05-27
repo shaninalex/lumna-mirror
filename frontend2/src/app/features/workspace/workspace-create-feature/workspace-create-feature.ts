@@ -1,5 +1,8 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, DestroyRef, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+
 import { form, required, FormField } from "@angular/forms/signals";
+import { Router } from "@angular/router";
 import {
     actionWorkspaceCreate,
     actionWorkspaceCreateFailed,
@@ -8,7 +11,6 @@ import {
 } from "@entities/workspace";
 import { Actions, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
-import { tap } from "rxjs";
 
 @Component({
     selector: "app-workspace-create-feature",
@@ -38,22 +40,29 @@ import { tap } from "rxjs";
 })
 export class WorkspaceCreateFeature {
     private store = inject(Store);
-    private actions = inject(Actions);
+    private actions$ = inject(Actions);
+    private destroyRef = inject(DestroyRef);
+    private router = inject(Router);
+
     wspFormModel = signal<WorkspaceCreateModel>({ title: "" });
     wspForm = form(this.wspFormModel, (schemaPath) => {
         required(schemaPath.title);
     });
 
     constructor() {
-        this.actions.pipe(
-            ofType(actionWorkspaceCreateSuccess),
-            tap((action) => console.log(action))
-        );
+        this.actions$
+            .pipe(
+                ofType(actionWorkspaceCreateSuccess),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(({ data }) => this.router.navigate(["/app", data.slug]));
 
-        this.actions.pipe(
-            ofType(actionWorkspaceCreateFailed),
-            tap((action) => console.log(action))
-        );
+        this.actions$
+            .pipe(
+                ofType(actionWorkspaceCreateFailed),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((action) => console.log(action));
     }
 
     onSubmit(event: Event): void {

@@ -1,32 +1,44 @@
-import { Component } from "@angular/core";
+import { AsyncPipe } from "@angular/common";
+import { Component, inject, forwardRef } from "@angular/core";
 import { RouterLink } from "@angular/router";
+import { selectWorkspaceList } from "@entities/workspace/model/workspace.selectors";
+import { Store } from "@ngrx/store";
 
 @Component({
     selector: "app-for-you",
-    imports: [RouterLink],
+    imports: [RouterLink, AsyncPipe, forwardRef(() => NoWorkspaces)],
     template: `
         <div class="p-4">
-            <p>Latest assignments</p>
-            <div class="mb-4 flex items-start gap-2">
-                <a
-                    routerLink="/app/lumna-1"
-                    class="border rounded p-4 hover:underline"
-                >
-                    Lumna ( 12 )
-                </a>
-                <a
-                    routerLink="/app/new-frontend-1"
-                    class="border rounded p-4 hover:underline"
-                >
-                    Another workpsace ( 2 )
-                </a>
-            </div>
-            <div>
-                <a routerLink="/workspaces" class="underline">
-                    View all workspaces
-                </a>
-            </div>
+            @if (workspaces$ | async; as workspaces) {
+                @if (!workspaces.length) {
+                    <app-no-workspaces />
+                }
+            } @else {
+                <p>Latest assignments</p>
+                <div>TODO: implement this</div>
+
+                <div>
+                    <a routerLink="/app/workspaces" class="underline">
+                        View all workspaces
+                    </a>
+                </div>
+            }
         </div>
     `
 })
-export class ForYou {}
+export class ForYou {
+    private store = inject(Store);
+    workspaces$ = this.store.select(selectWorkspaceList);
+}
+
+@Component({
+    selector: "app-no-workspaces",
+    imports: [RouterLink],
+    template: `<div>
+        You have no workspaces.
+        <a routerLink="/app/workspaces/create" class="underline text-blue-500">
+            Create one
+        </a>
+    </div> `
+})
+export class NoWorkspaces {}

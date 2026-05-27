@@ -15,11 +15,11 @@ export const actionWorkspaceCreate = createAction(
 );
 
 export const actionWorkspaceCreateSuccess = createAction(
-    "[Workspace] create",
+    "[Workspace] created",
     props<{ data: WorkspaceModel }>()
 );
 
 export const actionWorkspaceCreateFailed = createAction(
-    "[Workspace] create",
+    "[Workspace] create failed",
     props<{ errors: Error[] }>()
 );

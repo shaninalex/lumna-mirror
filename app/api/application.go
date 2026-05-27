@@ -54,6 +54,8 @@ type ApiDeps struct {
 	ActivityController   *activity.ActivityController
 	InvitationController *invitation.InvitationController
 	WorkspaceController  *workspace.WorkspaceController
+
+	AuthMiddleware middlewares.AuthMiddleware
 }
 
 func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
@@ -73,7 +75,7 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	deps.AuthController.Register(authGroup)
 
 	private := router.Group("/api/v1")
-	private.Use(middlewares.AuthMiddleware)
+	private.Use(gin.HandlerFunc(deps.AuthMiddleware))
 
 	deps.BoardController.Register(private)
 	deps.StatusController.Register(private)

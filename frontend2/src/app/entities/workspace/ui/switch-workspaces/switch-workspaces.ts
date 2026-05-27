@@ -1,6 +1,5 @@
 import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { WorkspaceModel } from "@entities/workspace";
 import { CdkMenuItem } from "@angular/cdk/menu";
 import { selectWorkspaceList } from "@entities/workspace/model/workspace.selectors";
 import { Store } from "@ngrx/store";
@@ -37,7 +36,7 @@ import { AsyncPipe } from "@angular/common";
 
                 <a
                     cdkMenuItem
-                    routerLink="/workspaces"
+                    routerLink="/app/workspaces"
                     class="text-slate-500 text-xs hover:underline"
                 >
                     view all
