@@ -8,27 +8,21 @@ import { Store } from "@ngrx/store";
     selector: "app-workspace-list",
     imports: [RouterLink, AsyncPipe],
     template: `
-        <div class="p-4 h-screen flex flex-col justify-between">
+        <div class="workspace-layout">
             <div>
-                <h1 class="text-lg font-bold">Workspaces list</h1>
-                <p class="text-sm text-slate-500 mb-4">
-                    This is the list of all your workspaces ( or workspaces you
-                    have permissions ).
+                <h1>Workspaces</h1>
+
+                <p class="subtitle">
+                    This is the list of all your workspaces (or workspaces you
+                    have permissions for).
                 </p>
 
                 @if (workspaces$ | async; as workspaces) {
-                    <div class="flex flex-col gap-4 mb-6">
-                        @for (workspace of workspaces; track $index) {
-                            <a
-                                [routerLink]="['/app', workspace.slug]"
-                                class="flex items-center gap-2"
-                            >
-                                <img
-                                    src="/img/project.svg"
-                                    alt=""
-                                    class="w-10 h-10 rounded"
-                                />
-                                <span class="font-bold">
+                    <div>
+                        @for (workspace of workspaces; track workspace.id) {
+                            <a [routerLink]="['/app', workspace.slug]">
+                                <img src="/img/project.svg" alt="" />
+                                <span>
                                     {{ workspace.title }}
                                 </span>
                             </a>
@@ -36,11 +30,17 @@ import { Store } from "@ngrx/store";
                     </div>
                 }
 
-                <a routerLink="/app/workspaces/create" class="btn">Create</a>
+                <button routerLink="/app/workspaces/create">
+                    Create workspace
+                </button>
             </div>
-            <div class="hover:underline">Profile</div>
+
+            <div>
+                <button>Profile</button>
+            </div>
         </div>
-    `
+    `,
+    styleUrl: "./workspace-list.css"
 })
 export class WorkspaceList {
     private store = inject(Store);

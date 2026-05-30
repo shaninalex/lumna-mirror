@@ -4,10 +4,17 @@ import { Component } from "@angular/core";
     selector: "app-auth-layout",
     imports: [],
     template: `
-        <div class="h-screen flex items-center justify-center">
+        <div
+            style="height: 100vh; display: flex; align-items: center; justify-content: center"
+        >
             <div>
-                <img src="img/logo-h.svg" class="w-64 block mb-4" />
-                <ng-content />
+                <img
+                    src="img/logo-h.svg"
+                    style="width: 10rem; margin-bottom: 1rem"
+                />
+                <div>
+                    <ng-content />
+                </div>
             </div>
         </div>
     `

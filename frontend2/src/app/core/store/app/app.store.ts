@@ -6,7 +6,7 @@ export type AppState = {
 };
 
 const initialState: AppState = {
-    sidebar: false
+    sidebar: true
 };
 
 export const appReducer = createReducer(

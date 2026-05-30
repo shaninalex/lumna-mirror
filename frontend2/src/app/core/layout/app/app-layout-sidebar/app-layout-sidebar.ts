@@ -1,57 +1,76 @@
-import { Component } from "@angular/core";
-import { RouterLink } from "@angular/router";
-import { DashboardDropdown, ToggleSidebar } from "./components";
+import { Component, inject } from "@angular/core";
+import { MenuModule } from "primeng/menu";
+import { MenuItem, MessageService } from "primeng/api";
+import { PanelMenuModule } from "primeng/panelmenu";
 
 @Component({
     selector: "app-app-layout-sidebar",
-    imports: [RouterLink, DashboardDropdown, ToggleSidebar],
-    styleUrl: "./sidebar.css",
-    template: ` <div class="sidebar">
-        <div class="flex gap-2 flex-col">
-            <div class="flex gap-2 items-center justify-between">
-                <app-dashboard-dropdown />
-                <app-toggle-sidebar />
-            </div>
-
-            <div class="text-slate-500 text-sm">Projects</div>
-            <nav class="flex gap-2 flex-col">
-                <a
-                    routerLink="/app/lumna-1/project/lumna-new-frontend-13"
-                    class="block hover:underline"
-                >
-                    Project A
-                </a>
-                <a
-                    routerLink="/app/lumna-1/project/sdondford-22"
-                    class="block hover:underline"
-                >
-                    Project B
-                </a>
-            </nav>
-            <a
-                routerLink="/app/lumna-1/projects"
-                class="text-slate-500 text-xs hover:underline"
-            >
-                view all
-            </a>
-
-            <hr class="border-slate-200" />
-
-            <nav class="flex gap-2 flex-col">
-                <a
-                    routerLink="/app/lumna-1/project/lumna-new-frontend-13"
-                    class="block hover:underline"
-                >
-                    Settings
-                </a>
-            </nav>
-        </div>
-
-        <nav class="flex gap-2 flex-col">
-            <div>
-                <button class="block hover:underline">Profile</button>
-            </div>
-        </nav>
-    </div>`
+    imports: [MenuModule, PanelMenuModule],
+    providers: [MessageService],
+    styleUrl: "./app-layout-sidebar.css",
+    template: `
+        <p-panelmenu
+            [model]="projectSettings"
+            class="sidebar-menu"
+        ></p-panelmenu>
+        <p-menu [model]="items" class="sidebar-menu" />
+    `
 })
-export class AppLayoutSidebar {}
+export class AppLayoutSidebar {
+    private messageService = inject(MessageService);
+    projectSettings: MenuItem[];
+    items: MenuItem[] | undefined;
+
+    ngOnInit() {
+        this.projectSettings = [
+            {
+                label: "Project settings",
+                icon: "pi pi-cog",
+                items: [
+                    { label: "Settings", icon: "pi pi-cog" },
+                    { label: "Members", icon: "pi pi-cog" },
+                    { label: "Permissions", icon: "pi pi-cog" },
+                    { label: "Integrations", icon: "pi pi-cog" },
+                    { label: "Webhooks", icon: "pi pi-cog" }
+                ]
+            }
+        ];
+        this.items = [
+            // {
+            //     separator: true
+            // },
+            {
+                label: "Projects",
+                items: [
+                    {
+                        label: "Project name b",
+                        icon: "pi pi-file",
+                        routerLink: "/app/lumna-1/project/lumna-new-frontend-13"
+                    },
+                    {
+                        label: "Project name a",
+                        icon: "pi pi-file",
+                        routerLink: "/app/lumna-1/project/sdondford-22"
+                    }
+                ]
+            }
+        ];
+    }
+}
+
+/*
+<div class="sidebar">
+    <div class="">
+        <app-dashboard-dropdown />
+        <div>
+            <a routerLink="/app/lumna-1/project/lumna-new-frontend-13">
+                <span>Project A</span>
+            </a>
+            <a routerLink="/app/lumna-1/project/sdondford-22">
+                <span>Project B</span>
+            </a>
+        </div>
+    </div>
+    <app-switch-workspaces />
+</div>
+*/

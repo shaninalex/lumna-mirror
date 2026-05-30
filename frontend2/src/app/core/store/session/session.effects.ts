@@ -71,7 +71,7 @@ export class SessionEffects {
     authenticated_successfull_redirect$ = createEffect(
         () => {
             return this.actions$.pipe(
-                ofType(actionSessionAuthenticatedSuccessfull.type),
+                ofType(actionSessionAuthenticatedSuccessfull),
                 map(() => this.router.navigateByUrl("/app"))
             );
         },

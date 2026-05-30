@@ -1,7 +1,7 @@
-import { Component, inject, DestroyRef, signal } from "@angular/core";
+import { Component, DestroyRef, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
-import { form, required, FormField } from "@angular/forms/signals";
+import { form, FormField, required } from "@angular/forms/signals";
 import { Router } from "@angular/router";
 import {
     actionWorkspaceCreate,
@@ -16,26 +16,40 @@ import { Store } from "@ngrx/store";
     selector: "app-workspace-create-feature",
     imports: [FormField],
     template: `
-        <form (submit)="onSubmit($event)">
-            <div class="mb-3">
-                <label for="title" class="text-sm">Workspace title</label>
-                <input
-                    class="form-control"
-                    id="title"
-                    type="text"
-                    placeholder="Workspace title"
-                    [formField]="wspForm.title"
-                />
-                @if (wspForm.title().dirty() && wspForm.title().errors()) {
-                    @for (error of wspForm.title().errors(); track error) {
-                        <div class="text-red-400 text-sm">
-                            {{ error.message }}
+        <div
+            style="display:flex; height: 100vh; align-items: center; justify-content: center"
+        >
+            <form (submit)="onSubmit($event)">
+                <div appearance="outlined">
+                    <div>
+                        <div>Poodle</div>
+                        <div>Non-sporting group</div>
+                    </div>
+                    <div>
+                        <div>
+                            <div>Workspace title</div>
+                            <input type="text" [formField]="wspForm.title" />
+                            <div>
+                                @if (
+                                    wspForm.title().dirty() &&
+                                    wspForm.title().errors()
+                                ) {
+                                    @for (
+                                        error of wspForm.title().errors();
+                                        track error
+                                    ) {
+                                        <div>{{ error.message }}</div>
+                                    }
+                                }
+                            </div>
                         </div>
-                    }
-                }
-            </div>
-            <button type="submit" class="btn">Login</button>
-        </form>
+                    </div>
+                    <div>
+                        <button type="submit">Create</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     `
 })
 export class WorkspaceCreateFeature {

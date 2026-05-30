@@ -1,38 +1,56 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { actionApplicationSidebarToggle } from "@core";
+import { Store } from "@ngrx/store";
+import { RippleModule } from "primeng/ripple";
+import { AvatarModule } from "primeng/avatar";
+import { BadgeModule } from "primeng/badge";
+import { MenubarModule } from "primeng/menubar";
+import { InputTextModule } from "primeng/inputtext";
+import { ButtonModule } from "primeng/button";
 
 @Component({
     selector: "app-app-layout-header",
-    imports: [],
+    imports: [
+        FormsModule,
+        AvatarModule,
+        BadgeModule,
+        MenubarModule,
+        InputTextModule,
+        RippleModule,
+        ButtonModule
+    ],
     template: `
-        <header
-            class="flex items-center justify-between border-b-[color:var(--color-slate-200)] h-[2.8rem] px-4 py-[0.6rem] border-b border-solid"
+        <div
+            class="flex items-center py-2 px-4 gap-4 border-b border-b-slate-200"
         >
-            <div></div>
-            <div class="relative">
-                <input
-                    class="form-control"
-                    type="search"
-                    placeholder="Search"
-                />
-                <i
-                    class="fa-solid fa-magnifying-glass absolute right-2 top-2 text-slate-500"
-                ></i>
+            <!--            <p-button-->
+            <!--                icon="pi pi-bars"-->
+            <!--                outlined-->
+            <!--                size="small"-->
+            <!--                (click)="handleToggleSidebar()"-->
+            <!--            />-->
+            <img src="/img/logo-h.svg" alt="" style="width: 150px" />
+            <div class="grow"></div>
+            <div class="flex gap-2">
+                <p-button icon="pi pi-bell" outlined size="small" />
+                <p-button icon="pi pi-cog" outlined size="small" />
+                <p-button icon="pi pi-check" outlined size="small" />
+                <div class="flex items-center gap-2">
+                    <p-avatar image="/img/6.png" shape="circle" />
+                </div>
             </div>
-            <div class="flex items-center gap-3">
-                <i class="fa-regular fa-bell"></i>
-                <i class="fa-regular fa-circle-question"></i>
-                <i class="fa-solid fa-gear"></i>
-                <img src="img/6.png" class="w-8 h-8 rounded-full" alt="" />
-            </div>
-        </header>
-    `,
-    styles: `
-        :host {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-        }
+        </div>
     `
 })
-export class AppLayoutHeader {}
+export class AppLayoutHeader {
+    private store = inject(Store);
+    // searchFormModel = signal<{ query: string }>({ query: "" });
+    // searchForm = form(this.searchFormModel, (schemaPath) => {
+    //     required(schemaPath.query, { message: "query field is required" });
+    // });
+
+    handleToggleSidebar(): void {
+        this.store.dispatch(actionApplicationSidebarToggle());
+    }
+}

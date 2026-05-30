@@ -1,30 +1,20 @@
 import { Component } from "@angular/core";
-import { CdkMenu, CdkMenuTrigger, CdkMenuItem } from "@angular/cdk/menu";
-import {
-    WorkspaceLabel,
-    WorkspaceModel,
-    SwitchWorkspaces
-} from "@entities/workspace";
+import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from "@angular/cdk/menu";
+import { SwitchWorkspaces, WorkspaceModel } from "@entities/workspace";
 
 @Component({
     selector: "app-dashboard-dropdown",
-    imports: [
-        CdkMenuTrigger,
-        CdkMenu,
-        CdkMenuItem,
-        WorkspaceLabel,
-        SwitchWorkspaces
-    ],
+    imports: [CdkMenuTrigger, CdkMenu, CdkMenuItem, SwitchWorkspaces],
     template: `
         <button
             [cdkMenuTriggerFor]="dashboardDropdown"
             class="inline-block cursor-pointer p-1 rounded hover:bg-slate-300 cursor-pointer;"
         >
-            <app-workspace-label [workspace]="workspace" size="sm" />
+            <!--            <app-workspace-label [workspace]="workspace" size="sm" />-->
         </button>
         <ng-template #dashboardDropdown>
             <div cdkMenu class="dropdown-base w-64 flex flex-col gap-2">
-                <app-workspace-label [workspace]="workspace" size="md" />
+                <!--                <app-workspace-label [workspace]="workspace" size="md" />-->
                 <div class="line-divider"></div>
                 <ul>
                     <li cdkMenuItem>Settings</li>

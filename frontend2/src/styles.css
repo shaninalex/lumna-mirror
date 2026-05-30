@@ -1,10 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+@import "tailwindcss-primeui";
+@import "primeicons/primeicons.css";
 
 html,
 body {
     font-size: 14px;
+}
+
+:root {
+    --sidebar-width: 284px;
 }
 
 .dropdown-base {
@@ -25,4 +31,27 @@ body {
 
 a {
     @apply hover:underline;
+}
+
+
+.avatar-btn {
+    background-size: cover;
+}
+
+hr.divider {
+    width: 100%;
+    color: rgba(0, 0, 0, 0.12);
+}
+
+.no-underline {
+    text-decoration: none !important;
+}
+
+.sidebar-menu .p-panelmenu-panel {
+    border-width: 0 !important;
+
+}
+
+.sidebar-menu .p-menu {
+    border-width: 0;
 }

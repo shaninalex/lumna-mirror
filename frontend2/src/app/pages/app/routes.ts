@@ -1,6 +1,5 @@
 import { Routes } from "@angular/router";
 import { ForYou } from "./for-you/for-you";
-import { ApplicationWrapper } from "./wrapper";
 import { provideWorkspaceFeature } from "@entities/workspace";
 import { provideTaskFeature } from "@entities/task";
 import { provideListFeature } from "@entities/list";
@@ -28,11 +27,6 @@ export const routes: Routes = [
                 children: [
                     {
                         path: "",
-                        pathMatch: "full",
-                        component: ForYou
-                    },
-                    {
-                        path: "for-you",
                         component: ForYou
                     },
                     {

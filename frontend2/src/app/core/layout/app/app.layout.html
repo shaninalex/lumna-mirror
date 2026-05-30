@@ -1,8 +1,10 @@
-<div class="main">
-    <app-app-layout-sidebar />
-    <div class="content">
-        <app-app-layout-header />
-        <div class="page-content">
+<div class="application-layout">
+    <app-app-layout-header />
+    <div class="main">
+        <div class="sidebar">
+            <app-app-layout-sidebar />
+        </div>
+        <div class="content">
             <ng-content />
         </div>
     </div>
