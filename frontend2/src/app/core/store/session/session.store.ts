@@ -1,14 +1,14 @@
-import { createReducer, on } from '@ngrx/store';
-import * as SessionActions from './session.actions';
+import { createReducer, on } from "@ngrx/store";
+import * as SessionActions from "./session.actions";
 
-type SessionState = {
+export type SessionState = {
     authenticated: boolean;
     checked: boolean;
 };
 
 const initialState: SessionState = {
     authenticated: false,
-    checked: false,
+    checked: false
 };
 
 export const sessionReducer = createReducer(
@@ -16,11 +16,11 @@ export const sessionReducer = createReducer(
     on(
         SessionActions.actionSessionAuthenticatedSuccessfull,
         SessionActions.actionSessionAuthenticated,
-        () => ({ authenticated: true, checked: true }),
+        () => ({ authenticated: true, checked: true })
     ),
     on(
         SessionActions.actionSessionLoggedOut,
         SessionActions.actionSessionFailed,
         () => ({ authenticated: false, checked: true })
-    ),
+    )
 );

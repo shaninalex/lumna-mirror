@@ -8,12 +8,12 @@ import { provideEffects } from "@ngrx/effects";
 import { ApplicationInit, LumnaPrimeNGTheme, provideApplicationFeature, sessionInterceptor } from "@core";
 import { provideStoreDevtools } from "@ngrx/store-devtools";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
-import { provideRouterStore } from "@ngrx/router-store";
 import { provideUserFeature } from "@entities/user";
 import { provideSessionFeature } from "@core/store/session/provider";
 
 // ui lib
 import { providePrimeNG } from "primeng/config";
+import { provideRouterStore } from "@ngrx/router-store";
 
 export const appConfig: ApplicationConfig = {
     providers: [

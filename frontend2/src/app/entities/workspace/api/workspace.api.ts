@@ -2,17 +2,19 @@ import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { WorkspaceCreateModel, WorkspaceModel } from "../model/workspace.model";
 import { APIResponse } from "@shared/models";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 
 @Injectable()
 export class WorkspaceApi {
     private http = inject(HttpClient);
 
-    list(): Observable<WorkspaceModel[]> {
+    list(active: boolean): Observable<WorkspaceModel[]> {
+        let params = new HttpParams();
+        params = params.set("active", active);
         return this.http
             .get<
                 APIResponse<WorkspaceModel[]>
-            >(`/api/v1/workspaces`, { withCredentials: true })
+            >(`/api/v1/workspaces`, { params, withCredentials: true })
             .pipe(map((response) => response.data));
     }
 

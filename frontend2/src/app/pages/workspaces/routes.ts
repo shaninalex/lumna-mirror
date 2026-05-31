@@ -1,8 +1,14 @@
 import { Routes } from "@angular/router";
-import { WorkspaceDetailSummary, WorkspaceList } from "./pages";
-import { WorkspaceCreatePage } from "./pages/workspace-create-page";
 import { ApplicationWrapper } from "@pages/app/wrapper";
+import {
+    WorkspaceArchivedPage,
+    WorkspaceCreatePage,
+    WorkspaceDetailSummary,
+    WorkspaceList
+} from "./pages";
+import { WorkspacesWrapper } from "@pages/workspaces/workspaces-wrapper";
 
+// routes goes under ApplicationWrapper ( <application-wrapper> )
 export const routes: Routes = [
     {
         path: ":workspace-slug",
@@ -21,13 +27,24 @@ export const routes: Routes = [
     }
 ];
 
+// routes goes under WorkspacesWrapper ( <workspaces-wrapper> )
 export const workspacesListRoutes: Routes = [
     {
         path: "",
-        component: WorkspaceList
-    },
-    {
-        path: "create",
-        component: WorkspaceCreatePage
+        component: WorkspacesWrapper,
+        children: [
+            {
+                path: "",
+                component: WorkspaceList
+            },
+            {
+                path: "create",
+                component: WorkspaceCreatePage
+            },
+            {
+                path: "archived",
+                component: WorkspaceArchivedPage
+            }
+        ]
     }
 ];

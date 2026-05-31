@@ -15,7 +15,7 @@ type WorkspaceManager interface {
 	Create(ctx context.Context, title string) (*models.Workspace, error)
 	CreateWithOwner(ctx context.Context, title string, idn *models.Identity) (*models.Workspace, error)
 	Update(ctx context.Context, id uint, payload map[string]any) error
-	List(ctx context.Context) ([]*models.Workspace, error)
+	List(ctx context.Context, params map[string]any) ([]*models.Workspace, error)
 }
 
 type WorkspaceService struct {
@@ -56,6 +56,7 @@ func (s *WorkspaceService) CreateWithOwner(ctx context.Context, title string, id
 		Title:      title,
 		Slug:       utils.Slugify(title),
 		CreatedAt:  time.Now(),
+		Active:     true,
 		OwnerEmail: idn.Email,
 	}
 
@@ -77,6 +78,6 @@ func (s *WorkspaceService) Update(ctx context.Context, id uint, payload map[stri
 	return s.repository.Update(ctx, id, payload)
 }
 
-func (s *WorkspaceService) List(ctx context.Context) ([]*models.Workspace, error) {
-	return s.repository.List(ctx, map[string]any{})
+func (s *WorkspaceService) List(ctx context.Context, params map[string]any) ([]*models.Workspace, error) {
+	return s.repository.List(ctx, params)
 }

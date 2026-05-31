@@ -1,32 +1,41 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MenuModule } from "primeng/menu";
-import { MenuItem } from "primeng/api";
+import { Store } from "@ngrx/store";
+import { selectCurrentProjectList } from "@entities/project";
+import { combineLatest, map } from "rxjs";
+import { AsyncPipe } from "@angular/common";
+import { ButtonModule } from "primeng/button";
+import { selectWorkspaceCurrentWorkspaceSlug } from "@entities/workspace";
 
 @Component({
     selector: "app-project-list",
-    imports: [MenuModule],
-    template: ` <p-menu [model]="items" class="sidebar-menu" /> `
-})
-export class ProjectList implements OnInit {
-    items: MenuItem[] | undefined;
+    imports: [MenuModule, AsyncPipe, ButtonModule],
+    template: `
+        @if (items$ | async; as items) {
+            <p-menu [model]="items" class="sidebar-menu" />
+        }
 
-    ngOnInit() {
-        this.items = [
-            {
-                label: "Projects",
-                items: [
-                    {
-                        label: "Project name b",
-                        icon: "pi pi-file",
-                        routerLink: "/app/lumna-1/project/lumna-new-frontend-13"
-                    },
-                    {
-                        label: "Project name a",
-                        icon: "pi pi-file",
-                        routerLink: "/app/lumna-1/project/sdondford-22"
-                    }
-                ]
+        <div class="px-4">
+            <p-button label="Create project" size="small" variant="outlined" />
+        </div>
+    `
+})
+export class ProjectList {
+    private store = inject(Store);
+
+    items$ = combineLatest([
+        this.store.select(selectWorkspaceCurrentWorkspaceSlug),
+        this.store.select(selectCurrentProjectList)
+    ]).pipe(
+        map(([workspaceSlug, projects]) => {
+            if (!projects || !workspaceSlug) {
+                return [];
             }
-        ];
-    }
+            return projects.map((project) => ({
+                label: project.title,
+                icon: "pi pi-th-large",
+                routerLink: `/app/${workspaceSlug}/project/${project.id}`
+            }));
+        })
+    );
 }

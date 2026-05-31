@@ -4,3 +4,8 @@ export interface ProjectModel {
     slug: string;
     workspace_id: number;
 }
+
+export interface ProjectCreateModel {
+    title: string;
+    workspace_id: number;
+}

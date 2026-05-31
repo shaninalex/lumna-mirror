@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { ForYou } from "./for-you/for-you";
 import { provideWorkspaceFeature } from "@entities/workspace";
 import { provideTaskFeature } from "@entities/task";
 import { provideListFeature } from "@entities/list";
@@ -27,7 +26,8 @@ export const routes: Routes = [
                 children: [
                     {
                         path: "",
-                        component: ForYou
+                        pathMatch: "full",
+                        redirectTo: "/app/workspaces"
                     },
                     {
                         path: "",

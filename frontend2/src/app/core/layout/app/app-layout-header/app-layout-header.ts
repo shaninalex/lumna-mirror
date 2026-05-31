@@ -30,7 +30,6 @@ import { ButtonModule } from "primeng/button";
             <div class="flex gap-2">
                 <p-button icon="pi pi-bell" outlined size="small" />
                 <p-button icon="pi pi-cog" outlined size="small" />
-                <p-button icon="pi pi-check" outlined size="small" />
                 <div class="flex items-center gap-2">
                     <p-avatar image="/img/6.png" shape="circle" />
                 </div>
