@@ -10,13 +10,13 @@ import { WorkspaceModel } from "./workspace.model";
 export interface WorkspaceState extends EntityState<WorkspaceModel> {
     loaded: boolean;
     loading: boolean;
-    currentWorkspaceSlug: string | null;
+    currentWorkspaceId: number | null;
 }
 export const workspaceAdapter = createEntityAdapter<WorkspaceModel>();
 const initialState = workspaceAdapter.getInitialState({
     loaded: false,
     loading: false,
-    currentWorkspaceSlug: null
+    currentWorkspaceId: null
 });
 
 export const workspaceReducer = createReducer(
@@ -31,8 +31,8 @@ export const workspaceReducer = createReducer(
     on(actionWorkspaceCreateSuccess, (state, { data }) =>
         workspaceAdapter.addOne(data, state)
     ),
-    on(actionWorkspaceSetCurrent, (state, { slug }) => ({
+    on(actionWorkspaceSetCurrent, (state, { id }) => ({
         ...state,
-        currentWorkspaceSlug: slug
+        currentWorkspaceId: id
     }))
 );

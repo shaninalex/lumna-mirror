@@ -6,7 +6,6 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/pkg/observer"
-	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
@@ -36,7 +35,6 @@ func NewWorkspaceService(
 func (s *WorkspaceService) Create(ctx context.Context, title string) (*models.Workspace, error) {
 	workspace := &models.Workspace{
 		Title:     title,
-		Slug:      utils.Slugify(title),
 		CreatedAt: time.Now(),
 		Active:    true,
 		// OwnerEmail: ,
@@ -54,7 +52,6 @@ func (s *WorkspaceService) Create(ctx context.Context, title string) (*models.Wo
 func (s *WorkspaceService) CreateWithOwner(ctx context.Context, title string, idn *models.Identity) (*models.Workspace, error) {
 	workspace := &models.Workspace{
 		Title:      title,
-		Slug:       utils.Slugify(title),
 		CreatedAt:  time.Now(),
 		Active:     true,
 		OwnerEmail: idn.Email,

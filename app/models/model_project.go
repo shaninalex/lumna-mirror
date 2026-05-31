@@ -11,8 +11,13 @@ type Project struct {
 	ID          uint      `gorm:"primaryKey" json:"id"`
 	Title       string    `gorm:"not null" json:"title"`
 	WorkspaceID uint      `gorm:"not null;index" json:"workspace_id"`
+	OwnerID     *uint     `gorm:"null;index" json:"owner_id"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+func (s *Project) GetTitle() string {
+	return s.Title
 }
 
 func (s *Project) BeforeCreate(tx *gorm.DB) error {
@@ -30,4 +35,10 @@ func (s *Project) BeforeUpdate(tx *gorm.DB) (err error) {
 
 func (s *Project) String() string {
 	return fmt.Sprintf("Project id=%d title=%s", s.ID, s.Title)
+}
+
+type ProjectCreateModel struct {
+	Title       string `json:"title"`
+	WorkspaceID uint   `json:"workspace_id"`
+	OwnerID     *uint  `json:"owner_id,omitempty"`
 }

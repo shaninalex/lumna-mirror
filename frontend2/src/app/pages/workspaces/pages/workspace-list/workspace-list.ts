@@ -28,7 +28,7 @@ import { ButtonModule } from "primeng/button";
                                         label="View"
                                         class="w-full"
                                         [outlined]="true"
-                                        [routerLink]="['/app', workspace.slug]"
+                                        [routerLink]="['/app', workspace.id]"
                                     />
                                 </ng-template>
                             </p-card>

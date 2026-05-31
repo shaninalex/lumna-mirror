@@ -20,7 +20,7 @@ export class ProjectApi {
         return this.http
             .post<
                 APIResponse<ProjectModel>
-            >(`/api/v1/workspaces`, data, { withCredentials: true })
+            >(`/api/v1/projects`, data, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 }

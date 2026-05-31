@@ -61,7 +61,7 @@ export class WorkspaceCreateFeature {
                 ofType(actionWorkspaceCreateSuccess),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(({ data }) => this.router.navigate(["/app", data.slug]));
+            .subscribe(({ data }) => this.router.navigate(["/app", data.id]));
 
         this.actions$
             .pipe(

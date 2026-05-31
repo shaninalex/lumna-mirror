@@ -27,3 +27,11 @@ func Slugify(s string) string {
 func randRange(min, max int) int {
 	return rand.IntN(max-min) + min
 }
+
+type TitleContainer interface {
+	GetTitle() string
+}
+
+func CreateSlug(s TitleContainer) string {
+	return fmt.Sprintf("%s-%s", RandomCode(6), Slugify(s.GetTitle()))
+}

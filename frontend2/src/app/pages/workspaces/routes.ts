@@ -11,7 +11,7 @@ import { WorkspacesWrapper } from "@pages/workspaces/workspaces-wrapper";
 // routes goes under ApplicationWrapper ( <application-wrapper> )
 export const routes: Routes = [
     {
-        path: ":workspace-slug",
+        path: ":workspace-id",
         component: ApplicationWrapper,
         children: [
             {

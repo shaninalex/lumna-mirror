@@ -122,7 +122,6 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 			wp := models.Workspace{
 				Title:      wpd.Title,
 				OwnerEmail: wpd.Email,
-				Slug:       wpd.Slug,
 				Active:     wpd.Active,
 			}
 			if result := database.Create(&wp); result.Error != nil {

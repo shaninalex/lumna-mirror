@@ -6,7 +6,6 @@ import { MenuModule } from "primeng/menu";
 import { MenuItem } from "primeng/api";
 import { tap } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { actionWorkspaceListRequested } from "@entities/workspace";
 
 @Component({
     selector: "app-switch-workspaces",
@@ -33,9 +32,6 @@ export class SwitchWorkspaces {
     };
 
     constructor() {
-        this.store.dispatch(
-            actionWorkspaceListRequested({ initiator: "SwitchWorkspaces" })
-        );
         this.store
             .select(selectWorkspaceList)
             .pipe(
@@ -44,7 +40,7 @@ export class SwitchWorkspaces {
                     this.items = workspaces.map((workspace) => ({
                         label: workspace.title,
                         icon: "pi pi-box",
-                        routerLink: `/app/${workspace.slug}`
+                        routerLink: `/app/${workspace.id}`
                     }));
                     this.items.push({ separator: true });
                     this.items.push(this.viewAll);

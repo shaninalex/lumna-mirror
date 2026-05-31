@@ -32,9 +32,11 @@ func (s *ProjectService) List(ctx context.Context) ([]models.Project, error) {
 	return s.repository.List(ctx)
 }
 
-func (s *ProjectService) Create(ctx context.Context, title string, userID uint) (*models.Project, error) {
+func (s *ProjectService) Create(ctx context.Context, data models.ProjectCreateModel) (*models.Project, error) {
 	project := &models.Project{
-		Title: title,
+		Title:       data.Title,
+		OwnerID:     data.OwnerID,
+		WorkspaceID: data.WorkspaceID,
 	}
 	if err := s.repository.Create(ctx, project); err != nil {
 		return nil, err

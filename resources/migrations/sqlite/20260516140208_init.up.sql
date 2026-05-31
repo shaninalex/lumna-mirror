@@ -63,7 +63,6 @@ CREATE TABLE workspaces
 (
     id          integer  PRIMARY KEY AUTOINCREMENT,
     title       text     NOT NULL,
-    slug        VARCHAR  NOT NULL,
     active      numeric,
     owner_email text     NULL,
     created_at  datetime DEFAULT CURRENT_TIMESTAMP,
@@ -74,10 +73,11 @@ CREATE TABLE projects
 (
     id           integer    PRIMARY KEY AUTOINCREMENT,
     title        text       NOT NULL,
-    workspace_id INTEGER    REFERENCES workspaces (id),
+    workspace_id INTEGER    REFERENCES workspaces (id) ON DELETE SET NULL,
     created_at   datetime,
     updated_at   datetime
 );
+
 CREATE TABLE lists
 (
     id         integer PRIMARY KEY AUTOINCREMENT,

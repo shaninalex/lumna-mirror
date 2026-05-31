@@ -1,6 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { MenuModule } from "primeng/menu";
-import { MenuItem, MessageService } from "primeng/api";
+import { MessageService } from "primeng/api";
 import { PanelMenuModule } from "primeng/panelmenu";
 import { PopoverModule } from "primeng/popover";
 import { ButtonModule } from "primeng/button";
@@ -21,7 +21,6 @@ import { ProjectList } from "@entities/project";
         ProjectList
     ],
     providers: [MessageService],
-    styleUrl: "./app-layout-sidebar.css",
     template: `
         <div class="flex flex-col h-full">
             <app-project-list />
@@ -36,43 +35,4 @@ import { ProjectList } from "@entities/project";
         </div>
     `
 })
-export class AppLayoutSidebar implements OnInit {
-    items: MenuItem[] | undefined;
-
-    ngOnInit() {
-        this.items = [
-            {
-                label: "Projects",
-                items: [
-                    {
-                        label: "Project name b",
-                        icon: "pi pi-file",
-                        routerLink: "/app/lumna-1/project/lumna-new-frontend-13"
-                    },
-                    {
-                        label: "Project name a",
-                        icon: "pi pi-file",
-                        routerLink: "/app/lumna-1/project/sdondford-22"
-                    }
-                ]
-            }
-        ];
-    }
-}
-
-/*
-<div class="sidebar">
-    <div class="">
-        <app-dashboard-dropdown />
-        <div>
-            <a routerLink="/app/lumna-1/project/lumna-new-frontend-13">
-                <span>Project A</span>
-            </a>
-            <a routerLink="/app/lumna-1/project/sdondford-22">
-                <span>Project B</span>
-            </a>
-        </div>
-    </div>
-    <app-switch-workspaces />
-</div>
-*/
+export class AppLayoutSidebar {}

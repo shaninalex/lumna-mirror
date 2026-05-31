@@ -1,19 +1,35 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { ProjectIcon, selectCurrentProjectList } from "@entities/project";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { TagModule } from "primeng/tag";
+import { ButtonModule } from "primeng/button";
+import { InputTextModule } from "primeng/inputtext";
+import { FormsModule } from "@angular/forms";
+import { Checkbox } from "primeng/checkbox";
 
 @Component({
     selector: "app-project-list",
-    imports: [RouterLink],
+    imports: [
+        RouterLink,
+        TagModule,
+        ButtonModule,
+        InputTextModule,
+        FormsModule,
+        Checkbox,
+        ProjectIcon
+    ],
     template: `<div class="p-4">
         <div class="rounded-md border border-zinc-200 bg-white p-5 mb-4">
             <p class="text-sm text-zinc-500">Total Projects</p>
             <div class="mt-3 flex items-end justify-between">
-                <h2 class="text-3xl font-bold">12</h2>
-                <span
-                    class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700"
-                >
-                    +2 this month
-                </span>
+                <h2 class="text-3xl font-bold">{{ projects()?.length }}</h2>
+                <p-tag
+                    severity="success"
+                    value="+2 this month"
+                    [rounded]="true"
+                />
             </div>
         </div>
 
@@ -32,97 +48,60 @@ import { RouterLink } from "@angular/router";
                     </p>
                 </div>
 
-                <button class="font-bold text-blue-600 hover:text-blue-700">
-                    Create
-                </button>
+                <p-button label="Create" routerLink="create" />
             </div>
 
+            <div
+                class="flex items-center border-b border-zinc-200 px-5 py-4 gap-4"
+            >
+                <input
+                    type="text"
+                    placeholder="Search"
+                    pInputText
+                    [(ngModel)]="searchValue"
+                />
+
+                <div class="flex items-center">
+                    <p-checkbox
+                        inputId="archived"
+                        name="pizza"
+                        [binary]="true"
+                        [(ngModel)]="archivedValue"
+                    />
+                    <label for="archived" class="ml-2"> Archived </label>
+                </div>
+            </div>
             <div class="divide-y divide-zinc-200">
-                <!-- Project -->
-                <a
-                    routerLink="/app/lumna-1/project/lumna-new-frontend-13"
-                    class="flex items-center justify-between px-5 py-4 hover:bg-zinc-50"
-                >
-                    <div class="flex items-center gap-2">
-                        <div
-                            class="flex h-12 w-12 items-center justify-center rounded-md bg-blue-600 text-sm font-bold text-white"
-                        >
-                            LM
-                        </div>
-
-                        <div>
-                            <h3 class="font-medium">Lumna Core</h3>
-
-                            <p class="text-sm text-zinc-500">
-                                42 open issues • 2 active boards
-                            </p>
-                        </div>
-                    </div>
-
-                    <span
-                        class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700"
+                @for (project of projects(); track project.id) {
+                    <a
+                        [routerLink]="project.appLink"
+                        class="flex items-center justify-between px-5 py-4 hover:bg-zinc-50"
                     >
-                        Active
-                    </span>
-                </a>
+                        <div class="flex items-center gap-2">
+                            <app-project-icon [project]="project" />
+                            <div>
+                                <h3 class="font-medium">{{ project.title }}</h3>
 
-                <!-- Project -->
-                <a
-                    routerLink="/app/lumna-1/project/sdondford-22"
-                    class="flex items-center justify-between px-5 py-4 hover:bg-zinc-50"
-                >
-                    <div class="flex items-center gap-2">
-                        <div
-                            class="flex h-12 w-12 items-center justify-center rounded-md bg-purple-600 text-sm font-bold text-white"
-                        >
-                            API
+                                <p class="text-sm text-zinc-500">
+                                    42 open issues • 2 active boards
+                                </p>
+                            </div>
                         </div>
 
-                        <div>
-                            <h3 class="font-medium">Public API</h3>
-
-                            <p class="text-sm text-zinc-500">
-                                17 open issues • 1 active sprint
-                            </p>
-                        </div>
-                    </div>
-
-                    <span
-                        class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700"
-                    >
-                        Planning
-                    </span>
-                </a>
-
-                <!-- Project -->
-                <a
-                    routerLink="/app/lumna-1/project/exelunatic-33"
-                    class="flex items-center justify-between px-5 py-4 hover:bg-zinc-50"
-                >
-                    <div class="flex items-center gap-2">
-                        <div
-                            class="flex h-12 w-12 items-center justify-center rounded-md bg-pink-600 text-sm font-bold text-white"
-                        >
-                            UX
-                        </div>
-
-                        <div>
-                            <h3 class="font-medium">UI Kit</h3>
-
-                            <p class="text-sm text-zinc-500">
-                                8 open issues • Design system
-                            </p>
-                        </div>
-                    </div>
-
-                    <span
-                        class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700"
-                    >
-                        In Progress
-                    </span>
-                </a>
+                        <p-tag
+                            severity="success"
+                            value="Active"
+                            [rounded]="true"
+                        />
+                    </a>
+                }
             </div>
         </section>
     </div>`
 })
-export class ProjectListPage {}
+export class ProjectListPage {
+    private store = inject(Store);
+    searchValue = "";
+    archivedValue = false;
+    projects = toSignal(this.store.select(selectCurrentProjectList));
+}

@@ -1,13 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import {
-    catchError,
-    exhaustMap,
-    map,
-    of,
-    switchMap,
-    withLatestFrom
-} from "rxjs";
+import { catchError, exhaustMap, map, of, switchMap, withLatestFrom } from "rxjs";
 import {
     actionWorkspaceCreate,
     actionWorkspaceCreateFailed,
@@ -36,13 +29,12 @@ export class WorkspaceEffects {
     routerEffect$ = createEffect(() =>
         this.actions$.pipe(
             ofType(routerNavigatedAction),
-            map((action) => {
-                const slug = findRouteParam(
-                    action.payload.routerState.root,
-                    "workspace-slug"
-                );
-
-                return actionWorkspaceSetCurrent({ slug });
+            map((action) =>
+                findRouteParam(action.payload.routerState.root, "workspace-id")
+            ),
+            filter((id) => id !== null),
+            map((id) => {
+                return actionWorkspaceSetCurrent({ id: parseInt(id) });
             })
         )
     );

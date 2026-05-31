@@ -15,9 +15,9 @@ export const selectWorkspace = (id: number) =>
         list.filter((a: WorkspaceModel) => a.id === id)
     );
 
-export const selectWorkspaceBySlug = (slug: string) =>
+export const selectWorkspaceById = (id: number) =>
     createSelector(selectWorkspaceList, (list) =>
-        list.find((a: WorkspaceModel) => a.slug === slug)
+        list.find((a: WorkspaceModel) => a.id === id)
     );
 
 export const selectWorkspaceListLoaded = createSelector(
@@ -25,7 +25,18 @@ export const selectWorkspaceListLoaded = createSelector(
     (s) => s.loaded
 );
 
-export const selectWorkspaceCurrentWorkspaceSlug = createSelector(
+export const selectWorkspaceCurrentWorkspaceId = createSelector(
     workspacesFeature,
-    (s) => s.currentWorkspaceSlug
+    (s) => s.currentWorkspaceId
+);
+
+export const selectWorkspaceCurrent = createSelector(
+    selectWorkspaceCurrentWorkspaceId,
+    selectWorkspaceList,
+    (id, workspaces) => {
+        if (!id) {
+            return undefined;
+        }
+        return workspaces.find((workspace) => workspace.id === id);
+    }
 );

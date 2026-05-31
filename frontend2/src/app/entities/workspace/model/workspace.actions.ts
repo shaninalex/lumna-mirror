@@ -31,5 +31,5 @@ export const actionWorkspaceListRequested = createAction(
 
 export const actionWorkspaceSetCurrent = createAction(
     "[Workspace] set current",
-    props<{ slug: string | null }>()
+    props<{ id: number | null }>()
 );

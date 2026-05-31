@@ -1,13 +1,27 @@
-import { Component } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
+import { Component, inject } from "@angular/core";
+import { ActivatedRoute, RouterOutlet } from "@angular/router";
 import { ProjectHeader } from "./components";
+import { Store } from "@ngrx/store";
+import { filter, switchMap } from "rxjs/operators";
+import { map } from "rxjs";
+import { selectProject } from "@entities/project";
 
 @Component({
     selector: "app-project-wrapper",
     imports: [RouterOutlet, ProjectHeader],
     template: `
-        <app-project-header />
+        <app-project-header [project]="project$" />
         <router-outlet />
     `
 })
-export class ProjectWrapper {}
+export class ProjectWrapper {
+    private route = inject(ActivatedRoute);
+    private store = inject(Store);
+
+    project$ = this.route.params.pipe(
+        filter((params) => params["project-id"]),
+        map((params) => parseInt(params["project-id"])),
+        switchMap((id) => this.store.select(selectProject(id))),
+        filter((project) => project !== undefined)
+    );
+}
