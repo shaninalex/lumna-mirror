@@ -7,24 +7,20 @@
     left: 0;
     right: 0;
     bottom: 0;
-    display: flex;
-    flex-direction: column;
+    padding-top: var(--header-height);
 }
 
 .main {
-    flex: 1;
+    padding-left: var(--sidebar-width);
     position: relative;
 }
 
 .sidebar {
     width: var(--sidebar-width);
     @apply border-r border-r-slate-200;
-    position: absolute;
+    padding-top: var(--header-height);
+    position: fixed;
     left: 0;
     top: 0;
-    bottom: 0;
-}
-
-.content {
-    margin-left: var(--sidebar-width);
+    height: 100%;
 }

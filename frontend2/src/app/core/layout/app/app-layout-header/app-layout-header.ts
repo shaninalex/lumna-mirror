@@ -20,16 +20,11 @@ import { ButtonModule } from "primeng/button";
         RippleModule,
         ButtonModule
     ],
+    styleUrl: "./app-layout-header.css",
     template: `
         <div
             class="flex items-center py-2 px-4 gap-4 border-b border-b-slate-200"
         >
-            <!--            <p-button-->
-            <!--                icon="pi pi-bars"-->
-            <!--                outlined-->
-            <!--                size="small"-->
-            <!--                (click)="handleToggleSidebar()"-->
-            <!--            />-->
             <img src="/img/logo-h.svg" alt="" style="width: 150px" />
             <div class="grow"></div>
             <div class="flex gap-2">

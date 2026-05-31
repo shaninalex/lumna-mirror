@@ -11,6 +11,7 @@ body {
 
 :root {
     --sidebar-width: 284px;
+    --header-height: 46px;
 }
 
 .dropdown-base {

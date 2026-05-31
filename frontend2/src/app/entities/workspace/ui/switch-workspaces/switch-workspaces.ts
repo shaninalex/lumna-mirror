@@ -1,30 +1,43 @@
-import { Component, inject } from "@angular/core";
+import { Component, DestroyRef, inject, OnInit } from "@angular/core";
 import { selectWorkspaceList } from "@entities/workspace/model/workspace.selectors";
 import { Store } from "@ngrx/store";
-import { AsyncPipe } from "@angular/common";
-import { RouterLink } from "@angular/router";
+import { ButtonModule } from "primeng/button";
+import { MenuModule } from "primeng/menu";
+import { MenuItem } from "primeng/api";
+import { tap } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-switch-workspaces",
-    imports: [AsyncPipe, RouterLink],
+    imports: [ButtonModule, MenuModule],
     template: `
-        <button aria-label="Switch workspaces dropdown menu">
-            Switch workspaces
-        </button>
-        <ng-template>
-            @if (workspaces$ | async; as workspaces) {
-                @for (workspace of workspaces; track $index) {
-                    <a [routerLink]="['/app', workspace.slug]">
-                        {{ workspace.title }}
-                    </a>
-                }
-                <hr class="divider" />
-                <a routerLink="/app/workspaces"> view all </a>
-            }
-        </ng-template>
+        <p-menu [model]="items" #workspaceMenu [popup]="true" />
+        <p-button
+            (click)="workspaceMenu.toggle($event)"
+            label="Switch workspaces"
+            variant="outlined"
+            size="small"
+        />
     `
 })
-export class SwitchWorkspaces {
+export class SwitchWorkspaces implements OnInit {
     private store = inject(Store);
-    workspaces$ = this.store.select(selectWorkspaceList);
+    private destroyRef = inject(DestroyRef);
+    items: MenuItem[] | undefined;
+
+    ngOnInit() {
+        this.store
+            .select(selectWorkspaceList)
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                tap((workspaces) => {
+                    this.items = workspaces.map((workspace) => ({
+                        label: workspace.title,
+                        icon: "pi pi-file",
+                        routerLink: `/app/${workspace.slug}`
+                    }));
+                })
+            )
+            .subscribe();
+    }
 }
