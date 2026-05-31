@@ -1,10 +1,12 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MenuModule } from "primeng/menu";
 import { MenuItem, MessageService } from "primeng/api";
 import { PanelMenuModule } from "primeng/panelmenu";
 import { PopoverModule } from "primeng/popover";
 import { ButtonModule } from "primeng/button";
-import { SwitchWorkspaces } from "@entities/workspace";
+import { SwitchWorkspaces, WorkspaceSettings } from "@entities/workspace";
+import { DividerModule } from "primeng/divider";
+import { ProjectList } from "@entities/project";
 
 @Component({
     selector: "app-app-layout-sidebar",
@@ -13,47 +15,31 @@ import { SwitchWorkspaces } from "@entities/workspace";
         PanelMenuModule,
         PopoverModule,
         ButtonModule,
-        SwitchWorkspaces
+        SwitchWorkspaces,
+        DividerModule,
+        WorkspaceSettings,
+        ProjectList
     ],
     providers: [MessageService],
     styleUrl: "./app-layout-sidebar.css",
     template: `
         <div class="flex flex-col h-full">
-            <div class="p-4 pb-0 flex justify-start">
-                <p-button
-                    (click)="menu.toggle($event)"
-                    label="Project settings"
-                    size="small"
-                    variant="outlined"
-                />
-                <p-menu #menu [model]="projectSettings" [popup]="true" />
-            </div>
-            <!-- -->
-            <p-menu [model]="items" class="sidebar-menu" />
+            <app-project-list />
+
             <div class="grow"></div>
-            <div class="p-4 ">
+
+            <p-divider />
+            <div class="px-4 pb-4 flex flex-col gap-1">
+                <app-workspace-settings />
                 <app-switch-workspaces />
             </div>
         </div>
     `
 })
 export class AppLayoutSidebar implements OnInit {
-    private messageService = inject(MessageService);
-    projectSettings: MenuItem[];
     items: MenuItem[] | undefined;
 
     ngOnInit() {
-        this.projectSettings = [
-            { label: "Members", icon: "pi pi-cog" },
-            { label: "Permissions", icon: "pi pi-cog" },
-            { label: "Integrations", icon: "pi pi-cog" },
-            { label: "Webhooks", icon: "pi pi-cog" },
-            {
-                separator: true
-            },
-            { label: "Settings", icon: "pi pi-cog" }
-        ];
-
         this.items = [
             {
                 label: "Projects",

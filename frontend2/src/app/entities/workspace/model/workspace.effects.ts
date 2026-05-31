@@ -15,8 +15,23 @@ import { fromErrorResponse } from "@shared/models";
 
 @Injectable()
 export class WorkspaceEffects {
-    private actions$ = inject(Actions);
     private api = inject(WorkspaceApi);
+    private actions$ = inject(Actions);
+
+    workspace_route_data$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(routerNavigatedAction),
+                exhaustMap((action) => {
+                    if (action.payload.routerState.url.includes("app")) {
+                        console.log(action);
+                        return EMPTY;
+                    }
+                    return EMPTY;
+                })
+            ),
+        { dispatch: false }
+    );
 
     workspaces_route_data$ = createEffect(() =>
         this.actions$.pipe(

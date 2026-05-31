@@ -38,6 +38,7 @@ func (s *WorkspaceService) Create(ctx context.Context, title string) (*models.Wo
 		Title:     title,
 		Slug:      utils.Slugify(title),
 		CreatedAt: time.Now(),
+		Active:    true,
 		// OwnerEmail: ,
 	}
 
