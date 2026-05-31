@@ -1,3 +1,37 @@
+## 0.34.0 (2026-05-31)
+
+### Feat
+
+- **workspaces**: create
+- **ui**: routes lazy loading
+- **ui-2**: rework route structure
+- onboarding form
+- **db**: workspace model
+- **db**: draft workspace table
+- **db**: sql based migrations
+- **db**: remove ORM relational fields from models. Keeping models flat.
+- **db**: other repositories
+- **db**: project repository
+- **db**: identity, task, column and board repositories
+- **db**: auth token repository
+- **ui**: invitation entity
+- **domain**: invitation model + service
+- **build**: embed mod
+
+### Fix
+
+- **api**: get boards tasks
+- **api**: get boards on project page
+- **config**: sqlite path to server
+- dependencies
+- past ORM issues
+- **ui**: save task title bug
+- styles
+
+### Refactor
+
+- **queue**: use single queue for main tasks
+
 ## 0.33.0 (2026-03-02)
 
 ### Feat
