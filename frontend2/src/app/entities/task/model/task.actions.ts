@@ -1,9 +1,18 @@
 import { createAction, props } from "@ngrx/store";
-import { TaskModel } from "./task.model";
+import { TaskListQueryModel, TaskModel } from "./task.model";
+import { Error } from "@shared/models";
 
-export const actionTaskGetList = createAction("[Task] get list");
+export const actionTaskGetList = createAction(
+    "[Task] get list",
+    props<{ query: TaskListQueryModel }>()
+);
 
 export const actionTaskSetList = createAction(
     "[Task] set list",
-    props<{ list: TaskModel[] }>()
+    props<{ tasks: TaskModel[] }>()
+);
+
+export const actionTaskSetListFailed = createAction(
+    "[Task] set list failed",
+    props<{ errors: Error[] }>()
 );

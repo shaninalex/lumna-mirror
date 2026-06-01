@@ -10,14 +10,15 @@ import (
 type Task struct {
 	ID    uint   `gorm:"primaryKey" json:"id"`
 	Title string `gorm:"not null" json:"title"`
+
+	// Order - need for saving ordering in kanban board
 	Order uint   `json:"order"`
 	Done  bool   `json:"done"`
 	Body  string `json:"body"`
 
-	StatusID    uint `gorm:"not null;index" json:"column_id"`
-	ListID      uint `gorm:"not null;index" json:"board_id"`
-	ProjectID   uint `gorm:"not null;index" json:"project_id"`
-	WorkspaceID uint `gorm:"not null;index" json:"workspace_id"`
+	// StatusID - Kanband Board column
+	StatusID  uint `gorm:"not null;index" json:"status_id"`
+	ProjectID uint `gorm:"not null;index" json:"project_id"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

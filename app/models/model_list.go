@@ -11,8 +11,7 @@ type List struct {
 	ID    uint   `gorm:"primaryKey" json:"id"`
 	Title string `gorm:"not null" json:"title"`
 
-	ProjectID   uint `gorm:"not null;index" json:"project_id"`
-	WorkspaceID uint `gorm:"not null;index" json:"workspace_id"`
+	ProjectID uint `gorm:"not null;index" json:"project_id"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

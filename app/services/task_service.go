@@ -22,8 +22,14 @@ func NewTaskService(
 	}
 }
 
-func (s *TaskService) List(ctx context.Context, query map[string]any) ([]*models.Task, error) {
-	return s.repository.List(ctx, query)
+type ServiceTaskListQuery struct {
+	ProjectID *uint `form:"project_id,omitempty"`
+}
+
+func (s *TaskService) List(ctx context.Context, query ServiceTaskListQuery) ([]*models.Task, error) {
+	return s.repository.List(ctx, repositories.TaskListQuery{
+		ProjectID: query.ProjectID,
+	})
 }
 
 func (s *TaskService) GetTask(ctx context.Context, taskID uint) (*models.Task, error) {
@@ -40,11 +46,11 @@ type TaskPayload struct {
 	Title     string `json:"title"`
 	Order     uint   `json:"order"`
 	ProjectID uint   `json:"project_id"`
-	ColumnID  uint   `json:"status_id"`
+	StatusID  uint   `json:"status_id"`
 }
 
 func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
-	status, err := s.statusRepository.GetByID(ctx, payload.ColumnID)
+	status, err := s.statusRepository.GetByID(ctx, payload.StatusID)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +59,6 @@ func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		Order:     payload.Order,
 		StatusID:  status.ID,
 		ProjectID: status.ProjectID,
-		ListID:    status.ListID,
 	}
 
 	if err := s.repository.Create(ctx, &task); err != nil {

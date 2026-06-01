@@ -26,10 +26,16 @@ import { MenuModule } from "primeng/menu";
                     </div>
                     <div class="grow"></div>
                     <div class="card flex justify-center">
-                        <p-menu #menu [model]="items" [popup]="true" />
+                        <p-menu
+                            #menu
+                            [model]="projectSettings"
+                            [popup]="true"
+                        />
                         <p-button
                             (click)="menu.toggle($event)"
                             icon="pi pi-ellipsis-v"
+                            outlined
+                            size="small"
                         />
                     </div>
                 </div>
@@ -57,6 +63,14 @@ export class ProjectHeader {
             label: "Board",
             icon: "pi pi-objects-column",
             routerLink: "board"
+        }
+    ];
+
+    projectSettings: MegaMenuItem[] = [
+        {
+            label: "Project Settings",
+            icon: "pi pi-cog",
+            routerLink: "summary"
         }
     ];
 }

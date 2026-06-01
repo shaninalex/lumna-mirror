@@ -2,9 +2,10 @@ import { Component, inject } from "@angular/core";
 import { ActivatedRoute, RouterOutlet } from "@angular/router";
 import { ProjectHeader } from "./components";
 import { Store } from "@ngrx/store";
-import { filter, switchMap } from "rxjs/operators";
+import { filter, switchMap, tap } from "rxjs/operators";
 import { map } from "rxjs";
 import { selectProject } from "@entities/project";
+import { actionTaskGetList } from "@entities/task";
 
 @Component({
     selector: "app-project-wrapper",
@@ -22,6 +23,15 @@ export class ProjectWrapper {
         filter((params) => params["project-id"]),
         map((params) => parseInt(params["project-id"])),
         switchMap((id) => this.store.select(selectProject(id))),
-        filter((project) => project !== undefined)
+        filter((project) => project !== undefined),
+        tap((project) => {
+            this.store.dispatch(
+                actionTaskGetList({
+                    query: {
+                        project_id: project.id
+                    }
+                })
+            );
+        })
     );
 }
