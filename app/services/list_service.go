@@ -4,12 +4,12 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/logger"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/services/logger"
 )
 
 type ListService struct {
-	listRepository  repositories.ListRepository
+	listRepository   repositories.ListRepository
 	taskRepository   repositories.TaskRepository
 	statusRepository repositories.StatusRepository
 }
@@ -20,7 +20,7 @@ func NewListService(
 	statusRepository repositories.StatusRepository,
 ) *ListService {
 	return &ListService{
-		listRepository:  listRepository,
+		listRepository:   listRepository,
 		taskRepository:   taskRepository,
 		statusRepository: statusRepository,
 	}
@@ -65,7 +65,7 @@ type KanbanListChangeOrderPayload struct {
 	MoveType string                     `json:"move_type"`
 	StatusId *uint                      `json:"status_id"`
 	Tasks    []KTask                    `json:"tasks"`
-	Statuses  []KColumn                  `json:"statuses"`
+	Statuses []KColumn                  `json:"statuses"`
 	Activity *logger.ActivityLogPayload `json:"activity"`
 }
 

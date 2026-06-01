@@ -6,9 +6,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/observer"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/services/observer"
 	"gitlab.com/shaninalex/lumna/testutils"
 )
 

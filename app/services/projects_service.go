@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/logger"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/services/logger"
 )
 
 type ProjectService struct {

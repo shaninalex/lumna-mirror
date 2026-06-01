@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/observer"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/services/observer"
 )
 
 type WorkspaceManager interface {

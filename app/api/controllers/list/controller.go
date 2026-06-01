@@ -2,8 +2,8 @@ package list
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.com/shaninalex/lumna/app/pkg/logger"
 	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/services/logger"
 )
 
 type ListController struct {

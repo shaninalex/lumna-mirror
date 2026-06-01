@@ -4,7 +4,7 @@ import (
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
-	"gitlab.com/shaninalex/lumna/app/pkg/observer"
+	"gitlab.com/shaninalex/lumna/app/services/observer"
 )
 
 var (
