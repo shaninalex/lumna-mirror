@@ -17,7 +17,7 @@ type WorkspaceManager interface {
 	List(ctx context.Context, params map[string]any) ([]*models.Workspace, error)
 }
 
-type WorkspaceService struct {
+type workspaceService struct {
 	repository repositories.WorkspaceRepository
 	bus        observer.Observer
 }
@@ -26,13 +26,13 @@ func NewWorkspaceService(
 	repository repositories.WorkspaceRepository,
 	bus observer.Observer,
 ) WorkspaceManager {
-	return &WorkspaceService{
+	return &workspaceService{
 		repository: repository,
 		bus:        bus,
 	}
 }
 
-func (s *WorkspaceService) Create(ctx context.Context, title string) (*models.Workspace, error) {
+func (s *workspaceService) Create(ctx context.Context, title string) (*models.Workspace, error) {
 	workspace := &models.Workspace{
 		Title:     title,
 		CreatedAt: time.Now(),
@@ -49,7 +49,7 @@ func (s *WorkspaceService) Create(ctx context.Context, title string) (*models.Wo
 	return workspace, nil
 }
 
-func (s *WorkspaceService) CreateWithOwner(ctx context.Context, title string, idn *models.Identity) (*models.Workspace, error) {
+func (s *workspaceService) CreateWithOwner(ctx context.Context, title string, idn *models.Identity) (*models.Workspace, error) {
 	workspace := &models.Workspace{
 		Title:      title,
 		CreatedAt:  time.Now(),
@@ -66,15 +66,15 @@ func (s *WorkspaceService) CreateWithOwner(ctx context.Context, title string, id
 	return workspace, nil
 }
 
-func (s *WorkspaceService) Get(ctx context.Context, id uint) (*models.Workspace, error) {
+func (s *workspaceService) Get(ctx context.Context, id uint) (*models.Workspace, error) {
 	return s.repository.GetByID(ctx, id)
 
 }
 
-func (s *WorkspaceService) Update(ctx context.Context, id uint, payload map[string]any) error {
+func (s *workspaceService) Update(ctx context.Context, id uint, payload map[string]any) error {
 	return s.repository.Update(ctx, id, payload)
 }
 
-func (s *WorkspaceService) List(ctx context.Context, params map[string]any) ([]*models.Workspace, error) {
+func (s *workspaceService) List(ctx context.Context, params map[string]any) ([]*models.Workspace, error) {
 	return s.repository.List(ctx, params)
 }

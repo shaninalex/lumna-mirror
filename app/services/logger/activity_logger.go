@@ -9,14 +9,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type ActivityLogger struct {
+type ActivityLogger interface {
+	Log(userId uint, activity *ActivityLogPayload)
+}
+
+type activityLogger struct {
 	db    *gorm.DB
 	ctx   context.Context
 	queue chan *models.ActivityLog
 }
 
-func ProvideActivityLogger(db *gorm.DB, ctx context.Context) *ActivityLogger {
-	s := &ActivityLogger{
+func ProvideActivityLogger(db *gorm.DB, ctx context.Context) ActivityLogger {
+	s := &activityLogger{
 		db:    db,
 		queue: make(chan *models.ActivityLog, 100),
 		ctx:   ctx,
@@ -25,7 +29,7 @@ func ProvideActivityLogger(db *gorm.DB, ctx context.Context) *ActivityLogger {
 	return s
 }
 
-func (s *ActivityLogger) init() {
+func (s *activityLogger) init() {
 	fmt.Println("[ActivityLogger] Start")
 	go func() {
 		for {
@@ -40,7 +44,7 @@ func (s *ActivityLogger) init() {
 	}()
 }
 
-func (s *ActivityLogger) save(activity *models.ActivityLog) {
+func (s *activityLogger) save(activity *models.ActivityLog) {
 	if result := s.db.WithContext(s.ctx).Create(&activity); result.Error != nil {
 		log.Println(result.Error)
 	}
@@ -53,7 +57,7 @@ type ActivityLogPayload struct {
 	Action     string `json:"action"`
 }
 
-func (s *ActivityLogger) Log(userId uint, activity *ActivityLogPayload) {
+func (s *activityLogger) Log(userId uint, activity *ActivityLogPayload) {
 	s.queue <- &models.ActivityLog{
 		Summary:    activity.Summary,
 		EntityID:   activity.EntityID,

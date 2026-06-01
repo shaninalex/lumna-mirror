@@ -6,14 +6,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
-	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/services/logger"
 )
 
 type ActivityController struct {
-	logService *services.ActivityLogService
+	logService logger.ActivityLogService
 }
 
-func NewActivityController(logService *services.ActivityLogService) *ActivityController {
+func NewActivityController(logService logger.ActivityLogService) *ActivityController {
 	s := &ActivityController{
 		logService: logService,
 	}

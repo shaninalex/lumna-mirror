@@ -1,4 +1,4 @@
-package services
+package invitation
 
 import (
 	"context"
@@ -23,7 +23,7 @@ var (
 	defaultValidUntil = 1 * time.Hour
 )
 
-type InvitationManager interface {
+type Service interface {
 	Create(ctx context.Context, email, role string, meta map[string]any) (*models.Invitation, string, error) // TODO: no need to return token string
 	Get(ctx context.Context, hash string) (*models.Invitation, error)                                        // TODO: rename into GetByHash
 	Accept(ctx context.Context, token string) error
@@ -37,8 +37,8 @@ func ProvideInvitationService(
 	repository repositories.InvitationRepository,
 	emailRepository repositories.EmailRepository,
 	bus observer.Observer,
-) InvitationManager {
-	s := &InvitationService{
+) Service {
+	s := &service{
 		repository:      repository,
 		emailRepository: emailRepository,
 		bus:             bus,
@@ -47,21 +47,23 @@ func ProvideInvitationService(
 	return s
 }
 
-type InvitationService struct {
+type service struct {
 	repository      repositories.InvitationRepository
 	emailRepository repositories.EmailRepository
 	bus             observer.Observer
 }
 
-func (s *InvitationService) init() {
+var _ Service = (*service)(nil)
+
+func (s *service) init() {
 	s.bus.Subscribe(email.EventEmailQueueSent, s.handleEventInvitationEmailSent)
 }
 
-func (s *InvitationService) List(ctx context.Context) ([]models.Invitation, error) {
+func (s *service) List(ctx context.Context) ([]models.Invitation, error) {
 	return s.repository.List(ctx)
 }
 
-func (s *InvitationService) Create(ctx context.Context, email, role string, meta map[string]any) (*models.Invitation, string, error) {
+func (s *service) Create(ctx context.Context, email, role string, meta map[string]any) (*models.Invitation, string, error) {
 	if email == "" || role == "" {
 		return nil, "", errors.New("invalid data")
 	}
@@ -115,7 +117,7 @@ func (s *InvitationService) Create(ctx context.Context, email, role string, meta
 	return invitation, token, nil
 }
 
-func (s *InvitationService) Accept(ctx context.Context, token string) error {
+func (s *service) Accept(ctx context.Context, token string) error {
 	tokenHash := utils.HashToken(token)
 
 	invitation, err := s.repository.GetByHash(ctx, tokenHash)
@@ -131,7 +133,7 @@ func (s *InvitationService) Accept(ctx context.Context, token string) error {
 	return s.repository.Update(ctx, invitation)
 }
 
-func (s *InvitationService) Validate(ctx context.Context, token string) error {
+func (s *service) Validate(ctx context.Context, token string) error {
 	tokenHash := utils.HashToken(token)
 	invitation, err := s.repository.GetByHash(ctx, tokenHash)
 	if err != nil {
@@ -146,7 +148,7 @@ func (s *InvitationService) Validate(ctx context.Context, token string) error {
 	return s.repository.Update(ctx, invitation)
 }
 
-func (s *InvitationService) Get(ctx context.Context, token string) (*models.Invitation, error) {
+func (s *service) Get(ctx context.Context, token string) (*models.Invitation, error) {
 	invitation, err := s.repository.GetByHash(ctx, utils.HashToken(token))
 	if err != nil {
 		return nil, err
@@ -154,11 +156,11 @@ func (s *InvitationService) Get(ctx context.Context, token string) (*models.Invi
 	return invitation, nil
 }
 
-func (s *InvitationService) Delete(ctx context.Context, invitationId uint) error {
+func (s *service) Delete(ctx context.Context, invitationId uint) error {
 	return s.repository.Delete(ctx, invitationId)
 }
 
-func (s *InvitationService) Reset(ctx context.Context, invitationId uint) (string, error) {
+func (s *service) Reset(ctx context.Context, invitationId uint) (string, error) {
 	invitation, err := s.repository.GetById(ctx, invitationId)
 	if err != nil {
 		return "", err
@@ -177,7 +179,7 @@ func (s *InvitationService) Reset(ctx context.Context, invitationId uint) (strin
 	return token, nil
 }
 
-func (s *InvitationService) handleEventInvitationEmailSent(ctx context.Context, data any) {
+func (s *service) handleEventInvitationEmailSent(ctx context.Context, data any) {
 	m, ok := data.(models.MetaContaing)
 	if !ok {
 		return

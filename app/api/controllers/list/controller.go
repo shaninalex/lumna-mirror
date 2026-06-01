@@ -7,17 +7,17 @@ import (
 )
 
 type ListController struct {
-	listService    *services.ListService
-	columnService  *services.StatusService
-	taskService    *services.TaskService
-	activityLogger *logger.ActivityLogger
+	listService    services.ListService
+	columnService  services.StatusService
+	taskService    services.TaskService
+	activityLogger logger.ActivityLogger
 }
 
 func NewListController(
-	listService *services.ListService,
-	columnService *services.StatusService,
-	taskService *services.TaskService,
-	activityLogger *logger.ActivityLogger,
+	listService services.ListService,
+	columnService services.StatusService,
+	taskService services.TaskService,
+	activityLogger logger.ActivityLogger,
 ) *ListController {
 	s := &ListController{
 		listService:    listService,

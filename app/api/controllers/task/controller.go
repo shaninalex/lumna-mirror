@@ -6,10 +6,10 @@ import (
 )
 
 type TaskController struct {
-	taskService *services.TaskService
+	taskService services.TaskService
 }
 
-func NewTaskController(taskService *services.TaskService) *TaskController {
+func NewTaskController(taskService services.TaskService) *TaskController {
 	return &TaskController{
 		taskService: taskService,
 	}

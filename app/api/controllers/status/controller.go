@@ -6,10 +6,10 @@ import (
 )
 
 type StatusController struct {
-	statusService *services.StatusService
+	statusService services.StatusService
 }
 
-func NewStatusController(statusService *services.StatusService) *StatusController {
+func NewStatusController(statusService services.StatusService) *StatusController {
 	s := &StatusController{
 		statusService: statusService,
 	}

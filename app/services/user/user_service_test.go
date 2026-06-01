@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/services/user"
 	"gitlab.com/shaninalex/lumna/testutils"
 )
 
@@ -13,9 +14,9 @@ func Test_IdentityService_Identity(t *testing.T) {
 	ctx, db := testutils.SetupTest()
 	defer testutils.ClearDB(db)
 
-	user := testutils.User(models.Identity{FullName: "test", Email: "test@test.com", Active: true}, db)
+	_user := testutils.User(models.Identity{FullName: "test", Email: "test@test.com", Active: true}, db)
 	service := user.NewUserService(repositories.NewGormIdentityRepository(db))
-	idn, err := service.Identity(ctx, user.ID)
+	idn, err := service.Identity(ctx, _user.ID)
 	assert.NoError(t, err)
 	assert.NotNil(t, idn)
 

@@ -2,13 +2,13 @@ package activity
 
 import (
 	"gitlab.com/shaninalex/lumna/app/repositories"
-	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/services/logger"
 	"go.uber.org/dig"
 )
 
 func Module(c *dig.Container) error {
 	_ = c.Provide(repositories.NewGormActivityLogRepository)
-	if err := c.Provide(services.NewActivityLogService); err != nil {
+	if err := c.Provide(logger.NewActivityLogService); err != nil {
 		panic(err)
 	}
 

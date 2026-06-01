@@ -8,31 +8,41 @@ import (
 	"gitlab.com/shaninalex/lumna/app/services/logger"
 )
 
-type ProjectService struct {
+type ProjectService interface {
+	Get(ctx context.Context, id uint) (*models.Project, error)
+	List(ctx context.Context) ([]models.Project, error)
+	Create(ctx context.Context, data models.ProjectCreateModel) (*models.Project, error)
+	Update(ctx context.Context, projectID uint, title string) (*models.Project, error)
+	Delete(ctx context.Context, id uint) error
+}
+
+type projectService struct {
 	repository repositories.ProjectRepository
 	logger     logger.Logger
 }
 
+var _ ProjectService = (*projectService)(nil)
+
 func NewProjectService(
 	repository repositories.ProjectRepository,
 	logger logger.Logger,
-) *ProjectService {
-	s := &ProjectService{
+) ProjectService {
+	s := &projectService{
 		repository: repository,
 		logger:     logger,
 	}
 	return s
 }
 
-func (s *ProjectService) Get(ctx context.Context, id uint) (*models.Project, error) {
+func (s *projectService) Get(ctx context.Context, id uint) (*models.Project, error) {
 	return s.repository.GetByID(ctx, id)
 }
 
-func (s *ProjectService) List(ctx context.Context) ([]models.Project, error) {
+func (s *projectService) List(ctx context.Context) ([]models.Project, error) {
 	return s.repository.List(ctx)
 }
 
-func (s *ProjectService) Create(ctx context.Context, data models.ProjectCreateModel) (*models.Project, error) {
+func (s *projectService) Create(ctx context.Context, data models.ProjectCreateModel) (*models.Project, error) {
 	project := &models.Project{
 		Title:       data.Title,
 		OwnerID:     data.OwnerID,
@@ -44,7 +54,7 @@ func (s *ProjectService) Create(ctx context.Context, data models.ProjectCreateMo
 	return project, nil
 }
 
-func (s *ProjectService) Update(ctx context.Context, projectID uint, title string) (*models.Project, error) {
+func (s *projectService) Update(ctx context.Context, projectID uint, title string) (*models.Project, error) {
 	project, err := s.repository.GetByID(ctx, projectID)
 	if err != nil {
 		return nil, err
@@ -58,6 +68,6 @@ func (s *ProjectService) Update(ctx context.Context, projectID uint, title strin
 	return project, nil
 }
 
-func (s *ProjectService) Delete(ctx context.Context, id uint) error {
+func (s *projectService) Delete(ctx context.Context, id uint) error {
 	return s.repository.DeleteByID(ctx, id)
 }

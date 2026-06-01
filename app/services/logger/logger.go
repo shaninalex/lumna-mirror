@@ -10,13 +10,13 @@ type Logger interface {
 	Log(msg string)
 }
 
-type SimpleLogger struct {
+type simpleLogger struct {
 	ctx   context.Context
 	queue chan string
 }
 
 func ProvideLogger(ctx context.Context) Logger {
-	l := SimpleLogger{
+	l := simpleLogger{
 		queue: make(chan string, 100),
 		ctx:   ctx,
 	}
@@ -24,11 +24,11 @@ func ProvideLogger(ctx context.Context) Logger {
 	return &l
 }
 
-func (s *SimpleLogger) Log(msg string) {
+func (s *simpleLogger) Log(msg string) {
 	s.queue <- msg
 }
 
-func (s *SimpleLogger) init() {
+func (s *simpleLogger) init() {
 	fmt.Println("[Logger] Start")
 	go func() {
 		for {
@@ -43,6 +43,6 @@ func (s *SimpleLogger) init() {
 	}()
 }
 
-func (s *SimpleLogger) process(msg string) {
+func (s *simpleLogger) process(msg string) {
 	log.Println(msg)
 }

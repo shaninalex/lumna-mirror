@@ -7,36 +7,44 @@ import (
 	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
-type StatusService struct {
+type StatusService interface {
+	Filter(ctx context.Context, listId uint) []models.Status
+	Get(ctx context.Context, statusID uint) (*models.Status, error)
+	Create(ctx context.Context, payload StatusUpdate) (*models.Status, error)
+	Update(ctx context.Context, status *models.Status) (*models.Status, error)
+	Delete(ctx context.Context, id uint) error
+}
+
+type statusService struct {
 	statusRepository repositories.StatusRepository
-	listRepository  repositories.ListRepository
+	listRepository   repositories.ListRepository
 }
 
 func NewStatusService(
 	listRepository repositories.ListRepository,
 	statusRepository repositories.StatusRepository,
-) *StatusService {
-	return &StatusService{
-		listRepository:  listRepository,
+) StatusService {
+	return &statusService{
+		listRepository:   listRepository,
 		statusRepository: statusRepository,
 	}
 }
 
-func (s *StatusService) Filter(ctx context.Context, listId uint) []models.Status {
+func (s *statusService) Filter(ctx context.Context, listId uint) []models.Status {
 	return s.statusRepository.FilterByList(ctx, listId)
 }
 
-func (s *StatusService) Get(ctx context.Context, statusID uint) (*models.Status, error) {
+func (s *statusService) Get(ctx context.Context, statusID uint) (*models.Status, error) {
 	return s.statusRepository.GetByID(ctx, statusID)
 }
 
 type StatusUpdate struct {
 	ListId uint   `json:"list_id"`
-	Order   uint   `json:"order"`
-	Title   string `json:"title"`
+	Order  uint   `json:"order"`
+	Title  string `json:"title"`
 }
 
-func (s *StatusService) Create(ctx context.Context, payload StatusUpdate) (*models.Status, error) {
+func (s *statusService) Create(ctx context.Context, payload StatusUpdate) (*models.Status, error) {
 	// NOTE: may be instead of ColumnUpdate use models.Column?
 	list, err := s.listRepository.GetByID(ctx, payload.ListId)
 	if err != nil {
@@ -44,7 +52,7 @@ func (s *StatusService) Create(ctx context.Context, payload StatusUpdate) (*mode
 	}
 
 	status := models.Status{
-		ListID:   list.ID,
+		ListID:    list.ID,
 		Order:     payload.Order,
 		Title:     payload.Title,
 		ProjectID: list.ProjectID,
@@ -53,10 +61,10 @@ func (s *StatusService) Create(ctx context.Context, payload StatusUpdate) (*mode
 	return s.statusRepository.Create(ctx, status)
 }
 
-func (s *StatusService) Update(ctx context.Context, status *models.Status) (*models.Status, error) {
+func (s *statusService) Update(ctx context.Context, status *models.Status) (*models.Status, error) {
 	return s.statusRepository.Update(ctx, status)
 }
 
-func (s *StatusService) Delete(ctx context.Context, id uint) error {
+func (s *statusService) Delete(ctx context.Context, id uint) error {
 	return s.statusRepository.Delete(ctx, id)
 }

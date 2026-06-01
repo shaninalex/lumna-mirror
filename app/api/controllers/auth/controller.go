@@ -7,12 +7,12 @@ import (
 
 type AuthController struct {
 	localProvider    *auth.EmailAuthProvider
-	authTokenService *auth.AuthTokenService // TODO: use interfaces!
+	authTokenService auth.TokenService
 }
 
 func NewAuthContoller(
 	authProvider *auth.EmailAuthProvider,
-	authTokenService *auth.AuthTokenService, // TODO: use interfaces!
+	authTokenService auth.TokenService,
 ) *AuthController {
 	s := &AuthController{
 		localProvider:    authProvider,
