@@ -3,15 +3,16 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/services/user"
 )
 
 type UserController struct {
-	userService       services.UserManager
+	userService       user.UserManager
 	invitationManager services.InvitationManager
 }
 
 func NewUserController(
-	userService services.UserManager,
+	userService user.UserManager,
 	invitationManager services.InvitationManager,
 ) *UserController {
 	s := &UserController{

@@ -1,10 +1,7 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { projectAdapter, ProjectState } from "./project.store";
 import { ProjectModel } from "./project.model";
-import {
-    selectWorkspaceCurrentWorkspaceId,
-    selectWorkspaceList
-} from "@entities/workspace";
+import { selectWorkspaceCurrentWorkspaceId, selectWorkspaceList } from "@entities/workspace";
 
 const feature = createFeatureSelector<ProjectState>("project");
 const selectors = projectAdapter.getSelectors();
@@ -55,3 +52,7 @@ export const selectProjectLink = (id: number) =>
             return `/app/${workspace.id}/project/${project.id}`;
         }
     );
+
+export const selectProjectCurrentId = createSelector(feature, (s) => {
+    return s.currentProjectId;
+});

@@ -23,3 +23,8 @@ export const actionProjectCreateSuccessful = createAction(
     "[Project] create successful",
     props<{ project: ProjectModel }>()
 );
+
+export const actionProjectSetCurrentProjectId = createAction(
+    "[Project] set current project_id",
+    props<{ project_id: number }>()
+);

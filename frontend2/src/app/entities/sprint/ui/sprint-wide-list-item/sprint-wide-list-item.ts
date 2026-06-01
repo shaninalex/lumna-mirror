@@ -1,33 +1,10 @@
-<div class="min-h-screen bg-zinc-100 text-zinc-900">
-    <main class="mx-auto p-4">
-        <section
-            class="mb-4 flex flex-col gap-2 rounded-md border border-zinc-200 bg-white p-4 md:flex-row md:items-center md:justify-between"
-        >
-            <div class="flex flex-1 items-center gap-3">
-                <input
-                    type="text"
-                    placeholder="Search backlog..."
-                    class="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm outline-none focus:border-blue-500"
-                />
+import { Component, Input } from "@angular/core";
+import { SprintModel } from "@entities/sprint";
 
-                <button
-                    class="rounded-md border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-50"
-                >
-                    Filters
-                </button>
-            </div>
-
-            <div class="flex items-center gap-2 text-sm">
-                <span class="rounded-full bg-zinc-200 px-3 py-1 text-zinc-700">
-                    All Issues
-                </span>
-
-                <span class="rounded-full bg-blue-100 px-3 py-1 text-blue-700">
-                    Sprint 12
-                </span>
-            </div>
-        </section>
-
+@Component({
+    selector: "app-sprint-wide-list-item",
+    imports: [],
+    template: `
         <!-- Sprint -->
         <section
             class="mb-8 overflow-hidden rounded-md border border-zinc-200 bg-white"
@@ -36,7 +13,7 @@
                 class="flex items-center justify-between border-b border-zinc-200 bg-zinc-50 px-5 py-4"
             >
                 <div>
-                    <h2 class="text-lg font-semibold">Sprint 12</h2>
+                    <h2 class="text-lg font-semibold">{{ sprint.title }}</h2>
                     <p class="text-sm text-zinc-500">
                         14 issues • 32 story points
                     </p>
@@ -159,88 +136,8 @@
                 </div>
             </div>
         </section>
-
-        <!-- Backlog -->
-        <section
-            class="overflow-hidden rounded-md border border-zinc-200 bg-white"
-        >
-            <div class="border-b border-zinc-200 bg-zinc-50 px-5 py-4">
-                <h2 class="text-lg font-semibold">Backlog</h2>
-                <p class="text-sm text-zinc-500">
-                    Prioritized issues not assigned to sprint
-                </p>
-            </div>
-
-            <div class="divide-y divide-zinc-200">
-                <!-- Task -->
-                <div class="flex items-start gap-2 px-5 py-4 hover:bg-zinc-50">
-                    <div class="mt-1 h-3 w-3 rounded-full bg-orange-500"></div>
-
-                    <div class="flex-1">
-                        <div class="mb-1 flex items-center gap-2">
-                            <span
-                                class="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700"
-                            >
-                                LUM-145
-                            </span>
-
-                            <h3 class="font-medium">Dark mode support</h3>
-                        </div>
-
-                        <p class="text-sm text-zinc-500">
-                            Add application-wide dark mode using Tailwind
-                            classes.
-                        </p>
-                    </div>
-
-                    <div class="flex items-center gap-2 text-xs">
-                        <span
-                            class="rounded bg-zinc-200 px-2 py-1 text-zinc-700"
-                        >
-                            Todo
-                        </span>
-
-                        <span class="rounded bg-zinc-200 px-2 py-1">
-                            2 SP
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Task -->
-                <div class="flex items-start gap-2 px-5 py-4 hover:bg-zinc-50">
-                    <div class="mt-1 h-3 w-3 rounded-full bg-pink-500"></div>
-
-                    <div class="flex-1">
-                        <div class="mb-1 flex items-center gap-2">
-                            <span
-                                class="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700"
-                            >
-                                LUM-146
-                            </span>
-
-                            <h3 class="font-medium">
-                                Slack integration prototype
-                            </h3>
-                        </div>
-
-                        <p class="text-sm text-zinc-500">
-                            Send notifications when issue status changes.
-                        </p>
-                    </div>
-
-                    <div class="flex items-center gap-2 text-xs">
-                        <span
-                            class="rounded bg-zinc-200 px-2 py-1 text-zinc-700"
-                        >
-                            Todo
-                        </span>
-
-                        <span class="rounded bg-zinc-200 px-2 py-1">
-                            13 SP
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-</div>
+    `
+})
+export class SprintWideListItem {
+    @Input() sprint: SprintModel;
+}

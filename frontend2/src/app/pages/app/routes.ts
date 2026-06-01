@@ -3,6 +3,7 @@ import { provideWorkspaceFeature } from "@entities/workspace";
 import { provideTaskFeature } from "@entities/task";
 import { provideListFeature } from "@entities/list";
 import { provideProjectFeature } from "@entities/project";
+import { provideSprintFeature } from "@entities/sprint";
 
 export const routes: Routes = [
     {
@@ -11,7 +12,8 @@ export const routes: Routes = [
             provideWorkspaceFeature(),
             provideProjectFeature(),
             provideListFeature(),
-            provideTaskFeature()
+            provideTaskFeature(),
+            provideSprintFeature()
         ],
         children: [
             {

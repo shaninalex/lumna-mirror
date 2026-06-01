@@ -24,6 +24,6 @@ func NewProjectsController(
 func (s *ProjectController) Register(router *gin.RouterGroup) {
 	router.GET("/projects", s.List)
 	router.POST("/projects", s.Create)
-	router.PATCH("/project/:id", s.Patch)
-	router.DELETE("/project/:id", s.Delete)
+	router.PATCH("/projects/:id", s.Patch)
+	router.DELETE("/projects/:id", s.Delete)
 }

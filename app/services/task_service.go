@@ -61,7 +61,7 @@ func (s *TaskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		ProjectID: status.ProjectID,
 	}
 
-	if err := s.repository.Create(ctx, &task); err != nil {
+	if err = s.repository.Create(ctx, &task); err != nil {
 		return nil, err
 	}
 	return &task, nil

@@ -10,6 +10,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/controllers/invitation"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/list"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/sprint"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/status"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
@@ -54,6 +55,7 @@ type ApiDeps struct {
 	ActivityController   *activity.ActivityController
 	InvitationController *invitation.InvitationController
 	WorkspaceController  *workspace.WorkspaceController
+	SprintController     *sprint.SprintController
 
 	AuthMiddleware middlewares.AuthMiddleware
 }
@@ -85,6 +87,7 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	deps.ActivityController.Register(private)
 	deps.InvitationController.Register(private)
 	deps.WorkspaceController.Register(private)
+	deps.SprintController.Register(private)
 
 	return router
 }

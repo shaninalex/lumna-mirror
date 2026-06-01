@@ -4,8 +4,12 @@ import { ProjectHeader } from "./components";
 import { Store } from "@ngrx/store";
 import { filter, switchMap, tap } from "rxjs/operators";
 import { map } from "rxjs";
-import { selectProject } from "@entities/project";
+import {
+    actionProjectSetCurrentProjectId,
+    selectProject
+} from "@entities/project";
 import { actionTaskGetList } from "@entities/task";
+import { actionSprintGetList } from "@entities/sprint";
 
 @Component({
     selector: "app-project-wrapper",
@@ -26,7 +30,17 @@ export class ProjectWrapper {
         filter((project) => project !== undefined),
         tap((project) => {
             this.store.dispatch(
+                actionProjectSetCurrentProjectId({ project_id: project.id })
+            );
+            this.store.dispatch(
                 actionTaskGetList({
+                    query: {
+                        project_id: project.id
+                    }
+                })
+            );
+            this.store.dispatch(
+                actionSprintGetList({
                     query: {
                         project_id: project.id
                     }
