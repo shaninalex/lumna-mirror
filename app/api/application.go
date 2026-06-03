@@ -23,14 +23,15 @@ import (
 )
 
 func ProvideRouter(conf *config.Config) *gin.Engine {
-	router := gin.New()
-	if conf.Env() != "development" {
-		gin.SetMode(gin.ReleaseMode)
-	}
+	//router := gin.New()
+	//if conf.Env() != "development" {
+	//	gin.SetMode(gin.ReleaseMode)
+	//}
 
-	router.RedirectTrailingSlash = false
-	router.RedirectFixedPath = false
+	//router.RedirectTrailingSlash = false
+	//router.RedirectFixedPath = false
 
+	router := gin.Default()
 	router.GET("/_health", HealthRoute)
 
 	return router

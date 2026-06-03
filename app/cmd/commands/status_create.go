@@ -2,7 +2,6 @@ package commands
 
 import (
 	"log"
-	"strconv"
 
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/models"
@@ -26,14 +25,14 @@ func NewStatusCreateCmd() *cobra.Command {
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(persistence.ProvideDB)
 
-			listId, err := strconv.Atoi(args[0])
+			//listId, err := strconv.Atoi(args[0])
 			if err != nil {
 				panic(err)
 			}
 			title := args[1]
 			column := models.Status{
-				Title:  title,
-				ListID: uint(listId),
+				Title: title,
+				//ListID: uint(listId),
 			}
 			if err := c.Invoke(createColumn(column)); err != nil {
 				panic(err)

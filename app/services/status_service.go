@@ -42,6 +42,7 @@ type StatusUpdate struct {
 	ListId uint   `json:"list_id"`
 	Order  uint   `json:"order"`
 	Title  string `json:"title"`
+	// TODO: project id
 }
 
 func (s *statusService) Create(ctx context.Context, payload StatusUpdate) (*models.Status, error) {
@@ -52,7 +53,6 @@ func (s *statusService) Create(ctx context.Context, payload StatusUpdate) (*mode
 	}
 
 	status := models.Status{
-		ListID:    list.ID,
 		Order:     payload.Order,
 		Title:     payload.Title,
 		ProjectID: list.ProjectID,

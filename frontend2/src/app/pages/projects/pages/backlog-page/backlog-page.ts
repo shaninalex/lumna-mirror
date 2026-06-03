@@ -1,18 +1,18 @@
 import { Component, inject } from "@angular/core";
 import { selectSprintByProject, SprintWideListItem } from "@entities/sprint";
-import { SprintCreateFeature, SprintSearchFormBarFeature, TaskInlineFormFeature } from "@features";
+import { SprintSearchFormBarFeature, TaskInlineFormFeature } from "@features";
 import { Store } from "@ngrx/store";
 import { selectProjectCurrentId } from "@entities/project";
 import { AsyncPipe } from "@angular/common";
 import { filter, switchMap } from "rxjs/operators";
 import { CardModule } from "primeng/card";
+import { selectTasksByCurrentProject } from "@entities/task";
 
 @Component({
     selector: "app-backlog-page",
     imports: [
         SprintWideListItem,
         SprintSearchFormBarFeature,
-        SprintCreateFeature,
         AsyncPipe,
         TaskInlineFormFeature,
         CardModule
@@ -28,12 +28,15 @@ import { CardModule } from "primeng/card";
                 }
 
                 <p-card>
-                    <div>
-                        <!-- tasks without sprint -->
-                    </div>
+                    @if (tasks$ | async; as tasks) {
+                        <div>
+                            @for (task of tasks; track task.id) {
+                                <div>{{ task.title }}</div>
+                            }
+                        </div>
+                    }
                     <app-task-inline-form-feature />
                 </p-card>
-                <app-sprint-create-feature />
             </main>
         </div>
     `
@@ -46,4 +49,6 @@ export class BacklogPage {
             this.store.select(selectSprintByProject(projectId))
         )
     );
+
+    tasks$ = this.store.select(selectTasksByCurrentProject);
 }

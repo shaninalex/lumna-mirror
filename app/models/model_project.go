@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"time"
 
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gorm.io/gorm"
 )
 
 type Project struct {
-	ID          uint      `gorm:"primaryKey" json:"id"`
-	Title       string    `gorm:"not null" json:"title"`
-	WorkspaceID uint      `gorm:"not null;index" json:"workspace_id"`
-	OwnerID     *uint     `gorm:"null;index" json:"owner_id"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          uint       `gorm:"primaryKey" json:"id"`
+	Title       string     `gorm:"not null" json:"title"`
+	WorkspaceID uint       `gorm:"not null;index" json:"workspace_id"`
+	OwnerID     *uint      `gorm:"null;index" json:"owner_id"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   *time.Time `json:"updated_at"`
 }
 
 func (s *Project) GetTitle() string {
@@ -29,7 +30,7 @@ func (s *Project) BeforeCreate(tx *gorm.DB) error {
 }
 
 func (s *Project) BeforeUpdate(tx *gorm.DB) (err error) {
-	s.UpdatedAt = time.Now()
+	s.UpdatedAt = utils.Pointer(time.Now())
 	return nil
 }
 

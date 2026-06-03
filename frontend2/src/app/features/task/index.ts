@@ -1,1 +1,1 @@
-export * from "./task-inline-form-feature";
+export { TaskInlineFormFeature } from "./task-inline-form-feature";

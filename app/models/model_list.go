@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gorm.io/gorm"
 )
 
@@ -13,8 +14,8 @@ type List struct {
 
 	ProjectID uint `gorm:"not null;index" json:"project_id"`
 
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
 }
 
 func (s *List) BeforeCreate(tx *gorm.DB) error {
@@ -25,7 +26,7 @@ func (s *List) BeforeCreate(tx *gorm.DB) error {
 }
 
 func (s *List) BeforeUpdate(tx *gorm.DB) (err error) {
-	s.UpdatedAt = time.Now()
+	s.UpdatedAt = utils.Pointer(time.Now())
 	return nil
 }
 

@@ -94,9 +94,9 @@ func connectPG(conf *config.Config) *gorm.DB {
 
 func connectionOptions(conf *config.Config) *gorm.Config {
 	opt := &gorm.Config{}
-	if conf.Env() != config.EnvironmentDev && conf.Env() != config.EnvironmentTest {
-		opt.Logger = silentLogger()
-	}
+	//if conf.Env() != config.EnvironmentDev && conf.Env() != config.EnvironmentTest {
+	//	opt.Logger = silentLogger()
+	//}
 	return opt
 }
 

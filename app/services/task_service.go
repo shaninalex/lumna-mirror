@@ -54,24 +54,25 @@ func (s *taskService) ReorderTask(ctx context.Context, taskID uint, listListID u
 // TODO: add validators
 type TaskPayload struct {
 	Title     string `json:"title"`
-	Order     uint   `json:"order"`
 	ProjectID uint   `json:"project_id"`
-	StatusID  uint   `json:"status_id"`
+	Order     *uint  `json:"order"`
+	StatusID  *uint  `json:"status_id"`
 }
 
 func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
-	status, err := s.statusRepository.GetByID(ctx, payload.StatusID)
-	if err != nil {
-		return nil, err
-	}
 	task := models.Task{
 		Title:     payload.Title,
-		Order:     payload.Order,
-		StatusID:  status.ID,
-		ProjectID: status.ProjectID,
+		ProjectID: payload.ProjectID,
+	}
+	if payload.StatusID != nil {
+		status, err := s.statusRepository.GetByID(ctx, *payload.StatusID)
+		if err != nil {
+			return nil, err
+		}
+		task.StatusID = &status.ID
 	}
 
-	if err = s.repository.Create(ctx, &task); err != nil {
+	if err := s.repository.Create(ctx, &task); err != nil {
 		return nil, err
 	}
 	return &task, nil

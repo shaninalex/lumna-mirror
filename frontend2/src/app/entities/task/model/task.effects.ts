@@ -2,6 +2,9 @@ import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, of } from "rxjs";
 import {
+    actionTaskCreate,
+    actionTaskCreateFailed,
+    actionTaskCreateSuccess,
     actionTaskGetList,
     actionTaskSetList,
     actionTaskSetListFailed
@@ -25,6 +28,24 @@ export class TaskEffects {
                     catchError((err: HttpErrorResponse) =>
                         of(
                             actionTaskSetListFailed({
+                                errors: fromErrorResponse(err)
+                            })
+                        )
+                    )
+                )
+            )
+        )
+    );
+
+    task_create$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionTaskCreate),
+            switchMap((action) =>
+                this.api.create(action.data).pipe(
+                    switchMap((task) => of(actionTaskCreateSuccess({ task }))),
+                    catchError((err: HttpErrorResponse) =>
+                        of(
+                            actionTaskCreateFailed({
                                 errors: fromErrorResponse(err)
                             })
                         )
