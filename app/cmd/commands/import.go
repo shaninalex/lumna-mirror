@@ -147,8 +147,8 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 					fmt.Printf("\t%d. List: %s\n", li, list.Title)
 					for li, _list := range _list.Statuses {
 						status := models.Status{
-							Title:     _list.Title,
-							ListID:    list.ID,
+							Title: _list.Title,
+							//ListID:    list.ID,
 							Order:     uint(li),
 							ProjectID: project.ID,
 							//WorkspaceID: wp.ID,
@@ -160,8 +160,8 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 						for ti, _task := range _list.Tasks {
 							task := models.Task{
 								Title:     _task.Title,
-								StatusID:  status.ID,
-								Order:     uint(ti),
+								StatusID:  &status.ID,
+								Order:     utils.Pointer(uint(ti)),
 								Body:      _task.Body,
 								ProjectID: project.ID,
 								//ListID:    list.ID,

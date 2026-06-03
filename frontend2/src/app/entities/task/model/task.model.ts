@@ -16,9 +16,9 @@ export interface TaskModel {
 
 export interface TaskCreateModel {
     title: string;
-    order: number;
     project_id: number;
-    status_id: number;
+    order?: number;
+    status_id?: number;
 }
 
 export interface TaskListQueryModel {
