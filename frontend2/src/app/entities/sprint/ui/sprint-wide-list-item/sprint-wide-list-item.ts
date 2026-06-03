@@ -1,11 +1,11 @@
 import { Component, Input } from "@angular/core";
 import { SprintModel } from "@entities/sprint";
+import { ButtonModule } from "primeng/button";
 
 @Component({
     selector: "app-sprint-wide-list-item",
-    imports: [],
+    imports: [ButtonModule],
     template: `
-        <!-- Sprint -->
         <section
             class="mb-8 overflow-hidden rounded-md border border-zinc-200 bg-white"
         >
@@ -19,11 +19,7 @@ import { SprintModel } from "@entities/sprint";
                     </p>
                 </div>
 
-                <button
-                    class="rounded-md border border-zinc-300 px-3 py-2 text-sm hover:bg-white"
-                >
-                    Complete Sprint
-                </button>
+                <p-button label="Complete sprint" size="small" outlined />
             </div>
 
             <div class="divide-y divide-zinc-200">
