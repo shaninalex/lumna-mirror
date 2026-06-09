@@ -11,6 +11,7 @@ import (
 type Project struct {
 	ID          uint       `gorm:"primaryKey" json:"id"`
 	Title       string     `gorm:"not null" json:"title"`
+	Key         string     `gorm:"not null" json:"key"`
 	WorkspaceID uint       `gorm:"not null;index" json:"workspace_id"`
 	OwnerID     *uint      `gorm:"null;index" json:"owner_id"`
 	CreatedAt   time.Time  `json:"created_at"`

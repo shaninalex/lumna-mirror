@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
@@ -16,8 +17,9 @@ type TaskService interface {
 }
 
 type taskService struct {
-	repository       repositories.TaskRepository
-	statusRepository repositories.StatusRepository
+	repository        repositories.TaskRepository
+	statusRepository  repositories.StatusRepository
+	projectRepository repositories.ProjectRepository
 }
 
 var _ TaskService = (*taskService)(nil)
@@ -25,10 +27,12 @@ var _ TaskService = (*taskService)(nil)
 func NewTaskService(
 	repository repositories.TaskRepository,
 	statusRepository repositories.StatusRepository,
+	projectRepository repositories.ProjectRepository,
 ) TaskService {
 	return &taskService{
-		repository:       repository,
-		statusRepository: statusRepository,
+		repository:        repository,
+		statusRepository:  statusRepository,
+		projectRepository: projectRepository,
 	}
 }
 
@@ -72,6 +76,12 @@ func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		task.StatusID = &status.ID
 	}
 
+	project, err := s.projectRepository.GetByID(ctx, task.ProjectID)
+	if err != nil {
+		return nil, err
+	}
+
+	task.Code = utils.TaskCode(project.Title, task.ID)
 	if err := s.repository.Create(ctx, &task); err != nil {
 		return nil, err
 	}

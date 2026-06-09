@@ -11,6 +11,7 @@ import (
 type Task struct {
 	ID    uint   `gorm:"primaryKey" json:"id"`
 	Title string `gorm:"not null" json:"title"`
+	Code  string `json:"code"`
 
 	// Order - need for saving ordering in kanban board
 	Order *uint  `json:"order"`

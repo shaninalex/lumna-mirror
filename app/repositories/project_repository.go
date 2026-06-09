@@ -9,7 +9,7 @@ import (
 
 type ProjectRepository interface {
 	GetByID(ctx context.Context, id uint) (*models.Project, error)
-	List(ctx context.Context) ([]models.Project, error)
+	List(ctx context.Context, options ...ProjectRepositoryOptions) ([]models.Project, error)
 	Create(ctx context.Context, project *models.Project) error
 	Update(ctx context.Context, project *models.Project) error
 	DeleteByID(ctx context.Context, id uint) error
@@ -27,7 +27,6 @@ func (r *GormProjectRepository) GetByID(ctx context.Context, id uint) (*models.P
 	var project models.Project
 
 	err := r.db.WithContext(ctx).
-		//Preload("Boards").
 		Where("id = ?", id).
 		First(&project).
 		Error
@@ -39,14 +38,19 @@ func (r *GormProjectRepository) GetByID(ctx context.Context, id uint) (*models.P
 	return &project, nil
 }
 
-func (r *GormProjectRepository) List(ctx context.Context) ([]models.Project, error) {
+type ProjectRepositoryOptions any
+
+func (r *GormProjectRepository) List(ctx context.Context, options ...ProjectRepositoryOptions) ([]models.Project, error) {
 	var projects []models.Project
+	q := r.db.WithContext(ctx)
 
-	err := r.db.WithContext(ctx).
-		//Preload("Boards").
-		Find(&projects).
-		Error
+	for _, option := range options {
+		if modelFilter, ok := option.(models.Project); ok {
+			q = q.Where(modelFilter)
+		}
+	}
 
+	err := q.Find(&projects).Error
 	if err != nil {
 		return nil, err
 	}

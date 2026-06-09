@@ -3,7 +3,7 @@ package templates
 import (
 	"context"
 
-	"gitlab.com/shaninalex/lumna/app/utils"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 )
 
 type EmailInvitation struct {

@@ -2,8 +2,11 @@ package services
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 	"gitlab.com/shaninalex/lumna/app/services/logger"
 )
@@ -14,6 +17,7 @@ type ProjectService interface {
 	Create(ctx context.Context, data models.ProjectCreateModel) (*models.Project, error)
 	Update(ctx context.Context, projectID uint, title string) (*models.Project, error)
 	Delete(ctx context.Context, id uint) error
+	GenerateKey(ctx context.Context, projectName string) (string, error)
 }
 
 type projectService struct {
@@ -70,4 +74,32 @@ func (s *projectService) Update(ctx context.Context, projectID uint, title strin
 
 func (s *projectService) Delete(ctx context.Context, id uint) error {
 	return s.repository.DeleteByID(ctx, id)
+}
+
+var (
+	ErrorProjectUnableGenerateKey = errors.New("unable to generate project key")
+	GenerateKeyMaxAttempts        = 25
+)
+
+func (s *projectService) GenerateKey(ctx context.Context, projectName string) (string, error) {
+	base := utils.ProjectKey(projectName)
+
+	for i := 0; i < GenerateKeyMaxAttempts; i++ {
+		key := base
+
+		if i > 0 {
+			key = fmt.Sprintf("%s%d", base, i)
+		}
+
+		projects, err := s.repository.List(ctx, models.Project{Key: key})
+		if err != nil {
+			return "", err
+		}
+
+		if len(projects) == 0 {
+			return key, nil
+		}
+	}
+
+	return "", ErrorProjectUnableGenerateKey
 }

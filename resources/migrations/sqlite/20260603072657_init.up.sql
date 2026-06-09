@@ -115,6 +115,7 @@ CREATE TABLE projects
     title        text    NOT NULL,
     workspace_id INTEGER NOT NULL,
     owner_id     INTEGER NULL,
+    key          varchar not null unique,
     created_at   datetime DEFAULT CURRENT_TIMESTAMP,
     updated_at   datetime,
 
@@ -132,7 +133,7 @@ CREATE TABLE sprints
     started_at  DATETIME NULL,
     finished_at DATETIME NULL,
 
-    created_at  DATETIME          DEFAULT CURRENT_TIMESTAMP,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME NULL,
 
     FOREIGN KEY (project_id) REFERENCES projects (id)
@@ -165,8 +166,9 @@ CREATE TABLE tasks
 (
     id         integer PRIMARY KEY AUTOINCREMENT,
     title      text    NOT NULL,
+    code       varchar NOT NULL UNIQUE,
     `order`    integer,
-    done       numeric DEFAULT 0,
+    done       numeric  DEFAULT 0,
     body       text,
     status_id  integer NULL,
     project_id integer NOT NULL,
