@@ -1,10 +1,16 @@
 import { Routes } from "@angular/router";
 import { ProjectWrapper } from "./wrapper";
-import { BoardPage, SummaryPage, BacklogPage, ProjectListPage } from "./pages/";
+import {
+    BacklogPage,
+    BoardPage,
+    ProjectCreatePage,
+    ProjectListPage,
+    SummaryPage
+} from "./pages/";
 
 export const routes: Routes = [
     {
-        path: "project/:slug",
+        path: "project/:project-id",
         component: ProjectWrapper,
         children: [
             {
@@ -29,5 +35,9 @@ export const routes: Routes = [
     {
         path: "projects",
         component: ProjectListPage
+    },
+    {
+        path: "projects/create",
+        component: ProjectCreatePage
     }
 ];

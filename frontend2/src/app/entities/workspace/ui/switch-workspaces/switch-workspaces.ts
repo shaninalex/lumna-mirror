@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from "@angular/core";
+import { Component, DestroyRef, inject } from "@angular/core";
 import { selectWorkspaceList } from "@entities/workspace/model/workspace.selectors";
 import { Store } from "@ngrx/store";
 import { ButtonModule } from "primeng/button";
@@ -20,12 +20,18 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
         />
     `
 })
-export class SwitchWorkspaces implements OnInit {
+export class SwitchWorkspaces {
     private store = inject(Store);
     private destroyRef = inject(DestroyRef);
     items: MenuItem[] | undefined;
 
-    ngOnInit() {
+    viewAll: MenuItem = {
+        label: "View All",
+        icon: "pi pi-list",
+        routerLink: `/app/workspaces`
+    };
+
+    constructor() {
         this.store
             .select(selectWorkspaceList)
             .pipe(
@@ -33,9 +39,11 @@ export class SwitchWorkspaces implements OnInit {
                 tap((workspaces) => {
                     this.items = workspaces.map((workspace) => ({
                         label: workspace.title,
-                        icon: "pi pi-file",
-                        routerLink: `/app/${workspace.slug}`
+                        icon: "pi pi-box",
+                        routerLink: `/app/${workspace.id}`
                     }));
+                    this.items.push({ separator: true });
+                    this.items.push(this.viewAll);
                 })
             )
             .subscribe();

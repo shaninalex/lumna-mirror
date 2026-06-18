@@ -23,3 +23,13 @@ export const actionWorkspaceCreateFailed = createAction(
     "[Workspace] create failed",
     props<{ errors: Error[] }>()
 );
+
+export const actionWorkspaceListRequested = createAction(
+    "[Workspace] data requested",
+    props<{ initiator?: any }>()
+);
+
+export const actionWorkspaceSetCurrent = createAction(
+    "[Workspace] set current",
+    props<{ id: number | null }>()
+);

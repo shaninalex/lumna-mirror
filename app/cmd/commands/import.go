@@ -122,7 +122,6 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 			wp := models.Workspace{
 				Title:      wpd.Title,
 				OwnerEmail: wpd.Email,
-				Slug:       wpd.Slug,
 				Active:     wpd.Active,
 			}
 			if result := database.Create(&wp); result.Error != nil {
@@ -138,9 +137,9 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 				fmt.Printf("%d. Project: %s\n", pidx, project.Title)
 				for li, _list := range _project.Lists {
 					list := models.List{
-						Title:       _list.Title,
-						ProjectID:   project.ID,
-						WorkspaceID: wp.ID,
+						Title:     _list.Title,
+						ProjectID: project.ID,
+						//WorkspaceID: wp.ID,
 					}
 					if result := database.Create(&list); result.Error != nil {
 						panic(result.Error)
@@ -148,11 +147,11 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 					fmt.Printf("\t%d. List: %s\n", li, list.Title)
 					for li, _list := range _list.Statuses {
 						status := models.Status{
-							Title:       _list.Title,
-							ListID:      list.ID,
-							Order:       uint(li),
-							ProjectID:   project.ID,
-							WorkspaceID: wp.ID,
+							Title: _list.Title,
+							//ListID:    list.ID,
+							Order:     uint(li),
+							ProjectID: project.ID,
+							//WorkspaceID: wp.ID,
 						}
 						if result := database.Create(&status); result.Error != nil {
 							panic(result.Error)
@@ -160,13 +159,12 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 						fmt.Printf("\t\t%d. Status: %s\n", li, status.Title)
 						for ti, _task := range _list.Tasks {
 							task := models.Task{
-								Title:       _task.Title,
-								StatusID:    status.ID,
-								Order:       uint(ti),
-								Body:        _task.Body,
-								ProjectID:   project.ID,
-								ListID:      list.ID,
-								WorkspaceID: wp.ID,
+								Title:     _task.Title,
+								StatusID:  &status.ID,
+								Order:     utils.Pointer(uint(ti)),
+								Body:      _task.Body,
+								ProjectID: project.ID,
+								//ListID:    list.ID,
 							}
 							if result := database.Create(&task); result.Error != nil {
 								panic(result.Error)

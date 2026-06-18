@@ -5,13 +5,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
+	"gitlab.com/shaninalex/lumna/app/models"
+	pkgUtils "gitlab.com/shaninalex/lumna/app/pkg/utils"
 )
 
 func (s *ProjectController) Create(c *gin.Context) {
-	payload := struct {
-		Title string `json:"title"`
-	}{}
-
+	var payload models.ProjectCreateModel
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
@@ -22,7 +21,8 @@ func (s *ProjectController) Create(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, err)
 	}
 
-	project, err := s.projectService.Create(c.Request.Context(), payload.Title, userID)
+	payload.OwnerID = pkgUtils.Pointer(userID)
+	project, err := s.projectService.Create(c.Request.Context(), payload)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 	}

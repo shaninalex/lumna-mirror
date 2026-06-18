@@ -7,7 +7,6 @@ export const routes: Routes = [
         path: "auth",
         loadChildren: () => import("./auth/routes").then((m) => m.routes)
     },
-
     {
         path: "",
         pathMatch: "full",

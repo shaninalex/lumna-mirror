@@ -11,57 +11,49 @@ import {
 } from "@entities/workspace";
 import { Actions, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
+import { CardModule } from "primeng/card";
+import { InputText } from "primeng/inputtext";
+import { ButtonModule } from "primeng/button";
 
 @Component({
     selector: "app-workspace-create-feature",
-    imports: [FormField],
+    imports: [FormField, CardModule, InputText, ButtonModule],
     template: `
-        <div
-            style="display:flex; height: 100vh; align-items: center; justify-content: center"
-        >
-            <form (submit)="onSubmit($event)">
-                <div appearance="outlined">
-                    <div>
-                        <div>Poodle</div>
-                        <div>Non-sporting group</div>
+        <div class="flex h-screen items-center justify-center">
+            <p-card header="Create workspace">
+                <form (submit)="onSubmit($event)">
+                    <div class="mb-4">
+                        <label for="workspace_title">Workspaces title</label>
+                        <input
+                            pInputText
+                            id="workspace_title"
+                            autocomplete="off"
+                            class="block"
+                            [class.p-invalid]="
+                                wspForm.title().touched() &&
+                                wspForm.title().invalid()
+                            "
+                            [formField]="wspForm.title"
+                        />
                     </div>
+
                     <div>
-                        <div>
-                            <div>Workspace title</div>
-                            <input type="text" [formField]="wspForm.title" />
-                            <div>
-                                @if (
-                                    wspForm.title().dirty() &&
-                                    wspForm.title().errors()
-                                ) {
-                                    @for (
-                                        error of wspForm.title().errors();
-                                        track error
-                                    ) {
-                                        <div>{{ error.message }}</div>
-                                    }
-                                }
-                            </div>
-                        </div>
+                        <button pButton type="submit">Create</button>
                     </div>
-                    <div>
-                        <button type="submit">Create</button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </p-card>
         </div>
     `
 })
 export class WorkspaceCreateFeature {
-    private store = inject(Store);
-    private actions$ = inject(Actions);
-    private destroyRef = inject(DestroyRef);
-    private router = inject(Router);
-
     wspFormModel = signal<WorkspaceCreateModel>({ title: "" });
     wspForm = form(this.wspFormModel, (schemaPath) => {
         required(schemaPath.title);
     });
+    private store = inject(Store);
+    private actions$ = inject(Actions);
+    private destroyRef = inject(DestroyRef);
+    private router = inject(Router);
 
     constructor() {
         this.actions$
@@ -69,7 +61,7 @@ export class WorkspaceCreateFeature {
                 ofType(actionWorkspaceCreateSuccess),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(({ data }) => this.router.navigate(["/app", data.slug]));
+            .subscribe(({ data }) => this.router.navigate(["/app", data.id]));
 
         this.actions$
             .pipe(

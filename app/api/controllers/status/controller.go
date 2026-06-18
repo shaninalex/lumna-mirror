@@ -6,10 +6,10 @@ import (
 )
 
 type StatusController struct {
-	statusService *services.StatusService
+	statusService services.StatusService
 }
 
-func NewStatusController(statusService *services.StatusService) *StatusController {
+func NewStatusController(statusService services.StatusService) *StatusController {
 	s := &StatusController{
 		statusService: statusService,
 	}
@@ -20,6 +20,6 @@ func NewStatusController(statusService *services.StatusService) *StatusControlle
 func (s *StatusController) Register(router *gin.RouterGroup) {
 	router.GET("statuses", s.List)
 	router.POST("statuses", s.Create)
-	router.DELETE("status/:statusId", s.Delete)
-	router.PATCH("status/:statusId", s.Patch)
+	router.DELETE("statuses/:statusId", s.Delete)
+	router.PATCH("statuses/:statusId", s.Patch)
 }

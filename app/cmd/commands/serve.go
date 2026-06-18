@@ -15,10 +15,10 @@ import (
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/api"
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
-	"gitlab.com/shaninalex/lumna/app/pkg/logger"
-	"gitlab.com/shaninalex/lumna/app/pkg/observer"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 	"gitlab.com/shaninalex/lumna/app/services/email"
+	logger2 "gitlab.com/shaninalex/lumna/app/services/logger"
+	"gitlab.com/shaninalex/lumna/app/services/observer"
 	"gitlab.com/shaninalex/lumna/app/services/persistence"
 	"go.uber.org/dig"
 )
@@ -44,8 +44,8 @@ func NewRootServeCommand() (cmd *cobra.Command) {
 			_ = c.Provide(config.ProvideConfig(configPath))
 			_ = c.Provide(observer.ProvideEventBus)
 			_ = c.Provide(persistence.ProvideDB)
-			_ = c.Provide(logger.ProvideLogger)
-			_ = c.Provide(logger.ProvideActivityLogger)
+			_ = c.Provide(logger2.ProvideLogger)
+			_ = c.Provide(logger2.ProvideActivityLogger)
 
 			_ = api.Module(c)
 			_ = repositories.Module(c)

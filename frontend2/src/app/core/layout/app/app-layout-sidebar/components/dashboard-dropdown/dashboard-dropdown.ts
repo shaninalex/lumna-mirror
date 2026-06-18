@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from "@angular/cdk/menu";
-import { SwitchWorkspaces, WorkspaceModel } from "@entities/workspace";
+import { SwitchWorkspaces } from "@entities/workspace";
 
 @Component({
     selector: "app-dashboard-dropdown",
@@ -26,12 +26,4 @@ import { SwitchWorkspaces, WorkspaceModel } from "@entities/workspace";
         </ng-template>
     `
 })
-export class DashboardDropdown {
-    wspTitle = "Lumna";
-    workspace: WorkspaceModel = {
-        id: 123,
-        slug: "lumna-123",
-        title: "Lumna",
-        icon: "/img/project.svg"
-    };
-}
+export class DashboardDropdown {}

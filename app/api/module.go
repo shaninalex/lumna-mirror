@@ -6,6 +6,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/controllers/invitation"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/list"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/sprint"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/status"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
@@ -24,6 +25,7 @@ func Module(c *dig.Container) error {
 	_ = activity.Module(c)
 	_ = invitation.Module(c)
 	_ = workspace.Module(c)
+	_ = sprint.Module(c)
 	_ = middlewares.Module(c)
 
 	_ = c.Provide(NewApi)

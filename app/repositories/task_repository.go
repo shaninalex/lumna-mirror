@@ -7,13 +7,21 @@ import (
 	"gorm.io/gorm"
 )
 
+type TaskListQuery struct {
+	ProjectID *uint
+	Code      *string
+	Query     *string
+	QueryArgs []interface{}
+}
+
 type TaskRepository interface {
-	List(ctx context.Context, query map[string]any) ([]*models.Task, error)
+	List(ctx context.Context, query TaskListQuery) ([]*models.Task, error)
 	GetByID(ctx context.Context, taskID uint) (*models.Task, error)
 	Reorder(ctx context.Context, taskID uint, statusID uint, order uint) error
 	Create(ctx context.Context, task *models.Task) error
 	Update(ctx context.Context, task *models.Task) error
 	UpdateFields(ctx context.Context, taskID uint, updates map[string]any) error
+	GetDB() *gorm.DB
 }
 
 type GormTaskRepository struct {
@@ -24,11 +32,21 @@ func NewGormTaskRepository(db *gorm.DB) TaskRepository {
 	return &GormTaskRepository{db: db}
 }
 
-func (r *GormTaskRepository) List(ctx context.Context, query map[string]any) ([]*models.Task, error) {
+func (r *GormTaskRepository) GetDB() *gorm.DB {
+	return r.db
+}
+
+func (r *GormTaskRepository) List(ctx context.Context, query TaskListQuery) ([]*models.Task, error) {
 	var tasks []*models.Task
-	if err := r.db.Where(query).Find(&tasks).Error; err != nil {
+	db := r.db.WithContext(ctx)
+	if query.ProjectID != nil {
+		db = db.Where("project_id = ?", *query.ProjectID)
+	}
+
+	if err := db.Find(&tasks).Error; err != nil {
 		return nil, err
 	}
+
 	return tasks, nil
 }
 

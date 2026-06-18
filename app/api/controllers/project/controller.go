@@ -6,13 +6,13 @@ import (
 )
 
 type ProjectController struct {
-	projectService *services.ProjectService
-	boardService   *services.ListService
+	projectService services.ProjectService
+	boardService   services.ListService
 }
 
 func NewProjectsController(
-	projectService *services.ProjectService,
-	boardService *services.ListService,
+	projectService services.ProjectService,
+	boardService services.ListService,
 ) *ProjectController {
 	s := &ProjectController{
 		projectService: projectService,
@@ -23,7 +23,8 @@ func NewProjectsController(
 
 func (s *ProjectController) Register(router *gin.RouterGroup) {
 	router.GET("/projects", s.List)
+	router.GET("/projects/generate-key", s.GenerateKey)
 	router.POST("/projects", s.Create)
-	router.PATCH("/project/:id", s.Patch)
-	router.DELETE("/project/:id", s.Delete)
+	router.PATCH("/projects/:id", s.Patch)
+	router.DELETE("/projects/:id", s.Delete)
 }
