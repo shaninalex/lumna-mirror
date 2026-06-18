@@ -1,0 +1,2 @@
+ALTER TABLE projects
+ADD COLUMN meta TEXT NULL;

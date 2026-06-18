@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/services/observer"
 )
 
 type TaskService interface {
@@ -20,6 +20,8 @@ type taskService struct {
 	repository        repositories.TaskRepository
 	statusRepository  repositories.StatusRepository
 	projectRepository repositories.ProjectRepository
+	projectService    ProjectService
+	bus               observer.Observer
 }
 
 var _ TaskService = (*taskService)(nil)
@@ -28,11 +30,13 @@ func NewTaskService(
 	repository repositories.TaskRepository,
 	statusRepository repositories.StatusRepository,
 	projectRepository repositories.ProjectRepository,
+	projectService ProjectService,
 ) TaskService {
 	return &taskService{
 		repository:        repository,
 		statusRepository:  statusRepository,
 		projectRepository: projectRepository,
+		projectService:    projectService,
 	}
 }
 
@@ -64,9 +68,15 @@ type TaskPayload struct {
 }
 
 func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
+	code, err := s.projectService.GetCode(ctx, payload.ProjectID, "task")
+	if err != nil {
+		return nil, err
+	}
+
 	task := models.Task{
 		Title:     payload.Title,
 		ProjectID: payload.ProjectID,
+		Code:      code,
 	}
 	if payload.StatusID != nil {
 		status, err := s.statusRepository.GetByID(ctx, *payload.StatusID)
@@ -76,18 +86,17 @@ func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		task.StatusID = &status.ID
 	}
 
-	project, err := s.projectRepository.GetByID(ctx, task.ProjectID)
-	if err != nil {
-		return nil, err
-	}
-
-	task.Code = utils.TaskCode(project.Title, task.ID)
 	if err := s.repository.Create(ctx, &task); err != nil {
 		return nil, err
 	}
+
+	s.bus.Publish(ctx, models.EventTaskCreated, task)
 	return &task, nil
 }
 
 func (s *taskService) UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error {
+	if _, err := s.GetTask(ctx, taskID); err != nil {
+		return err
+	}
 	return s.repository.Update(ctx, payload)
 }

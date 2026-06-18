@@ -21,10 +21,17 @@ func (s *ProjectController) Patch(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
-	project, err := s.projectService.Update(c.Request.Context(), uint(id), payload.Title)
+
+	project, err := s.projectService.Get(c.Request.Context(), uint(id))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
+	project.Title = payload.Title
+	if err = s.projectService.Update(c.Request.Context(), project); err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
 	utils.Success(c, project)
 }
