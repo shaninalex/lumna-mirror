@@ -2,11 +2,10 @@ package services
 
 import (
 	"context"
-	"errors"
 
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+	"gitlab.com/shaninalex/lumna/app/services/observer"
 )
 
 type TaskService interface {
@@ -21,6 +20,8 @@ type taskService struct {
 	repository        repositories.TaskRepository
 	statusRepository  repositories.StatusRepository
 	projectRepository repositories.ProjectRepository
+	projectService    ProjectService
+	bus               observer.Observer
 }
 
 var _ TaskService = (*taskService)(nil)
@@ -29,11 +30,13 @@ func NewTaskService(
 	repository repositories.TaskRepository,
 	statusRepository repositories.StatusRepository,
 	projectRepository repositories.ProjectRepository,
+	projectService ProjectService,
 ) TaskService {
 	return &taskService{
 		repository:        repository,
 		statusRepository:  statusRepository,
 		projectRepository: projectRepository,
+		projectService:    projectService,
 	}
 }
 
@@ -65,9 +68,15 @@ type TaskPayload struct {
 }
 
 func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
+	code, err := s.projectService.GetCode(ctx, payload.ProjectID, "task")
+	if err != nil {
+		return nil, err
+	}
+
 	task := models.Task{
 		Title:     payload.Title,
 		ProjectID: payload.ProjectID,
+		Code:      code,
 	}
 	if payload.StatusID != nil {
 		status, err := s.statusRepository.GetByID(ctx, *payload.StatusID)
@@ -77,51 +86,17 @@ func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		task.StatusID = &status.ID
 	}
 
-	if err := s.taskCode(ctx, &task, payload.ProjectID); err != nil {
-		return nil, err
-	}
-
 	if err := s.repository.Create(ctx, &task); err != nil {
 		return nil, err
 	}
+
+	s.bus.Publish(ctx, models.EventTaskCreated, task)
 	return &task, nil
 }
 
 func (s *taskService) UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error {
-	return s.repository.Update(ctx, payload)
-}
-
-var (
-	ErrorTaskUnableGenerateCode = errors.New("unable to generate task code")
-	GenerateTaskCodeMaxAttempts = 25
-)
-
-// taskCode - sequential task code generator
-// NOTE: not sure about that logic
-func (s *taskService) taskCode(ctx context.Context, task *models.Task, projectId uint) error {
-	project, err := s.projectRepository.GetByID(ctx, projectId)
-	if err != nil {
+	if _, err := s.GetTask(ctx, taskID); err != nil {
 		return err
 	}
-	tasks, err := s.repository.List(ctx, repositories.TaskListQuery{
-		ProjectID: &projectId,
-	})
-
-	for i := 1; i <= GenerateTaskCodeMaxAttempts; i++ {
-		code := utils.TaskCode(project.Title, len(tasks)+i)
-		tasks, err = s.repository.List(ctx, repositories.TaskListQuery{
-			ProjectID: &projectId,
-			Code:      &code,
-		})
-		if err != nil {
-			return err
-		}
-
-		if len(tasks) == 0 {
-			task.Code = code
-			return nil
-		}
-	}
-
-	return ErrorTaskUnableGenerateCode
+	return s.repository.Update(ctx, payload)
 }

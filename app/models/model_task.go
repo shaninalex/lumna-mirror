@@ -5,7 +5,12 @@ import (
 	"time"
 
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
+	"gitlab.com/shaninalex/lumna/app/services/observer"
 	"gorm.io/gorm"
+)
+
+const (
+	EventTaskCreated observer.Event = "TASK_CREATED"
 )
 
 type Task struct {

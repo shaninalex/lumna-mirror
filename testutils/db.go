@@ -24,7 +24,7 @@ func Migrate(db *gorm.DB) error {
 	return persistence.ApplyMigrations(ProvideTestConfig())
 }
 
-var tablesToClean = []string{"identities", "credentials"}
+var tablesToClean = []string{"identities", "credentials", "projects", "workspaces"}
 
 func ClearDB(db *gorm.DB) {
 	for _, t := range tablesToClean {
