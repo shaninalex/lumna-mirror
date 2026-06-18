@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"errors"
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
@@ -76,12 +77,10 @@ func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		task.StatusID = &status.ID
 	}
 
-	project, err := s.projectRepository.GetByID(ctx, task.ProjectID)
-	if err != nil {
+	if err := s.taskCode(ctx, &task, payload.ProjectID); err != nil {
 		return nil, err
 	}
 
-	task.Code = utils.TaskCode(project.Title, task.ID)
 	if err := s.repository.Create(ctx, &task); err != nil {
 		return nil, err
 	}
@@ -90,4 +89,39 @@ func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 
 func (s *taskService) UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error {
 	return s.repository.Update(ctx, payload)
+}
+
+var (
+	ErrorTaskUnableGenerateCode = errors.New("unable to generate task code")
+	GenerateTaskCodeMaxAttempts = 25
+)
+
+// taskCode - sequential task code generator
+// NOTE: not sure about that logic
+func (s *taskService) taskCode(ctx context.Context, task *models.Task, projectId uint) error {
+	project, err := s.projectRepository.GetByID(ctx, projectId)
+	if err != nil {
+		return err
+	}
+	tasks, err := s.repository.List(ctx, repositories.TaskListQuery{
+		ProjectID: &projectId,
+	})
+
+	for i := 1; i <= GenerateTaskCodeMaxAttempts; i++ {
+		code := utils.TaskCode(project.Title, len(tasks)+i)
+		tasks, err = s.repository.List(ctx, repositories.TaskListQuery{
+			ProjectID: &projectId,
+			Code:      &code,
+		})
+		if err != nil {
+			return err
+		}
+
+		if len(tasks) == 0 {
+			task.Code = code
+			return nil
+		}
+	}
+
+	return ErrorTaskUnableGenerateCode
 }

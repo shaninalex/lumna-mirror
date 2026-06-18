@@ -9,6 +9,9 @@ import (
 
 type TaskListQuery struct {
 	ProjectID *uint
+	Code      *string
+	Query     *string
+	QueryArgs []interface{}
 }
 
 type TaskRepository interface {
@@ -18,6 +21,7 @@ type TaskRepository interface {
 	Create(ctx context.Context, task *models.Task) error
 	Update(ctx context.Context, task *models.Task) error
 	UpdateFields(ctx context.Context, taskID uint, updates map[string]any) error
+	GetDB() *gorm.DB
 }
 
 type GormTaskRepository struct {
@@ -26,6 +30,10 @@ type GormTaskRepository struct {
 
 func NewGormTaskRepository(db *gorm.DB) TaskRepository {
 	return &GormTaskRepository{db: db}
+}
+
+func (r *GormTaskRepository) GetDB() *gorm.DB {
+	return r.db
 }
 
 func (r *GormTaskRepository) List(ctx context.Context, query TaskListQuery) ([]*models.Task, error) {
