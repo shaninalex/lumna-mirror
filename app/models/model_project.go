@@ -3,7 +3,6 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"time"
 
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
@@ -43,39 +42,34 @@ func (s *Project) String() string {
 }
 
 type ProjectMeta struct {
-	NextEntityNumber map[string]uint `json:"next_entity_number"`
+	LastEntityNumber map[string]uint `json:"last_entity_number"`
 }
 
 func NewProjectMeta() *ProjectMeta {
 	return &ProjectMeta{
-		NextEntityNumber: make(map[string]uint),
+		LastEntityNumber: make(map[string]uint),
 	}
 }
 
-func (p *ProjectMeta) GetNextEntityNumber(e string) uint {
-	if p == nil || p.NextEntityNumber == nil {
-		return 1
+// GetLastEntityNumber returns the last used number for the entity type, or 0
+// when none has been assigned yet. Callers add 1 to derive the next number.
+func (p *ProjectMeta) GetLastEntityNumber(e string) uint {
+	if p == nil || p.LastEntityNumber == nil {
+		return 0
 	}
-	n, ok := p.NextEntityNumber[e]
-	if !ok {
-		return 1
-	}
-	return n
+	return p.LastEntityNumber[e]
 }
 
-func (p *ProjectMeta) SetNextEntityNumber(e string) {
+// SetLastEntityNumber increments the last used number for the entity type,
+// initializing it to 1 on first use.
+func (p *ProjectMeta) SetLastEntityNumber(e string) {
 	if p == nil {
 		return
 	}
-	if p.NextEntityNumber == nil {
-		p.NextEntityNumber = make(map[string]uint)
+	if p.LastEntityNumber == nil {
+		p.LastEntityNumber = make(map[string]uint)
 	}
-	n, ok := p.NextEntityNumber[e]
-	if !ok {
-		n = 1
-	}
-	p.NextEntityNumber[e] = n + 1
-	log.Println(p)
+	p.LastEntityNumber[e]++
 }
 
 func (s *Project) GetMeta() *ProjectMeta {
@@ -86,8 +80,8 @@ func (s *Project) GetMeta() *ProjectMeta {
 	if err := json.Unmarshal([]byte(*s.Meta), m); err != nil {
 		return NewProjectMeta()
 	}
-	if m.NextEntityNumber == nil {
-		m.NextEntityNumber = make(map[string]uint)
+	if m.LastEntityNumber == nil {
+		m.LastEntityNumber = make(map[string]uint)
 	}
 
 	return m

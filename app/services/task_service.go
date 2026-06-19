@@ -70,7 +70,7 @@ type TaskPayload struct {
 }
 
 func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
-	code, err := s.projectService.GetCode(ctx, payload.ProjectID, "task")
+	code, err := s.projectService.GetNewCode(ctx, payload.ProjectID, "task")
 	if err != nil {
 		return nil, err
 	}

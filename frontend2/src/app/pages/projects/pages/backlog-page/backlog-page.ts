@@ -31,7 +31,7 @@ import { selectTasksByCurrentProject } from "@entities/task";
                     @if (tasks$ | async; as tasks) {
                         <div>
                             @for (task of tasks; track task.id) {
-                                <div>{{ task.title }}</div>
+                                <div>[{{ task.code }}] - {{ task.title }}</div>
                             }
                         </div>
                     }
