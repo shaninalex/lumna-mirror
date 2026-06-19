@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
@@ -74,6 +75,7 @@ func (p *ProjectMeta) SetNextEntityNumber(e string) {
 		n = 1
 	}
 	p.NextEntityNumber[e] = n + 1
+	log.Println(p)
 }
 
 func (s *Project) GetMeta() *ProjectMeta {

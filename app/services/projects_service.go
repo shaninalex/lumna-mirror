@@ -34,11 +34,14 @@ var _ ProjectService = (*projectService)(nil)
 func NewProjectService(
 	repository repositories.ProjectRepository,
 	logger logger.Logger,
+	bus observer.Observer,
 ) ProjectService {
 	s := &projectService{
 		repository: repository,
 		logger:     logger,
+		bus:        bus,
 	}
+	s.init()
 	return s
 }
 

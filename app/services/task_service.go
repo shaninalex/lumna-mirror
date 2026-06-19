@@ -31,12 +31,14 @@ func NewTaskService(
 	statusRepository repositories.StatusRepository,
 	projectRepository repositories.ProjectRepository,
 	projectService ProjectService,
+	bus observer.Observer,
 ) TaskService {
 	return &taskService{
 		repository:        repository,
 		statusRepository:  statusRepository,
 		projectRepository: projectRepository,
 		projectService:    projectService,
+		bus:               bus,
 	}
 }
 
