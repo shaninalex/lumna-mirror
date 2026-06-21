@@ -23,7 +23,7 @@ export const actionSprintSetListFailed = createAction(
 
 export const actionSprintCreate = createAction(
     "[Sprint] create",
-    props<{ data: SprintCreateModel }>()
+    props<{ data: Omit<SprintCreateModel, "project_id"> }>()
 );
 
 export const actionSprintCreateSuccess = createAction(

@@ -1,0 +1,28 @@
+import { Component, inject } from "@angular/core";
+import { AsyncPipe } from "@angular/common";
+import { selectSprintByProject, SprintWideListItem } from "@entities/sprint";
+import { Store } from "@ngrx/store";
+import { selectProjectCurrentId } from "@entities/project";
+import { filter, switchMap } from "rxjs/operators";
+
+@Component({
+    selector: "app-sprint-wide-list",
+    imports: [AsyncPipe, SprintWideListItem],
+    template: `
+        @if (sprints$ | async; as sprints) {
+            @for (sprint of sprints; track sprint.id) {
+                <app-sprint-wide-list-item [sprint]="sprint" />
+            }
+        }
+    `
+})
+export class SprintWideList {
+    private store = inject(Store);
+
+    sprints$ = this.store.select(selectProjectCurrentId).pipe(
+        filter((projectId) => projectId !== undefined),
+        switchMap((projectId) =>
+            this.store.select(selectSprintByProject(projectId))
+        )
+    );
+}

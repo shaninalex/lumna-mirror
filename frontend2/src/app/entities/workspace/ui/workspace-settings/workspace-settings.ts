@@ -7,13 +7,13 @@ import { MenuItem } from "primeng/api";
     selector: "app-workspace-settings",
     imports: [Button, Menu],
     template: `
+        <p-menu #menu [model]="items" [popup]="true" />
         <p-button
             (click)="menu.toggle($event)"
             label="Workspace settings"
             size="small"
             variant="outlined"
         />
-        <p-menu #menu [model]="items" [popup]="true" />
     `
 })
 export class WorkspaceSettings implements OnInit {

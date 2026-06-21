@@ -47,7 +47,6 @@ func NewProjectService(
 
 func (s *projectService) init() {
 	s.bus.Subscribe(models.EventTaskCreated, s.handleEventTaskCreated)
-
 }
 
 func (s *projectService) handleEventTaskCreated(ctx context.Context, data any) {
