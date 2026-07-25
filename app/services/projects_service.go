@@ -20,7 +20,7 @@ type ProjectService interface {
 	Update(ctx context.Context, project *models.Project) error
 	Delete(ctx context.Context, id uint) error
 	GenerateKey(ctx context.Context, projectName string) (string, error)
-	GetCode(ctx context.Context, projectID uint, entity string) (string, error)
+	GetNewCode(ctx context.Context, projectID uint, entity string) (string, error)
 }
 
 type projectService struct {
@@ -34,17 +34,19 @@ var _ ProjectService = (*projectService)(nil)
 func NewProjectService(
 	repository repositories.ProjectRepository,
 	logger logger.Logger,
+	bus observer.Observer,
 ) ProjectService {
 	s := &projectService{
 		repository: repository,
 		logger:     logger,
+		bus:        bus,
 	}
+	s.init()
 	return s
 }
 
 func (s *projectService) init() {
 	s.bus.Subscribe(models.EventTaskCreated, s.handleEventTaskCreated)
-
 }
 
 func (s *projectService) handleEventTaskCreated(ctx context.Context, data any) {
@@ -58,7 +60,7 @@ func (s *projectService) handleEventTaskCreated(ctx context.Context, data any) {
 		return
 	}
 	m := project.GetMeta()
-	m.SetNextEntityNumber("task")
+	m.SetLastEntityNumber("task")
 	if err = project.SetMeta(m); err != nil {
 		log.Println(err)
 		return
@@ -125,13 +127,14 @@ func (s *projectService) GenerateKey(ctx context.Context, projectName string) (s
 	return "", ErrorProjectUnableGenerateKey
 }
 
-func (s *projectService) GetCode(ctx context.Context, projectID uint, entity string) (string, error) {
+func (s *projectService) GetNewCode(ctx context.Context, projectID uint, entity string) (string, error) {
 	project, err := s.repository.GetByID(ctx, projectID)
 	if err != nil {
 		return "", err
 	}
+	n := int(project.GetMeta().GetLastEntityNumber(entity))
 	return utils.TaskCode(
 		project.Title,
-		int(project.GetMeta().GetNextEntityNumber(entity)),
+		n+1,
 	), nil
 }

@@ -6,12 +6,17 @@ export interface TaskModel {
     order: number;
     done: boolean;
     body: string;
+    code: string;
 
     status_id: number;
     project_id: number;
 
     created_at: Date;
     updated_at: Date;
+}
+
+export function makeListLabel(task: TaskModel): string {
+    return `${task.code}  ${task.title}`;
 }
 
 export interface TaskCreateModel {

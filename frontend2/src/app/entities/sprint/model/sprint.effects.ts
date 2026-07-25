@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, of } from "rxjs";
+import { catchError, of, withLatestFrom } from "rxjs";
 import {
     actionSprintCreate,
     actionSprintCreateFailed,
@@ -10,14 +10,17 @@ import {
     actionSprintSetListFailed
 } from "./sprint.actions";
 import { SprintApi } from "@entities/sprint/api";
-import { switchMap } from "rxjs/operators";
+import { filter, switchMap } from "rxjs/operators";
 import { HttpErrorResponse } from "@angular/common/http";
 import { fromErrorResponse } from "@shared/models";
+import { Store } from "@ngrx/store";
+import { selectProjectCurrentId } from "@entities/project";
 
 @Injectable()
 export class SprintEffects {
     private actions$ = inject(Actions);
     private api = inject(SprintApi);
+    private store = inject(Store);
 
     sprint_list$ = createEffect(() =>
         this.actions$.pipe(
@@ -42,8 +45,10 @@ export class SprintEffects {
     sprint_Create$ = createEffect(() =>
         this.actions$.pipe(
             ofType(actionSprintCreate),
-            switchMap((action) =>
-                this.api.create(action.data).pipe(
+            withLatestFrom(this.store.select(selectProjectCurrentId)),
+            filter(([, projectId]) => projectId !== undefined),
+            switchMap(([action, projectId]) =>
+                this.api.create({ ...action.data, project_id: projectId! }).pipe(
                     switchMap((sprint) =>
                         of(actionSprintCreateSuccess({ sprint }))
                     ),

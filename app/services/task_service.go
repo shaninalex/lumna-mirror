@@ -31,12 +31,14 @@ func NewTaskService(
 	statusRepository repositories.StatusRepository,
 	projectRepository repositories.ProjectRepository,
 	projectService ProjectService,
+	bus observer.Observer,
 ) TaskService {
 	return &taskService{
 		repository:        repository,
 		statusRepository:  statusRepository,
 		projectRepository: projectRepository,
 		projectService:    projectService,
+		bus:               bus,
 	}
 }
 
@@ -68,7 +70,7 @@ type TaskPayload struct {
 }
 
 func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
-	code, err := s.projectService.GetCode(ctx, payload.ProjectID, "task")
+	code, err := s.projectService.GetNewCode(ctx, payload.ProjectID, "task")
 	if err != nil {
 		return nil, err
 	}

@@ -26,6 +26,7 @@ type Task struct {
 	// StatusID - Kanband Board column
 	StatusID  *uint `gorm:"not null;index" json:"status_id"`
 	ProjectID uint  `gorm:"not null;index" json:"project_id"`
+	SprintID  *uint `gorm:"index" json:"sprint_id"`
 
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`

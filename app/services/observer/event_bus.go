@@ -44,7 +44,13 @@ func (s *observer) Publish(ctx context.Context, event Event, data any) {
 	}
 
 	fmt.Println("[BUS] publish ", event)
+	// Subscribers run asynchronously, so they must not be tied to the
+	// caller's request-scoped context: once the request completes its ctx is
+	// canceled, which would abort in-flight subscriber work (e.g. DB queries
+	// failing with "context canceled"). WithoutCancel keeps the context values
+	// while detaching cancellation/deadline propagation.
+	subCtx := context.WithoutCancel(ctx)
 	for _, subscriber := range subscribers {
-		go subscriber(ctx, data)
+		go subscriber(subCtx, data)
 	}
 }
