@@ -1,16 +1,20 @@
 import { Routes } from '@angular/router';
-import { MainRoot } from './main.root';
-import { SelectWorkspacePage } from './select-workspace';
+import { InboxPage } from './inbox';
+import { MyWorkPage } from './my-work';
+
 
 export const routes: Routes = [
     {
+        path: 'inbox',
+        component: InboxPage,
+    },
+    {
+        path: 'my-work',
+        component: MyWorkPage,
+    },
+    {
         path: '',
-        component: MainRoot,
-        children: [
-            {
-                path: 'select-workspace',
-                component: SelectWorkspacePage,
-            }
-        ]
+        pathMatch: 'full',
+        redirectTo: '/inbox'
     }
 ];
