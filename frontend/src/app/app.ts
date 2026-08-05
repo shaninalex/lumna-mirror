@@ -1,12 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CoreService } from '@core/core.service';
 
 @Component({
-    selector: 'app-root',
+    selector: 'lu-root',
     imports: [RouterOutlet],
-    template: `<router-outlet />`,
+    template: `
+        <router-outlet />
+    `,
 })
 export class App {
-    readonly coreService = inject(CoreService);
+    protected readonly title = signal('frontend');
 }

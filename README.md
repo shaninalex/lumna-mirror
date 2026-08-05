@@ -17,9 +17,14 @@ make build_embed
 ```bash
 go mod tidy
 cp ./config/config.test.yaml ./config/config.yaml
-go run ./app migrate --config=config/config.yaml  # ./bin/migrate.sh
-go run ./app import resources/dev_db.json --config=config/config.yaml # ./bin/import.sh
-go run ./app serve  --config=config/config.yaml # ./bin/dev.sh
 
-# login with test@test.com:111 in http://localhost:8000/auth/login
+# modify path to database
+
+cd frontend
+yarn build
+
+go run ./app migrate apply --config=config/config.yaml
+go run ./app serve  --config=config/config.yaml
+
+# go to http://localhost:8000/setup and setup your workspace
 ```
