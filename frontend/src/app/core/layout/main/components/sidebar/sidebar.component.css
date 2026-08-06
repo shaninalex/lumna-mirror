@@ -8,3 +8,13 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
+.sidebar.sidebar-closed .sidebar-nav-link {
+    display: none;
+}
+
+.nav-link {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}

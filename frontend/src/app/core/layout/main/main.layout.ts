@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import {Component, DestroyRef, inject} from '@angular/core';
 import { SidebarComponent, HeaderComponent } from './components';
+import {Actions, ofType} from '@ngrx/effects';
+import {actionToggleSidebar} from '@core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {NgClass} from '@angular/common';
 
 @Component({
     selector: 'lu-main-layout',
-    imports: [SidebarComponent, HeaderComponent],
+    imports: [SidebarComponent, HeaderComponent, NgClass],
     styleUrl: './main.layout.css',
     template: `
-        <div class="dashboard">
+        <div class="dashboard" [ngClass]="{ 'sidebar-closed': hideSidebar }">
             <div class="dashboard-header">
                 <lu-header />
             </div>
@@ -19,4 +23,17 @@ import { SidebarComponent, HeaderComponent } from './components';
         </div>
     `,
 })
-export class MainLayout {}
+export class MainLayout {
+    hideSidebar = false;
+
+    private actions$ = inject(Actions);
+    private ref = inject(DestroyRef);
+
+    constructor() {
+        this.actions$
+            .pipe(
+                ofType(actionToggleSidebar),
+                takeUntilDestroyed(this.ref),
+            ).subscribe(() => this.hideSidebar = !this.hideSidebar);
+    }
+}

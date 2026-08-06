@@ -3,7 +3,7 @@
     width: 100vw;
     height: 100vh;
 
-    grid-template-columns: 180px 1fr;
+    grid-template-columns: 12rem 1fr;
     grid-template-rows: auto 1fr;
 
     grid-template-areas:
@@ -23,4 +23,8 @@
 .dashboard-content {
     grid-area: content;
     overflow: auto;
+}
+
+.dashboard.sidebar-closed {
+    grid-template-columns: 3.5rem 1fr;
 }

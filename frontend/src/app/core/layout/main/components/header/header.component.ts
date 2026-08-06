@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {actionToggleSidebar} from '@core';
 
 @Component({
     selector: 'lu-header',
@@ -10,6 +12,9 @@ import { Component } from '@angular/core';
                 <a href="#" class="me-4">
                     <img src="/images/logo-h.svg" alt="" style="width: 140px">
                 </a>
+                <button class="btn btn-sm btn-outline-secondary" (click)="toggleSidebar()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -45,4 +50,10 @@ import { Component } from '@angular/core';
         </nav>
     `,
 })
-export class HeaderComponent { }
+export class HeaderComponent {
+    private store = inject(Store);
+
+    toggleSidebar(): void {
+        this.store.dispatch(actionToggleSidebar());
+    }
+}
