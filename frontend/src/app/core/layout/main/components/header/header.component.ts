@@ -1,24 +1,31 @@
-import {Component, inject} from '@angular/core';
+import {Component, DestroyRef, inject} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {actionToggleSidebar} from '@core';
+import { Actions, ofType } from '@ngrx/effects';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'lu-header',
-    imports: [],
+    imports: [NgClass],
     styleUrl: './header.component.css',
     template: `
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
+                <button class="btn btn-sm btn-outline-secondary me-2" (click)="toggleSidebar()">
+                    @if (sidebarHidden) {
+                        <i class="fa-solid fa-chevron-right"></i>
+                    } @else {
+                        <i class="fa-solid fa-bars"></i>
+                    }
+                </button>
                 <a href="#" class="me-4">
                     <img src="/images/logo-h.svg" alt="" style="width: 140px">
                 </a>
-                <button class="btn btn-sm btn-outline-secondary" (click)="toggleSidebar()">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" (click)="toggleMenu()">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse" [ngClass]="{'show': showMenu}">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="#">Home</a>
@@ -52,8 +59,25 @@ import {actionToggleSidebar} from '@core';
 })
 export class HeaderComponent {
     private store = inject(Store);
+    sidebarHidden = false;
+    showMenu = false;
+
+    private actions$ = inject(Actions);
+    private ref = inject(DestroyRef);
+
+    constructor() {
+        this.actions$
+            .pipe(
+                ofType(actionToggleSidebar),
+                takeUntilDestroyed(this.ref),
+            ).subscribe(() => this.sidebarHidden = !this.sidebarHidden);
+    }
 
     toggleSidebar(): void {
         this.store.dispatch(actionToggleSidebar());
+    }
+
+    toggleMenu(): void {
+        this.showMenu = !this.showMenu;
     }
 }

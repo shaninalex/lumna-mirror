@@ -23,6 +23,7 @@
 .dashboard-content {
     grid-area: content;
     overflow: auto;
+    padding: 1rem;
 }
 
 .dashboard.sidebar-closed {
