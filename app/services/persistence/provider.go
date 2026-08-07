@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
+	// _ "github.com/lib/pq"
+	// _ "github.com/mattn/go-sqlite3"
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"

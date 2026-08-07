@@ -20,11 +20,5 @@ func (s *ListController) ChangeOrder(c *gin.Context) {
 		return
 	}
 
-	if payload.Activity != nil {
-		if id, err := utils.GetUserID(c); err == nil {
-			s.activityLogger.Log(id, payload.Activity)
-		}
-	}
-
 	utils.Success(c, nil)
 }

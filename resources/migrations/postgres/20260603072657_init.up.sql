@@ -5,9 +5,9 @@
 CREATE TABLE identities
 (
     id         SERIAL PRIMARY KEY,
-    full_name  VARCHAR NOT NULL,
-    email      VARCHAR NOT NULL,
-    active     BOOLEAN,
+    full_name  TEXT     NOT NULL,
+    email      TEXT     NOT NULL,
+    active     NUMERIC,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL,
 
@@ -18,10 +18,10 @@ CREATE TABLE credentials
 (
     id               SERIAL PRIMARY KEY,
     identity_id      INTEGER NOT NULL,
-    provider         VARCHAR NOT NULL,
-    provider_user_id VARCHAR,
-    email            VARCHAR,
-    password_hash    VARCHAR,
+    provider         TEXT    NOT NULL,
+    provider_user_id TEXT,
+    email            TEXT,
+    password_hash    TEXT,
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -29,12 +29,12 @@ CREATE TABLE credentials
 CREATE TABLE refresh_tokens
 (
     id          SERIAL PRIMARY KEY,
-    identity_id INTEGER NOT NULL,
-    hash        VARCHAR NOT NULL,
-    client_id   VARCHAR,
-    scopes      VARCHAR,
+    identity_id INTEGER  NOT NULL,
+    hash        TEXT     NOT NULL,
+    client_id   TEXT,
+    scopes      TEXT,
     expires_at  TIMESTAMP NOT NULL,
-    revoked     BOOLEAN NOT NULL DEFAULT false,
+    revoked     NUMERIC  NOT NULL DEFAULT false,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -42,19 +42,6 @@ CREATE TABLE refresh_tokens
 -----------------------------
 -- SYSTEM
 -----------------------------
-
-CREATE TABLE activity_logs
-(
-    id          SERIAL PRIMARY KEY,
-    summary     VARCHAR NOT NULL,
-    identity_id INTEGER,
-    entity_id   INTEGER NOT NULL,
-    entity_type VARCHAR NOT NULL,
-    action      VARCHAR NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 CREATE TABLE emails
 (
@@ -68,7 +55,7 @@ CREATE TABLE emails
     headers     VARCHAR,
     status      VARCHAR
         CHECK (status IN ('pending', 'running', 'success', 'repeat', 'error', 'skipped'))
-                          DEFAULT 'pending',
+                         DEFAULT 'pending',
     cc          VARCHAR,
     bcc         VARCHAR,
     reply_to    VARCHAR,
@@ -84,13 +71,13 @@ CREATE TABLE emails
 CREATE TABLE invitations
 (
     id          SERIAL PRIMARY KEY,
-    email       VARCHAR,
-    token_hash  VARCHAR,
-    state       VARCHAR,
-    role        VARCHAR,
+    email       TEXT,
+    token_hash  TEXT,
+    state       TEXT,
+    role        TEXT,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     valid_until TIMESTAMP NOT NULL,
-    meta        TEXT NULL,
+    meta        TEXT     NULL,
 
     CONSTRAINT uni_invitations_email UNIQUE (email)
 );
@@ -98,9 +85,9 @@ CREATE TABLE invitations
 CREATE TABLE workspaces
 (
     id          SERIAL PRIMARY KEY,
-    title       VARCHAR NOT NULL,
-    active      BOOLEAN DEFAULT true,
-    owner_email VARCHAR NULL,
+    title       TEXT     NOT NULL,
+    active      NUMERIC,
+    owner_email TEXT     NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP NULL
 );
@@ -112,36 +99,23 @@ CREATE TABLE workspaces
 CREATE TABLE projects
 (
     id           SERIAL PRIMARY KEY,
-    title        VARCHAR NOT NULL,
+    title        TEXT    NOT NULL,
     workspace_id INTEGER NOT NULL,
     owner_id     INTEGER NULL,
-    created_at   TIMESTAMP,
+    key          VARCHAR NOT NULL UNIQUE,
+    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at   TIMESTAMP,
+    meta         TEXT    NULL,
 
     FOREIGN KEY (workspace_id) REFERENCES workspaces (id) ON DELETE CASCADE,
     FOREIGN KEY (owner_id) REFERENCES identities (id) ON DELETE SET NULL
 );
 
-CREATE TABLE sprints
-(
-    id          SERIAL PRIMARY KEY,
-    title       VARCHAR NOT NULL,
-    description VARCHAR,
-    done        BOOLEAN NOT NULL DEFAULT false,
-    project_id  INTEGER NOT NULL,
-    started_at  TIMESTAMP NULL,
-    finished_at TIMESTAMP NULL,
 
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP NULL,
-
-    FOREIGN KEY (project_id) REFERENCES projects (id)
-);
-
-CREATE TABLE lists
+CREATE TABLE lists -- // boards
 (
     id         SERIAL PRIMARY KEY,
-    title      VARCHAR NOT NULL,
+    title      TEXT    NOT NULL,
     project_id INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
@@ -149,30 +123,32 @@ CREATE TABLE lists
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE statuses
+
+CREATE TABLE statuses -- // columns
 (
     id         SERIAL PRIMARY KEY,
-    title      VARCHAR NOT NULL,
+    title      TEXT    NOT NULL,
     "order"    INTEGER NULL,
---     list_id    INTEGER NOT NULL REFERENCES lists (id) ON DELETE CASCADE ON UPDATE CASCADE,
     project_id INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
 
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 
 CREATE TABLE tasks
 (
     id         SERIAL PRIMARY KEY,
-    title      VARCHAR NOT NULL,
+    title      TEXT    NOT NULL,
+    code       VARCHAR NOT NULL UNIQUE,
     "order"    INTEGER,
-    done       BOOLEAN DEFAULT false,
-    body       VARCHAR,
+    done       NUMERIC  DEFAULT 0,
+    body       TEXT,
+    status_id  INTEGER NULL,
+    project_id INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
-    status_id  INTEGER NOT NULL,
-    project_id INTEGER NOT NULL,
 
     FOREIGN KEY (status_id) REFERENCES statuses (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE

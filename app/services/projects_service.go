@@ -9,7 +9,6 @@ import (
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
-	"gitlab.com/shaninalex/lumna/app/services/logger"
 	"gitlab.com/shaninalex/lumna/app/services/observer"
 )
 
@@ -26,19 +25,16 @@ type ProjectService interface {
 type projectService struct {
 	repository repositories.ProjectRepository
 	bus        observer.Observer
-	logger     logger.Logger
 }
 
 var _ ProjectService = (*projectService)(nil)
 
 func NewProjectService(
 	repository repositories.ProjectRepository,
-	logger logger.Logger,
 	bus observer.Observer,
 ) ProjectService {
 	s := &projectService{
 		repository: repository,
-		logger:     logger,
 		bus:        bus,
 	}
 	s.init()

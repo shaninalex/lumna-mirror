@@ -1,2 +1,0 @@
-ALTER TABLE projects
-    ADD COLUMN meta JSONB NULL;

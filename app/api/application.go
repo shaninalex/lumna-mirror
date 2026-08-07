@@ -5,12 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/activity"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/invitation"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/list"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/sprint"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/status"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
@@ -53,10 +51,8 @@ type ApiDeps struct {
 	ProjectController    *project.ProjectController
 	TaskController       *task.TaskController
 	UserController       *user.UserController
-	ActivityController   *activity.ActivityController
 	InvitationController *invitation.InvitationController
 	WorkspaceController  *workspace.WorkspaceController
-	SprintController     *sprint.SprintController
 
 	AuthMiddleware middlewares.AuthMiddleware
 }
@@ -85,10 +81,8 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	deps.ProjectController.Register(private)
 	deps.TaskController.Register(private)
 	deps.UserController.Register(private)
-	deps.ActivityController.Register(private)
 	deps.InvitationController.Register(private)
 	deps.WorkspaceController.Register(private)
-	deps.SprintController.Register(private)
 
 	return router
 }

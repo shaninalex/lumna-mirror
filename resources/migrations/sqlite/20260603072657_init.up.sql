@@ -43,19 +43,6 @@ CREATE TABLE refresh_tokens
 -- SYSTEM
 -----------------------------
 
-CREATE TABLE activity_logs
-(
-    id          integer PRIMARY KEY AUTOINCREMENT,
-    summary     text    NOT NULL,
-    identity_id integer,
-    entity_id   integer NOT NULL,
-    entity_type text    NOT NULL,
-    action      text    NOT NULL,
-    created_at  datetime DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 CREATE TABLE emails
 (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -118,28 +105,14 @@ CREATE TABLE projects
     key          varchar not null unique,
     created_at   datetime DEFAULT CURRENT_TIMESTAMP,
     updated_at   datetime,
+    meta         text    NULL,
 
     FOREIGN KEY (workspace_id) REFERENCES workspaces (id) ON DELETE CASCADE,
     FOREIGN KEY (owner_id) REFERENCES identities (id) ON DELETE SET NULL
 );
 
-CREATE TABLE sprints
-(
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    title       TEXT     NOT NULL,
-    description TEXT,
-    done        INTEGER  DEFAULT 0,
-    project_id  INTEGER  NOT NULL,
-    started_at  DATETIME NULL,
-    finished_at DATETIME NULL,
 
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at  DATETIME NULL,
-
-    FOREIGN KEY (project_id) REFERENCES projects (id)
-);
-
-CREATE TABLE lists
+CREATE TABLE lists -- // boards
 (
     id         integer PRIMARY KEY AUTOINCREMENT,
     title      text    NOT NULL,
@@ -150,7 +123,8 @@ CREATE TABLE lists
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE statuses
+
+CREATE TABLE statuses -- // columns
 (
     id         integer PRIMARY KEY AUTOINCREMENT,
     title      text    NOT NULL,
@@ -162,6 +136,7 @@ CREATE TABLE statuses
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
 CREATE TABLE tasks
 (
     id         integer PRIMARY KEY AUTOINCREMENT,
@@ -171,12 +146,10 @@ CREATE TABLE tasks
     done       numeric  DEFAULT 0,
     body       text,
     status_id  integer NULL,
-    sprint_id  integer NULL,
     project_id integer NOT NULL,
     created_at datetime DEFAULT CURRENT_TIMESTAMP,
     updated_at datetime,
 
     FOREIGN KEY (status_id) REFERENCES statuses (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (sprint_id) REFERENCES sprints (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

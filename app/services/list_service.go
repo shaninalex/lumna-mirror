@@ -5,7 +5,6 @@ import (
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/repositories"
-	"gitlab.com/shaninalex/lumna/app/services/logger"
 )
 
 type ListService interface {
@@ -73,11 +72,10 @@ type KColumn struct {
 }
 
 type KanbanListChangeOrderPayload struct {
-	MoveType string                     `json:"move_type"`
-	StatusId *uint                      `json:"status_id"`
-	Tasks    []KTask                    `json:"tasks"`
-	Statuses []KColumn                  `json:"statuses"`
-	Activity *logger.ActivityLogPayload `json:"activity"`
+	MoveType string    `json:"move_type"`
+	StatusId *uint     `json:"status_id"`
+	Tasks    []KTask   `json:"tasks"`
+	Statuses []KColumn `json:"statuses"`
 }
 
 func (s *listService) Reorder(ctx context.Context, payload *KanbanListChangeOrderPayload) error {

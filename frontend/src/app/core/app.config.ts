@@ -5,14 +5,15 @@ import { routes } from '@pages';
 import {provideStore} from '@ngrx/store';
 import {provideEffects} from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { effects, reducers } from './store';
 
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(),
         provideRouter(routes),
-        provideStore(),
-        provideEffects(),
+        provideEffects(effects),
+        provideStore(reducers),
         provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     ]
 };
