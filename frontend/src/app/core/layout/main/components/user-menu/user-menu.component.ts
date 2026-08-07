@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { WorkspaceSwitcherComponent } from "../workspace-switcher";
+import { Store } from '@ngrx/store';
+import { actionSessionLoggingOut } from '@core/store';
 
 
 @Component({
@@ -16,11 +18,22 @@ import { WorkspaceSwitcherComponent } from "../workspace-switcher";
                 <div class="list-group">
                     <button cdkMenuItem type="button" class="list-group-item list-group-item-action">Account</button>
                     <button cdkMenuItem type="button" class="list-group-item list-group-item-action">Settings</button>
-                    <button cdkMenuItem type="button" class="list-group-item list-group-item-action">Logout</button>
+                    <button cdkMenuItem 
+                        type="button" 
+                        class="list-group-item list-group-item-action"
+                        (click)="logout()">
+                        Logout
+                    </button>
                 </div>
                 <lu-workspace-switcher />
             </div>
         </ng-template>
     `,
 })
-export class UserMenuComponent {}
+export class UserMenuComponent {
+    readonly store = inject(Store);
+
+    logout(): void {
+        this.store.dispatch(actionSessionLoggingOut());
+    }
+}

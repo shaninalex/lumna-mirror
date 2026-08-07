@@ -6,3 +6,7 @@ build_embed:
 
 migrate:
 	go run app/main.go --config=./config/config.yaml migrate apply
+
+run:
+	go run app/main.go --config=./config/config.yaml serve
+
