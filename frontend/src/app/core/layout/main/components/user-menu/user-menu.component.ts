@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
-import { WorkspaceSwitcherComponent } from "../workspace-switcher";
+import { WorkspaceSwitcherComponent } from '@entities/workspace'
 import { Store } from '@ngrx/store';
 import { actionSessionLoggingOut } from '@core/store';
 

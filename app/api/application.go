@@ -65,10 +65,7 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	router.Use(middlewares.CORSMiddleware())
 
 	setup.RegisterSetupRoute(router, config)
-
-	if config.Bool("serve.embed") {
-		web.RegisterEmbedRoute(router)
-	}
+	web.RegisterEmbedRoute(router)
 
 	authGroup := router.Group("/api/v1/auth")
 	deps.AuthController.Register(authGroup)
