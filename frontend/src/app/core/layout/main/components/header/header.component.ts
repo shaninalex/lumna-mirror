@@ -5,11 +5,12 @@ import { Actions, ofType } from '@ngrx/effects';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserMenuComponent } from "../user-menu";
 import { ProjectsMenuComponent } from "../projects-menu";
+import { ThemeSwitcherComponent } from "../theme-switcher";
 
 
 @Component({
     selector: 'lu-header',
-    imports: [UserMenuComponent, ProjectsMenuComponent],
+    imports: [UserMenuComponent, ProjectsMenuComponent, ThemeSwitcherComponent],
     styleUrl: './header.component.css',
     template: `
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -27,6 +28,7 @@ import { ProjectsMenuComponent } from "../projects-menu";
                 </div>
 
                 <div class="flex align-items-center">
+                    <lu-theme-switcher />
                     <button class="btn btn-sm">
                         <i class="fa-solid fa-bell"></i>
                     </button>

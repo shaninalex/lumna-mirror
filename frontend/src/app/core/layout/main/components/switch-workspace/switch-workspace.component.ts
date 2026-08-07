@@ -27,12 +27,9 @@ export class SwitchWorkspaceComponent {
     selector: 'lu-switch-workspace-modal',
     template: `
         <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-                The current link item
-            </a>
-            <a href="#" class="list-group-item list-group-item-action">A second link item</a>
-            <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-            <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
+            <a href="#" class="list-group-item list-group-item-action active">Lumna Dev</a>
+            <a href="#" class="list-group-item list-group-item-action">Acme Inc.</a>
+            <a href="#" class="list-group-item list-group-item-action">Open Source</a>
             <button (click)="seeAll()"
                 class="list-group-item list-group-item-action text-decoration-underline">
                 See all

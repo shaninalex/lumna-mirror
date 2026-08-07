@@ -24,6 +24,8 @@
     grid-area: content;
     overflow: auto;
     padding: 1rem;
+    background-color: var(--bs-body-bg);
+    border-top-left-radius: 1rem;
 }
 
 .dashboard.sidebar-closed {
