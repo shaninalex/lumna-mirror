@@ -3,18 +3,14 @@ import { MainLayout } from '@core/layout';
 import { UiService } from '@shared/ui';
 
 @Component({
-    selector: 'lu-inbox-page',
+    selector: 'lu-backlog',
     imports: [MainLayout],
-    template: `
-        <lu-main-layout>
-            <p>inbox works!</p>
-        </lu-main-layout>
-    `,
+    templateUrl: './backlog.page.html',
 })
-export class InboxPage {
+export class BacklogPage {
     private ui = inject(UiService);
 
     ngOnInit(): void {
-        this.ui.setPageTitle("Inbox");
+        this.ui.setPageTitle("Backlog");
     }
 }

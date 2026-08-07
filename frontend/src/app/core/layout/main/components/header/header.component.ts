@@ -4,13 +4,13 @@ import { actionToggleSidebar } from '@core';
 import { Actions, ofType } from '@ngrx/effects';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserMenuComponent } from "../user-menu";
-import { ProjectsMenuComponent } from "../projects-menu";
+import { ProjectSwitcherComponent } from "../project-switcher";
 import { ThemeSwitcherComponent } from "../theme-switcher";
 
 
 @Component({
     selector: 'lu-header',
-    imports: [UserMenuComponent, ProjectsMenuComponent, ThemeSwitcherComponent],
+    imports: [UserMenuComponent, ThemeSwitcherComponent, ProjectSwitcherComponent],
     styleUrl: './header.component.css',
     template: `
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -24,7 +24,7 @@ import { ThemeSwitcherComponent } from "../theme-switcher";
                             <i class="fa-solid fa-bars"></i>
                         }
                     </button>
-                    <lu-projects-menu />
+                    <lu-project-switcher />
                 </div>
 
                 <div class="flex align-items-center">

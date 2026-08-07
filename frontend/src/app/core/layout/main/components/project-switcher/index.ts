@@ -1,0 +1,1 @@
+export { ProjectSwitcherComponent } from './project-switcher.component'

@@ -1,1 +1,0 @@
-export { ProjectsMenuComponent } from './projects-menu.component'

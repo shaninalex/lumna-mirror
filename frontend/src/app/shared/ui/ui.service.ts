@@ -20,7 +20,7 @@ export class UiService {
 
     /** Page title API */
     public setPageTitle(t: string) {
-        this.pageTitle.next(t);
+        this.pageTitle.next(`${t} | Lumna`);
     }
 
     public getPageTitle(): string {

@@ -10,6 +10,11 @@ export const routes: Routes = [
             {
                 path: 'login',
                 component: LoginPage,
+            },
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: '/auth/login'
             }
         ]
     }

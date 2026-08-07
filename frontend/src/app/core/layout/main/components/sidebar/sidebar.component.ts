@@ -3,24 +3,31 @@ import {Actions, ofType} from '@ngrx/effects';
 import {actionToggleSidebar} from '@core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NgClass} from '@angular/common';
+import { RouterLink } from "@angular/router";
 
 @Component({
     selector: 'lu-sidebar',
-    imports: [NgClass],
+    imports: [NgClass, RouterLink],
     styleUrl: './sidebar.component.css',
     template: `
         <nav class="sidebar h-100 bg-body-tertiary" [ngClass]="{ 'sidebar-closed': hideSidebar }">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link" href="/inbox">
+                    <a class="nav-link" routerLink="/inbox">
                         <i class="fa-solid fa-chart-column"></i>
                         <span class="sidebar-nav-link">Inbox</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" routerLink="/boards">
                         <i class="fa-solid fa-chart-simple"></i>
                         <span class="sidebar-nav-link">Boards</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/backlog">
+                        <i class="fa-regular fa-file"></i>
+                        <span class="sidebar-nav-link">Tasks</span>
                     </a>
                 </li>
                 <li class="nav-item">

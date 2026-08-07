@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
-import { SwitchWorkspaceComponent } from "../switch-workspace";
+import { WorkspaceSwitcherComponent } from "../workspace-switcher";
 
 
 @Component({
     selector: 'lu-user-menu',
-    imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, SwitchWorkspaceComponent],
+    imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, WorkspaceSwitcherComponent],
     template: `
         <button [cdkMenuTriggerFor]="menu" class="btn btn-sm">
             <img src="images/7.png" alt="" class="rounded-circle" style="width: 24px">
@@ -18,7 +18,7 @@ import { SwitchWorkspaceComponent } from "../switch-workspace";
                     <button cdkMenuItem type="button" class="list-group-item list-group-item-action">Settings</button>
                     <button cdkMenuItem type="button" class="list-group-item list-group-item-action">Logout</button>
                 </div>
-                <lu-switch-workspace />
+                <lu-workspace-switcher />
             </div>
         </ng-template>
     `,

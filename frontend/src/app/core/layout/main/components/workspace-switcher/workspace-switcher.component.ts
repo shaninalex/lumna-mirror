@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 
 
 @Component({
-    selector: 'lu-switch-workspace',
+    selector: 'lu-workspace-switcher',
     imports: [],
     template: `
         <button class="btn btn-sm btn-outline-secondary d-block w-100 text-left" (click)="openDialog()">
@@ -13,7 +13,7 @@ import { Router, RouterLink } from "@angular/router";
         </button>
     `,
 })
-export class SwitchWorkspaceComponent {
+export class WorkspaceSwitcherComponent {
     dialog = inject(Dialog);
 
     openDialog() {
