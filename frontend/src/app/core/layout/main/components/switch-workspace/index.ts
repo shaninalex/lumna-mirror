@@ -1,0 +1,1 @@
+export { SwitchWorkspaceComponent } from './switch-workspace.component'

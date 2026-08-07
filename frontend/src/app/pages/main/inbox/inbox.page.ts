@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MainLayout } from '@core/layout';
 
 @Component({
-    selector: 'lu-inbox',
+    selector: 'lu-inbox-page',
     imports: [MainLayout],
     template: `<lu-main-layout> <p>inbox works!</p> </lu-main-layout>`,
 })
