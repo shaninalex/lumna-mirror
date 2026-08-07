@@ -1,5 +1,3 @@
-//go:build embed
-
 package lumna
 
 import (
@@ -12,7 +10,12 @@ import (
 //go:embed all:resources/migrations
 var resourcesFS embed.FS
 
-// StaticFS returns embedded static files when built with -tags embed
+// StaticFS returns the embedded static files rooted at p.
+//
+// Resources are always compiled into the binary, so nothing here depends on the
+// working directory. The frontend under resources/assets is a build artifact and
+// is not committed: run the frontend build before `go build`, otherwise the
+// binary embeds only the .gitkeep placeholder and serves no UI.
 func StaticFS(p string) fs.FS {
 	sub, err := fs.Sub(resourcesFS, p)
 	if err != nil {

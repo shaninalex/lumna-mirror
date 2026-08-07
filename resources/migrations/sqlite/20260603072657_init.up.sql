@@ -146,12 +146,10 @@ CREATE TABLE tasks
     done       numeric  DEFAULT 0,
     body       text,
     status_id  integer NULL,
-    sprint_id  integer NULL,
     project_id integer NOT NULL,
     created_at datetime DEFAULT CURRENT_TIMESTAMP,
     updated_at datetime,
 
     FOREIGN KEY (status_id) REFERENCES statuses (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (sprint_id) REFERENCES sprints (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

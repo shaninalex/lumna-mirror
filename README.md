@@ -9,8 +9,11 @@ hosted in your own vps with minimal setup and configuration.
 
 ```bash
 make build
-make build_embed
 ```
+
+`resources/` (migrations and the built frontend) is always embedded into the
+binary, so build the frontend into `resources/assets` before `make build` if you
+want the UI served from it.
 
 ### development
 
