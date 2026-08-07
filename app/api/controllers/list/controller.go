@@ -3,27 +3,23 @@ package list
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/services"
-	"gitlab.com/shaninalex/lumna/app/services/logger"
 )
 
 type ListController struct {
-	listService    services.ListService
-	columnService  services.StatusService
-	taskService    services.TaskService
-	activityLogger logger.ActivityLogger
+	listService   services.ListService
+	columnService services.StatusService
+	taskService   services.TaskService
 }
 
 func NewListController(
 	listService services.ListService,
 	columnService services.StatusService,
 	taskService services.TaskService,
-	activityLogger logger.ActivityLogger,
 ) *ListController {
 	s := &ListController{
-		listService:    listService,
-		columnService:  columnService,
-		taskService:    taskService,
-		activityLogger: activityLogger,
+		listService:   listService,
+		columnService: columnService,
+		taskService:   taskService,
 	}
 	return s
 }

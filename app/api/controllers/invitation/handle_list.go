@@ -16,7 +16,6 @@ func (s *InvitationController) List(c *gin.Context) {
 	invitations, err := s.invitationService.List(c.Request.Context())
 	if err != nil {
 		utils.Error(c, http.StatusInternalServerError, ErrorInvitationList)
-		s.logger.Log(err.Error())
 		return
 	}
 	utils.Success(c, invitations)
