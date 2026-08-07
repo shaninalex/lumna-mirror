@@ -7,7 +7,6 @@ env: development
 serve:
   # port of the server
   port: 8000
-  embed: false
   setup: true
 
 database:

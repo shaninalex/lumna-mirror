@@ -19,7 +19,7 @@ export class SessionEffects {
 
     authenticate_start$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(actionSessionAuthenticateStart.type),
+            ofType(actionSessionAuthenticateStart),
             exhaustMap((action) =>
                 this.sessionApi.login(action.email, action.password).pipe(
                     map((user) => actionSessionAuthenticatedSuccessfull({ user: user })),
@@ -31,7 +31,7 @@ export class SessionEffects {
 
     logging_out_init$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(actionSessionLoggingOut.type),
+            ofType(actionSessionLoggingOut),
             exhaustMap(() =>
                 this.sessionApi.logout().pipe(
                     map(() => actionSessionLoggedOut()),
@@ -43,7 +43,7 @@ export class SessionEffects {
 
     authenticated_successfull$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(actionSessionAuthenticatedSuccessfull.type),
+            ofType(actionSessionAuthenticatedSuccessfull),
             map((action) => actionUserSet({ user: action.user })),
         );
     });
@@ -51,7 +51,7 @@ export class SessionEffects {
     authenticated_successfull_redirect$ = createEffect(
         () => {
             return this.actions$.pipe(
-                ofType(actionSessionAuthenticatedSuccessfull.type),
+                ofType(actionSessionAuthenticatedSuccessfull),
                 map(() => this.router.navigateByUrl('/')),
             );
         },
@@ -60,7 +60,7 @@ export class SessionEffects {
 
     logging_out_completed$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(actionSessionLoggedOut.type),
+            ofType(actionSessionLoggedOut),
             map((action) => actionUserClear()),
         );
     });
@@ -68,7 +68,7 @@ export class SessionEffects {
     logging_out_completed_redirect$ = createEffect(
         () => {
             return this.actions$.pipe(
-                ofType(actionSessionLoggedOut.type),
+                ofType(actionSessionLoggedOut),
                 map(() => this.router.navigateByUrl('/auth/login')),
             );
         },
