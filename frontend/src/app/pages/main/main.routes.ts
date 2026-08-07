@@ -5,6 +5,7 @@ import { WorkspacesPage } from './workspaces';
 import { BoardsPage } from './boards';
 import { BoardPage } from './board';
 import { BacklogPage } from './backlog/backlog.page';
+import { TaskPage } from './task';
 
 
 export const routes: Routes = [
@@ -31,6 +32,10 @@ export const routes: Routes = [
     {
         path: 'backlog',
         component: BacklogPage,
+    },
+    {
+        path: 'task',
+        component: TaskPage,
     },
     {
         path: '',
