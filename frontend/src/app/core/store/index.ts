@@ -1,4 +1,1 @@
-export { SessionEffects } from './session.effects';
-
-export * from './session.actions';
-export * from './session.store';
+export { actionToggleSidebar } from './store.actions'

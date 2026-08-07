@@ -1,4 +1,2 @@
-export * from './core.service';
-export * from './layouts';
-export * from './refreshToken.interceptor';
+export { appConfig } from './app.config'
 export * from './store';

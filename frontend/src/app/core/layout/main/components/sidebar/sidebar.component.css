@@ -1,0 +1,20 @@
+:host {
+    height: 100%;
+    display: block;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar.sidebar-closed .sidebar-nav-link {
+    display: none;
+}
+
+.nav-link {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
