@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { MainLayout } from '@core/layout';
 import { UiService } from '@shared/ui';
+import { RouterLink } from "@angular/router";
 
 @Component({
     selector: 'lu-board-page',
-    imports: [MainLayout],
+    imports: [MainLayout, RouterLink],
     templateUrl: './board.page.html',
 })
 export class BoardPage {
