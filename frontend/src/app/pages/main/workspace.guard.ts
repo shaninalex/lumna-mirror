@@ -69,7 +69,6 @@ export const activeWorkspaceGuard: CanActivateFn = (route) => {
             }
 
             store.dispatch(actionWorkspaceSetCurrent({ id: targetWorkspace.id }));
-            localStorage.setItem('last_workspace_id', targetWorkspace.id.toString());
             return true;
         })
     );

@@ -10,17 +10,18 @@
                 </p>
             </div>
 
-            <button class="btn btn-primary">
+            <a routerLink="/app/workspaces/create" class="btn btn-primary">
                 New Workspace
-            </button>
+            </a>
         </div>
 
         <div class="d-flex flex-column gap-3">
-            <lu-workspace-card />
-            <lu-workspace-card />
-            <lu-workspace-card />
+            @if (workspaces$ | async; as workspaces) {
+                @for (item of workspaces; track $index) {
+                    <lu-workspace-card />
+                }
+            }
         </div>
-
     </div>
 
 </lu-global-layout>

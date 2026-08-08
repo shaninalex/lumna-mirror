@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { Router, RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
-import { selectWorkspaceList } from '@entities/workspace';
+import { selectCurrentWorkspace, selectWorkspaceList } from '@entities/workspace';
 import { AsyncPipe } from '@angular/common';
 
 
@@ -10,14 +10,34 @@ import { AsyncPipe } from '@angular/common';
     selector: 'lu-workspace-switcher',
     imports: [AsyncPipe, RouterLink],
     template: `
-        @if (workspaces$ | async; as workspaces) {
-            @if (workspaces.length) {
-                <button class="btn btn-sm btn-outline-secondary d-block w-100 text-left" (click)="openDialog()">
-                    <span class="d-block text-start">Lumna dev</span>
-                    <small class="d-block text-start" style="font-size: 0.8rem">Switch workspace</small>
+        @if (workspace$ | async; as workspace) {
+            <button
+                class="btn btn-sm btn-outline-secondary d-block w-100 text-left bg-body text-body"
+                (click)="openDialog()"
+            >
+                <span class="d-block text-start">
+                    {{ workspace.title }}
+                </span>
+                <small class="d-block text-start" style="font-size: 0.7rem">
+                    Switch workspace
+                </small>
+            </button>
+        } @else if (workspaces$ | async; as workspaces) {
+            @if (workspaces.length > 0) {
+                <button
+                    class="btn btn-sm btn-outline-secondary d-block w-100 text-left bg-body text-body"
+                    (click)="openDialog()"
+                >
+                    <span class="d-block text-start">
+                        Select workspace
+                    </span>
                 </button>
             } @else {
-                <a routerLink="/app/workspaces/create" class="btn btn-primary">Create workspace</a>
+                <a 
+                    class="btn btn-sm btn-outline-secondary d-block bg-body text-body"
+                    routerLink="/app/workspaces/create">
+                    Create Workspace
+                </a>
             }
         }
     `,
@@ -25,7 +45,7 @@ import { AsyncPipe } from '@angular/common';
 export class WorkspaceSwitcherComponent {
     private store = inject(Store);
     dialog = inject(Dialog);
-
+    workspace$ = this.store.select(selectCurrentWorkspace);
     workspaces$ = this.store.select(selectWorkspaceList);
 
     openDialog() {
@@ -37,26 +57,23 @@ export class WorkspaceSwitcherComponent {
 
 @Component({
     selector: 'lu-switch-workspace-modal',
-    imports: [AsyncPipe, RouterLink],
+    imports: [AsyncPipe],
     template: `
-        @if (workspaces$ | async; as workspaces) {
-            @if (workspaces.length) {
-                <div class="list-group">
+        <div class="card">
+            @if (workspaces$ | async; as workspaces) {
+                <div class="list-group overflow-y-auto" style="max-height: 20rem">
                     @for (item of workspaces; track $index) {
-                        <a href="#" class="list-group-item list-group-item-action">{{ item.title }}</a>
-                    }
-        
-                    @if (workspaces.length > 5) {
-                        <button (click)="seeAll()"
-                            class="list-group-item list-group-item-action text-decoration-underline">
-                            See all
-                        </button>
+                        <button 
+                            (click)="handleLink(['/app/w', item.id.toString()])" 
+                            class="list-group-item list-group-item-action">
+                        {{ item.title }}
+                    </button>
                     }
                 </div>
-            } @else {
-                <a routerLink="/workspaces/create" class="btn btn-primary">Create workspace</a>
             }
-        }
+            <button (click)="handleLink(['/app/workspaces'])" class="btn btn-link">See all</button>
+        </div>
+        
     `,
 })
 export class SwitchWorkspaceModal {
@@ -66,8 +83,8 @@ export class SwitchWorkspaceModal {
 
     workspaces$ = this.store.select(selectWorkspaceList);
 
-    async seeAll() {
+    handleLink(link: Array<string>) {
         this.dialogRef.close();
-        await this.router.navigate(['/workspaces']);
+        this.router.navigate(link);
     }
 }

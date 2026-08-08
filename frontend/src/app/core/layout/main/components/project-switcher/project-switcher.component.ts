@@ -38,7 +38,7 @@ import { RouterLink } from "@angular/router";
                     </div>
                 </button>
                 
-                <a cdkMenuItem routerLink="/projects" class="list-group-item list-group-item-action text-decoration-underline">
+                <a cdkMenuItem routerLink="/app/w/1/projects" class="list-group-item list-group-item-action text-decoration-underline">
                     See all
                 </a>
             </div>

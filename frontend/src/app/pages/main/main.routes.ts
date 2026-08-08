@@ -11,6 +11,10 @@ import { activeWorkspaceGuard, workspaceRedirectGuard } from './workspace.guard'
 
 export const routes: Routes = [
     {
+        path: 'workspaces',
+        component: WorkspacesPage,
+    },
+    {
         path: 'workspaces/create',
         component: WorkspaceCreateComponent,
     },
@@ -25,10 +29,6 @@ export const routes: Routes = [
             {
                 path: 'projects',
                 component: ProjectsPage,
-            },
-            {
-                path: 'workspaces',
-                component: WorkspacesPage,
             },
             {
                 path: 'boards',
