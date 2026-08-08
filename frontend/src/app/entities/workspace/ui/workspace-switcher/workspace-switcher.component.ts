@@ -8,7 +8,7 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'lu-workspace-switcher',
-    imports: [AsyncPipe],
+    imports: [AsyncPipe, RouterLink],
     template: `
         @if (workspaces$ | async; as workspaces) {
             @if (workspaces.length) {
@@ -17,7 +17,7 @@ import { AsyncPipe } from '@angular/common';
                     <small class="d-block text-start" style="font-size: 0.8rem">Switch workspace</small>
                 </button>
             } @else {
-                <a routerLink="/workspaces/create" class="btn btn-primary">Create workspace</a>
+                <a routerLink="/app/workspaces/create" class="btn btn-primary">Create workspace</a>
             }
         }
     `,

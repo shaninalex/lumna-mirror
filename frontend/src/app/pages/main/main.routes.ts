@@ -6,6 +6,7 @@ import { BoardsPage } from './boards';
 import { BoardPage } from './board';
 import { BacklogPage } from './backlog/backlog.page';
 import { TaskPage } from './task';
+import { WorkspaceCreateComponent } from './workspace-create';
 
 
 export const routes: Routes = [
@@ -20,6 +21,10 @@ export const routes: Routes = [
     {
         path: 'workspaces',
         component: WorkspacesPage,
+    },
+    {
+        path: 'workspaces/create',
+        component: WorkspaceCreateComponent,
     },
     {
         path: 'boards',
@@ -40,6 +45,6 @@ export const routes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: '/inbox'
+        redirectTo: '/app/inbox'
     }
 ];

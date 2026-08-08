@@ -1,7 +1,7 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject, Injectable } from '@angular/core';
 import { map } from 'rxjs';
-import { actionSessionAuthenticatedSuccessfull } from './session.actions';
+import { actionSessionAuthenticated } from './session.actions';
 import { actionWorkspaceGetList } from '@entities/workspace';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class AppEffects {
 
     authenticated_successfull$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(actionSessionAuthenticatedSuccessfull),
+            ofType(actionSessionAuthenticated),
             map(() => actionWorkspaceGetList()),
         );
     });

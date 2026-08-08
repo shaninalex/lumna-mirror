@@ -6,3 +6,7 @@ export interface WorkspaceModel {
     created_at: Date;
     updated_at?: Date;
 }
+
+export interface WorkspaceCreateModel {
+    title: string;
+}
