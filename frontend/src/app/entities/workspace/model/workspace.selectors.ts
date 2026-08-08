@@ -10,5 +10,17 @@ export const selectWorkspaceList = createSelector(feature, (state) =>
 
 export const selectWorkspace = (id: number) =>
     createSelector(selectWorkspaceList, (list) =>
-        list.filter((a: WorkspaceModel) => a.id === id)
+        list.find((a: WorkspaceModel) => a.id === id)
     );
+
+export const selectCurrentWorkspaceId = createSelector(
+    feature,
+    (state) => state?.currentId ?? null
+);
+
+export const selectCurrentWorkspace = createSelector(
+    selectWorkspaceList,
+    selectCurrentWorkspaceId,
+    (list, currentId) => list.find((w) => w.id === currentId) ?? null
+);
+

@@ -7,44 +7,57 @@ import { BoardPage } from './board';
 import { BacklogPage } from './backlog/backlog.page';
 import { TaskPage } from './task';
 import { WorkspaceCreateComponent } from './workspace-create';
-
+import { activeWorkspaceGuard, workspaceRedirectGuard } from './workspace.guard';
 
 export const routes: Routes = [
-    {
-        path: 'inbox',
-        component: InboxPage,
-    },
-    {
-        path: 'projects',
-        component: ProjectsPage,
-    },
-    {
-        path: 'workspaces',
-        component: WorkspacesPage,
-    },
     {
         path: 'workspaces/create',
         component: WorkspaceCreateComponent,
     },
     {
-        path: 'boards',
-        component: BoardsPage,
-    },
-    {
-        path: 'board',
-        component: BoardPage,
-    },
-    {
-        path: 'backlog',
-        component: BacklogPage,
-    },
-    {
-        path: 'task',
-        component: TaskPage,
+        path: 'w/:workspaceId',
+        canActivate: [activeWorkspaceGuard],
+        children: [
+            {
+                path: 'inbox',
+                component: InboxPage,
+            },
+            {
+                path: 'projects',
+                component: ProjectsPage,
+            },
+            {
+                path: 'workspaces',
+                component: WorkspacesPage,
+            },
+            {
+                path: 'boards',
+                component: BoardsPage,
+            },
+            {
+                path: 'board',
+                component: BoardPage,
+            },
+            {
+                path: 'backlog',
+                component: BacklogPage,
+            },
+            {
+                path: 'task',
+                component: TaskPage,
+            },
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'inbox',
+            },
+        ],
     },
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: '/app/inbox'
-    }
+        canActivate: [workspaceRedirectGuard],
+        children: [],
+    },
 ];
+

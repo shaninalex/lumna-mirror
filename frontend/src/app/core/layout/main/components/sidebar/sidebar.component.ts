@@ -1,9 +1,11 @@
-import {Component, DestroyRef, inject} from '@angular/core';
-import {Actions, ofType} from '@ngrx/effects';
-import {actionToggleSidebar} from '@core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {NgClass} from '@angular/common';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { Actions, ofType } from '@ngrx/effects';
+import { actionToggleSidebar } from '@core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NgClass } from '@angular/common';
 import { RouterLink } from "@angular/router";
+import { Store } from '@ngrx/store';
+import { selectCurrentWorkspaceId } from '@entities/workspace';
 
 @Component({
     selector: 'lu-sidebar',
@@ -13,19 +15,19 @@ import { RouterLink } from "@angular/router";
         <nav class="sidebar h-100 bg-body-tertiary" [ngClass]="{ 'sidebar-closed': hideSidebar }">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link text-body" routerLink="/inbox">
+                    <a class="nav-link text-body" [routerLink]="['/app/w', currentWorkspaceId() || '', 'inbox']">
                         <i class="fa-solid fa-chart-column"></i>
                         <span class="sidebar-nav-link">Inbox</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-body" routerLink="/boards">
+                    <a class="nav-link text-body" [routerLink]="['/app/w', currentWorkspaceId() || '', 'boards']">
                         <i class="fa-solid fa-chart-simple"></i>
                         <span class="sidebar-nav-link">Boards</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-body" routerLink="/backlog">
+                    <a class="nav-link text-body" [routerLink]="['/app/w', currentWorkspaceId() || '', 'backlog']">
                         <i class="fa-regular fa-file"></i>
                         <span class="sidebar-nav-link">Tasks</span>
                     </a>
@@ -66,6 +68,9 @@ export class SidebarComponent {
 
     private actions$ = inject(Actions);
     private ref = inject(DestroyRef);
+    private store = inject(Store);
+
+    currentWorkspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
 
     constructor() {
         this.actions$
@@ -75,3 +80,4 @@ export class SidebarComponent {
             ).subscribe(() => this.hideSidebar = !this.hideSidebar);
     }
 }
+
