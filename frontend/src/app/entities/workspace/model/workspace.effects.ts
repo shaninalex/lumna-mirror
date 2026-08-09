@@ -23,14 +23,10 @@ export class WorkspaceEffects {
     workspace_list$ = createEffect(() =>
         this.actions$.pipe(
             ofType(actionWorkspaceGetList),
-            exhaustMap(() =>
-                this.api
-                    .List()
-                    .pipe(
-                        switchMap((list) =>
-                            of(actionWorkspaceSetList({ list }))
-                        )
-                    )
+            exhaustMap(() => 
+                this.api.List().pipe(
+                    switchMap((list) => of(actionWorkspaceSetList({ list })))
+                )
             )
         )
     );
@@ -40,26 +36,14 @@ export class WorkspaceEffects {
             ofType(actionWorkspaceCreate),
             exhaustMap((action) =>
                 this.api.Create(action.data).pipe(
-                    switchMap((workspace) =>
-                        of(
-                            actionWorkspaceCreateSuccess({
-                                data: workspace
-                            })
-                        )
-                    ),
-                    catchError((err: HttpErrorResponse) =>
-                        of(
-                            actionWorkspaceCreateFailed({
-                                errors: fromErrorResponse(err)
-                            })
-                        )
-                    )
+                    switchMap((workspace) => of(actionWorkspaceCreateSuccess({ data: workspace }))),
+                    catchError((err: HttpErrorResponse) => of(actionWorkspaceCreateFailed({ errors: fromErrorResponse(err) })))
                 )
             )
         )
     );
 
-    workspace_created$ = createEffect(() => 
+    workspace_created$ = createEffect(() =>
         this.actions$.pipe(
             ofType(actionWorkspaceCreateSuccess),
             map((action) => action.data.id),

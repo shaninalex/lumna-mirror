@@ -8,6 +8,7 @@ import { BacklogPage } from './backlog/backlog.page';
 import { TaskPage } from './task';
 import { WorkspaceCreateComponent } from './workspace-create';
 import { activeWorkspaceGuard, workspaceRedirectGuard } from './workspace.guard';
+import { ProjectsCreatePage } from './projects-create';
 
 export const routes: Routes = [
     {
@@ -29,6 +30,10 @@ export const routes: Routes = [
             {
                 path: 'projects',
                 component: ProjectsPage,
+            },
+            {
+                path: 'projects/create',
+                component: ProjectsCreatePage,
             },
             {
                 path: 'boards',

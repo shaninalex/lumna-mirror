@@ -2,14 +2,29 @@ import { Component, inject, OnInit } from '@angular/core';
 import { GlobalLayout } from '@core/layout';
 import { RouterLink } from "@angular/router";
 import { UiService } from '@shared/ui';
+import { selectProjectsByWorkspaceID, ProjectCardComponent } from '@entities/project';
+import { selectCurrentWorkspace } from '@entities/workspace';
+import { Store } from '@ngrx/store';
+import { filter, switchMap, map } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'lu-projects-page',
-    imports: [GlobalLayout, RouterLink],
+    imports: [GlobalLayout, RouterLink, AsyncPipe, ProjectCardComponent],
     templateUrl: './projects.page.html',
 })
 export class ProjectsPage implements OnInit {
     private ui = inject(UiService);
+    private store = inject(Store);
+
+    workspace$ = this.store.select(selectCurrentWorkspace).pipe(
+        filter(workspace => workspace !== null),
+        switchMap((workspace) => 
+            this.store.select(selectProjectsByWorkspaceID(workspace.id)).pipe(
+                map((projects) => ({workspace, projects}))
+            )
+        ),
+    );
 
     ngOnInit(): void {
         this.ui.setPageTitle("Projects")

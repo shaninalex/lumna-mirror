@@ -14,7 +14,7 @@ import (
 
 type ProjectService interface {
 	Get(ctx context.Context, id uint) (*models.Project, error)
-	List(ctx context.Context) ([]models.Project, error)
+	List(ctx context.Context, workspaceID uint) ([]models.Project, error)
 	Create(ctx context.Context, data models.ProjectCreateModel) (*models.Project, error)
 	Update(ctx context.Context, project *models.Project) error
 	Delete(ctx context.Context, id uint) error
@@ -70,15 +70,21 @@ func (s *projectService) Get(ctx context.Context, id uint) (*models.Project, err
 	return s.repository.GetByID(ctx, id)
 }
 
-func (s *projectService) List(ctx context.Context) ([]models.Project, error) {
-	return s.repository.List(ctx)
+func (s *projectService) List(ctx context.Context, workspaceId uint) ([]models.Project, error) {
+	return s.repository.List(ctx, models.Project{WorkspaceID: workspaceId})
 }
 
 func (s *projectService) Create(ctx context.Context, data models.ProjectCreateModel) (*models.Project, error) {
+	key, err := s.GenerateKey(ctx, data.Title)
+	if err != nil {
+		return nil, err
+	}
+
 	project := &models.Project{
 		Title:       data.Title,
 		OwnerID:     data.OwnerID,
 		WorkspaceID: data.WorkspaceID,
+		Key:         key,
 	}
 	_ = project.SetMeta(models.NewProjectMeta())
 	if err := s.repository.Create(ctx, project); err != nil {

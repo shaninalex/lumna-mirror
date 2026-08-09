@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ThemeSwitcherComponent } from '../main/components/theme-switcher';
-import { UserMenuComponent } from '../main/components/user-menu';
+import { UserMenuComponent } from '@entities/user'
 import { RouterLink } from "@angular/router";
 
 @Component({

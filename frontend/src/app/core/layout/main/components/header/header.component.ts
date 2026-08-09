@@ -3,8 +3,8 @@ import { Store } from '@ngrx/store';
 import { actionToggleSidebar } from '@core';
 import { Actions, ofType } from '@ngrx/effects';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UserMenuComponent } from "../user-menu";
-import { ProjectSwitcherComponent } from "../project-switcher";
+import { UserMenuComponent } from '@entities/user'
+import { ProjectSwitcherComponent } from '@entities/project'
 import { ThemeSwitcherComponent } from "../theme-switcher";
 
 

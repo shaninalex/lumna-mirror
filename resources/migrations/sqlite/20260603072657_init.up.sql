@@ -100,12 +100,12 @@ CREATE TABLE projects
 (
     id           integer PRIMARY KEY AUTOINCREMENT,
     title        text    NOT NULL,
+    key          varchar not null unique,
     workspace_id INTEGER NOT NULL,
     owner_id     INTEGER NULL,
-    key          varchar not null unique,
+    meta         text    NULL,
     created_at   datetime DEFAULT CURRENT_TIMESTAMP,
     updated_at   datetime,
-    meta         text    NULL,
 
     FOREIGN KEY (workspace_id) REFERENCES workspaces (id) ON DELETE CASCADE,
     FOREIGN KEY (owner_id) REFERENCES identities (id) ON DELETE SET NULL

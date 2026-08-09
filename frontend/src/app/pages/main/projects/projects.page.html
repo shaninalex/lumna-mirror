@@ -12,107 +12,21 @@
                 </div>
             </div>
 
-            <button class="btn btn-primary">
-                New Project
-            </button>
+            @if (workspace$ | async; as workspace) {
+                <a [routerLink]="['/app/w', workspace.workspace.id, 'projects', 'create']" class="btn btn-primary">
+                    New Project
+                </a>
+            }
         </div>
 
         <div class="row g-4">
-            <div class="col-12 col-md-6 col-xl-4">
-                <div class="card h-100">
-                    <div class="card-body">
-
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div>
-                                <h5 class="card-title mb-1">
-                                    <a routerLink="/">Website Redesign</a>
-                                </h5>
-
-                                <div class="text-muted small">
-                                    WEB
-                                </div>
-                            </div>
-
-                            <span class="badge text-bg-success">
-                                Active
-                            </span>
-                        </div>
-
-                        <p class="card-text text-muted">
-                            Placeholder description for the project. Brief summary of
-                            what this project is about.
-                        </p>
-
-                        <div class="d-flex justify-content-between text-muted small">
-                            <span>12 members</span>
-                            <span>245 tasks</span>
-                        </div>
+            @if (workspace$ | async; as workspace) {
+                @for (item of workspace.projects; track $index) {
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <lu-project-card [project]="item" />
                     </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6 col-xl-4">
-                <div class="card h-100">
-                    <div class="card-body">
-
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div>
-                                <h5 class="card-title mb-1">
-                                    <a routerLink="/">Mobile App</a>
-                                </h5>
-
-                                <div class="text-muted small">
-                                    MOBILE
-                                </div>
-                            </div>
-
-                            <span class="badge text-bg-warning">
-                                Planning
-                            </span>
-                        </div>
-
-                        <p class="card-text text-muted">
-                            Placeholder description for the project.
-                        </p>
-
-                        <div class="d-flex justify-content-between text-muted small">
-                            <span>6 members</span>
-                            <span>38 tasks</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6 col-xl-4">
-                <div class="card h-100">
-                    <div class="card-body">
-
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div>
-                                <h5 class="card-title mb-1">
-                                    <a routerLink="/">Internal Tools</a>
-                                </h5>
-
-                                <div class="text-muted small">
-                                    PLATFORM
-                                </div>
-                            </div>
-
-                            <span class="badge text-bg-secondary">
-                                Archived
-                            </span>
-                        </div>
-
-                        <p class="card-text text-muted">
-                            Placeholder description for the project.
-                        </p>
-                        <div class="d-flex justify-content-between text-muted small">
-                            <span>4 members</span>
-                            <span>91 tasks</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                }
+            }
         </div>
     </div>
 </lu-global-layout>
