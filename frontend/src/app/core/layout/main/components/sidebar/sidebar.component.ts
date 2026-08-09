@@ -6,6 +6,7 @@ import { NgClass } from '@angular/common';
 import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
 import { selectCurrentWorkspaceId } from '@entities/workspace';
+import packageJson from "@root/package.json";
 
 @Component({
     selector: 'lu-sidebar',
@@ -52,19 +53,23 @@ import { selectCurrentWorkspaceId } from '@entities/workspace';
                 </li>
             </ul>
 
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link text-body" href="#">
-                        <i class="fa-regular fa-circle-question"></i>
-                        <span class="sidebar-nav-link">Help</span>
-                    </a>
-                </li>
-            </ul>
+            <div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-body" href="#">
+                            <i class="fa-regular fa-circle-question"></i>
+                            <span class="sidebar-nav-link">Help</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="nav-link text-secondary pb-1 px-3" style="font-size: 0.7rem">v{{ version }}</div>
+            </div>
         </nav>
     `,
 })
 export class SidebarComponent {
     hideSidebar = false;
+    version: string = packageJson.version;
 
     private actions$ = inject(Actions);
     private ref = inject(DestroyRef);
