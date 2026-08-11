@@ -6,11 +6,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserMenuComponent } from '@entities/user'
 import { ProjectSwitcherComponent } from '@entities/project'
 import { ThemeSwitcherComponent } from "../theme-switcher";
+import { NotificationsDropdownComponent } from "@entities/notification";
 
 
 @Component({
     selector: 'lu-header',
-    imports: [UserMenuComponent, ThemeSwitcherComponent, ProjectSwitcherComponent],
+    imports: [UserMenuComponent, ThemeSwitcherComponent, ProjectSwitcherComponent, NotificationsDropdownComponent],
     styleUrl: './header.component.css',
     template: `
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -29,9 +30,7 @@ import { ThemeSwitcherComponent } from "../theme-switcher";
 
                 <div class="flex align-items-center">
                     <lu-theme-switcher />
-                    <button class="btn btn-sm">
-                        <i class="fa-solid fa-bell"></i>
-                    </button>
+                    <lu-notifications-dropdown />
                     <lu-user-menu />
                 </div>
             </div>
