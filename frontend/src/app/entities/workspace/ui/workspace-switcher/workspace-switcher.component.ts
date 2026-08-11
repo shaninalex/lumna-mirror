@@ -3,7 +3,8 @@ import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { Router, RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
 import { selectCurrentWorkspace, selectWorkspaceList } from '@entities/workspace';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
+import { filter, map, switchMap } from 'rxjs';
 
 
 @Component({
@@ -57,14 +58,15 @@ export class WorkspaceSwitcherComponent {
 
 @Component({
     selector: 'lu-switch-workspace-modal',
-    imports: [AsyncPipe],
+    imports: [AsyncPipe, NgClass],
     template: `
         <div class="card">
-            @if (workspaces$ | async; as workspaces) {
+            @if (data$ | async; as data) {
                 <div class="list-group overflow-y-auto" style="max-height: 20rem">
-                    @for (item of workspaces; track $index) {
+                    @for (item of data.workspaces; track $index) {
                         <button 
-                            (click)="handleLink(['/app/w', item.id.toString()])" 
+                            (click)="handleLink(['/app/w', item.id.toString()])"
+                            [ngClass]="{'active': data.currentWorkspace!.id === item.id}"
                             class="list-group-item list-group-item-action">
                         {{ item.title }}
                     </button>
@@ -81,7 +83,14 @@ export class SwitchWorkspaceModal {
     private router = inject(Router);
     private store = inject(Store);
 
-    workspaces$ = this.store.select(selectWorkspaceList);
+    data$ = this.store.select(selectWorkspaceList).pipe(
+        filter(workspace => workspace !== null),
+        switchMap((workspaces) => 
+            this.store.select(selectCurrentWorkspace).pipe(
+                map((currentWorkspace) => ({workspaces, currentWorkspace}))
+            )
+        ),
+    );
 
     handleLink(link: Array<string>) {
         this.dialogRef.close();

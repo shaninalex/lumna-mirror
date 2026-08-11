@@ -68,14 +68,13 @@ import packageJson from "@root/package.json";
     `,
 })
 export class SidebarComponent {
-    hideSidebar = false;
-    version: string = packageJson.version;
-
     private actions$ = inject(Actions);
     private ref = inject(DestroyRef);
     private store = inject(Store);
 
     currentWorkspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
+    hideSidebar = false;
+    version: string = packageJson.version;
 
     constructor() {
         this.actions$
