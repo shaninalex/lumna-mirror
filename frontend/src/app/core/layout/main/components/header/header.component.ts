@@ -17,7 +17,6 @@ import { NotificationsDropdownComponent } from "@entities/notification";
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
                 <div class="d-flex align-items-center gap-2">
-
                     <button class="btn btn-sm btn-outline-secondary" (click)="toggleSidebar()">
                         @if (sidebarHidden) {
                             <i class="fa-solid fa-chevron-right"></i>

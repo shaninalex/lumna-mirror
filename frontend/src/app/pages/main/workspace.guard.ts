@@ -8,8 +8,9 @@ import {
     actionWorkspaceSetList,
     selectWorkspaceList,
     WorkspaceApi,
-    WorkspaceModel
+    WorkspaceModel,
 } from '@entities/workspace';
+import { parseRouteId } from '@shared/utils';
 
 function getOrFetchWorkspaces() {
     const store = inject(Store);
@@ -25,9 +26,9 @@ function getOrFetchWorkspaces() {
                 map((list: WorkspaceModel[]) => {
                     store.dispatch(actionWorkspaceSetList({ list }));
                     return list;
-                })
+                }),
             );
-        })
+        }),
     );
 }
 
@@ -41,18 +42,23 @@ export const workspaceRedirectGuard: CanActivateFn = () => {
             }
 
             const savedId = localStorage.getItem('last_workspace_id');
-            const targetWorkspace =
-                workspaces.find((w: WorkspaceModel) => w.id.toString() === savedId) || workspaces[0];
+            const targetWorkspace = workspaces.find(
+                (w: WorkspaceModel) => w.id.toString() === savedId,
+            ); // || workspaces[0];
+            console.log('workspaceRedirectGuard: ', targetWorkspace);
+            if (!targetWorkspace) {
+                return router.createUrlTree(['/app/workspaces']);
+            }
 
-            return router.createUrlTree(['/app/w', targetWorkspace.id, 'inbox']);
-        })
+            return router.createUrlTree(['/app/w', targetWorkspace.id]);
+        }),
     );
 };
 
 export const activeWorkspaceGuard: CanActivateFn = (route) => {
     const store = inject(Store);
     const router = inject(Router);
-    const workspaceIdParam = route.paramMap.get('workspaceId');
+    const workspaceId = parseRouteId(route.paramMap.get('workspaceId'));
 
     return getOrFetchWorkspaces().pipe(
         map((workspaces: WorkspaceModel[]) => {
@@ -60,17 +66,18 @@ export const activeWorkspaceGuard: CanActivateFn = (route) => {
                 return router.createUrlTree(['/app/workspaces/create']);
             }
 
-            const numericId = workspaceIdParam ? parseInt(workspaceIdParam, 10) : NaN;
-            const targetWorkspace = workspaces.find((w: WorkspaceModel) => w.id === numericId);
+            const targetWorkspace =
+                workspaceId === null
+                    ? undefined
+                    : workspaces.find((w: WorkspaceModel) => w.id === workspaceId);
 
             if (!targetWorkspace) {
-                // If invalid workspace ID in URL, fallback to first available workspace
-                return router.createUrlTree(['/app/w', workspaces[0].id, 'inbox']);
+                // Malformed or unknown workspace ID in URL
+                return router.createUrlTree(['/app/workspaces']);
             }
 
             store.dispatch(actionWorkspaceSetCurrent({ id: targetWorkspace.id }));
             return true;
-        })
+        }),
     );
 };
-

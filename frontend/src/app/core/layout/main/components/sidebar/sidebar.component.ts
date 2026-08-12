@@ -2,70 +2,19 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import { actionToggleSidebar } from '@core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgClass } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
 import { selectCurrentWorkspaceId } from '@entities/workspace';
 import packageJson from "@root/package.json";
+import { filter, map, switchMap } from 'rxjs';
+import { selectCurrentProject, selectProjectsByWorkspaceID } from '@entities/project';
 
 @Component({
     selector: 'lu-sidebar',
-    imports: [NgClass, RouterLink],
+    imports: [NgClass, RouterLink, AsyncPipe],
     styleUrl: './sidebar.component.css',
-    template: `
-        <nav class="sidebar h-100 bg-body-tertiary" [ngClass]="{ 'sidebar-closed': hideSidebar }">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link text-body" [routerLink]="['/app/w', currentWorkspaceId() || '', 'inbox']">
-                        <i class="fa-solid fa-chart-column"></i>
-                        <span class="sidebar-nav-link">Inbox</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-body" [routerLink]="['/app/w', currentWorkspaceId() || '', 'boards']">
-                        <i class="fa-solid fa-chart-simple"></i>
-                        <span class="sidebar-nav-link">Boards</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-body" [routerLink]="['/app/w', currentWorkspaceId() || '', 'backlog']">
-                        <i class="fa-regular fa-file"></i>
-                        <span class="sidebar-nav-link">Tasks</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-body" href="#">
-                        <i class="fa-regular fa-file"></i>
-                        <span class="sidebar-nav-link">Files</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-body" href="#">
-                        <i class="fa-regular fa-envelope"></i>
-                        <span class="sidebar-nav-link">Messages</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-body" href="#">
-                        <i class="fa-solid fa-bell"></i>
-                        <span class="sidebar-nav-link">Notifications</span>
-                    </a>
-                </li>
-            </ul>
-
-            <div>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link text-body" href="#">
-                            <i class="fa-regular fa-circle-question"></i>
-                            <span class="sidebar-nav-link">Help</span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="nav-link text-secondary pb-1 px-3" style="font-size: 0.7rem">v{{ version }}</div>
-            </div>
-        </nav>
-    `,
+    templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent {
     private actions$ = inject(Actions);
@@ -75,6 +24,17 @@ export class SidebarComponent {
     currentWorkspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
     hideSidebar = false;
     version: string = packageJson.version;
+
+    currentProject = this.store.selectSignal(selectCurrentProject);
+
+    workspace$ = this.store.select(selectCurrentWorkspaceId).pipe(
+        filter(workspaceId => workspaceId !== null),
+        switchMap((workspaceId) => 
+            this.store.select(selectProjectsByWorkspaceID(workspaceId)).pipe(
+                map((projects) => ({workspaceId, projects}))
+            )
+        ),
+    );
 
     constructor() {
         this.actions$

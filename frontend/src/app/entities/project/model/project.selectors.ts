@@ -17,3 +17,14 @@ export const selectProjectsByWorkspaceID = (workspaceId: number) =>
     createSelector(selectProjectsFeature, (state: ProjectState) =>
         projectsSelectors.selectAll(state).filter((p) => p.workspace_id === workspaceId),
     );
+
+export const selectCurrentProjectId = createSelector(
+    selectProjectsFeature,
+    (state) => state?.currentId ?? null,
+);
+
+export const selectCurrentProject = createSelector(
+    selectProjects,
+    selectCurrentProjectId,
+    (list, currentId) => list.find((p) => p.id === currentId) ?? null,
+);

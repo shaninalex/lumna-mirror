@@ -8,7 +8,9 @@ import { BacklogPage } from './backlog/backlog.page';
 import { TaskPage } from './task';
 import { WorkspaceCreateComponent } from './workspace-create';
 import { activeWorkspaceGuard, workspaceRedirectGuard } from './workspace.guard';
+import { activeProjectGuard } from './project.guard';
 import { ProjectsCreatePage } from './projects-create';
+import { WorkspaceEntryPage } from '@pages/main/workspace-entry/workspace-entry.page';
 
 export const routes: Routes = [
     {
@@ -24,8 +26,39 @@ export const routes: Routes = [
         canActivate: [activeWorkspaceGuard],
         children: [
             {
-                path: 'inbox',
-                component: InboxPage,
+                path: '',
+                component: WorkspaceEntryPage,
+            },
+            {
+                path: 'p/:projectId',
+                canActivate: [activeProjectGuard],
+                children: [
+                    {
+                        path: 'inbox',
+                        component: InboxPage,
+                    },
+                    {
+                        path: 'boards',
+                        component: BoardsPage,
+                    },
+                    {
+                        path: 'board',
+                        component: BoardPage,
+                    },
+                    {
+                        path: 'backlog',
+                        component: BacklogPage,
+                    },
+                    {
+                        path: 'task',
+                        component: TaskPage,
+                    },
+                    {
+                        path: '',
+                        pathMatch: 'full',
+                        redirectTo: 'inbox',
+                    },
+                ],
             },
             {
                 path: 'projects',
@@ -34,27 +67,6 @@ export const routes: Routes = [
             {
                 path: 'projects/create',
                 component: ProjectsCreatePage,
-            },
-            {
-                path: 'boards',
-                component: BoardsPage,
-            },
-            {
-                path: 'board',
-                component: BoardPage,
-            },
-            {
-                path: 'backlog',
-                component: BacklogPage,
-            },
-            {
-                path: 'task',
-                component: TaskPage,
-            },
-            {
-                path: '',
-                pathMatch: 'full',
-                redirectTo: 'inbox',
             },
         ],
     },
@@ -65,4 +77,3 @@ export const routes: Routes = [
         children: [],
     },
 ];
-

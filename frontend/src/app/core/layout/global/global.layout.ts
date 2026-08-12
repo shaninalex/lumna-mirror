@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ThemeSwitcherComponent } from '../main/components/theme-switcher';
 import { UserMenuComponent } from '@entities/user'
 import { RouterLink } from "@angular/router";
+import { Store } from '@ngrx/store';
+import { selectCurrentWorkspaceId } from '@entities/workspace';
 
 @Component({
     selector: 'lu-global-layout',
@@ -9,7 +11,7 @@ import { RouterLink } from "@angular/router";
     template: `
         <nav class="navbar navbar-expand-lg border-bottom bg-body">
             <div class="container-fluid">
-                <a routerLink="/">
+                <a [routerLink]="['/app/w', currentWorkspaceId() || '']">
                     <img src="images/logo-h.svg" alt="" style="width: 160px">
                 </a>
 
@@ -27,4 +29,6 @@ import { RouterLink } from "@angular/router";
     `,
 })
 export class GlobalLayout {
+    private store = inject(Store);
+    currentWorkspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
 }

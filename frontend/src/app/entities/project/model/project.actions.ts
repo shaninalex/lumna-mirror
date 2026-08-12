@@ -42,3 +42,8 @@ export const actionProjectCreateFailed = createAction(
     "[Project] create failed",
     props<{ errors: Error[] }>()
 );
+
+export const actionProjectSetCurrent = createAction(
+    '[Project] set current',
+    props<{ id: number | null }>(),
+);

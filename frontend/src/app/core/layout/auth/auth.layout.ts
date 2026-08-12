@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { UiService } from '@shared/ui';
 
 @Component({
     selector: 'lu-auth-layout',
@@ -14,4 +15,6 @@ import { Component } from '@angular/core';
         </div>
     `,
 })
-export class AuthLayout {}
+export class AuthLayout {
+    private _ = inject(UiService);
+}

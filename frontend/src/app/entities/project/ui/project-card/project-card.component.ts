@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProjectModel } from '@entities/project/model';
+import { selectCurrentWorkspaceId } from '@entities/workspace';
+import { Store } from '@ngrx/store';
 
 @Component({
     selector: 'lu-project-card',
@@ -12,7 +14,9 @@ import { ProjectModel } from '@entities/project/model';
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
                         <h5 class="card-title mb-1">
-                            <a routerLink="/">{{ project.title }} </a>
+                            <a [routerLink]="['/app/w', currentWorkspaceId() || '', 'p', project.id]">
+                                {{ project.title }}
+                            </a>
                         </h5>
 
                         <div class="text-muted small">
@@ -40,4 +44,7 @@ import { ProjectModel } from '@entities/project/model';
 })
 export class ProjectCardComponent {
     @Input() project: ProjectModel;
+
+    private store = inject(Store);
+    currentWorkspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
 }
