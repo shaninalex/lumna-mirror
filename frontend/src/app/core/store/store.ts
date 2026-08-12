@@ -1,23 +1,22 @@
 import { routerReducer } from '@ngrx/router-store';
-import { UserEffects, userReducer } from '@entities/user';
-import { WorkspaceEffects, workspaceReducer } from '@entities/workspace';
 import { SessionEffects } from '@core/store/session.effects';
 import { sessionReducer } from '@core/store/session.store';
 import { AppEffects } from './app.effects';
-import { ProjectEffects, projectReducer } from '@entities/project';
 
-export const effects = [
+export const rootEffects = [
     SessionEffects,
     AppEffects,
-    UserEffects,
-    WorkspaceEffects,
-    ProjectEffects,
+
+    // UserEffects,
+    // WorkspaceEffects,
+    // ProjectEffects,
 ];
 
-export const reducers = {
+export const rootReducers = {
     session: sessionReducer,
     router: routerReducer,
-    user: userReducer,
-    workspace: workspaceReducer,
-    project: projectReducer,
+
+    // user: userReducer,
+    // workspace: workspaceReducer,
+    // project: projectReducer,
 };

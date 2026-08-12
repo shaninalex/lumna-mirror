@@ -1,0 +1,27 @@
+import { Routes } from '@angular/router';
+import { authGuard } from '@pages/main';
+
+export const routes: Routes = [
+    {
+        path: 'auth',
+        loadChildren: () => import('../modules/auth/auth.module').then((m) => m.AuthModule),
+    },
+    {
+        path: 'app',
+        canMatch: [authGuard],
+        loadChildren: () => import('../modules/main/main.module').then((m) => m.MainModule),
+    },
+    {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'app',
+    },
+    {
+        path: '404',
+        loadComponent: () => import('../pages/system/page-404').then((m) => m.Page404),
+    },
+    {
+        path: '**',
+        redirectTo: '404',
+    },
+];

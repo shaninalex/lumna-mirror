@@ -1,6 +1,6 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject, Injectable } from '@angular/core';
-import { filter, map, tap } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { actionSessionAuthenticated } from './session.actions';
 import { actionWorkspaceGetList, actionWorkspaceSetCurrent } from '@entities/workspace';
 import { actionProjectList } from '@entities/project';
