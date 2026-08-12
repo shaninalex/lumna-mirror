@@ -1,5 +1,5 @@
 import { UserModel } from './user.model';
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import { actionUserClear, actionUserSet } from './user.actions';
 
 export interface UserState {
@@ -15,3 +15,8 @@ export const userReducer = createReducer(
     on(actionUserSet, (state, action) => ({ user: action.user })),
     on(actionUserClear, (state, action) => ({ user: null })),
 );
+
+export const userFeature = createFeature({
+    name: 'user',
+    reducer: userReducer,
+});

@@ -1,1 +1,3 @@
-export { routes } from './app.routes'
+export * from './auth'
+export * from './main'
+export * from './system'

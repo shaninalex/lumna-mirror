@@ -4,9 +4,7 @@ import { ProjectModel, ProjectCreateModel } from '../model/project.model';
 import { APIResponse } from '@shared/models';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class ProjectApi {
     http = inject(HttpClient);
 

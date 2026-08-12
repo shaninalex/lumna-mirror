@@ -2,25 +2,31 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { routes } from './main.routes';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { mainEffects, mainReducers } from './store';
+import { provideState } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { mainEffects } from './store';
 import { WorkspaceApi } from '@entities/workspace';
-
+import { ProjectApi, projectFeature } from '@entities/project';
+import { UserApi } from '@entities/user';
+import { workspaceFeature } from '@entities/workspace';
+import { userFeature } from '@entities/user';
 
 
 @NgModule({
     declarations: [],
     imports: [
         CommonModule,
-        
-        StoreModule.forFeature('main', mainReducers),
-        EffectsModule.forFeature(mainEffects),
-
         RouterModule.forChild(routes),
     ],
     providers: [
         WorkspaceApi,
+        ProjectApi,
+        UserApi,
+
+        provideEffects(mainEffects),
+        provideState(workspaceFeature),
+        provideState(projectFeature),
+        provideState(userFeature),
     ]
 })
 export class MainModule {}

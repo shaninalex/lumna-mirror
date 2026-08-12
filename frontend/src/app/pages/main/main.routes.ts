@@ -12,7 +12,7 @@ import { activeProjectGuard } from './project.guard';
 import { ProjectsCreatePage } from './projects-create';
 import { WorkspaceEntryPage } from '@pages/main/workspace-entry/workspace-entry.page';
 
-export const routes: Routes = [
+export const mainRoutes: Routes = [
     {
         path: 'workspaces',
         component: WorkspacesPage,

@@ -1,5 +1,5 @@
 import { createEntityAdapter, EntityState } from "@ngrx/entity";
-import { createReducer, on } from "@ngrx/store";
+import { createFeature, createReducer, on } from "@ngrx/store";
 import { actionWorkspaceCreateSuccess, actionWorkspaceSetCurrent, actionWorkspaceSetList } from "./workspace.actions";
 import { WorkspaceModel } from "./workspace.model";
 
@@ -18,3 +18,7 @@ export const workspaceReducer = createReducer(
     on(actionWorkspaceSetCurrent, (state, { id }) => ({ ...state, currentId: id }))
 );
 
+export const workspaceFeature = createFeature({
+    name: 'workspace',
+    reducer: workspaceReducer,
+});

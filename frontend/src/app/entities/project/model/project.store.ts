@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import { ProjectModel } from './project.model';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import {
@@ -43,3 +43,8 @@ export const projectReducer = createReducer(
             : { ...state, currentId: null };
     })
 );
+
+export const projectFeature = createFeature({
+    name: 'project',
+    reducer: projectReducer,
+});

@@ -4,9 +4,7 @@ import { UserModel } from '../model/user.model';
 import { APIResponse } from '@shared/models';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class UserApi {
     http = inject(HttpClient);
 
