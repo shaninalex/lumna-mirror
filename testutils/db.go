@@ -11,7 +11,9 @@ import (
 func SetupTest() (context.Context, *gorm.DB) {
 	ctx := context.Background()
 	db := ProvideTestDB()
-	_ = Migrate(db)
+	if err := Migrate(db); err != nil {
+		panic(fmt.Errorf("test migrations failed: %w", err))
+	}
 
 	return ctx, db
 }

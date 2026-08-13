@@ -13,8 +13,6 @@ test:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
   before_script:
-    - git fetch --all
-    - git checkout main || true
     - go version
 
   script:
