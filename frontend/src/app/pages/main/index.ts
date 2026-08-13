@@ -1,4 +1,10 @@
-export { mainRoutes } from './main.routes';
-export { authGuard } from './auth.guard';
-export { workspaceRedirectGuard, activeWorkspaceGuard } from './workspace.guard';
-export { activeProjectGuard } from './project.guard';
+export * from './backlog'
+export * from './board'
+export * from './boards'
+export * from './inbox'
+export * from './projects'
+export * from './projects-create'
+export * from './task'
+export * from './workspace-create'
+export * from './workspace-entry'
+export * from './workspaces'

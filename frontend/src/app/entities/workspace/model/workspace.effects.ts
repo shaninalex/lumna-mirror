@@ -52,13 +52,13 @@ export class WorkspaceEffects {
         { dispatch: false }
     );
 
-    workspace_set_current$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(actionWorkspaceSetCurrent),
-            map((action) => action.id),
-            filter(id => id !== null),
-            tap((id) => localStorage.setItem('last_workspace_id', id.toString())),
-        ),
-        { dispatch: false }
-    );
+    // workspace_set_current$ = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType(actionWorkspaceSetCurrent),
+    //         map((action) => action.id),
+    //         filter(id => id !== null),
+    //         tap((id) => localStorage.setItem('last_workspace_id', id.toString())),
+    //     ),
+    //     { dispatch: false }
+    // );
 }

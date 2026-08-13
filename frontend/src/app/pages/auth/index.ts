@@ -1,1 +1,1 @@
-export { routes } from './auth.routes'
+export * from './login'

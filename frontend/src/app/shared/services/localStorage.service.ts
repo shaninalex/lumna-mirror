@@ -1,10 +1,15 @@
 import { Injectable } from "@angular/core";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class LocalStorageService {
     get(key: string): string | null {
         const s = localStorage.getItem(key);
-        return s === '' ? s: null;
+        if (s === "") {
+            return null
+        }
+        return s
     }
 
     set(key: string, s: string): void {

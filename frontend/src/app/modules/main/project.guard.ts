@@ -13,22 +13,6 @@ import {
 import { selectCurrentWorkspaceId } from '@entities/workspace';
 import { parseRouteId } from '@shared/utils';
 
-function getOrFetchProjects(store: Store, projectApi: ProjectApi, workspaceId: number) {
-    return store.select(selectProjectsByWorkspaceID(workspaceId)).pipe(
-        take(1),
-        switchMap((projects) => {
-            if (projects && projects.length > 0) {
-                return of(projects);
-            }
-            return projectApi.GetProjects(workspaceId).pipe(
-                map((list: ProjectModel[]) => {
-                    store.dispatch(actionProjectsSetList({ projects: list }));
-                    return list;
-                })
-            );
-        })
-    );
-}
 
 export const activeProjectGuard: CanActivateFn = (route) => {
     const store = inject(Store);
@@ -68,3 +52,20 @@ export const activeProjectGuard: CanActivateFn = (route) => {
         })
     );
 };
+
+function getOrFetchProjects(store: Store, projectApi: ProjectApi, workspaceId: number) {
+    return store.select(selectProjectsByWorkspaceID(workspaceId)).pipe(
+        take(1),
+        switchMap((projects) => {
+            if (projects && projects.length > 0) {
+                return of(projects);
+            }
+            return projectApi.GetProjects(workspaceId).pipe(
+                map((list: ProjectModel[]) => {
+                    store.dispatch(actionProjectsSetList({ projects: list }));
+                    return list;
+                })
+            );
+        })
+    );
+}

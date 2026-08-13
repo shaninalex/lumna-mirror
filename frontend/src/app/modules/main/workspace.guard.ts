@@ -32,28 +32,28 @@ function getOrFetchWorkspaces() {
     );
 }
 
-export const workspaceRedirectGuard: CanActivateFn = () => {
-    const router = inject(Router);
+// export const workspaceRedirectGuard: CanActivateFn = () => {
+//     const router = inject(Router);
 
-    return getOrFetchWorkspaces().pipe(
-        map((workspaces: WorkspaceModel[]) => {
-            if (!workspaces || workspaces.length === 0) {
-                return router.createUrlTree(['/app/workspaces/create']);
-            }
+//     return getOrFetchWorkspaces().pipe(
+//         map((workspaces: WorkspaceModel[]) => {
+//             if (!workspaces || workspaces.length === 0) {
+//                 return router.createUrlTree(['/app/workspaces/create']);
+//             }
 
-            const savedId = localStorage.getItem('last_workspace_id');
-            const targetWorkspace = workspaces.find(
-                (w: WorkspaceModel) => w.id.toString() === savedId,
-            ); // || workspaces[0];
-            console.log('workspaceRedirectGuard: ', targetWorkspace);
-            if (!targetWorkspace) {
-                return router.createUrlTree(['/app/workspaces']);
-            }
+//             const savedId = localStorage.getItem('last_workspace_id');
+//             const targetWorkspace = workspaces.find(
+//                 (w: WorkspaceModel) => w.id.toString() === savedId,
+//             ); // || workspaces[0];
+//             console.log('workspaceRedirectGuard: ', targetWorkspace);
+//             if (!targetWorkspace) {
+//                 return router.createUrlTree(['/app/workspaces']);
+//             }
 
-            return router.createUrlTree(['/app/w', targetWorkspace.id]);
-        }),
-    );
-};
+//             return router.createUrlTree(['/app/w', targetWorkspace.id]);
+//         }),
+//     );
+// };
 
 export const activeWorkspaceGuard: CanActivateFn = (route) => {
     const store = inject(Store);

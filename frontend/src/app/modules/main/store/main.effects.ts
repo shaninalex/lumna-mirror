@@ -1,7 +1,7 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject, Injectable } from '@angular/core';
 import { filter, map, tap } from 'rxjs';
-import { ROUTER_NAVIGATED, RouterNavigatedPayload } from '@ngrx/router-store';
+import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { actionSessionAuthenticated } from '@core';
 import { actionProjectList } from '@entities/project';
 import { actionWorkspaceGetList, actionWorkspaceSetCurrent } from '@entities/workspace';
@@ -16,8 +16,9 @@ export class MainEffects {
         () =>
             this.actions$.pipe(
                 ofType(ROUTER_NAVIGATED),
-                map((action) => action.payload),
-                tap((payload: RouterNavigatedPayload) => this.localStorageService.set("last_url", payload.event.url)),
+                map((action) => action.payload.event.url),
+                filter((url: string) => url.startsWith("/app")),
+                tap((url) => this.localStorageService.set("last_url", url)),
             ),
         { dispatch: false },
     );

@@ -61,12 +61,4 @@ export class ProjectEffects {
                 )
         ),
     );
-
-    set_current_project$ = createEffect(() => 
-        this.actions$.pipe(
-            ofType(actionProjectSetCurrent),
-            tap((action) => localStorage.setItem("last_project_id", String(action.id)))
-        ),
-        { dispatch: false }
-    );
 }

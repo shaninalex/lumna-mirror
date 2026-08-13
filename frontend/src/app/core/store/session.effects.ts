@@ -1,6 +1,6 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject, Injectable } from '@angular/core';
-import { catchError, EMPTY, exhaustMap, map } from 'rxjs';
+import { catchError, EMPTY, exhaustMap, map, tap } from 'rxjs';
 import { SessionApi } from './session.api';
 import {
     actionSessionAuthenticatedSuccessfull,
@@ -52,7 +52,7 @@ export class SessionEffects {
         () => {
             return this.actions$.pipe(
                 ofType(actionSessionAuthenticatedSuccessfull),
-                map(() => this.router.navigateByUrl('/')),
+                map(() => this.router.navigateByUrl('/app')),
             );
         },
         { dispatch: false },

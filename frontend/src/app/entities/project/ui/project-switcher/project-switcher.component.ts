@@ -4,7 +4,7 @@ import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
 import { selectCurrentWorkspace } from '@entities/workspace/model';
 import { AsyncPipe } from '@angular/common';
-import { selectProjectsByWorkspaceID } from '@entities/project/model';
+import { selectCurrentProject, selectProjectsByWorkspaceID } from '@entities/project/model';
 import { filter, map, switchMap, tap } from 'rxjs';
 import { ProjectListItemComponent } from "../project-list-item";
 
@@ -15,7 +15,13 @@ import { ProjectListItemComponent } from "../project-list-item";
     template: `
         @if(workspace$ | async; as workspace) {
             <button [cdkMenuTriggerFor]="menu" class="btn btn-sm btn-outline-secondary">
-                Project name
+                @if (project$ | async; as project) {
+                    @if (project) {
+                        {{ project.title }}
+                    }
+                } @else {
+                    Select project
+                }
                 <i class="fa-solid fa-chevron-down"></i>
             </button>
         
@@ -40,6 +46,7 @@ import { ProjectListItemComponent } from "../project-list-item";
 export class ProjectSwitcherComponent {
     private store = inject(Store);
 
+    project$ = this.store.select(selectCurrentProject);
     workspace$ = this.store.select(selectCurrentWorkspace).pipe(
         filter(workspace => workspace !== null),
         switchMap((workspace) => 
