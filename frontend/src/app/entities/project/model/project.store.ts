@@ -6,8 +6,9 @@ import {
     actionProjectSetCurrent,
     actionProjectsSetList,
     actionProjectUpsert,
-} from '@entities/project';
-import { actionWorkspaceSetCurrent } from '@entities/workspace';
+} from './project.actions';
+
+import { actionWorkspaceSetCurrent } from '@entities/workspace/model/workspace.actions';
 
 export interface ProjectState extends EntityState<ProjectModel> {
     currentId: number | null;

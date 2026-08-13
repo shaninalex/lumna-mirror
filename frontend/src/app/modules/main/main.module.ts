@@ -10,6 +10,7 @@ import { ProjectApi, projectFeature } from '@entities/project';
 import { UserApi } from '@entities/user';
 import { workspaceFeature } from '@entities/workspace';
 import { userFeature } from '@entities/user';
+import { LocalStorageService } from '@shared/services';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { userFeature } from '@entities/user';
         WorkspaceApi,
         ProjectApi,
         UserApi,
+        LocalStorageService,
 
         provideEffects(mainEffects),
         provideState(workspaceFeature),

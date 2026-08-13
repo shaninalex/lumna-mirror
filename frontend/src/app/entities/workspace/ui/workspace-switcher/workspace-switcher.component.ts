@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { Router, RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
-import { selectCurrentWorkspace, selectWorkspaceList } from '@entities/workspace';
+import { selectCurrentWorkspace, selectWorkspaceList } from '@entities/workspace/model';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { filter, map, switchMap } from 'rxjs';
 
