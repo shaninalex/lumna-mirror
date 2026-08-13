@@ -13,7 +13,7 @@
                 </li>
                 <li class="nav-item">
                     <a
-                        class="nav-link text-body"
+                        class="nav-link disabled text-secondary" aria-disabled="true"
                         [routerLink]="['/app/w', workspace.workspaceId, 'p', project.id, 'boards']"
                     >
                         <i class="fa-solid fa-chart-simple"></i>
@@ -31,19 +31,19 @@
                 </li>
             }
             <li class="nav-item">
-                <a class="nav-link text-body" href="#">
+                <a class="nav-link disabled text-secondary" aria-disabled="true" href="#">
                     <i class="fa-regular fa-file"></i>
                     <span class="sidebar-nav-link">Files</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-body" href="#">
+                <a class="nav-link disabled text-secondary" aria-disabled="true" href="#">
                     <i class="fa-regular fa-envelope"></i>
                     <span class="sidebar-nav-link">Messages</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-body" href="#">
+                <a class="nav-link disabled text-secondary" aria-disabled="true" href="#">
                     <i class="fa-solid fa-bell"></i>
                     <span class="sidebar-nav-link">Notifications</span>
                 </a>
@@ -53,7 +53,7 @@
         <div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link text-body" href="#">
+                    <a class="nav-link" href="#">
                         <i class="fa-regular fa-circle-question"></i>
                         <span class="sidebar-nav-link">Help</span>
                     </a>

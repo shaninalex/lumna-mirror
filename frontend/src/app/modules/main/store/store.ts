@@ -1,15 +1,11 @@
-import { ProjectEffects, projectReducer } from "@entities/project";
-import { UserEffects, userReducer } from "@entities/user";
-import { WorkspaceEffects, workspaceReducer } from "@entities/workspace";
+import { ProjectEffects } from "@entities/project";
+import { UserEffects } from "@entities/user";
+import { WorkspaceEffects } from "@entities/workspace";
 import { MainEffects } from "./main.effects";
-
-export const mainReducers = {
-    user: userReducer,
-    workspace: workspaceReducer,
-    project: projectReducer,
-};
+import { TaskEffects } from "@entities/task";
 
 export const mainEffects = [
+    TaskEffects,
     MainEffects,
     UserEffects,
     WorkspaceEffects,

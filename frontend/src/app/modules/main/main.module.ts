@@ -10,6 +10,7 @@ import { ProjectApi, projectFeature } from '@entities/project';
 import { UserApi } from '@entities/user';
 import { workspaceFeature } from '@entities/workspace';
 import { userFeature } from '@entities/user';
+import { TaskApi, taskFeature } from '@entities/task';
 
 
 @NgModule({
@@ -22,11 +23,13 @@ import { userFeature } from '@entities/user';
         WorkspaceApi,
         ProjectApi,
         UserApi,
+        TaskApi,
 
         provideEffects(mainEffects),
         provideState(workspaceFeature),
         provideState(projectFeature),
         provideState(userFeature),
+        provideState(taskFeature),
     ]
 })
 export class MainModule {}
