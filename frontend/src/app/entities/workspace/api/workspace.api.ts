@@ -4,9 +4,7 @@ import { APIResponse } from "@shared/models";
 import { HttpClient } from "@angular/common/http";
 import { WorkspaceCreateModel, WorkspaceModel } from "../model/workspace.model";
 
-@Injectable({
-    providedIn: "root"
-})
+@Injectable()
 export class WorkspaceApi {
     http = inject(HttpClient);
 

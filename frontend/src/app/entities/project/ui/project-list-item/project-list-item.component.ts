@@ -1,6 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { ProjectModel } from '@entities/project/model';
-import { selectCurrentWorkspaceId } from '@entities/workspace';
+import { selectCurrentWorkspaceId } from '@entities/workspace/model';
 import { Store } from '@ngrx/store';
 import { RouterLink } from "@angular/router";
 

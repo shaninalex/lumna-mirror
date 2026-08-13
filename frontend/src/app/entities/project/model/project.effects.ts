@@ -3,11 +3,12 @@ import { inject, Injectable } from '@angular/core';
 import {
     actionProjectCreate, actionProjectCreateFailed, actionProjectDelete, actionProjectDeleteSuccess,
     actionProjectList,
+    actionProjectSetCurrent,
     actionProjectsSetList,
     actionProjectUpdate,
     actionProjectUpsert,
 } from './project.actions';
-import { catchError, exhaustMap, of, switchMap } from 'rxjs';
+import { catchError, exhaustMap, of, switchMap, tap } from 'rxjs';
 import { ProjectApi } from '../api/project.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { fromErrorResponse } from '@shared/models';
@@ -58,5 +59,14 @@ export class ProjectEffects {
                 this.projectsApi.DeleteProject(action.project_id).pipe(
                     switchMap(() => of(actionProjectDeleteSuccess({ project_id: action.project_id }))))
                 )
-        ))
+        ),
+    );
+
+    set_current_project$ = createEffect(() => 
+        this.actions$.pipe(
+            ofType(actionProjectSetCurrent),
+            tap((action) => localStorage.setItem("last_project_id", String(action.id)))
+        ),
+        { dispatch: false }
+    );
 }

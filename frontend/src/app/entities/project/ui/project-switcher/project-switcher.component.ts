@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
-import { selectCurrentWorkspace } from '@entities/workspace';
+import { selectCurrentWorkspace } from '@entities/workspace/model';
 import { AsyncPipe } from '@angular/common';
 import { selectProjectsByWorkspaceID } from '@entities/project/model';
 import { filter, map, switchMap, tap } from 'rxjs';

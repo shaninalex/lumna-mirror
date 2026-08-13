@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import { ProjectModel } from './project.model';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import {
@@ -6,8 +6,9 @@ import {
     actionProjectSetCurrent,
     actionProjectsSetList,
     actionProjectUpsert,
-} from '@entities/project';
-import { actionWorkspaceSetCurrent } from '@entities/workspace';
+} from './project.actions';
+
+import { actionWorkspaceSetCurrent } from '@entities/workspace/model/workspace.actions';
 
 export interface ProjectState extends EntityState<ProjectModel> {
     currentId: number | null;
@@ -43,3 +44,8 @@ export const projectReducer = createReducer(
             : { ...state, currentId: null };
     })
 );
+
+export const projectFeature = createFeature({
+    name: 'project',
+    reducer: projectReducer,
+});
