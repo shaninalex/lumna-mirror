@@ -23,19 +23,22 @@ type ProjectService interface {
 }
 
 type projectService struct {
-	repository repositories.ProjectRepository
-	bus        observer.Observer
+	repository     repositories.ProjectRepository
+	taskRepository repositories.TaskRepository
+	bus            observer.Observer
 }
 
 var _ ProjectService = (*projectService)(nil)
 
 func NewProjectService(
 	repository repositories.ProjectRepository,
+	taskRepository repositories.TaskRepository,
 	bus observer.Observer,
 ) ProjectService {
 	s := &projectService{
-		repository: repository,
-		bus:        bus,
+		repository:     repository,
+		taskRepository: taskRepository,
+		bus:            bus,
 	}
 	s.init()
 	return s
@@ -53,12 +56,6 @@ func (s *projectService) handleEventTaskCreated(ctx context.Context, data any) {
 
 	project, err := s.Get(ctx, task.ProjectID)
 	if err != nil {
-		return
-	}
-	m := project.GetMeta()
-	m.SetLastEntityNumber("task")
-	if err = project.SetMeta(m); err != nil {
-		log.Println(err)
 		return
 	}
 	if err = s.Update(ctx, project); err != nil {
@@ -134,7 +131,21 @@ func (s *projectService) GetNewCode(ctx context.Context, projectID uint, entity 
 	if err != nil {
 		return "", err
 	}
-	n := int(project.GetMeta().GetLastEntityNumber(entity))
+
+	tasks, err := s.taskRepository.List(ctx, repositories.TaskListQuery{
+		ProjectID: &projectID,
+		OrderBy:   utils.Pointer("id DESC"),
+		Limit:     utils.Pointer(uint(1)),
+	})
+	if err != nil {
+		return "", err
+	}
+
+	var n int = 0
+	if len(tasks) > 0 {
+		n = int(tasks[0].ID)
+	}
+
 	return utils.TaskCode(
 		project.Title,
 		n+1,

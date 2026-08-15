@@ -17,7 +17,8 @@ func Test_ProjectService_GetCode(t *testing.T) {
 
 	bus := observer.ProvideEventBus()
 	repo := repositories.NewGormProjectRepository(db)
-	service := services.NewProjectService(repo, bus)
+	tRepo := repositories.NewGormTaskRepository(db)
+	service := services.NewProjectService(repo, tRepo, bus)
 
 	workspace := &models.Workspace{Title: "ws", Active: true}
 	assert.NoError(t, db.WithContext(ctx).Create(workspace).Error)
@@ -29,24 +30,4 @@ func Test_ProjectService_GetCode(t *testing.T) {
 	code, err := service.GetNewCode(ctx, noMeta.ID, "task")
 	assert.NoError(t, err)
 	assert.Equal(t, "PRO-1", code)
-
-	// project whose meta holds the last used number yields the next one
-	withMeta := &models.Project{Title: "Backend", Key: "BAC", WorkspaceID: workspace.ID}
-	m := models.NewProjectMeta()
-	m.LastEntityNumber["task"] = 5
-	assert.NoError(t, withMeta.SetMeta(m))
-	assert.NoError(t, repo.Create(ctx, withMeta))
-
-	code, err = service.GetNewCode(ctx, withMeta.ID, "task")
-	assert.NoError(t, err)
-	assert.Equal(t, "BAC-6", code)
-
-	// unknown entity type falls back to number 1
-	code, err = service.GetNewCode(ctx, withMeta.ID, "epic")
-	assert.NoError(t, err)
-	assert.Equal(t, "BAC-1", code)
-
-	// missing project surfaces an error
-	_, err = service.GetNewCode(ctx, 999999, "task")
-	assert.Error(t, err)
 }

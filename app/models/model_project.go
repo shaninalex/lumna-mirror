@@ -42,34 +42,10 @@ func (s *Project) String() string {
 }
 
 type ProjectMeta struct {
-	LastEntityNumber map[string]uint `json:"last_entity_number"`
 }
 
 func NewProjectMeta() *ProjectMeta {
-	return &ProjectMeta{
-		LastEntityNumber: make(map[string]uint),
-	}
-}
-
-// GetLastEntityNumber returns the last used number for the entity type, or 0
-// when none has been assigned yet. Callers add 1 to derive the next number.
-func (p *ProjectMeta) GetLastEntityNumber(e string) uint {
-	if p == nil || p.LastEntityNumber == nil {
-		return 0
-	}
-	return p.LastEntityNumber[e]
-}
-
-// SetLastEntityNumber increments the last used number for the entity type,
-// initializing it to 1 on first use.
-func (p *ProjectMeta) SetLastEntityNumber(e string) {
-	if p == nil {
-		return
-	}
-	if p.LastEntityNumber == nil {
-		p.LastEntityNumber = make(map[string]uint)
-	}
-	p.LastEntityNumber[e]++
+	return &ProjectMeta{}
 }
 
 func (s *Project) GetMeta() *ProjectMeta {
@@ -80,10 +56,6 @@ func (s *Project) GetMeta() *ProjectMeta {
 	if err := json.Unmarshal([]byte(*s.Meta), m); err != nil {
 		return NewProjectMeta()
 	}
-	if m.LastEntityNumber == nil {
-		m.LastEntityNumber = make(map[string]uint)
-	}
-
 	return m
 }
 

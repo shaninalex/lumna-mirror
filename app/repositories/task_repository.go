@@ -12,6 +12,8 @@ type TaskListQuery struct {
 	Code      *string
 	Query     *string
 	QueryArgs []interface{}
+	OrderBy   *string
+	Limit     *uint
 }
 
 type TaskRepository interface {
@@ -43,6 +45,13 @@ func (r *GormTaskRepository) List(ctx context.Context, query TaskListQuery) ([]*
 		db = db.Where("project_id = ?", *query.ProjectID)
 	}
 
+	if query.OrderBy != nil {
+		db = db.Order(*query.OrderBy)
+	}
+
+	if query.Limit != nil {
+		db = db.Limit(int(*query.Limit))
+	}
 	if err := db.Find(&tasks).Error; err != nil {
 		return nil, err
 	}

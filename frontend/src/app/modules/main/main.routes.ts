@@ -10,6 +10,8 @@ import {
     TaskPage, 
     ProjectsPage, 
     ProjectsCreatePage,
+    TaskCreatePage,
+    TaskDetailPage,
 } from '@pages';
 import { authGuard } from './auth.guard';
 import { activeProjectGuard } from './project.guard';
@@ -60,6 +62,14 @@ export const routes: Routes = [
                             {
                                 path: 'task',
                                 component: TaskPage,
+                            },
+                            {
+                                path: 'task/create',
+                                component: TaskCreatePage,
+                            },
+                            {
+                                path: 'task/:id',
+                                component: TaskDetailPage,
                             },
                             {
                                 path: '',

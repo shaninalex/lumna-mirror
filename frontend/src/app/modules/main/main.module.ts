@@ -11,6 +11,8 @@ import { UserApi } from '@entities/user';
 import { workspaceFeature } from '@entities/workspace';
 import { userFeature } from '@entities/user';
 import { TaskApi, taskFeature } from '@entities/task';
+import { AppRoutes } from '@pages';
+
 
 
 @NgModule({
@@ -20,6 +22,7 @@ import { TaskApi, taskFeature } from '@entities/task';
         RouterModule.forChild(routes),
     ],
     providers: [
+        AppRoutes,
         WorkspaceApi,
         ProjectApi,
         UserApi,

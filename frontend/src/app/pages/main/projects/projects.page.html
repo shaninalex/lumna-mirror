@@ -13,7 +13,7 @@
             </div>
 
             @if (workspace$ | async; as workspace) {
-                <a [routerLink]="['/app/w', workspace.workspace.id, 'projects', 'create']" class="btn btn-primary">
+                <a [routerLink]="[...appRoutes.projectsCreate()]" class="btn btn-primary">
                     New Project
                 </a>
             }

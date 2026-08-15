@@ -4,7 +4,9 @@ import { actionTaskCreateSuccess, actionTaskSetList } from "./task.actions";
 import { TaskModel } from "./task.model";
 
 export interface TaskState extends EntityState<TaskModel> {}
-export const taskAdapter = createEntityAdapter<TaskModel>();
+export const taskAdapter = createEntityAdapter<TaskModel>({
+    sortComparer: (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+});
 const initialState = taskAdapter.getInitialState();
 
 export const taskReducer = createReducer(

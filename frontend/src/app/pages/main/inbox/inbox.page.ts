@@ -7,7 +7,11 @@ import { UiService } from '@shared/ui';
     imports: [MainLayout],
     template: `
         <lu-main-layout>
-            <p>inbox works!</p>
+            <div class="container py-4">
+                <h4>Few latest tasks</h4>
+                <h4>Latest comments</h4>
+                <h4>Latest assignments, attachments and other activity</h4>
+            </div>
         </lu-main-layout>
     `,
 })
@@ -15,6 +19,6 @@ export class InboxPage {
     private ui = inject(UiService);
 
     ngOnInit(): void {
-        this.ui.setPageTitle("Inbox");
+        this.ui.setPageTitle('Inbox');
     }
 }

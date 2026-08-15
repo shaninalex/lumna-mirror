@@ -7,6 +7,7 @@ import { selectCurrentWorkspace } from '@entities/workspace';
 import { Store } from '@ngrx/store';
 import { filter, switchMap, map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { AppRoutes } from '../routes.service';
 
 @Component({
     selector: 'lu-projects-page',
@@ -16,6 +17,7 @@ import { AsyncPipe } from '@angular/common';
 export class ProjectsPage implements OnInit {
     private ui = inject(UiService);
     private store = inject(Store);
+    readonly appRoutes = inject(AppRoutes);
 
     workspace$ = this.store.select(selectCurrentWorkspace).pipe(
         filter(workspace => workspace !== null),

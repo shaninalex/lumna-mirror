@@ -1,0 +1,20 @@
+<lu-main-layout>
+    <div class="container py-4">
+        <h3>Create task</h3>
+
+        <form (submit)="onSubmit($event)" class="flex gap-2">
+            <div class="mb-4">
+                <label for="task_title" class="form-label">Task title</label>
+                <input type="text" class="form-control" id="project_title" [formField]="taskForm.title">
+            </div>
+
+            <button 
+                class="btn btn-primary" 
+                type="submit"
+                [disabled]="taskForm.title().touched() && taskForm.title().invalid()"
+            >
+                Create
+            </button>
+        </form>
+    </div>
+</lu-main-layout>
