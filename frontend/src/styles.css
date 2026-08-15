@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+.app-version {
+    position: fixed;
+    z-index: 10;
+    bottom: -3px;
+    right: 15px;
+    font-size: 10px;
+    opacity: 0.5;
+}

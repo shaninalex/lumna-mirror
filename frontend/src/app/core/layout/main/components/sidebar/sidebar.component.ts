@@ -6,7 +6,6 @@ import { AsyncPipe, NgClass } from '@angular/common';
 import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
 import { selectCurrentWorkspaceId } from '@entities/workspace';
-import packageJson from "@root/package.json";
 import { filter, map, switchMap } from 'rxjs';
 import { selectCurrentProject, selectProjectsByWorkspaceID } from '@entities/project';
 
@@ -23,7 +22,6 @@ export class SidebarComponent {
 
     currentWorkspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
     hideSidebar = false;
-    version: string = packageJson.version;
 
     currentProject = this.store.selectSignal(selectCurrentProject);
 
