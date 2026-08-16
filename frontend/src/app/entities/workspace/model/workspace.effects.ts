@@ -1,16 +1,15 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, exhaustMap, filter, map, of, switchMap, tap } from "rxjs";
+import { catchError, exhaustMap, map, of, switchMap } from "rxjs";
 import {
     actionWorkspaceCreate,
     actionWorkspaceCreateFailed,
     actionWorkspaceCreateSuccess,
     actionWorkspaceGetList,
-    actionWorkspaceSetCurrent,
     actionWorkspaceSetList
 } from "./workspace.actions";
 import { WorkspaceApi } from "../api/workspace.api";
-import { HttpErrorResponse } from "@angular/common/http";
+import type { HttpErrorResponse } from "@angular/common/http";
 import { fromErrorResponse } from "@shared/models";
 import { Router } from "@angular/router";
 

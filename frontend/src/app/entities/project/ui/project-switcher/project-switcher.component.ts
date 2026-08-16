@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { selectCurrentWorkspace } from '@entities/workspace/model';
 import { AsyncPipe } from '@angular/common';
 import { selectCurrentProject, selectProjectsByWorkspaceID } from '@entities/project/model';
-import { filter, map, switchMap, tap } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs';
 import { ProjectListItemComponent } from "../project-list-item";
 
 

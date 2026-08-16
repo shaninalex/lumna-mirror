@@ -1,6 +1,7 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { ProjectModel } from './project.model';
-import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import type { ProjectModel } from './project.model';
+import type { EntityState } from '@ngrx/entity';
+import { createEntityAdapter } from '@ngrx/entity';
 import {
     actionProjectDeleteSuccess,
     actionProjectSetCurrent,

@@ -1,14 +1,16 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import type { CanActivateFn} from '@angular/router';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, switchMap, take } from 'rxjs/operators';
 import { of } from 'rxjs';
+import type {
+    WorkspaceModel} from '@entities/workspace';
 import {
     actionWorkspaceSetCurrent,
     actionWorkspaceSetList,
     selectWorkspaceList,
-    WorkspaceApi,
-    WorkspaceModel,
+    WorkspaceApi
 } from '@entities/workspace';
 import { parseRouteId } from '@shared/utils';
 

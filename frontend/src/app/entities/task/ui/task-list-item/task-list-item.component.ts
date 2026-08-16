@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TaskModel } from '@entities/task/model';
-import { AppRoutes } from '@pages';
+import type { TaskModel } from '@entities/task/model';
+import { AppRoutes } from '@core/routes';
 
 @Component({
     selector: 'lu-task-list-item',

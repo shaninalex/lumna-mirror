@@ -1,13 +1,15 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import type { CanActivateFn} from '@angular/router';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, switchMap, take } from 'rxjs/operators';
 import { of } from 'rxjs';
+import type {
+    ProjectModel} from '@entities/project';
 import {
     actionProjectSetCurrent,
     actionProjectsSetList,
     ProjectApi,
-    ProjectModel,
     selectProjectsByWorkspaceID,
 } from '@entities/project';
 import { selectCurrentWorkspaceId } from '@entities/workspace';

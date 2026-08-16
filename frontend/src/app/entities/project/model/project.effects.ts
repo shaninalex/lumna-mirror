@@ -3,14 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import {
     actionProjectCreate, actionProjectCreateFailed, actionProjectDelete, actionProjectDeleteSuccess,
     actionProjectList,
-    actionProjectSetCurrent,
     actionProjectsSetList,
     actionProjectUpdate,
     actionProjectUpsert,
 } from './project.actions';
-import { catchError, exhaustMap, of, switchMap, tap } from 'rxjs';
+import { catchError, exhaustMap, of, switchMap } from 'rxjs';
 import { ProjectApi } from '../api/project.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { fromErrorResponse } from '@shared/models';
 
 @Injectable()

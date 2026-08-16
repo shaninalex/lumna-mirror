@@ -1,6 +1,6 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject, Injectable } from '@angular/core';
-import { catchError, EMPTY, exhaustMap, map, tap } from 'rxjs';
+import { catchError, EMPTY, exhaustMap, map } from 'rxjs';
 import { SessionApi } from './session.api';
 import {
     actionSessionAuthenticatedSuccessfull,
@@ -61,7 +61,7 @@ export class SessionEffects {
     logging_out_completed$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(actionSessionLoggedOut),
-            map((action) => actionUserClear()),
+            map(() => actionUserClear()),
         );
     });
 

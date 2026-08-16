@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { UserModel } from './user.model';
+import type { UserModel } from './user.model';
 
 /**
  * Dispatched to request loading the current user.

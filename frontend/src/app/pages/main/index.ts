@@ -10,5 +10,3 @@ export * from './task-create'
 export * from './workspace-create'
 export * from './workspace-entry'
 export * from './workspaces'
-
-export * from './routes.service'

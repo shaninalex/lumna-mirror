@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 import { AuthRoot } from '@pages/auth/auth.root';
 import { LoginPage } from '@pages/auth/login/login.page';
 

@@ -1,7 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { UiService } from '@shared/ui';
-import { Theme } from '@shared/ui/theme.manager';
-import { Observable } from 'rxjs';
 
 @Component({
     selector: 'lu-static-layout',

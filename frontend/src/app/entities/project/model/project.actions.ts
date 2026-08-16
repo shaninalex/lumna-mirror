@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
-import { ProjectModel, ProjectCreateModel } from './project.model';
-import { Error } from '@shared/models'
+import type { ProjectModel, ProjectCreateModel } from './project.model';
+import type { Error } from '@shared/models'
 
 export const actionProjectList = createAction(
     '[Project] get list',

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { WorkspaceModel } from '@entities/workspace/model';
+import type { WorkspaceModel } from '@entities/workspace/model';
 
 @Component({
     selector: 'lu-workspace-card',

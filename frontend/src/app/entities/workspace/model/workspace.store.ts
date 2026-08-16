@@ -1,7 +1,8 @@
-import { createEntityAdapter, EntityState } from "@ngrx/entity";
+import type { EntityState } from "@ngrx/entity";
+import { createEntityAdapter } from "@ngrx/entity";
 import { createFeature, createReducer, on } from "@ngrx/store";
 import { actionWorkspaceCreateSuccess, actionWorkspaceSetCurrent, actionWorkspaceSetList } from "./workspace.actions";
-import { WorkspaceModel } from "./workspace.model";
+import type { WorkspaceModel } from "./workspace.model";
 
 export interface WorkspaceState extends EntityState<WorkspaceModel> {
     currentId: number | null;

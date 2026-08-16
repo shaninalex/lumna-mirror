@@ -14,9 +14,7 @@ export const sessionReducer = createReducer(
     on(
         SessionActions.actionSessionAuthenticatedSuccessfull,
         SessionActions.actionSessionAuthenticated,
-        (state, action) => ({
-            authenticated: true,
-        }),
+        () => ({ authenticated: true }),
     ),
-    on(SessionActions.actionSessionLoggedOut, (state, action) => ({ authenticated: false })),
+    on(SessionActions.actionSessionLoggedOut, () => ({ authenticated: false })),
 );

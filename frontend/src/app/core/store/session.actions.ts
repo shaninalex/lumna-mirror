@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { UserModel } from '@entities/user';
+import type { UserModel } from '@entities/user';
 
 export const actionSessionAuthenticateStart = createAction(
     '[Session] start authenticate',

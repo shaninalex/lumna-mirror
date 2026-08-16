@@ -1,6 +1,6 @@
 import { createAction, props } from "@ngrx/store";
-import { Error } from '@shared/models'
-import { WorkspaceCreateModel, WorkspaceModel } from "./workspace.model";
+import type { Error } from '@shared/models'
+import type { WorkspaceCreateModel, WorkspaceModel } from "./workspace.model";
 
 export const actionWorkspaceGetList = createAction("[Workspace] get list");
 
@@ -26,7 +26,7 @@ export const actionWorkspaceCreateFailed = createAction(
 
 export const actionWorkspaceListRequested = createAction(
     "[Workspace] data requested",
-    props<{ initiator?: any }>()
+    props<{ initiator?: unknown }>()
 );
 
 export const actionWorkspaceSetCurrent = createAction(

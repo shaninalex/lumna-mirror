@@ -1,0 +1,29 @@
+stages:
+  - test
+
+variables:
+  NODE_VERSION: "24"
+
+frontend_lint:
+  stage: test
+  image: node:${NODE_VERSION}-alpine
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+  cache:
+    key:
+      files:
+        - frontend/yarn.lock
+    paths:
+      - frontend/node_modules/
+
+  before_script:
+    - node --version
+    - yarn --version
+
+  script:
+    - cd frontend
+    - yarn install --frozen-lockfile --non-interactive
+    - yarn lint

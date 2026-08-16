@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { UserModel } from '../model/user.model';
-import { APIResponse } from '@shared/models';
+import type { Observable } from 'rxjs';
+import { map } from 'rxjs';
+import type { UserModel } from '../model/user.model';
+import type { APIResponse } from '@shared/models';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()

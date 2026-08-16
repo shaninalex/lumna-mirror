@@ -1,3 +1,4 @@
+import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
 import { GlobalLayout } from '@core/layout';
 import { UiService } from '@shared/ui';
@@ -11,7 +12,7 @@ import { AsyncPipe } from '@angular/common';
     imports: [GlobalLayout, WorkspaceCardComponent, RouterLink, AsyncPipe],
     templateUrl: 'workspaces.page.html',
 })
-export class WorkspacesPage {
+export class WorkspacesPage implements OnInit {
     private ui = inject(UiService);
     private store = inject(Store);
     

@@ -1,8 +1,10 @@
 import { inject, Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
-import { APIResponse } from "@shared/models";
+import type { Observable } from "rxjs";
+import { map } from "rxjs";
+import type { APIResponse } from "@shared/models";
 import { HttpClient } from "@angular/common/http";
-import { TaskCreateModel, TaskListQueryModel, TaskModel, ToHttpParams } from "@entities/task";
+import type { TaskCreateModel, TaskListQueryModel, TaskModel } from "../model/task.model";
+import { ToHttpParams } from "../model/task.model";
 
 @Injectable()
 export class TaskApi {

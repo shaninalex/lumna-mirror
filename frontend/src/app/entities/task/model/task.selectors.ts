@@ -1,6 +1,7 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { taskAdapter, TaskState } from "./task.store";
-import { TaskModel } from "./task.model";
+import type { TaskState } from "./task.store";
+import { taskAdapter } from "./task.store";
+import type { TaskModel } from "./task.model";
 
 const feature = createFeatureSelector<TaskState>("task");
 const selectors = taskAdapter.getSelectors();

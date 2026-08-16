@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
-import { UserModel } from '@entities/user';
-import { APIResponse } from '@shared/models';
+import type { Observable } from 'rxjs';
+import { map } from 'rxjs';
+import type { UserModel } from '@entities/user';
+import type { APIResponse } from '@shared/models';
 
 @Injectable({
     providedIn: 'root',

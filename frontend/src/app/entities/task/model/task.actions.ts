@@ -1,6 +1,6 @@
 import { createAction, props } from "@ngrx/store";
-import { TaskCreateModel, TaskListQueryModel, TaskModel } from "./task.model";
-import { Error } from "@shared/models";
+import type { TaskCreateModel, TaskListQueryModel, TaskModel } from "./task.model";
+import type { Error } from "@shared/models";
 
 export const actionTaskGetList = createAction(
     "[Task] get list",

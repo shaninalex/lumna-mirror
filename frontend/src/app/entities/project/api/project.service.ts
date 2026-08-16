@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { ProjectModel, ProjectCreateModel } from '../model/project.model';
-import { APIResponse } from '@shared/models';
+import type { Observable } from 'rxjs';
+import { map } from 'rxjs';
+import type { ProjectModel, ProjectCreateModel } from '../model/project.model';
+import type { APIResponse } from '@shared/models';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable()

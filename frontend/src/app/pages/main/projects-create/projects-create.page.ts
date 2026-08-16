@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { GlobalLayout } from '@core/layout';
-import { ProjectCreateFeature } from '@features';
+import { ProjectCreateFeature } from '@features/project';
 
 @Component({
     selector: 'lu-projects-create-page',

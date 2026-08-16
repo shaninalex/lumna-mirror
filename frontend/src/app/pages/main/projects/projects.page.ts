@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import type { OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { GlobalLayout } from '@core/layout';
 import { RouterLink } from "@angular/router";
 import { UiService } from '@shared/ui';
@@ -7,7 +8,7 @@ import { selectCurrentWorkspace } from '@entities/workspace';
 import { Store } from '@ngrx/store';
 import { filter, switchMap, map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { AppRoutes } from '../routes.service';
+import { AppRoutes } from '@core/routes';
 
 @Component({
     selector: 'lu-projects-page',

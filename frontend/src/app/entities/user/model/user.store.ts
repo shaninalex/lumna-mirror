@@ -1,4 +1,4 @@
-import { UserModel } from './user.model';
+import type { UserModel } from './user.model';
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { actionUserClear, actionUserSet } from './user.actions';
 
@@ -13,7 +13,7 @@ const initialState: UserState = {
 export const userReducer = createReducer(
     initialState,
     on(actionUserSet, (state, action) => ({ user: action.user })),
-    on(actionUserClear, (state, action) => ({ user: null })),
+    on(actionUserClear, () => ({ user: null })),
 );
 
 export const userFeature = createFeature({

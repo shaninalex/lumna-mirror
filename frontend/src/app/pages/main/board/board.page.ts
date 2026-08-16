@@ -1,3 +1,4 @@
+import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
 import { MainLayout } from '@core/layout';
 import { UiService } from '@shared/ui';
@@ -8,7 +9,7 @@ import { RouterLink } from "@angular/router";
     imports: [MainLayout, RouterLink],
     templateUrl: './board.page.html',
 })
-export class BoardPage {
+export class BoardPage implements OnInit {
     private ui = inject(UiService);
 
     ngOnInit(): void {

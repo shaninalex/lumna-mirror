@@ -1,12 +1,14 @@
-import {
+import type {
     HttpRequest,
     HttpHandlerFn,
     HttpEvent,
-    HttpClient,
-    HttpErrorResponse,
+    HttpErrorResponse} from '@angular/common/http';
+import {
+    HttpClient
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError } from 'rxjs';
+import type { Observable} from 'rxjs';
+import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from 'rxjs';
 
 let isRefreshing = false;
 const refreshSubject = new BehaviorSubject<boolean | null>(null);
@@ -37,10 +39,10 @@ export function apiInterceptor(
 }
 
 function handle401(
-    req: HttpRequest<any>,
+    req: HttpRequest<unknown>,
     next: HttpHandlerFn,
     http: HttpClient,
-): Observable<HttpEvent<any>> {
+): Observable<HttpEvent<unknown>> {
     if (!isRefreshing) {
         isRefreshing = true;
         refreshSubject.next(null);

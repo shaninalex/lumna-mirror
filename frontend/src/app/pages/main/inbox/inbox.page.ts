@@ -1,3 +1,4 @@
+import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
 import { MainLayout } from '@core/layout';
 import { UiService } from '@shared/ui';
@@ -15,7 +16,7 @@ import { UiService } from '@shared/ui';
         </lu-main-layout>
     `,
 })
-export class InboxPage {
+export class InboxPage implements OnInit {
     private ui = inject(UiService);
 
     ngOnInit(): void {

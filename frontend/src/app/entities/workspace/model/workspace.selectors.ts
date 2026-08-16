@@ -1,6 +1,7 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { workspaceAdapter, WorkspaceState } from "./workspace.store";
-import { WorkspaceModel } from "./workspace.model";
+import type { WorkspaceState } from "./workspace.store";
+import { workspaceAdapter } from "./workspace.store";
+import type { WorkspaceModel } from "./workspace.model";
 
 const feature = createFeatureSelector<WorkspaceState>("workspace");
 const selectors = workspaceAdapter.getSelectors();

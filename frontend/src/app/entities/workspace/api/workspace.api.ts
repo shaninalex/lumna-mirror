@@ -1,8 +1,9 @@
 import { inject, Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
-import { APIResponse } from "@shared/models";
+import type { Observable } from "rxjs";
+import { map } from "rxjs";
+import type { APIResponse } from "@shared/models";
 import { HttpClient } from "@angular/common/http";
-import { WorkspaceCreateModel, WorkspaceModel } from "../model/workspace.model";
+import type { WorkspaceCreateModel, WorkspaceModel } from "../model/workspace.model";
 
 @Injectable()
 export class WorkspaceApi {

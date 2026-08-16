@@ -1,7 +1,8 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, required } from '@angular/forms/signals';
-import { actionProjectCreate, actionProjectCreateFailed, ProjectCreateModel } from '@entities/project';
+import type { ProjectCreateModel } from '@entities/project';
+import { actionProjectCreate, actionProjectCreateFailed } from '@entities/project';
 import { selectCurrentWorkspace } from '@entities/workspace';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';

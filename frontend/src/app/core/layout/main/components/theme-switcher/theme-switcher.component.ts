@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { AsyncPipe } from '@angular/common';
 import { UiService } from '@shared/ui';
-import { Theme } from '@shared/ui/theme.manager';
-import { Observable } from 'rxjs';
+import type { Theme } from '@shared/ui/theme.manager';
+import type { Observable } from 'rxjs';
 
 @Component({
     selector: 'lu-theme-switcher',

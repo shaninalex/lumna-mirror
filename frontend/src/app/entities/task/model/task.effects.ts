@@ -11,7 +11,7 @@ import {
 } from "./task.actions";
 import { TaskApi } from "@entities/task/api";
 import { switchMap } from "rxjs/operators";
-import { HttpErrorResponse } from "@angular/common/http";
+import type { HttpErrorResponse } from "@angular/common/http";
 import { fromErrorResponse } from "@shared/models";
 
 @Injectable()
