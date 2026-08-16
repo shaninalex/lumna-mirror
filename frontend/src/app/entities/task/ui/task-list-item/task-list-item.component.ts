@@ -3,6 +3,7 @@ import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { TaskModel } from '@entities/task/model';
 import { AppRoutes } from '@core/routes';
+import { standardTimeFormat } from '@shared/utils'
 
 @Component({
     selector: 'lu-task-list-item',
@@ -15,4 +16,5 @@ import { AppRoutes } from '@core/routes';
 export class TaskListItemComponent {
     @Input() task: TaskModel;
     readonly appRoutes = inject(AppRoutes)
+    standardTime = standardTimeFormat;
 }

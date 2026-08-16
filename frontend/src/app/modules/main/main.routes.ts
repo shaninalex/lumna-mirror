@@ -7,7 +7,6 @@ import {
     BoardsPage, 
     BoardPage, 
     BacklogPage, 
-    TaskPage, 
     ProjectsPage, 
     ProjectsCreatePage,
     TaskCreatePage,
@@ -17,6 +16,7 @@ import { authGuard } from './auth.guard';
 import { activeProjectGuard } from './project.guard';
 import { activeWorkspaceGuard } from './workspace.guard';
 import { lastRouteRedirect } from './lastRouteRedirect';
+import { paramMatches, paramMatchesDigitsOnly } from '@shared/utils';
 
 export const routes: Routes = [
     {
@@ -60,16 +60,13 @@ export const routes: Routes = [
                                 component: BacklogPage,
                             },
                             {
-                                path: 'task',
-                                component: TaskPage,
-                            },
-                            {
                                 path: 'task/create',
                                 component: TaskCreatePage,
                             },
                             {
-                                path: 'task/:id',
+                                path: 'task/:taskId',
                                 component: TaskDetailPage,
+                                canMatch: [paramMatches("taskId", paramMatchesDigitsOnly)]
                             },
                             {
                                 path: '',

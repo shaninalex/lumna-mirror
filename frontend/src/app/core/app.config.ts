@@ -3,7 +3,7 @@ import { isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideRouterStore } from '@ngrx/router-store';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 
@@ -15,7 +15,10 @@ export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(),
         provideHttpClient(withInterceptors([apiInterceptor])),
-        provideRouter(routes),
+        provideRouter(
+            routes,
+            withComponentInputBinding(),
+        ),
         provideEffects(rootEffects),
         provideStore(rootReducers),
         provideRouterStore(),

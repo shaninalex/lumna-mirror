@@ -1,0 +1,1 @@
+export const standardTimeFormat = 'MMM d, HH:mm'

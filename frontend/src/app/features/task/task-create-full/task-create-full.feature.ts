@@ -22,6 +22,7 @@ export class TaskCreateFullFeature {
     taskFormModel = signal<TaskCreateModel>({
         title: '',
         project_id: 0,
+        body: '',
     });
 
     taskForm = form(this.taskFormModel, (schemaPath) => {
@@ -51,6 +52,7 @@ export class TaskCreateFullFeature {
                     this.taskFormModel.set({
                         ...this.taskFormModel(),
                         title: '',
+                        body: '',
                     });
                     this.taskForm().reset();
                 }),

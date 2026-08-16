@@ -63,11 +63,11 @@ func (s *taskService) ReorderTask(ctx context.Context, taskID uint, listListID u
 // TaskPayload - used to create/partial update task
 // TODO: add validators
 type TaskPayload struct {
-	Title     string  `json:"title"`
-	ProjectID uint    `json:"project_id"`
-	Order     *uint   `json:"order"`
-	StatusID  *uint   `json:"status_id"`
-	Body      *string `json:"body,omitempty"`
+	Title     string `json:"title"`
+	ProjectID uint   `json:"project_id"`
+	Order     *uint  `json:"order"`
+	StatusID  *uint  `json:"status_id"`
+	Body      string `json:"body"`
 }
 
 func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
@@ -80,10 +80,7 @@ func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		Title:     payload.Title,
 		ProjectID: payload.ProjectID,
 		Code:      code,
-	}
-
-	if payload.Body != nil {
-		task.Body = *payload.Body
+		Body:      payload.Body,
 	}
 
 	if payload.StatusID != nil {

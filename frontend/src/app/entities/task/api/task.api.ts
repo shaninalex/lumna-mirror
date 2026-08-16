@@ -4,14 +4,14 @@ import { map } from "rxjs";
 import type { APIResponse } from "@shared/models";
 import { HttpClient } from "@angular/common/http";
 import type { TaskCreateModel, TaskListQueryModel, TaskModel } from "../model/task.model";
-import { ToHttpParams } from "../model/task.model";
+import { toHttpParams } from "../model/task.model";
 
 @Injectable()
 export class TaskApi {
     private http = inject(HttpClient);
 
     list(q: TaskListQueryModel): Observable<TaskModel[]> {
-        const params = ToHttpParams(q);
+        const params = toHttpParams(q);
         return this.http
             .get<
                 APIResponse<TaskModel[]>

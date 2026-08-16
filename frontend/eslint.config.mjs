@@ -59,9 +59,6 @@ export default tseslint.config(
             ],
         },
         rules: {
-            // Catches the cycle in-editor, on the file you are editing.
-            // allowUnsafeDynamicCyclicDependency mirrors madge's skipAsyncImports:
-            // `loadChildren: () => import(...)` is a separate lazy chunk, not an eager edge.
             'import-x/no-cycle': [
                 'error',
                 {
@@ -69,17 +66,19 @@ export default tseslint.config(
                     allowUnsafeDynamicCyclicDependency: true,
                 },
             ],
-
-            // Enforces one-way layer flow. This is the rule that catches an
-            // entity importing from pages before it ever becomes a cycle.
             'import-x/no-restricted-paths': ['error', { zones: layerZones }],
-
-            // `separate-type-imports` emits `import type { X } from '...'` as its own
-            // statement, which erases the runtime edge and lets madge's
-            // skipTypeImports actually skip it. Do not switch to inline-type-imports.
             '@typescript-eslint/consistent-type-imports': [
                 'error',
                 { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
+            ],
+            '@typescript-eslint/naming-convention': [
+                'error',
+                { selector: 'typeLike', format: ['PascalCase'] },
+                {
+                    selector: 'variableLike',
+                    format: ['camelCase'],
+                    leadingUnderscore: 'allow',
+                },
             ],
         },
     },
