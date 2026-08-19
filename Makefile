@@ -9,3 +9,5 @@ migrate:
 run:
 	go run app/main.go --config=./config/config.yaml serve
 
+run_frontend:
+	yarn --cwd=./frontend start

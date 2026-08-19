@@ -1,5 +1,6 @@
 export * from './backlog'
 export * from './board'
+export * from './board-create'
 export * from './boards'
 export * from './inbox'
 export * from './projects'

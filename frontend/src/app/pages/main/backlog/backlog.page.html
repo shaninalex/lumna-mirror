@@ -5,14 +5,14 @@
             <div>
                 <h2 class="mb-1">Backlog</h2>
                 <p class="text-muted mb-0">
-                    All tasks across every board, grouped by creation date.
+                    All tasks across every board
                 </p>
             </div>
 
             <a
                 [routerLink]="[...appRoutes.createTask()]"
                 [queryParams]="{ return_to: returnTo() }"
-                class="btn btn-primary"
+                class="btn btn-primary btn-sm"
             >
                 <i class="fa-solid fa-plus me-2"></i>
                 New Task
@@ -22,8 +22,7 @@
         @if (data$ | async; as data) {
             <div class="mb-5">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h5 class="mb-0">Today</h5>
-                    <span class="badge text-bg-secondary">3 tasks</span>
+                    <span class="badge text-bg-secondary">{{ data.tasks.length }} tasks</span>
                 </div>
 
                 <div class="list-group">
@@ -33,22 +32,5 @@
                 </div>
             </div>
         }
-        <!-- Yesterday -->
-        <div class="mb-5">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <h5 class="mb-0">Yesterday</h5>
-                <span class="badge text-bg-secondary">5 tasks</span>
-            </div>
-            <div class="list-group"></div>
-        </div>
-
-        <!-- This Week -->
-        <div>
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <h5 class="mb-0">Earlier This Week</h5>
-                <span class="badge text-bg-secondary">12 tasks</span>
-            </div>
-            <div class="list-group"></div>
-        </div>
     </div>
 </lu-main-layout>

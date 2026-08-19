@@ -13,7 +13,8 @@ import { TimeAgoPipe } from '@shared/utils';
 })
 export class TaskDetailViewView {
     private store = inject(Store);
-    readonly appRouter = inject(AppRoutes)
+
+    readonly appRouter = inject(AppRoutes);
     taskId = input.required<number>();
     task = computed(() => this.store.selectSignal(selectTask(this.taskId()))());
 }

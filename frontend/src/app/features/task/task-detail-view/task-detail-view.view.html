@@ -1,5 +1,5 @@
 @if (task(); as t) {
-<nav class="mb-3">
+<nav class="mb-3 d-flex gap-2">
     <ol class="breadcrumb mb-0">
         <!-- board/list -->
         <li class="breadcrumb-item"><a routerLink="/boards">Boards</a></li>
@@ -25,12 +25,16 @@
                         </h2>
 
                         <div class="d-flex gap-2 flex-wrap">
-                            <span class="badge text-bg-warning">
-                                In Progress
+                            <span class="badge text-bg-secondary">
+                                authentication
                             </span>
 
-                            <span class="badge text-bg-info">
-                                Feature
+                            <span class="badge text-bg-secondary">
+                                backend
+                            </span>
+
+                            <span class="badge text-bg-secondary">
+                                oauth
                             </span>
                         </div>
                     </div>
@@ -100,88 +104,49 @@
 
     <!-- Sidebar -->
     <div class="col-lg-4">
-
         <div class="card mb-3">
-
             <div class="card-header">
                 Details
             </div>
-
             <div class="list-group list-group-flush">
-
                 <div class="list-group-item d-flex justify-content-between">
                     <span class="text-muted">Board</span>
                     <a routerLink="/board">Development</a>
                 </div>
-
                 <div class="list-group-item d-flex justify-content-between">
                     <span class="text-muted">Column</span>
                     <strong>In Progress</strong>
                 </div>
-
                 <div class="list-group-item d-flex justify-content-between">
                     <span class="text-muted">Priority</span>
                     <span class="badge text-bg-danger">
                         High
                     </span>
                 </div>
-
                 <div class="list-group-item d-flex justify-content-between">
                     <span class="text-muted">Assignee</span>
                     <strong>Alex</strong>
                 </div>
-
                 <div class="list-group-item d-flex justify-content-between">
                     <span class="text-muted">Reporter</span>
                     <strong>Kate</strong>
                 </div>
-
                 <div class="list-group-item d-flex justify-content-between">
                     <span class="text-muted">Created</span>
                     <span>{{ t.created_at | date }}</span>
                 </div>
-
                 <div class="list-group-item d-flex justify-content-between">
                     <span class="text-muted">Updated</span>
                     <span>{{ t.updated_at | timeAgo }}</span>
                 </div>
-
             </div>
-
-        </div>
-
-        <div class="card mb-3">
-
-            <div class="card-header">
-                Labels
-            </div>
-
-            <div class="card-body d-flex gap-2 flex-wrap">
-
-                <span class="badge text-bg-secondary">
-                    authentication
-                </span>
-
-                <span class="badge text-bg-secondary">
-                    backend
-                </span>
-
-                <span class="badge text-bg-secondary">
-                    oauth
-                </span>
-
-            </div>
-
         </div>
 
         <div class="card">
-
             <div class="card-header">
                 Activity
             </div>
-
             <div class="list-group list-group-flush">
-
                 <div class="list-group-item">
                     <small class="text-muted">
                         Today 10:14
@@ -191,7 +156,6 @@
                         <strong>In Progress</strong>
                     </div>
                 </div>
-
                 <div class="list-group-item">
                     <small class="text-muted">
                         Yesterday
@@ -200,7 +164,6 @@
                         Alex assigned the task.
                     </div>
                 </div>
-
                 <div class="list-group-item">
                     <small class="text-muted">
                         Aug 5, 2026

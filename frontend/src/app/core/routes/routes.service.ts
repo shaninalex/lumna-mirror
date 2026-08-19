@@ -27,6 +27,10 @@ export class AppRoutes {
         return [...this.projectRoute(), 'boards'];
     }
 
+    boardsCreate(): unknown[] {
+        return [...this.projectRoute(), 'board', 'create'];
+    }
+
     createTask(): unknown[] {
         return [...this.projectRoute(), 'task', 'create'];
     }

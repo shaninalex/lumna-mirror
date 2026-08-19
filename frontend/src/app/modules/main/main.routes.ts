@@ -11,6 +11,7 @@ import {
     ProjectsCreatePage,
     TaskCreatePage,
     TaskDetailPage,
+    BoardCreatePage,
 } from '@pages';
 import { authGuard } from './auth.guard';
 import { activeProjectGuard } from './project.guard';
@@ -54,6 +55,10 @@ export const routes: Routes = [
                             {
                                 path: 'board',
                                 component: BoardPage,
+                            },
+                            {
+                                path: 'board/create',
+                                component: BoardCreatePage,
                             },
                             {
                                 path: 'backlog',

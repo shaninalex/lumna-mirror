@@ -1,1 +1,2 @@
-export { LocalStorageService } from './localStorage.service'
+export * from './localStorage.service'
+export * from './navigation.service'

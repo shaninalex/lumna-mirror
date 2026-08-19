@@ -12,18 +12,16 @@ import { filter, tap } from 'rxjs';
     selector: 'lu-project-create-feature',
     imports: [FormField],
     template: `
-        <div class="container">
-            <form (submit)="onSubmit($event)">
-                <div class="mb-4">
-                    <label for="project_title" class="form-label">Project title</label>
-                    <input type="text" class="form-control" id="project_title" [formField]="pForm.title">
-                </div>
+        <form (submit)="onSubmit($event)">
+            <div class="mb-4">
+                <label for="project_title" class="form-label">Project title</label>
+                <input type="text" class="form-control" id="project_title" [formField]="pForm.title">
+            </div>
 
-                <div>
-                    <button class="btn btn-primary" type="submit">Create</button>
-                </div>
-            </form>
-        </div>
+            <div>
+                <button class="btn btn-primary" type="submit">Create</button>
+            </div>
+        </form>
     `,
 })
 export class ProjectCreateFeature {
