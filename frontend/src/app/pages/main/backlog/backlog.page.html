@@ -9,13 +9,17 @@
                 </p>
             </div>
 
-            <a [routerLink]="[...appRoutes.createTask()]" class="btn btn-primary">
+            <a
+                [routerLink]="[...appRoutes.createTask()]"
+                [queryParams]="{ return_to: returnTo() }"
+                class="btn btn-primary"
+            >
                 <i class="fa-solid fa-plus me-2"></i>
                 New Task
             </a>
         </div>
 
-        @if(data$ | async; as data) {
+        @if (data$ | async; as data) {
             <div class="mb-5">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <h5 class="mb-0">Today</h5>
@@ -35,9 +39,7 @@
                 <h5 class="mb-0">Yesterday</h5>
                 <span class="badge text-bg-secondary">5 tasks</span>
             </div>
-            <div class="list-group">
-
-            </div>
+            <div class="list-group"></div>
         </div>
 
         <!-- This Week -->
@@ -46,10 +48,7 @@
                 <h5 class="mb-0">Earlier This Week</h5>
                 <span class="badge text-bg-secondary">12 tasks</span>
             </div>
-            <div class="list-group">
-
-            </div>
+            <div class="list-group"></div>
         </div>
     </div>
-
 </lu-main-layout>

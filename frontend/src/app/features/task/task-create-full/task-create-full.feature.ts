@@ -8,6 +8,7 @@ import { filter, tap } from 'rxjs';
 import { selectCurrentProjectId } from '@entities/project';
 import type { TaskCreateModel} from '@entities/task';
 import { actionTaskCreateSuccess, actionTaskCreate } from '@entities/task';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'lu-task-create-full-feature',
@@ -18,6 +19,8 @@ export class TaskCreateFullFeature {
     private store = inject(Store);
     private actions$ = inject(Actions);
     private destroyRef = inject(DestroyRef);
+    private activatedRoute = inject(ActivatedRoute)
+    private router = inject(Router);
 
     taskFormModel = signal<TaskCreateModel>({
         title: '',
@@ -55,6 +58,9 @@ export class TaskCreateFullFeature {
                         body: '',
                     });
                     this.taskForm().reset();
+                    if ("return_to" in this.activatedRoute.snapshot.queryParams) {
+                        this.router.navigate([this.activatedRoute.snapshot.queryParams["return_to"]])
+                    }
                 }),
             )
             .subscribe();

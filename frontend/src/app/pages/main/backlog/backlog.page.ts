@@ -31,7 +31,12 @@ export class BacklogPage implements OnInit {
             )
         ),
     )
+    
     ngOnInit(): void {
         this.ui.setPageTitle("Backlog");
+    }
+
+    returnTo(): string {
+        return this.appRoutes.backlog().join('/')
     }
 }
