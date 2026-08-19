@@ -1,19 +1,14 @@
-<lu-main-layout>
-    <div class="container py-4">
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="mb-1">Boards</h2>
-                <p class="text-muted mb-0">Organize your project's work into multiple boards.</p>
-            </div>
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { selectBoardsByProjectId } from '@entities/board/model/board.selectors';
+import { selectCurrentProjectId } from '@entities/project';
+import { Store } from '@ngrx/store';
+import { filter, switchMap } from 'rxjs';
 
-            <a [routerLink]="appRoutes.boardsCreate()" class="btn btn-primary btn-sm">
-                <i class="fa-solid fa-plus me-2"></i>
-                New Board
-            </a>
-        </div>
-
-        <!-- Boards -->
+@Component({
+    selector: 'lu-board-list-feature',
+    imports: [AsyncPipe],
+    template: `
         <div class="list-group">
             @if (boards$ | async; as boards) {
                 @for (board of boards; track $index) {
@@ -42,5 +37,12 @@
                 }
             }
         </div>
-    </div>
-</lu-main-layout>
+    `,
+})
+export class BoardListFeature {
+    private store = inject(Store);
+    boards$ = this.store.select(selectCurrentProjectId).pipe(
+        filter((projectId) => projectId !== null),
+        switchMap((projectId) => this.store.select(selectBoardsByProjectId(projectId))),
+    );
+}
