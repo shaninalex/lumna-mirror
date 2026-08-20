@@ -5,13 +5,13 @@ import {
     WorkspaceEntryPage, 
     InboxPage, 
     BoardsPage, 
-    BoardPage, 
     BacklogPage, 
     ProjectsPage, 
     ProjectsCreatePage,
     TaskCreatePage,
     TaskDetailPage,
     BoardCreatePage,
+    BoardDetailPage,
 } from '@pages';
 import { authGuard } from './auth.guard';
 import { activeProjectGuard } from './project.guard';
@@ -53,12 +53,12 @@ export const routes: Routes = [
                                 component: BoardsPage,
                             },
                             {
-                                path: 'board',
-                                component: BoardPage,
-                            },
-                            {
                                 path: 'board/create',
                                 component: BoardCreatePage,
+                            },
+                            {
+                                path: 'board/:boardId',
+                                component: BoardDetailPage,
                             },
                             {
                                 path: 'backlog',

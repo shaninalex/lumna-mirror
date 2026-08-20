@@ -8,7 +8,7 @@ import { selectCurrentWorkspace } from '@entities/workspace';
 import { Store } from '@ngrx/store';
 import { filter, switchMap, map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { AppRoutes } from '@core/routes';
+import { AppRoutes } from '@core';
 
 @Component({
     selector: 'lu-projects-page',

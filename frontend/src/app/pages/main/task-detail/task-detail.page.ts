@@ -7,7 +7,7 @@ import { TaskDetailViewView } from '@features';
     imports: [MainLayout, TaskDetailViewView],
     template: `
         <lu-main-layout>
-            <div class="container">
+            <div class="container-fluid">
                 <lu-task-detail-view [taskId]="taskId()" />
             </div>
         </lu-main-layout>

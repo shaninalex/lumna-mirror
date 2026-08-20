@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { MainLayout } from '@core/layout';
 import { UiService } from '@shared/ui';
 import { RouterLink } from "@angular/router";
-import { AppRoutes } from '@core/routes';
+import { AppRoutes } from '@core';
 import { selectTasksByProject, TaskListItemComponent } from "@entities/task";
 import { Store } from '@ngrx/store';
 import { selectCurrentProjectId } from '@entities/project';

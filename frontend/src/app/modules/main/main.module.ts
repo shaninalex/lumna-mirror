@@ -9,7 +9,7 @@ import { WorkspaceApi, workspaceFeature  } from '@entities/workspace';
 import { ProjectApi, projectFeature } from '@entities/project';
 import { UserApi, userFeature  } from '@entities/user';
 import { TaskApi, taskFeature } from '@entities/task';
-import { AppRoutes } from '@core/routes';
+import { AppRoutes } from '@core';
 import { boardFeature } from '@entities/board/provider';
 import { BoardApi } from '@entities/board/api/board.api';
 

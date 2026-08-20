@@ -8,7 +8,7 @@ import { UiService } from '@shared/ui';
     imports: [MainLayout],
     template: `
         <lu-main-layout>
-            <div class="container py-4">
+            <div class="container-fluid py-4">
                 <h4>Few latest tasks</h4>
                 <h4>Latest comments</h4>
                 <h4>Latest assignments, attachments and other activity</h4>

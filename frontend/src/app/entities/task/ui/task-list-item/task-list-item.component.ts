@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { TaskModel } from '@entities/task/model';
-import { AppRoutes } from '@core/routes';
+import { AppRoutes } from '@core';
 import { standardTimeFormat } from '@shared/utils'
 
 @Component({

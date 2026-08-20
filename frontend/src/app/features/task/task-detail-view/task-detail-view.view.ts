@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AppRoutes } from '@core/routes';
+import { AppRoutes } from '@core';
 import { selectTask } from '@entities/task';
 import { Store } from '@ngrx/store';
 import { TimeAgoPipe } from '@shared/utils';

@@ -27,6 +27,10 @@ export class AppRoutes {
         return [...this.projectRoute(), 'boards'];
     }
 
+    board(id: number): unknown[] {
+        return [...this.projectRoute(), 'board', id];
+    }
+
     boardsCreate(): unknown[] {
         return [...this.projectRoute(), 'board', 'create'];
     }

@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, required } from '@angular/forms/signals';
 import { Router } from '@angular/router';
-import { AppRoutes } from '@core/routes';
+import { AppRoutes } from '@core';
 import type { BoardPayloadModel } from '@entities/board';
 import { actionBoardCreate, actionBoardCreateFailed, actionBoardCreateSuccess } from '@entities/board';
 import { selectCurrentProjectId } from '@entities/project';

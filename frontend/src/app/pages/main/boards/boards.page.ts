@@ -2,7 +2,7 @@ import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
 import { UiService } from '@shared/ui';
 import { RouterLink } from "@angular/router";
-import { AppRoutes } from '@core/routes';
+import { AppRoutes } from '@core';
 import { Store } from '@ngrx/store';
 import { selectCurrentProjectId } from '@entities/project';
 import { filter, switchMap } from 'rxjs';
@@ -15,7 +15,7 @@ import { MainLayout } from '@core/layout';
     imports: [MainLayout, RouterLink, BoardListFeature],
     template: `
         <lu-main-layout>
-            <div class="container py-4">
+            <div class="container-fluid py-4">
                 <!-- Header -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
