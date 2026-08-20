@@ -14,6 +14,7 @@ type Status struct {
 	Order uint   `json:"order"`
 
 	ProjectID uint `gorm:"not null;index" json:"project_id"`
+	ListId    uint `gorm:"not null;index" json:"list_id"`
 
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`

@@ -130,10 +130,12 @@ CREATE TABLE statuses -- // columns
     title      text    NOT NULL,
     `order`    integer NULL,
     project_id integer NOT NULL,
+    list_id    integer NOT NULL,
     created_at datetime DEFAULT CURRENT_TIMESTAMP,
     updated_at datetime,
 
-    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 

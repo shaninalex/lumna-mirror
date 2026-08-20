@@ -1,4 +1,4 @@
-export * from './board'
+export * from './list'
 export * from './user'
 export * from './workspace'
 export * from './project'

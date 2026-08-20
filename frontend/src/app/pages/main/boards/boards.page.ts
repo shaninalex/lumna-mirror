@@ -6,7 +6,7 @@ import { AppRoutes } from '@core';
 import { Store } from '@ngrx/store';
 import { selectCurrentProjectId } from '@entities/project';
 import { filter, switchMap } from 'rxjs';
-import { selectBoardsByProjectId } from '@entities/board/model/board.selectors';
+import { selectListsByProjectId } from '@entities/list';
 import { BoardListFeature } from '@features';
 import { MainLayout } from '@core/layout';
 
@@ -45,7 +45,7 @@ export class BoardsPage implements OnInit {
         filter((projectId) => projectId !== null),
         switchMap((projectId) => {
             console.log('projectId: ', projectId);
-            return this.store.select(selectBoardsByProjectId(projectId))
+            return this.store.select(selectListsByProjectId(projectId))
         })
     )
 

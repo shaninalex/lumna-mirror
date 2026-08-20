@@ -1,8 +1,8 @@
 import { AsyncPipe } from '@angular/common';
 import type { OnInit } from '@angular/core';
 import { Component, inject, Input } from '@angular/core';
-import type { BoardModel } from '@entities/board';
-import { selectBoardById } from '@entities/board/model/board.selectors';
+import type { ListModel } from '@entities/list';
+import { selectListById } from '@entities/list/model/list.selectors';
 import { Store } from '@ngrx/store';
 import type { Observable } from 'rxjs';
 import { filter } from 'rxjs';
@@ -16,11 +16,11 @@ export class BoardDetailFeature implements OnInit{
     private store = inject(Store);
 
     @Input() boardId: number;
-    board$: Observable<BoardModel>;
+    board$: Observable<ListModel>;
 
     ngOnInit() {
         this.board$ = this.store
-            .select(selectBoardById(this.boardId))
+            .select(selectListById(this.boardId))
             .pipe(filter((board) => board !== null));
     }
 }

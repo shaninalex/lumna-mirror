@@ -3,33 +3,33 @@ import type { Observable } from 'rxjs';
 import { map } from 'rxjs';
 import type { APIResponse } from '@shared/models';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import type { BoardModel, BoardPayloadModel } from '../model/board.model';
+import type { ListModel, ListPayloadModel } from '../model/list.model';
 
 @Injectable({
     providedIn: 'root',
 })
-export class BoardApi {
+export class ListApi {
     http = inject(HttpClient);
 
-    List(projectId: number): Observable<BoardModel[]> {
+    List(projectId: number): Observable<ListModel[]> {
         let params = new HttpParams();
         params = params.set('project_id', projectId);
         return this.http
             .get<
-                APIResponse<BoardModel[]>
+                APIResponse<ListModel[]>
             >(`/api/v1/lists`, { params: params, withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
-    Create(payload: BoardPayloadModel): Observable<BoardModel> {
+    Create(payload: ListPayloadModel): Observable<ListModel> {
         return this.http
-            .post<APIResponse<BoardModel>>(`/api/v1/lists`, payload, { withCredentials: true })
+            .post<APIResponse<ListModel>>(`/api/v1/lists`, payload, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
-    Get(boardId: number): Observable<BoardModel> {
+    Get(boardId: number): Observable<ListModel> {
         return this.http
-            .get<APIResponse<BoardModel>>(`/api/v1/lists/${boardId}`, { withCredentials: true })
+            .get<APIResponse<ListModel>>(`/api/v1/lists/${boardId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
@@ -39,10 +39,10 @@ export class BoardApi {
             .pipe(map((response) => response.data));
     }
 
-    Patch(boardId: number, payload: BoardPayloadModel): Observable<BoardModel> {
+    Patch(boardId: number, payload: ListPayloadModel): Observable<ListModel> {
         return this.http
             .patch<
-                APIResponse<BoardModel>
+                APIResponse<ListModel>
             >(`/api/v1/lists/${boardId}`, payload, { withCredentials: true })
             .pipe(map((response) => response.data));
     }

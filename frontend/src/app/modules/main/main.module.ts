@@ -10,8 +10,7 @@ import { ProjectApi, projectFeature } from '@entities/project';
 import { UserApi, userFeature  } from '@entities/user';
 import { TaskApi, taskFeature } from '@entities/task';
 import { AppRoutes } from '@core';
-import { boardFeature } from '@entities/board/provider';
-import { BoardApi } from '@entities/board/api/board.api';
+import { listFeature, ListApi } from '@entities/list';
 
 
 
@@ -27,14 +26,14 @@ import { BoardApi } from '@entities/board/api/board.api';
         ProjectApi,
         UserApi,
         TaskApi,
-        BoardApi,
+        ListApi,
 
         provideEffects(mainEffects),
         provideState(workspaceFeature),
         provideState(projectFeature),
         provideState(userFeature),
         provideState(taskFeature),
-        provideState(boardFeature),
+        provideState(listFeature),
     ]
 })
 export class MainModule {}

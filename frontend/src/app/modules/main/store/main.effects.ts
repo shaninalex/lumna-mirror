@@ -7,7 +7,7 @@ import { actionProjectList, actionProjectSetCurrent } from '@entities/project';
 import { actionWorkspaceGetList, actionWorkspaceSetCurrent } from '@entities/workspace';
 import { LocalStorageService } from '@shared/services';
 import { actionTaskGetList } from '@entities/task';
-import { actionBoardGetList } from '@entities/board';
+import { actionListGetList } from '@entities/list';
 
 @Injectable()
 export class MainEffects {
@@ -55,7 +55,7 @@ export class MainEffects {
             ofType(actionProjectSetCurrent),
             map((action) => action.id),
             filter((id) => id !== null),
-            map((id) => actionBoardGetList({ projectId: id })),
+            map((id) => actionListGetList({ projectId: id })),
         ),
     );
 }

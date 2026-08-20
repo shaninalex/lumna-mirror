@@ -1,5 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
-import type { BoardModel } from '../../model/board.model';
+import type { ListModel } from '../../model/list.model';
 import { RouterLink } from '@angular/router';
 import { AppRoutes } from '@core';
 
@@ -32,7 +32,7 @@ import { AppRoutes } from '@core';
     },
 })
 export class BoardListItemComponent {
-    @Input() board: BoardModel;
+    @Input() board: ListModel;
 
     readonly appRoutes = inject(AppRoutes);
 }

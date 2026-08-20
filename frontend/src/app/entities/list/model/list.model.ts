@@ -1,4 +1,4 @@
-export interface BoardModel {
+export interface ListModel {
     id: number;
     title: string;
     project_id: number;
@@ -7,7 +7,7 @@ export interface BoardModel {
     updated_at: Date;
 }
 
-export interface BoardPayloadModel {
+export interface ListPayloadModel {
     title: string;
     project_id: number;
 }
