@@ -3,15 +3,19 @@ import { Store } from '@ngrx/store';
 import { actionToggleSidebar } from '@core';
 import { Actions, ofType } from '@ngrx/effects';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UserMenuComponent } from '@entities/user'
-import { ProjectSwitcherComponent } from '@entities/project'
-import { ThemeSwitcherComponent } from "../theme-switcher";
-import { NotificationsDropdownComponent } from "@entities/notification";
-
+import { UserMenuComponent } from '@entities/user';
+import { NotificationsDropdownComponent } from '@entities/notification';
+import { ThemeSwitcherComponent } from '@shared/ui';
+import { ProjectDropdownComponent } from '@features/project';
 
 @Component({
     selector: 'lu-header',
-    imports: [UserMenuComponent, ThemeSwitcherComponent, ProjectSwitcherComponent, NotificationsDropdownComponent],
+    imports: [
+        UserMenuComponent,
+        ThemeSwitcherComponent,
+        NotificationsDropdownComponent,
+        ProjectDropdownComponent,
+    ],
     styleUrl: './header.component.css',
     template: `
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -24,7 +28,7 @@ import { NotificationsDropdownComponent } from "@entities/notification";
                             <i class="fa-solid fa-bars"></i>
                         }
                     </button>
-                    <lu-project-switcher />
+                    <lu-project-dropdown />
                 </div>
 
                 <div class="flex align-items-center">
@@ -45,10 +49,8 @@ export class HeaderComponent {
 
     constructor() {
         this.actions$
-            .pipe(
-                ofType(actionToggleSidebar),
-                takeUntilDestroyed(this.ref),
-            ).subscribe(() => this.sidebarHidden = !this.sidebarHidden);
+            .pipe(ofType(actionToggleSidebar), takeUntilDestroyed(this.ref))
+            .subscribe(() => (this.sidebarHidden = !this.sidebarHidden));
     }
 
     toggleSidebar(): void {

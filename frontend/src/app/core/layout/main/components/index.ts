@@ -1,3 +1,2 @@
-export { HeaderComponent } from './header'
-export { SidebarComponent } from './sidebar'
-export { ThemeSwitcherComponent } from './theme-switcher'
+export * from './header'
+export * from './sidebar'

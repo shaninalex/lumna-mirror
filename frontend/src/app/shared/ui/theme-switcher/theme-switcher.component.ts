@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { AsyncPipe } from '@angular/common';
-import { UiService } from '@shared/ui';
-import type { Theme } from '@shared/ui/theme.manager';
+import { UiService } from '../ui.service';
+import type { Theme } from '../theme.manager';
 import type { Observable } from 'rxjs';
 
 @Component({

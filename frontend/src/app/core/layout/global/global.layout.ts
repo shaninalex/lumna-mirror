@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ThemeSwitcherComponent } from '../main/components/theme-switcher';
+import { ThemeSwitcherComponent } from '../../../shared/ui/theme-switcher';
 import { UserMenuComponent } from '@entities/user'
 import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';

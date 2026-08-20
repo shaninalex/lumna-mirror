@@ -11,18 +11,16 @@ import { Store } from "@ngrx/store";
     selector: "lu-workspace-create-feature",
     imports: [FormField],
     template: `
-        <div class="container">
-            <form (submit)="onSubmit($event)">
-                <div class="mb-4">
-                    <label for="workspace_title" class="form-label">Workspaces title</label>
-                    <input type="text" class="form-control" id="workspace_title" [formField]="wspForm.title">
-                </div>
+        <form (submit)="onSubmit($event)">
+            <div class="mb-4">
+                <label for="workspace_title" class="form-label">Workspaces title</label>
+                <input type="text" class="form-control" id="workspace_title" [formField]="wspForm.title">
+            </div>
 
-                <div>
-                    <button class="btn btn-primary" type="submit">Create</button>
-                </div>
-            </form>
-        </div>
+            <div>
+                <button class="btn btn-primary" type="submit">Create</button>
+            </div>
+        </form>
     `
 })
 export class WorkspaceCreateFeature {
