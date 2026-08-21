@@ -6,10 +6,11 @@ import { selectListById } from '@entities/list/model/list.selectors';
 import { Store } from '@ngrx/store';
 import type { Observable } from 'rxjs';
 import { filter } from 'rxjs';
+import { TaskCardComponent } from "@entities/task";
 
 @Component({
     selector: 'lu-board-detail-feature',
-    imports: [AsyncPipe],
+    imports: [AsyncPipe, TaskCardComponent],
     templateUrl: './board-detail.feature.html',
 })
 export class BoardDetailFeature implements OnInit{

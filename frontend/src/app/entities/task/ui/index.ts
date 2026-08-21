@@ -1,1 +1,2 @@
-export { TaskListItemComponent } from './task-list-item'
+export * from './task-list-item'
+export * from './task-card'

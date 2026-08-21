@@ -6,17 +6,17 @@
         </div>
 
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary">
+            <button class="btn btn-sm btn-outline-secondary" disabled>
                 <i class="fa-solid fa-filter me-2"></i>
                 Filter
             </button>
 
-            <button class="btn btn-outline-secondary">
+            <button class="btn btn-sm btn-outline-secondary" disabled>
                 <i class="fa-solid fa-users me-2"></i>
                 Members
             </button>
 
-            <button class="btn btn-primary">
+            <button class="btn btn-sm btn-primary">
                 <i class="fa-solid fa-plus me-2"></i>
                 New Task
             </button>
@@ -31,36 +31,8 @@
                     <span class="badge text-bg-secondary">8</span>
                 </div>
                 <div class="card-body d-flex flex-column gap-3">
-                    <a routerLink="/app/w/1/task" class="card text-decoration-none text-body">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="badge text-bg-primary"> Feature </span>
-
-                                <small class="text-muted"> #AUTH-42 </small>
-                            </div>
-
-                            <h6 class="mb-2">Implement OAuth login</h6>
-
-                            <p class="small text-muted mb-3">
-                                Add Google and GitHub authentication.
-                            </p>
-
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted"> Alex </small>
-
-                                <i class="fa-regular fa-message"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <a routerLink="/app/w/1/task" class="card text-decoration-none text-body">
-                        <div class="card-body">
-                            <span class="badge text-bg-warning mb-2"> Improvement </span>
-
-                            <h6 class="mb-2">Improve dashboard performance</h6>
-
-                            <small class="text-muted"> #CORE-15 </small>
-                        </div>
-                    </a>
+                    <lu-task-card />
+                    <lu-task-card />
                 </div>
             </div>
         </div>
@@ -72,15 +44,7 @@
                     <span class="badge text-bg-warning">3</span>
                 </div>
                 <div class="card-body d-flex flex-column gap-3">
-                    <a routerLink="/app/w/1/task" class="card text-decoration-none text-body">
-                        <div class="card-body">
-                            <span class="badge text-bg-success mb-2"> Backend </span>
-
-                            <h6 class="mb-2">Refactor permissions service</h6>
-
-                            <small class="text-muted"> #API-28 </small>
-                        </div>
-                    </a>
+                    <lu-task-card />
                 </div>
             </div>
         </div>
@@ -92,15 +56,7 @@
                     <span class="badge text-bg-info">2</span>
                 </div>
                 <div class="card-body d-flex flex-column gap-3">
-                    <a routerLink="/app/w/1/task" class="card text-decoration-none text-body">
-                        <div class="card-body">
-                            <span class="badge text-bg-info mb-2"> UI </span>
-
-                            <h6 class="mb-2">Redesign login page</h6>
-
-                            <small class="text-muted"> #WEB-61 </small>
-                        </div>
-                    </a>
+                    <lu-task-card />
                 </div>
             </div>
         </div>
@@ -112,15 +68,7 @@
                     <span class="badge text-bg-success">11</span>
                 </div>
                 <div class="card-body d-flex flex-column gap-3">
-                    <a routerLink="/app/w/1/task" class="card text-decoration-none text-body">
-                        <div class="card-body">
-                            <span class="badge text-bg-success mb-2"> Infrastructure </span>
-
-                            <h6 class="mb-2">Configure CI/CD pipeline</h6>
-
-                            <small class="text-muted"> #OPS-12 </small>
-                        </div>
-                    </a>
+                    <lu-task-card />
                 </div>
             </div>
         </div>
