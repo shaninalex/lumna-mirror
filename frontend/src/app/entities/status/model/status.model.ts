@@ -9,7 +9,7 @@ export interface StatusModel {
 }
 
 export interface StatusPayloadModel {
-    title: number
+    title: string
     order: number
     project_id: number
     list_id: number

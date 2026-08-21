@@ -39,25 +39,19 @@ func (s *statusService) Get(ctx context.Context, statusID uint) (*models.Status,
 }
 
 type StatusUpdate struct {
-	ListId uint   `json:"list_id"`
-	Order  uint   `json:"order"`
-	Title  string `json:"title"`
-	// TODO: project id
+	Title     string `json:"title"`
+	Order     uint   `json:"order"`
+	ListId    uint   `json:"list_id"`
+	ProjectId uint   `json:"project_id"`
 }
 
 func (s *statusService) Create(ctx context.Context, payload StatusUpdate) (*models.Status, error) {
-	// NOTE: may be instead of ColumnUpdate use models.Column?
-	list, err := s.listRepository.GetByID(ctx, payload.ListId)
-	if err != nil {
-		return nil, err
-	}
-
 	status := models.Status{
 		Order:     payload.Order,
 		Title:     payload.Title,
-		ProjectID: list.ProjectID,
+		ListId:    payload.ListId,
+		ProjectID: payload.ProjectId,
 	}
-
 	return s.statusRepository.Create(ctx, status)
 }
 

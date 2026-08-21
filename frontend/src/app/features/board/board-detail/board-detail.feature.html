@@ -37,48 +37,9 @@
             </div>
         </div>
 
-        <div style="min-width: 320px">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>In Progress</strong>
-                    <span class="badge text-bg-warning">3</span>
-                </div>
-                <div class="card-body d-flex flex-column gap-3">
-                    <lu-task-card />
-                </div>
-            </div>
-        </div>
-
-        <div style="min-width: 320px">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>Review</strong>
-                    <span class="badge text-bg-info">2</span>
-                </div>
-                <div class="card-body d-flex flex-column gap-3">
-                    <lu-task-card />
-                </div>
-            </div>
-        </div>
-
-        <div style="min-width: 320px">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>Done</strong>
-                    <span class="badge text-bg-success">11</span>
-                </div>
-                <div class="card-body d-flex flex-column gap-3">
-                    <lu-task-card />
-                </div>
-            </div>
-        </div>
-
         <!-- Add Column -->
         <div style="min-width: 280px">
-            <button class="btn btn-outline-secondary w-100" style="height: 100px">
-                <i class="fa-solid fa-plus me-2"></i>
-                Add Column
-            </button>
+            <lu-new-column-form [board_id]="boardId" />
         </div>
     </div>
 }

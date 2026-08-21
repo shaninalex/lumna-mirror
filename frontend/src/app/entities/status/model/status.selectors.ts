@@ -6,7 +6,7 @@ const feature = createFeatureSelector<StatusState>('status');
 
 const entitySelectors = statusAdapter.getSelectors();
 
-export const statusSelectors = {
+export const selectoStatuses = {
     all: createSelector(feature, entitySelectors.selectAll),
 
     entities: createSelector(feature, entitySelectors.selectEntities),

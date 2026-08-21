@@ -4,7 +4,7 @@ import { catchError, of } from "rxjs";
 import { switchMap } from "rxjs/operators";
 import type { HttpErrorResponse } from "@angular/common/http";
 import { fromErrorResponse } from "@shared/models";
-import { statusActions } from "./status.actions";
+import { actionsStatuses } from "./status.actions";
 import { StatusApi } from "../api";
 
 @Injectable()
@@ -14,13 +14,13 @@ export class StatusEffects {
 
     statuses$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(statusActions.loadByListId),
+            ofType(actionsStatuses.loadByListId),
             switchMap((action) =>
                 this.api.list(action.list_id).pipe(
-                    switchMap((statuses) => of(statusActions.loadByListIdSuccess({ statuses }))),
+                    switchMap((statuses) => of(actionsStatuses.loadByListIdSuccess({ statuses }))),
                     catchError((err: HttpErrorResponse) =>
                         of(
-                            statusActions.loadByListIdFailed({
+                            actionsStatuses.loadByListIdFailed({
                                 errors: fromErrorResponse(err)
                             })
                         )
@@ -32,13 +32,13 @@ export class StatusEffects {
 
     task_create$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(statusActions.create),
+            ofType(actionsStatuses.create),
             switchMap((action) =>
                 this.api.create(action.payload).pipe(
-                    switchMap((status) => of(statusActions.createSuccess({ status }))),
+                    switchMap((status) => of(actionsStatuses.createSuccess({ status }))),
                     catchError((err: HttpErrorResponse) =>
                         of(
-                            statusActions.createFailed({
+                            actionsStatuses.createFailed({
                                 errors: fromErrorResponse(err)
                             })
                         )

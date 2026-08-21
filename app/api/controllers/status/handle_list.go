@@ -14,12 +14,12 @@ var (
 )
 
 func (s *StatusController) List(c *gin.Context) {
-	boardId, err := strconv.Atoi(c.Query("board_id"))
+	listId, err := strconv.Atoi(c.Query("list_id"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, ErrorNoBoardProvided)
 		return
 	}
 
-	statuss := s.statusService.Filter(c.Request.Context(), uint(boardId))
+	statuss := s.statusService.Filter(c.Request.Context(), uint(listId))
 	utils.Success(c, statuss)
 }

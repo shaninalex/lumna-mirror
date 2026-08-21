@@ -2,7 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { createEntityAdapter, type EntityState } from '@ngrx/entity';
 import type { Error } from '@shared/models';
 import type { StatusModel } from './status.model';
-import { statusActions } from './status.actions';
+import { actionsStatuses } from './status.actions';
 
 export interface StatusState extends EntityState<StatusModel> {
     loading: boolean;
@@ -20,11 +20,11 @@ const initialState: StatusState = statusAdapter.getInitialState({
 
 export const statusReducer = createReducer(
     initialState,
-    on(statusActions.createSuccess, (state, action) => statusAdapter.addOne(action.status, state)),
-    on(statusActions.loadByListIdSuccess, (state, action) =>
+    on(actionsStatuses.createSuccess, (state, action) => statusAdapter.addOne(action.status, state)),
+    on(actionsStatuses.loadByListIdSuccess, (state, action) =>
         statusAdapter.addMany(action.statuses, state),
     ),
-    on((statusActions.loadByListIdFailed, statusActions.createFailed), (state, action) => ({
+    on((actionsStatuses.loadByListIdFailed, actionsStatuses.createFailed), (state, action) => ({
         ...state,
         errors: action.errors,
     })),

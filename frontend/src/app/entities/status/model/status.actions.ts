@@ -3,7 +3,7 @@ import type { StatusPayloadModel, StatusModel } from './status.model';
 import type { Error } from '@shared/models';
 
 
-export const statusActions = createActionGroup({
+export const actionsStatuses = createActionGroup({
     source: "Status",
     events: {
         'load by list id': props<{ list_id: number }>(),

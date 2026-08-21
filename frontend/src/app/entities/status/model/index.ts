@@ -1,3 +1,5 @@
 export * from './status.actions'
+export * from './status.effects'
 export * from './status.model'
+export * from './status.selectors'
 export * from './status.store'
