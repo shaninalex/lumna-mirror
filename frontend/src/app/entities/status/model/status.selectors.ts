@@ -6,7 +6,7 @@ const feature = createFeatureSelector<StatusState>('status');
 
 const entitySelectors = statusAdapter.getSelectors();
 
-export const selectoStatuses = {
+export const selectStatuses = {
     all: createSelector(feature, entitySelectors.selectAll),
 
     entities: createSelector(feature, entitySelectors.selectEntities),
@@ -20,12 +20,12 @@ export const selectoStatuses = {
 
     byListId: (listId: number) =>
         createSelector(feature, (state) =>
-            entitySelectors.selectAll(state).find((a) => a.list_id === listId),
+            entitySelectors.selectAll(state).filter((a) => a.list_id === listId),
         ),
 
     byProjectId: (projectId: number) =>
         createSelector(feature, (state) =>
-            entitySelectors.selectAll(state).find((a) => a.project_id === projectId),
+            entitySelectors.selectAll(state).filter((a) => a.project_id === projectId),
         ),
 
     loading: createSelector(

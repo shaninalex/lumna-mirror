@@ -29,6 +29,7 @@ export interface TaskCreateModel {
 
 export interface TaskListQueryModel {
     project_id?: number;
+    status_ids?: number[]
 }
 
 export function toHttpParams(q: TaskListQueryModel): HttpParams {
