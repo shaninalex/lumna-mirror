@@ -4,7 +4,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import type { TaskCreateModel } from '@entities/task/model';
-import { actionTaskCreate, actionTaskCreateFailed, actionTaskCreateSuccess } from '@entities/task/model';
+import {
+    actionTaskCreate,
+    actionTaskCreateFailed,
+    actionTaskCreateSuccess,
+} from '@entities/task/model';
 
 @Component({
     selector: 'lu-task-inline-form',
@@ -66,6 +70,9 @@ export class TaskInlineForm {
     loading = signal(false);
     errors = signal<string[]>([]);
     taskFormModel = signal<{ title: string }>({ title: '' });
+    taskForm = form(this.taskFormModel, (schemaPath) => {
+        required(schemaPath.title, { message: 'Name is required' });
+    });
 
     constructor() {
         this.actions$
@@ -85,28 +92,24 @@ export class TaskInlineForm {
         });
     }
 
-    taskForm = form(this.taskFormModel, (schemaPath) => {
-        required(schemaPath.title, { message: 'Name is required' });
-    });
-
     submit(event: Event) {
         event.preventDefault();
         const formData = this.taskFormModel();
         const data: TaskCreateModel = {
             title: formData.title,
-            body: "",
+            body: '',
             project_id: this.project_id(),
             order: this.task_count(),
             status_id: this.column_id(),
         };
         this.store.dispatch(actionTaskCreate({ data }));
+        this._reset();
     }
 
     private _reset() {
         this.loading.set(false);
         this.openedForm.set(false);
         this.errors.set([]);
-        this.taskForm().value.set({ title: '' });
-        this.errors.set([]);
+        this.taskForm().reset();
     }
 }
