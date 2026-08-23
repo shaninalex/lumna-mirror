@@ -149,9 +149,11 @@ func importDB(payload MockDbDataSchema) func(db *gorm.DB) {
 						status := models.Status{
 							Title: _list.Title,
 							//ListID:    list.ID,
-							Order:     uint(li),
 							ProjectID: project.ID,
 							//WorkspaceID: wp.ID,
+							Meta: models.StatusMeta{
+								Order: uint(li),
+							},
 						}
 						if result := database.Create(&status); result.Error != nil {
 							panic(result.Error)

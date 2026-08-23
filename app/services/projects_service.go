@@ -82,8 +82,8 @@ func (s *projectService) Create(ctx context.Context, data models.ProjectCreateMo
 		OwnerID:     data.OwnerID,
 		WorkspaceID: data.WorkspaceID,
 		Key:         key,
+		Meta:        models.NewProjectMeta(),
 	}
-	_ = project.SetMeta(models.NewProjectMeta())
 	if err := s.repository.Create(ctx, project); err != nil {
 		return nil, err
 	}

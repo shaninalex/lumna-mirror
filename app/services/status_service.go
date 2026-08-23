@@ -47,10 +47,12 @@ type StatusUpdate struct {
 
 func (s *statusService) Create(ctx context.Context, payload StatusUpdate) (*models.Status, error) {
 	status := models.Status{
-		Order:     payload.Order,
 		Title:     payload.Title,
 		ListId:    payload.ListId,
 		ProjectID: payload.ProjectId,
+		Meta: models.StatusMeta{
+			Order: payload.Order,
+		},
 	}
 	return s.statusRepository.Create(ctx, status)
 }
