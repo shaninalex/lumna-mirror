@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 	"gitlab.com/shaninalex/lumna/app/services/observer"
 )
@@ -76,19 +77,25 @@ func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 		return nil, err
 	}
 
+	var taskOrder int = 0
+	db := s.repository.GetDB().WithContext(ctx)
+	db = db.Table("tasks t").Select("t.'order'")
+	db = db.Where("project_id = ?", payload.ProjectID)
+	db = db.Where("status_id = ?", payload.StatusID)
+	db = db.Order("t.'order' DESC")
+	db = db.Limit(1)
+	if err = db.Find(&taskOrder).Error; err != nil {
+		taskOrder = 0
+	}
+
+	taskOrder = taskOrder + 1
 	task := models.Task{
 		Title:     payload.Title,
 		ProjectID: payload.ProjectID,
+		StatusID:  payload.StatusID,
 		Code:      code,
 		Body:      payload.Body,
-	}
-
-	if payload.StatusID != nil {
-		status, err := s.statusRepository.GetByID(ctx, *payload.StatusID)
-		if err != nil {
-			return nil, err
-		}
-		task.StatusID = &status.ID
+		Order:     utils.Pointer(uint(taskOrder)),
 	}
 
 	if err := s.repository.Create(ctx, &task); err != nil {

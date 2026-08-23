@@ -134,7 +134,7 @@ func (s *projectService) GetNewCode(ctx context.Context, projectID uint, entity 
 
 	tasks, err := s.taskRepository.List(ctx, repositories.TaskListQuery{
 		ProjectID: &projectID,
-		OrderBy:   utils.Pointer("id DESC"),
+		OrderBy:   utils.Pointer("'order DESC"),
 		Limit:     utils.Pointer(uint(1)),
 	})
 	if err != nil {

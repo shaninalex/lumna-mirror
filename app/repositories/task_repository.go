@@ -10,7 +10,6 @@ import (
 type TaskListQuery struct {
 	ProjectID *uint
 	Code      *string
-	Query     *string
 	QueryArgs []interface{}
 	OrderBy   *string
 	Limit     *uint
