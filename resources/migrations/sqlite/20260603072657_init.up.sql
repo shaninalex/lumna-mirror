@@ -203,8 +203,11 @@ CREATE TABLE board_tasks
 CREATE TABLE task_history
 (
     id          integer PRIMARY KEY AUTOINCREMENT,
+    identity_id integer NULL,
     event_type  text NOT NULL,
     value_from  text NULL,
     value_to    text NULL,
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE SET NULL
 );
