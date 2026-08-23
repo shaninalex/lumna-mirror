@@ -8,6 +8,7 @@ import (
 )
 
 type StatusRepository interface {
+	Repository
 	Create(ctx context.Context, status models.Status) (*models.Status, error)
 	Update(ctx context.Context, status *models.Status) (*models.Status, error)
 	UpdateFields(ctx context.Context, statusID uint, updates map[string]any) error
@@ -24,6 +25,10 @@ func NewGormStatusRepository(db *gorm.DB) StatusRepository {
 	return &GormStatusRepository{
 		db: db,
 	}
+}
+
+func (r *GormStatusRepository) GetDB() *gorm.DB {
+	return r.db
 }
 
 func (r *GormStatusRepository) GetByID(ctx context.Context, id uint) (*models.Status, error) {

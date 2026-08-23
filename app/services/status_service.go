@@ -46,12 +46,26 @@ type StatusUpdate struct {
 }
 
 func (s *statusService) Create(ctx context.Context, payload StatusUpdate) (*models.Status, error) {
+	var statusOrder uint = 0
+
+	db := s.statusRepository.GetDB().WithContext(ctx).
+		Table("statuses t").Select("t.meta->>'order'").
+		Where("project_id = ?", payload.ProjectId).
+		Where("list_id = ?", payload.ListId).
+		Order("t.meta->>'order' DESC").
+		Limit(1)
+
+	if err := db.Find(&statusOrder).Error; err != nil {
+		statusOrder = 0
+	}
+
+	statusOrder = statusOrder + 1
 	status := models.Status{
 		Title:     payload.Title,
 		ListId:    payload.ListId,
 		ProjectID: payload.ProjectId,
 		Meta: models.StatusMeta{
-			Order: payload.Order,
+			Order: statusOrder,
 		},
 	}
 	return s.statusRepository.Create(ctx, status)

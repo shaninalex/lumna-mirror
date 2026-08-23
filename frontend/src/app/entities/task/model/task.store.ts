@@ -6,7 +6,7 @@ import type { TaskModel } from "./task.model";
 
 export type TaskState = EntityState<TaskModel>
 export const taskAdapter = createEntityAdapter<TaskModel>({
-    sortComparer: (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    sortComparer: (a, b) => a.order - b.order,
 });
 const initialState = taskAdapter.getInitialState();
 

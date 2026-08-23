@@ -78,12 +78,12 @@ func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*mo
 	}
 
 	var taskOrder int = 0
-	db := s.repository.GetDB().WithContext(ctx)
-	db = db.Table("tasks t").Select("t.'order'")
-	db = db.Where("project_id = ?", payload.ProjectID)
-	db = db.Where("status_id = ?", payload.StatusID)
-	db = db.Order("t.'order' DESC")
-	db = db.Limit(1)
+	db := s.repository.GetDB().WithContext(ctx).
+		Table("tasks t").Select("t.'order'").
+		Where("project_id = ?", payload.ProjectID).
+		Where("status_id = ?", payload.StatusID).
+		Order("t.'order' DESC").
+		Limit(1)
 	if err = db.Find(&taskOrder).Error; err != nil {
 		taskOrder = 0
 	}
