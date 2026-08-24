@@ -1,8 +1,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import type { StatusState } from './status.store';
-import { statusAdapter } from './status.store';
+import type { ColumnState } from './column.store';
+import { statusAdapter } from './column.store';
 
-const feature = createFeatureSelector<StatusState>('status');
+const feature = createFeatureSelector<ColumnState>('column');
 
 const entitySelectors = statusAdapter.getSelectors();
 
@@ -20,12 +20,7 @@ export const selectStatuses = {
 
     byListId: (listId: number) =>
         createSelector(feature, (state) =>
-            entitySelectors.selectAll(state).filter((a) => a.list_id === listId),
-        ),
-
-    byProjectId: (projectId: number) =>
-        createSelector(feature, (state) =>
-            entitySelectors.selectAll(state).filter((a) => a.project_id === projectId),
+            entitySelectors.selectAll(state).filter((a) => a.board_id === listId),
         ),
 
     loading: createSelector(

@@ -62,7 +62,6 @@ export class TaskInlineForm {
     private store = inject(Store);
     private actions$ = inject(Actions);
 
-    project_id = input.required<number>();
     column_id = input.required<number>();
     task_count = input.required<number>();
 
@@ -98,7 +97,6 @@ export class TaskInlineForm {
         const data: TaskCreateModel = {
             title: formData.title,
             body: '',
-            project_id: this.project_id(),
             order: this.task_count(),
             status_id: this.column_id(),
         };

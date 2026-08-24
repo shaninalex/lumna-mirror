@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import type { OnInit } from '@angular/core';
 import { Component, inject, Input } from '@angular/core';
-import type { StatusModel } from '@entities/status/model';
+import type { ColumnModel } from '@entities/column/model';
 import type { TaskModel } from '@entities/task';
 import { selectTasksByStatusId, TaskCardComponent, TaskInlineForm } from '@entities/task';
 import { Store } from '@ngrx/store';
@@ -26,7 +26,6 @@ import type { Observable } from 'rxjs';
                 }
 
                 <lu-task-inline-form
-                    [project_id]="column.project_id"
                     [column_id]="column.id"
                     [task_count]="0"
                 />
@@ -37,7 +36,7 @@ import type { Observable } from 'rxjs';
 export class ColumnItemComponent implements OnInit {
     private store = inject(Store);
 
-    @Input({ required: true }) column: StatusModel;
+    @Input({ required: true }) column: ColumnModel;
     tasks$: Observable<TaskModel[]>;
 
     ngOnInit(): void {

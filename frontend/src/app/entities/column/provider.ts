@@ -1,7 +1,7 @@
 import { createFeature } from "@ngrx/store";
 import { statusReducer } from "./model";
 
-export const statusFeature = createFeature({
-    name: 'status',
+export const columnFeature = createFeature({
+    name: 'column',
     reducer: statusReducer,
 });

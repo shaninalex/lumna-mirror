@@ -4,23 +4,23 @@ import { catchError, of } from "rxjs";
 import { switchMap } from "rxjs/operators";
 import type { HttpErrorResponse } from "@angular/common/http";
 import { fromErrorResponse } from "@shared/models";
-import { actionsStatuses } from "./status.actions";
-import { StatusApi } from "../api";
+import { actionsColumns } from "./column.actions";
+import { ColumnApi } from "../api";
 
 @Injectable()
-export class StatusEffects {
+export class ColumnEffects {
     private actions$ = inject(Actions);
-    private api = inject(StatusApi);
+    private api = inject(ColumnApi);
 
-    statuses$ = createEffect(() =>
+    list_columns$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionsStatuses.loadByListId),
+            ofType(actionsColumns.loadByBoardId),
             switchMap((action) =>
-                this.api.list(action.list_id).pipe(
-                    switchMap((statuses) => of(actionsStatuses.loadByListIdSuccess({ statuses }))),
+                this.api.list(action.board_id).pipe(
+                    switchMap((statuses) => of(actionsColumns.loadByBoardIdSuccess({ columns: statuses }))),
                     catchError((err: HttpErrorResponse) =>
                         of(
-                            actionsStatuses.loadByListIdFailed({
+                            actionsColumns.loadByBoardIdFailed({
                                 errors: fromErrorResponse(err)
                             })
                         )
@@ -30,15 +30,15 @@ export class StatusEffects {
         )
     );
 
-    task_create$ = createEffect(() =>
+    column_create$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionsStatuses.create),
+            ofType(actionsColumns.create),
             switchMap((action) =>
                 this.api.create(action.payload).pipe(
-                    switchMap((status) => of(actionsStatuses.createSuccess({ status }))),
+                    switchMap((column) => of(actionsColumns.createSuccess({ column }))),
                     catchError((err: HttpErrorResponse) =>
                         of(
-                            actionsStatuses.createFailed({
+                            actionsColumns.createFailed({
                                 errors: fromErrorResponse(err)
                             })
                         )

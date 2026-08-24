@@ -3,7 +3,7 @@ import { Component, DestroyRef, inject, Input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, form, required } from '@angular/forms/signals';
 import { selectCurrentProjectId } from '@entities/project';
-import { actionsStatuses } from '@entities/status/model';
+import { actionsColumns } from '@entities/column/model';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import type { Error } from '@shared/models';
@@ -86,7 +86,7 @@ export class NewColumnFormComponent implements OnInit {
         this.actions$
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                ofType(actionsStatuses.createSuccess),
+                ofType(actionsColumns.createSuccess),
                 tap(() => {
                     this.loading.set(false);
                     this.openedForm.set(false);
@@ -99,7 +99,7 @@ export class NewColumnFormComponent implements OnInit {
         this.actions$
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                ofType(actionsStatuses.createFailed),
+                ofType(actionsColumns.createFailed),
                 tap((data) => {
                     this.errors.set(data.errors);
                     this.loading.set(false);
@@ -114,18 +114,13 @@ export class NewColumnFormComponent implements OnInit {
 
         if (!formData.title) return;
 
-        const v = {
+        const payload = {
             title: formData.title,
-            list_id: this.board_id,
+            board_id: this.board_id,
             order: 0,
-            project_id: this.projectId,
         };
 
-        this.store.dispatch(
-            actionsStatuses.create({
-                payload: v,
-            }),
-        );
+        this.store.dispatch(actionsColumns.create({ payload }));
     }
 
     openForm(): void {

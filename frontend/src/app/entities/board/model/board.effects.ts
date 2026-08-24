@@ -7,7 +7,7 @@ import { fromErrorResponse } from '@shared/models';
 import { actionBoard } from './board.actions';
 
 @Injectable()
-export class ListsEffects {
+export class BoardEffects {
     private actions$ = inject(Actions);
     private listApi = inject(BoardApi);
 

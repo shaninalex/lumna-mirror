@@ -2,11 +2,11 @@ import { AsyncPipe } from '@angular/common';
 import type { OnInit } from '@angular/core';
 import { Component, inject, input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import type { StatusModel } from '@entities/status';
-import { actionsStatuses, ColumnItemComponent, NewColumnFormComponent, selectStatuses } from '@entities/status';
+import type { ColumnModel } from '@entities/column';
+import { actionsColumns, ColumnItemComponent, NewColumnFormComponent, selectStatuses } from '@entities/column';
 import { filter, type Observable } from 'rxjs';
-import { selectListById, type ListModel } from '@entities/list';
 import { TimeAgoPipe } from '@shared/utils';
+import { selectBoard, type BoardModel } from '@entities/board';
 
 @Component({
     selector: 'lu-board-detail-feature',
@@ -17,13 +17,13 @@ export class BoardDetailFeature implements OnInit {
     private store = inject(Store);
 
     boardId = input.required<number>();
-    board$: Observable<ListModel>;
-    columns$: Observable<StatusModel[]>;
+    board$: Observable<BoardModel>;
+    columns$: Observable<ColumnModel[]>;
 
     ngOnInit() {
-        this.store.dispatch(actionsStatuses.loadByListId({ list_id: this.boardId() }));
+        this.store.dispatch(actionsColumns.loadByBoardId({ board_id: this.boardId() }));
         this.board$ = this.store
-            .select(selectListById(this.boardId()))
+            .select(selectBoard.byId(this.boardId()))
             .pipe(filter((board) => board !== null));
         this.columns$ = this.store.select(selectStatuses.byListId(this.boardId()));
     }

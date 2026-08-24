@@ -1,7 +1,7 @@
 import { createFeature } from "@ngrx/store";
-import { listReducer } from "./model";
+import { boardReducer } from "./model";
 
-export const listFeature = createFeature({
-    name: 'list',
-    reducer: listReducer,
+export const boardFeature = createFeature({
+    name: 'board',
+    reducer: boardReducer,
 });

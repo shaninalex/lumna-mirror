@@ -3,7 +3,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, required } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { AppRoutes } from '@core';
-import { actionListCreate, actionListCreateFailed, actionListCreateSuccess, type ListPayloadModel } from '@entities/list';
+import type { BoardPayloadModel } from '@entities/board';
+import { actionBoard } from '@entities/board';
 import { selectCurrentProjectId } from '@entities/project';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -38,7 +39,7 @@ export class BoardCreateFeature {
     private appRoutes = inject(AppRoutes);
     private currentProjectId = this.store.selectSignal(selectCurrentProjectId);
 
-    pFormModel = signal<ListPayloadModel>({ title: '', project_id: 0 });
+    pFormModel = signal<BoardPayloadModel>({ title: '', project_id: 0 });
     pForm = form(this.pFormModel, (schemaPath) => required(schemaPath.title));
 
     constructor() {
@@ -46,11 +47,11 @@ export class BoardCreateFeature {
         if (_currentProjectId) this.pFormModel().project_id = _currentProjectId;
 
         this.actions$
-            .pipe(ofType(actionListCreateFailed), takeUntilDestroyed(this.destroyRef))
+            .pipe(ofType(actionBoard.createFailed), takeUntilDestroyed(this.destroyRef))
             .subscribe((action) => console.log(action));
         this.actions$
             .pipe(
-                ofType(actionListCreateSuccess),
+                ofType(actionBoard.createSuccess),
                 takeUntilDestroyed(this.destroyRef),
                 tap(() => {
                     this.router.navigate(this.appRoutes.boards());
@@ -61,6 +62,6 @@ export class BoardCreateFeature {
 
     onSubmit(event: Event): void {
         event.preventDefault();
-        this.store.dispatch(actionListCreate({ data: this.pFormModel() }));
+        this.store.dispatch(actionBoard.create({ data: this.pFormModel() }));
     }
 }
