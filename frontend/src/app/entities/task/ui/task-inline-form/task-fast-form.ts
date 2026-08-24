@@ -48,7 +48,7 @@ import { actionTask, type TaskCreateModel } from '@entities/task/model';
             </form>
         } @else {
             <button class="btn btn-sm btn-outline-secondary" (click)="this.openedForm.set(true)">
-                add task
+                Add task
             </button>
         }
     `,
@@ -58,6 +58,7 @@ export class TaskInlineForm {
     private actions$ = inject(Actions);
 
     column_id = input.required<number>();
+    board_id = input.required<number>();
     task_count = input.required<number>();
 
     openedForm = signal<boolean>(false);
@@ -93,7 +94,8 @@ export class TaskInlineForm {
             title: formData.title,
             body: '',
             order: this.task_count(),
-            status_id: this.column_id(),
+            column_id: this.column_id(),
+            board_id: this.board_id(),
         };
         this.store.dispatch(actionTask.create({ data }));
         this._reset();

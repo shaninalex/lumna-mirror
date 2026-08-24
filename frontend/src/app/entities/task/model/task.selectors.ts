@@ -4,7 +4,7 @@ import { taskAdapter } from './task.store';
 import type { TaskModel } from './task.model';
 
 const feature = createFeatureSelector<TaskState>('task');
-const entitySelectors = taskAdapter.getSelectors();
+const entitySelectors = taskAdapter.getSelectors(feature);
 
 export const selectTasks = {
     all: createSelector(feature, entitySelectors.selectAll),

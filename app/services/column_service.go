@@ -8,10 +8,10 @@ import (
 )
 
 type ColumnService interface {
-	Filter(ctx context.Context, columnId uint) []models.Column
-	Get(ctx context.Context, statusID uint) (*models.Column, error)
+	Filter(ctx context.Context, boardId uint) []models.Column
+	Get(ctx context.Context, columnId uint) (*models.Column, error)
 	Create(ctx context.Context, payload BoardUpdate) (*models.Column, error)
-	Update(ctx context.Context, status *models.Column) (*models.Column, error)
+	Update(ctx context.Context, column *models.Column) (*models.Column, error)
 	Delete(ctx context.Context, id uint) error
 }
 

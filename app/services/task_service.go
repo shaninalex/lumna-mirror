@@ -12,7 +12,7 @@ type TaskService interface {
 	List(ctx context.Context, query ServiceTaskListQuery) ([]*models.Task, error)
 	GetTask(ctx context.Context, taskID uint) (*models.Task, error)
 	ReorderTask(ctx context.Context, taskID uint, listListID uint, order uint) error
-	CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error)
+	CreateTask(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error)
 	UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error
 }
 
@@ -51,23 +51,22 @@ func (s *taskService) ReorderTask(ctx context.Context, taskID uint, listListID u
 	return s.repository.Reorder(ctx, taskID, listListID, order)
 }
 
-// TaskPayload - used to create/partial update task
-// TODO: add validators
-type TaskPayload struct {
-	Title     string `json:"title"`
-	ProjectID uint   `json:"project_id"`
-	Order     *uint  `json:"order"`
-	StatusID  *uint  `json:"status_id"`
-	Body      string `json:"body"`
-}
-
-func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
+func (s *taskService) CreateTask(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error) {
 	task := models.Task{
 		Title: payload.Title,
 		Body:  payload.Body,
 	}
 
 	if err := s.repository.Create(ctx, &task); err != nil {
+		return nil, err
+	}
+
+	if err := s.repository.CreateTaskBoard(ctx, models.BoardTask{
+		TaskId:   task.ID,
+		Position: uint(0),
+		BoardId:  *payload.BoardId,
+		ColumnId: *payload.ColumnId,
+	}); err != nil {
 		return nil, err
 	}
 

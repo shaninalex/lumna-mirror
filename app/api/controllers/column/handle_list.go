@@ -14,12 +14,12 @@ var (
 )
 
 func (s *ColumnController) List(c *gin.Context) {
-	listId, err := strconv.Atoi(c.Query("list_id"))
+	boardId, err := strconv.Atoi(c.Query("board_id"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, ErrorNoBoardProvided)
 		return
 	}
 
-	statuss := s.columnService.Filter(c.Request.Context(), uint(listId))
+	statuss := s.columnService.Filter(c.Request.Context(), uint(boardId))
 	utils.Success(c, statuss)
 }

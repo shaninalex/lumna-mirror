@@ -21,6 +21,7 @@ type TaskRepository interface {
 	GetByID(ctx context.Context, taskID uint) (*models.Task, error)
 	Reorder(ctx context.Context, taskID uint, statusID uint, order uint) error
 	Create(ctx context.Context, task *models.Task) error
+	CreateTaskBoard(ctx context.Context, task models.BoardTask) error
 	Update(ctx context.Context, task *models.Task) error
 	UpdateFields(ctx context.Context, taskID uint, updates map[string]any) error
 }
@@ -85,6 +86,20 @@ func (r *GormTaskRepository) Create(ctx context.Context, task *models.Task) erro
 	return r.db.WithContext(ctx).
 		Create(task).
 		Error
+}
+
+func (r *GormTaskRepository) CreateTaskBoard(ctx context.Context, boardTask models.BoardTask) error {
+	result := r.db.Exec(`
+        INSERT INTO board_tasks (board_id, task_id, column_id, position)
+        VALUES (?, ?, ?, ?)
+    `,
+		boardTask.BoardId,
+		boardTask.TaskId,
+		boardTask.ColumnId,
+		boardTask.Position,
+	)
+
+	return result.Error
 }
 
 func (r *GormTaskRepository) Update(ctx context.Context, task *models.Task) error {

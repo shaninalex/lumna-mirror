@@ -4,7 +4,6 @@ import { filter, map, tap } from 'rxjs';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { LocalStorageService } from '@shared/services';
 import { actionBoard } from '@entities/board';
-import { actionTask } from '@entities/task';
 import { actionSession } from '@core/store';
 import { actionWorkspace } from '@entities/workspace';
 import { actionProject } from '@entities/project';
@@ -41,14 +40,14 @@ export class MainEffects {
         ),
     );
 
-    loadProjectTasks$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(actionProject.setCurrent),
-            map((action) => action.id),
-            filter((id) => id !== null),
-            map((id) => actionTask.getList({ query: { project_id: id } })),
-        ),
-    );
+    // loadProjectTasks$ = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType(actionProject.setCurrent),
+    //         map((action) => action.id),
+    //         filter((id) => id !== null),
+    //         map((id) => actionTask.getList({ query: { project_id: id } })),
+    //     ),
+    // );
 
     onSetCurrentProject$ = createEffect(() =>
         this.actions$.pipe(

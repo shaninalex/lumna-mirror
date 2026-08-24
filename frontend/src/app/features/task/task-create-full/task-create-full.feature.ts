@@ -22,6 +22,9 @@ export class TaskCreateFullFeature {
     taskFormModel = signal<TaskCreateModel>({
         title: '',
         body: '',
+        order: 0,
+        column_id: 0,
+        board_id: 0,
     });
 
     taskForm = form(this.taskFormModel, (schemaPath) => {

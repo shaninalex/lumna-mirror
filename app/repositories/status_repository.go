@@ -49,7 +49,7 @@ func (r *GormStatusRepository) FilterByBoard(ctx context.Context, listId uint) [
 	var statuss []models.Column
 	if result := r.db.WithContext(ctx).
 		//Preload("Tasks").
-		Where("list_id = ?", listId).
+		Where("board_id = ?", listId).
 		Find(&statuss); result.Error != nil {
 		return []models.Column{}
 	}

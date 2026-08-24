@@ -1,5 +1,3 @@
-import { HttpParams } from '@angular/common/http';
-
 export interface TaskModel {
     id: number;
     title: string;
@@ -22,19 +20,11 @@ export function makeListLabel(task: TaskModel): string {
 export interface TaskCreateModel {
     title: string;
     body: string;
-    order?: number;
-    status_id?: number;
+    order: number;
+    column_id: number;
+    board_id: number;
 }
 
 export interface TaskListQueryModel {
-    project_id?: number;
-    status_ids?: number[]
-}
-
-export function toHttpParams(q: TaskListQueryModel): HttpParams {
-    let params = new HttpParams();
-    if (q.project_id) {
-        params = params.set('project_id', q.project_id);
-    }
-    return params;
+    board_id: number
 }

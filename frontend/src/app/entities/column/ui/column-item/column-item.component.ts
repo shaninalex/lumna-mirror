@@ -27,6 +27,7 @@ import type { Observable } from 'rxjs';
 
                 <lu-task-inline-form
                     [column_id]="column.id"
+                    [board_id]="column.board_id"
                     [task_count]="0"
                 />
             </div>
@@ -36,7 +37,7 @@ import type { Observable } from 'rxjs';
 export class ColumnItemComponent implements OnInit {
     private store = inject(Store);
 
-    @Input({ required: true }) column: ColumnModel;
+    @Input() column: ColumnModel;
     tasks$: Observable<TaskModel[]>;
 
     ngOnInit(): void {

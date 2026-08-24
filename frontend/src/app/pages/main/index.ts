@@ -1,5 +1,4 @@
 export * from './backlog'
-export * from './board'
 export * from './board-create'
 export * from './board-detail'
 export * from './boards'

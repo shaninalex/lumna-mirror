@@ -5,11 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
-	"gitlab.com/shaninalex/lumna/app/services"
+	"gitlab.com/shaninalex/lumna/app/models"
 )
 
 func (s *TaskController) handleCreateTask(c *gin.Context) {
-	payload := services.TaskPayload{}
+	payload := models.TaskCreateOnBoard{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)

@@ -40,3 +40,15 @@ func (s *Task) BeforeUpdate(tx *gorm.DB) (err error) {
 func (s *Task) String() string {
 	return fmt.Sprintf("Task id=%d title=%s", s.ID, s.Title)
 }
+
+type TaskCreateOnBoard struct {
+	Title    string `json:"title"`
+	Body     string `json:"body"`
+	Position *uint  `json:"position"`
+	BoardId  *uint  `json:"board_id"`
+	ColumnId *uint  `json:"column_id"`
+}
+
+type TaskCreateBacklog struct {
+	Title string `json:"title"`
+}
