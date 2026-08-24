@@ -8,11 +8,11 @@ import (
 )
 
 type ListService interface {
-	Create(ctx context.Context, projectID uint, title string) (*models.List, error)
+	Create(ctx context.Context, projectID uint, title string) (*models.Board, error)
 	Delete(ctx context.Context, listID uint) error
-	Update(ctx context.Context, list *models.List) error
-	Get(ctx context.Context, listID uint) (*models.List, error)
-	List(ctx context.Context, projectID uint) ([]*models.List, error)
+	Update(ctx context.Context, list *models.Board) error
+	Get(ctx context.Context, listID uint) (*models.Board, error)
+	List(ctx context.Context, projectID uint) ([]*models.Board, error)
 	Reorder(ctx context.Context, payload *KanbanListChangeOrderPayload) error
 }
 
@@ -36,8 +36,8 @@ func NewListService(
 	}
 }
 
-func (s *listService) Create(ctx context.Context, projectID uint, title string) (*models.List, error) {
-	list := models.List{
+func (s *listService) Create(ctx context.Context, projectID uint, title string) (*models.Board, error) {
+	list := models.Board{
 		ProjectID: projectID,
 		Title:     title,
 	}
@@ -48,15 +48,15 @@ func (s *listService) Delete(ctx context.Context, listID uint) error {
 	return s.listRepository.Delete(ctx, listID)
 }
 
-func (s *listService) Update(ctx context.Context, list *models.List) error {
+func (s *listService) Update(ctx context.Context, list *models.Board) error {
 	_, err := s.listRepository.Update(ctx, list)
 	return err
 }
 
-func (s *listService) Get(ctx context.Context, listID uint) (*models.List, error) {
+func (s *listService) Get(ctx context.Context, listID uint) (*models.Board, error) {
 	return s.listRepository.GetByID(ctx, listID)
 }
-func (s *listService) List(ctx context.Context, projectID uint) ([]*models.List, error) {
+func (s *listService) List(ctx context.Context, projectID uint) ([]*models.Board, error) {
 	return s.listRepository.ListByProjectId(ctx, projectID)
 }
 

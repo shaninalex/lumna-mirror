@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/repositories"
 	"gitlab.com/shaninalex/lumna/app/services/observer"
 )
@@ -18,28 +17,19 @@ type TaskService interface {
 }
 
 type taskService struct {
-	repository        repositories.TaskRepository
-	statusRepository  repositories.StatusRepository
-	projectRepository repositories.ProjectRepository
-	projectService    ProjectService
-	bus               observer.Observer
+	repository repositories.TaskRepository
+	bus        observer.Observer
 }
 
 var _ TaskService = (*taskService)(nil)
 
 func NewTaskService(
 	repository repositories.TaskRepository,
-	statusRepository repositories.StatusRepository,
-	projectRepository repositories.ProjectRepository,
-	projectService ProjectService,
 	bus observer.Observer,
 ) TaskService {
 	return &taskService{
-		repository:        repository,
-		statusRepository:  statusRepository,
-		projectRepository: projectRepository,
-		projectService:    projectService,
-		bus:               bus,
+		repository: repository,
+		bus:        bus,
 	}
 }
 
@@ -72,30 +62,9 @@ type TaskPayload struct {
 }
 
 func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
-	code, err := s.projectService.GetNewCode(ctx, payload.ProjectID, "task")
-	if err != nil {
-		return nil, err
-	}
-
-	var taskOrder int = 0
-	db := s.repository.GetDB().WithContext(ctx).
-		Table("tasks t").Select("t.'order'").
-		Where("project_id = ?", payload.ProjectID).
-		Where("status_id = ?", payload.StatusID).
-		Order("t.'order' DESC").
-		Limit(1)
-	if err = db.Find(&taskOrder).Error; err != nil {
-		taskOrder = 0
-	}
-
-	taskOrder = taskOrder + 1
 	task := models.Task{
-		Title:     payload.Title,
-		ProjectID: payload.ProjectID,
-		StatusID:  payload.StatusID,
-		Code:      code,
-		Body:      payload.Body,
-		Order:     utils.Pointer(uint(taskOrder)),
+		Title: payload.Title,
+		Body:  payload.Body,
 	}
 
 	if err := s.repository.Create(ctx, &task); err != nil {

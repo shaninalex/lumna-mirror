@@ -2,12 +2,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject, Injectable } from '@angular/core';
 import { filter, map, tap } from 'rxjs';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
-import { actionSessionAuthenticated } from '@core';
-import { actionProjectList, actionProjectSetCurrent } from '@entities/project';
-import { actionWorkspaceGetList, actionWorkspaceSetCurrent } from '@entities/workspace';
 import { LocalStorageService } from '@shared/services';
-import { actionTaskGetList } from '@entities/task';
-import { actionListGetList } from '@entities/list';
+import { actionBoard } from '@entities/board';
+import { actionTask } from '@entities/task';
+import { actionSession } from '@core/store';
+import { actionWorkspace } from '@entities/workspace';
+import { actionProject } from '@entities/project';
 
 @Injectable()
 export class MainEffects {
@@ -27,35 +27,35 @@ export class MainEffects {
 
     authenticated_successfull$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionSessionAuthenticated),
-            map(() => actionWorkspaceGetList()),
+            ofType(actionSession.authenticated),
+            map(() => actionWorkspace.getList()),
         ),
     );
 
     setCurrentWorkspace$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionWorkspaceSetCurrent),
+            ofType(actionWorkspace.setCurrent),
             map((action) => action.id),
             filter((id) => id !== null),
-            map((id) => actionProjectList({ workspace_id: id })),
+            map((id) => actionProject.getList({ workspace_id: id })),
         ),
     );
 
     loadProjectTasks$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionProjectSetCurrent),
+            ofType(actionProject.setCurrent),
             map((action) => action.id),
             filter((id) => id !== null),
-            map((id) => actionTaskGetList({ query: { project_id: id } })),
+            map((id) => actionTask.getList({ query: { project_id: id } })),
         ),
     );
 
     onSetCurrentProject$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionProjectSetCurrent),
+            ofType(actionProject.setCurrent),
             map((action) => action.id),
             filter((id) => id !== null),
-            map((id) => actionListGetList({ projectId: id })),
+            map((id) => actionBoard.getList({ projectId: id })),
         ),
     );
 }

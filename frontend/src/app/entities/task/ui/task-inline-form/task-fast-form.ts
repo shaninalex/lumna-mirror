@@ -3,8 +3,7 @@ import { FormField, form, required } from '@angular/forms/signals';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
-import type { TaskCreateModel } from '@entities/task/model';
-import { actionTaskCreate, actionTaskCreateFailed, actionTaskCreateSuccess } from '@entities/task/model';
+import { actionTask, type TaskCreateModel } from '@entities/task/model';
 
 @Component({
     selector: 'lu-task-inline-form',
@@ -58,7 +57,6 @@ export class TaskInlineForm {
     private store = inject(Store);
     private actions$ = inject(Actions);
 
-    project_id = input.required<number>();
     column_id = input.required<number>();
     task_count = input.required<number>();
 
@@ -66,13 +64,16 @@ export class TaskInlineForm {
     loading = signal(false);
     errors = signal<string[]>([]);
     taskFormModel = signal<{ title: string }>({ title: '' });
+    taskForm = form(this.taskFormModel, (schemaPath) => {
+        required(schemaPath.title, { message: 'Name is required' });
+    });
 
     constructor() {
         this.actions$
-            .pipe(ofType(actionTaskCreateSuccess), takeUntilDestroyed())
+            .pipe(ofType(actionTask.createSuccess), takeUntilDestroyed())
             .subscribe(() => this._reset());
 
-        this.actions$.pipe(ofType(actionTaskCreateFailed)).subscribe((data) => {
+        this.actions$.pipe(ofType(actionTask.createFailed)).subscribe((data) => {
             this.errors.set([data.errors.toString()]);
             this.loading.set(false);
         });
@@ -85,28 +86,23 @@ export class TaskInlineForm {
         });
     }
 
-    taskForm = form(this.taskFormModel, (schemaPath) => {
-        required(schemaPath.title, { message: 'Name is required' });
-    });
-
     submit(event: Event) {
         event.preventDefault();
         const formData = this.taskFormModel();
         const data: TaskCreateModel = {
             title: formData.title,
-            body: "",
-            project_id: this.project_id(),
+            body: '',
             order: this.task_count(),
             status_id: this.column_id(),
         };
-        this.store.dispatch(actionTaskCreate({ data }));
+        this.store.dispatch(actionTask.create({ data }));
+        this._reset();
     }
 
     private _reset() {
         this.loading.set(false);
         this.openedForm.set(false);
         this.errors.set([]);
-        this.taskForm().value.set({ title: '' });
-        this.errors.set([]);
+        this.taskForm().reset();
     }
 }

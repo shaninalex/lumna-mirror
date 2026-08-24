@@ -3,7 +3,7 @@ import { ThemeSwitcherComponent } from '../../../shared/ui/theme-switcher';
 import { UserMenuComponent } from '@entities/user'
 import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
-import { selectCurrentWorkspaceId } from '@entities/workspace';
+import { selectWorkspaces } from '@entities/workspace';
 
 @Component({
     selector: 'lu-global-layout',
@@ -30,5 +30,5 @@ import { selectCurrentWorkspaceId } from '@entities/workspace';
 })
 export class GlobalLayout {
     private store = inject(Store);
-    currentWorkspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
+    currentWorkspaceId = this.store.selectSignal(selectWorkspaces.currentWorkspaceId);
 }

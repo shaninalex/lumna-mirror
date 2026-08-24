@@ -9,12 +9,12 @@ import (
 
 type StatusRepository interface {
 	Repository
-	Create(ctx context.Context, status models.Status) (*models.Status, error)
-	Update(ctx context.Context, status *models.Status) (*models.Status, error)
+	Create(ctx context.Context, status models.Column) (*models.Column, error)
+	Update(ctx context.Context, status *models.Column) (*models.Column, error)
 	UpdateFields(ctx context.Context, statusID uint, updates map[string]any) error
 	Delete(ctx context.Context, id uint) error
-	GetByID(ctx context.Context, statusID uint) (*models.Status, error)
-	FilterByList(ctx context.Context, listId uint) []models.Status
+	GetByID(ctx context.Context, statusID uint) (*models.Column, error)
+	FilterByBoard(ctx context.Context, listId uint) []models.Column
 }
 
 type GormStatusRepository struct {
@@ -31,8 +31,8 @@ func (r *GormStatusRepository) GetDB() *gorm.DB {
 	return r.db
 }
 
-func (r *GormStatusRepository) GetByID(ctx context.Context, id uint) (*models.Status, error) {
-	var status models.Status
+func (r *GormStatusRepository) GetByID(ctx context.Context, id uint) (*models.Column, error) {
+	var status models.Column
 
 	err := r.db.WithContext(ctx).
 		First(&status, "id = ?", id).
@@ -45,25 +45,25 @@ func (r *GormStatusRepository) GetByID(ctx context.Context, id uint) (*models.St
 	return &status, nil
 }
 
-func (r *GormStatusRepository) FilterByList(ctx context.Context, listId uint) []models.Status {
-	var statuss []models.Status
+func (r *GormStatusRepository) FilterByBoard(ctx context.Context, listId uint) []models.Column {
+	var statuss []models.Column
 	if result := r.db.WithContext(ctx).
 		//Preload("Tasks").
 		Where("list_id = ?", listId).
 		Find(&statuss); result.Error != nil {
-		return []models.Status{}
+		return []models.Column{}
 	}
 	return statuss
 }
 
-func (r *GormStatusRepository) Create(ctx context.Context, status models.Status) (*models.Status, error) {
+func (r *GormStatusRepository) Create(ctx context.Context, status models.Column) (*models.Column, error) {
 	if result := r.db.WithContext(ctx).Create(&status); result.Error != nil {
 		return nil, result.Error
 	}
 	return &status, nil
 }
 
-func (r *GormStatusRepository) Update(ctx context.Context, status *models.Status) (*models.Status, error) {
+func (r *GormStatusRepository) Update(ctx context.Context, status *models.Column) (*models.Column, error) {
 	if result := r.db.WithContext(ctx).Save(&status); result.Error != nil {
 		return nil, result.Error
 	}
@@ -71,14 +71,14 @@ func (r *GormStatusRepository) Update(ctx context.Context, status *models.Status
 }
 
 func (r *GormStatusRepository) Delete(ctx context.Context, id uint) error {
-	if result := r.db.WithContext(ctx).Where("id = ?", id).Delete(&models.Status{}); result.Error != nil {
+	if result := r.db.WithContext(ctx).Where("id = ?", id).Delete(&models.Column{}); result.Error != nil {
 		return result.Error
 	}
 	return nil
 }
 
 func (r *GormStatusRepository) UpdateFields(ctx context.Context, statusID uint, updates map[string]any) error {
-	result := r.db.WithContext(ctx).Model(&models.Status{}).
+	result := r.db.WithContext(ctx).Model(&models.Column{}).
 		Where("id = ?", statusID).
 		Updates(updates)
 	return result.Error

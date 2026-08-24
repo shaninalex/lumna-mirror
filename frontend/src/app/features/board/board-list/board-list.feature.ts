@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { BoardListItemComponent, selectListsByProjectId } from '@entities/list';
-import { selectCurrentProjectId } from '@entities/project';
+import { BoardListItemComponent, selectBoard } from '@entities/board';
+import { selectProjects } from '@entities/project';
 import { Store } from '@ngrx/store';
 import { filter, switchMap } from 'rxjs';
 
@@ -20,8 +20,8 @@ import { filter, switchMap } from 'rxjs';
 })
 export class BoardListFeature {
     private store = inject(Store);
-    boards$ = this.store.select(selectCurrentProjectId).pipe(
+    boards$ = this.store.select(selectProjects.currentProjectId).pipe(
         filter((projectId) => projectId !== null),
-        switchMap((projectId) => this.store.select(selectListsByProjectId(projectId))),
+        switchMap((projectId) => this.store.select(selectBoard.byProjectId(projectId))),
     );
 }

@@ -5,9 +5,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
-import { selectCurrentWorkspaceId } from '@entities/workspace';
+import { selectWorkspaces } from '@entities/workspace';
 import { filter, map, switchMap } from 'rxjs';
-import { selectCurrentProject, selectProjectsByWorkspaceID } from '@entities/project';
+import { selectProjects } from '@entities/project';
 
 @Component({
     selector: 'lu-sidebar',
@@ -20,15 +20,15 @@ export class SidebarComponent {
     private ref = inject(DestroyRef);
     private store = inject(Store);
 
-    currentWorkspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
+    currentWorkspaceId = this.store.selectSignal(selectWorkspaces.currentWorkspaceId);
     hideSidebar = false;
 
-    currentProject = this.store.selectSignal(selectCurrentProject);
+    currentProject = this.store.selectSignal(selectProjects.currentProject);
 
-    workspace$ = this.store.select(selectCurrentWorkspaceId).pipe(
+    workspace$ = this.store.select(selectWorkspaces.currentWorkspaceId).pipe(
         filter(workspaceId => workspaceId !== null),
         switchMap((workspaceId) => 
-            this.store.select(selectProjectsByWorkspaceID(workspaceId)).pipe(
+            this.store.select(selectProjects.byWorkspaceId(workspaceId)).pipe(
                 map((projects) => ({workspaceId, projects}))
             )
         ),

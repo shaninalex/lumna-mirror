@@ -1,6 +1,6 @@
 import {Component, inject, signal} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { actionSessionAuthenticateStart } from '@core/store/session.actions';
+import { actionSession } from '@core/store/session.actions';
 import { Store } from '@ngrx/store';
 import {form, required, email, FormField} from '@angular/forms/signals';
 
@@ -31,7 +31,7 @@ export class AuthLoginFeature {
     onSubmit(): void {
         if (!this.loginForm.email().errors().length && !this.loginForm.password().errors().length) {
             this.store.dispatch(
-                actionSessionAuthenticateStart({
+                actionSession.startAuthenticate({
                     email: this.loginForm.email().value(),
                     password: this.loginForm.password().value(),
                 }),

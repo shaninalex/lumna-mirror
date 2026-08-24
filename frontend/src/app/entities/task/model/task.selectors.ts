@@ -4,17 +4,27 @@ import { taskAdapter } from './task.store';
 import type { TaskModel } from './task.model';
 
 const feature = createFeatureSelector<TaskState>('task');
-const selectors = taskAdapter.getSelectors();
-export const selectTaskList = createSelector(feature, (state) => selectors.selectAll(state));
+const entitySelectors = taskAdapter.getSelectors();
 
-export const selectTask = (id: number) =>
-    createSelector(selectTaskList, (list) => list.find((a: TaskModel) => a.id === id));
-
-export const selectTasksByProject = (projectId: number) =>
-    createSelector(selectTaskList, (list) => list.filter((a) => a.project_id === projectId));
-
-export const selectTaskCountByProjectId = (projectId: number) =>
-    createSelector(selectTaskList, (list) => list.filter((a) => a.project_id === projectId).length);
-
-export const selectTasksByStatusId = (statusId: number) =>
-    createSelector(selectTaskList, (list) => list.filter((a) => a.status_id === statusId));
+export const selectTasks = {
+    all: createSelector(feature, entitySelectors.selectAll),
+    entities: createSelector(feature, entitySelectors.selectEntities),
+    total: createSelector(feature, entitySelectors.selectTotal),
+    byId: (id: number) =>
+        createSelector(entitySelectors.selectAll, (list) =>
+            list.find((a: TaskModel) => a.id === id),
+        ),
+    byProject: (projectId: number) =>
+        createSelector(entitySelectors.selectAll, (list) =>
+            list.filter((a) => a.project_id === projectId),
+        ),
+    countByProjectId: (projectId: number) =>
+        createSelector(
+            entitySelectors.selectAll,
+            (list) => list.filter((a) => a.project_id === projectId).length,
+        ),
+    byStatusId: (statusId: number) =>
+        createSelector(entitySelectors.selectAll, (list) =>
+            list.filter((a) => a.status_id === statusId),
+        ),
+};

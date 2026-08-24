@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import type { CanActivateFn} from '@angular/router';
 import { Router } from '@angular/router';
-import { actionSessionAuthenticated } from '@core/store/session.actions';
-import { actionUserSet, UserApi } from '@entities/user';
+import { actionSession } from '@core';
+import { UserApi, actionUser } from '@entities/user';
 import { Store } from '@ngrx/store';
 import { catchError, map, of } from 'rxjs';
 
@@ -13,8 +13,8 @@ export const authGuard: CanActivateFn = () => {
 
     return userApi.me().pipe(
         map((user) => {
-            store.dispatch(actionUserSet({ user }));
-            store.dispatch(actionSessionAuthenticated());
+            store.dispatch(actionUser.set({ user }));
+            store.dispatch(actionSession.authenticated());
             return true;
         }),
         catchError(() => {

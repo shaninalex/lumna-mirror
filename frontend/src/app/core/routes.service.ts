@@ -1,15 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import { selectCurrentProjectId } from '@entities/project';
-import { selectCurrentWorkspaceId } from '@entities/workspace';
+import { selectProjects } from '@entities/project';
+import { selectWorkspaces } from '@entities/workspace';
 import { Store } from '@ngrx/store';
 
 @Injectable()
 export class AppRoutes {
     private readonly store = inject(Store);
 
-    private readonly workspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
+    private readonly workspaceId = this.store.selectSignal(selectWorkspaces.currentWorkspaceId);
 
-    private readonly projectId = this.store.selectSignal(selectCurrentProjectId);
+    private readonly projectId = this.store.selectSignal(selectProjects.currentProjectId);
 
     private projectRoute(): unknown[] {
         return ['/app', 'w', this.workspaceId(), 'p', this.projectId()];

@@ -1,16 +1,10 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject, Injectable } from '@angular/core';
-import {
-    actionProjectCreate, actionProjectCreateFailed, actionProjectDelete, actionProjectDeleteSuccess,
-    actionProjectList,
-    actionProjectsSetList,
-    actionProjectUpdate,
-    actionProjectUpsert,
-} from './project.actions';
 import { catchError, exhaustMap, of, switchMap } from 'rxjs';
 import { ProjectApi } from '../api/project.service';
 import type { HttpErrorResponse } from '@angular/common/http';
 import { fromErrorResponse } from '@shared/models';
+import { actionProject } from './project.actions';
 
 @Injectable()
 export class ProjectEffects {
@@ -19,10 +13,10 @@ export class ProjectEffects {
 
     get_projects_list$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionProjectList),
+            ofType(actionProject.getList),
             exhaustMap((action) =>
                 this.projectsApi.GetProjects(action.workspace_id).pipe(
-                    switchMap((data) => of(actionProjectsSetList({ projects: data })))
+                    switchMap((data) => of(actionProject.setList({ projects: data })))
                 ),
             ),
         ),
@@ -30,11 +24,11 @@ export class ProjectEffects {
 
     create_project$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionProjectCreate),
+            ofType(actionProject.create),
             exhaustMap((action) =>
                 this.projectsApi.CreateProject(action.payload).pipe(
-                    switchMap((data) => of(actionProjectUpsert({ project: data }))),
-                    catchError((err: HttpErrorResponse) => of(actionProjectCreateFailed({ errors: fromErrorResponse(err) })))
+                    switchMap((data) => of(actionProject.createSuccefull({ project: data }))),
+                    catchError((err: HttpErrorResponse) => of(actionProject.createFailed({ errors: fromErrorResponse(err) })))
                 ),
             ),
         ),
@@ -42,10 +36,10 @@ export class ProjectEffects {
 
     update_project$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionProjectUpdate),
+            ofType(actionProject.patch),
             exhaustMap((action) =>
                 this.projectsApi.Patch(action.id, action.data).pipe(
-                    switchMap((data) => of(actionProjectUpsert({ project: data })))
+                    switchMap((data) => of(actionProject.patchSuccessfull({ data })))
                 ),
             ),
         ),
@@ -53,10 +47,10 @@ export class ProjectEffects {
 
     delete_project$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionProjectDelete),
+            ofType(actionProject.delete),
             exhaustMap((action) =>
                 this.projectsApi.DeleteProject(action.project_id).pipe(
-                    switchMap(() => of(actionProjectDeleteSuccess({ project_id: action.project_id }))))
+                    switchMap(() => of(actionProject.deleteSuccefull({ project_id: action.project_id }))))
                 )
         ),
     );

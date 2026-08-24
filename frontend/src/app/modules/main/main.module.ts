@@ -11,8 +11,8 @@ import { WorkspaceApi, workspaceFeature } from '@entities/workspace';
 import { ProjectApi, projectFeature } from '@entities/project';
 import { UserApi, userFeature } from '@entities/user';
 import { TaskApi, taskFeature } from '@entities/task';
-import { listFeature, ListApi } from '@entities/list';
-import { statusFeature, StatusApi } from '@entities/status';
+import { columnFeature, ColumnApi } from '@entities/column';
+import { BoardApi, boardFeature } from '@entities/board';
 
 @NgModule({
     declarations: [],
@@ -23,16 +23,16 @@ import { statusFeature, StatusApi } from '@entities/status';
         ProjectApi,
         UserApi,
         TaskApi,
-        ListApi,
-        StatusApi,
+        BoardApi,
+        ColumnApi,
 
         provideEffects(mainEffects),
         provideState(workspaceFeature),
         provideState(projectFeature),
         provideState(userFeature),
         provideState(taskFeature),
-        provideState(listFeature),
-        provideState(statusFeature),
+        provideState(boardFeature),
+        provideState(columnFeature),
     ],
 })
 export class MainModule {}

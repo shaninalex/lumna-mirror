@@ -2,30 +2,29 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import type { ProjectState } from './project.store';
 import { projectsAdapter } from './project.store';
 
-export const selectProjectsFeature = createFeatureSelector<ProjectState>('project');
-export const projectsSelectors = projectsAdapter.getSelectors();
+const feature = createFeatureSelector<ProjectState>('project');
+const entitySelectors = projectsAdapter.getSelectors();
 
-export const selectProjects = createSelector(selectProjectsFeature, (state) =>
-    projectsSelectors.selectAll(state),
-);
+const selectCurrentProjectId = createSelector(feature, (state) => state.currentId ?? null);
 
-export const selectProjectByID = (id: number) =>
-    createSelector(selectProjectsFeature, (state: ProjectState) =>
-        projectsSelectors.selectAll(state).find((p) => p.id === id),
-    );
-
-export const selectProjectsByWorkspaceID = (workspaceId: number) =>
-    createSelector(selectProjectsFeature, (state: ProjectState) =>
-        projectsSelectors.selectAll(state).filter((p) => p.workspace_id === workspaceId),
-    );
-
-export const selectCurrentProjectId = createSelector(
-    selectProjectsFeature,
-    (state) => state?.currentId ?? null,
-);
-
-export const selectCurrentProject = createSelector(
-    selectProjects,
+const selectCurrentProject = createSelector(
+    feature,
     selectCurrentProjectId,
-    (list, currentId) => list.find((p) => p.id === currentId) ?? null,
+    (state, currentId) => entitySelectors.selectAll(state).find((p) => p.id === currentId) ?? null,
 );
+
+export const selectProjects = {
+    all: createSelector(feature, entitySelectors.selectAll),
+    entities: createSelector(feature, entitySelectors.selectEntities),
+    total: createSelector(feature, entitySelectors.selectTotal),
+    byId: (id: number) =>
+        createSelector(feature, (state: ProjectState) =>
+            entitySelectors.selectAll(state).find((p) => p.id === id),
+        ),
+    byWorkspaceId: (workspaceId: number) =>
+        createSelector(feature, (state: ProjectState) =>
+            entitySelectors.selectAll(state).filter((p) => p.workspace_id === workspaceId),
+        ),
+    currentProjectId: selectCurrentProjectId,
+    currentProject: selectCurrentProject,
+};

@@ -69,28 +69,28 @@
         }
 
         @if (workspace$ | async; as workspace) {
-            <div class="card-body border-top">
+            <div class="card-body border-top d-flex flex-column gap-2">
                 @if (workspace.projects.length) {
                     @for (item of workspace.projects; track $index) {
                         <lu-project-list-item cdkMenuItem [project]="item" />
                     }
-
-                    <div class="pt-2">
-                        <a
-                            class="card-link"
-                            cdkMenuItem
-                            [routerLink]="['/app/w', workspace.workspace.id, 'projects']"
-                        >
-                            See all
-                        </a>
-                        <a
-                            class="card-link"
-                            [routerLink]="['/app/w', workspace.workspace.id, 'projects', 'create']"
-                        >
-                            Create project
-                        </a>
-                    </div>
                 }
+
+                <div>
+                    <a
+                        class="card-link"
+                        cdkMenuItem
+                        [routerLink]="['/app/w', workspace.workspace.id, 'projects']"
+                    >
+                        See all
+                    </a>
+                    <a
+                        class="card-link"
+                        [routerLink]="['/app/w', workspace.workspace.id, 'projects', 'create']"
+                    >
+                        Create project
+                    </a>
+                </div>
             </div>
         }
     </div>

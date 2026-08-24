@@ -39,13 +39,20 @@ CREATE TABLE refresh_tokens
     FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE user_auth_history
+(
+    id          integer PRIMARY KEY AUTOINCREMENT,
+    event_type  text NOT NULL,
+    created_at  datetime DEFAULT CURRENT_TIMESTAMP
+);
+
 -----------------------------
 -- SYSTEM
 -----------------------------
 
 CREATE TABLE emails
 (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    id          integer PRIMARY KEY AUTOINCREMENT,
     from_email  VARCHAR,
     to_email    VARCHAR,
     subject     VARCHAR,
@@ -96,13 +103,37 @@ CREATE TABLE workspaces
 -- WORK
 -----------------------------
 
+/*
+
+Core entities:
+    Workspace
+    Project
+    Board
+    Column
+    Task
+
+Relationships:
+    Project -> Workspace
+    Board -> Project
+    Column -> Board
+    Taks -> Column
+
+Events/History:
+    TaskHistory
+
+Value objects/attributes:
+    Color
+    Tag/Label
+    Badge
+    (badge is not a tag/label. Badge can have logic in it, while label is just a lable)
+*/
+
 CREATE TABLE projects
 (
     id           integer PRIMARY KEY AUTOINCREMENT,
     title        text    NOT NULL,
-    key          varchar not null unique,
-    workspace_id INTEGER NOT NULL,
-    owner_id     INTEGER NULL,
+    workspace_id integer NOT NULL,
+    owner_id     integer NULL,
     meta         text    NULL,
     created_at   datetime DEFAULT CURRENT_TIMESTAMP,
     updated_at   datetime,
@@ -111,47 +142,72 @@ CREATE TABLE projects
     FOREIGN KEY (owner_id) REFERENCES identities (id) ON DELETE SET NULL
 );
 
-
-CREATE TABLE lists -- // boards
+CREATE TABLE boards
 (
     id         integer PRIMARY KEY AUTOINCREMENT,
     title      text    NOT NULL,
     project_id integer NOT NULL,
+    meta       text,
     created_at datetime DEFAULT CURRENT_TIMESTAMP,
     updated_at datetime,
 
-    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
 );
 
 
-CREATE TABLE statuses -- // columns
+CREATE TABLE columns
 (
     id         integer PRIMARY KEY AUTOINCREMENT,
     title      text    NOT NULL,
-    `order`    integer NULL,
-    project_id integer NOT NULL,
-    list_id    integer NOT NULL,
+    board_id  integer NOT NULL,
+    meta       varchar null,
     created_at datetime DEFAULT CURRENT_TIMESTAMP,
     updated_at datetime,
 
-    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE
 );
-
 
 CREATE TABLE tasks
 (
-    id         integer PRIMARY KEY AUTOINCREMENT,
-    title      text    NOT NULL,
-    code       varchar NOT NULL UNIQUE,
-    `order`    integer,
-    done       numeric  DEFAULT 0,
-    body       text,
-    status_id  integer NULL,
-    project_id integer NOT NULL,
-    created_at datetime DEFAULT CURRENT_TIMESTAMP,
-    updated_at datetime,
+    id          integer PRIMARY KEY AUTOINCREMENT,
+    title       text NOT NULL,
+    body        text,
+    completed   boolean DEFAULT false,
+    meta        text,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME
+);
 
-    FOREIGN KEY (status_id) REFERENCES statuses (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE board_tasks
+(
+    board_id  integer NOT NULL,
+    task_id   integer NOT NULL,
+    column_id integer NULL,
+    position  real NOT NULL,
+
+    PRIMARY KEY (board_id, task_id),
+
+    FOREIGN KEY (board_id)
+        REFERENCES boards(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (task_id)
+        REFERENCES tasks(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (board_id, column_id)
+        REFERENCES board_columns(board_id, id)
+        ON DELETE SET NULL
+);
+
+CREATE TABLE task_events
+(
+    id          integer PRIMARY KEY AUTOINCREMENT,
+    identity_id integer NULL,
+    event_type  text NOT NULL,
+    value_from  text NULL,
+    value_to    text NULL,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE SET NULL
 );

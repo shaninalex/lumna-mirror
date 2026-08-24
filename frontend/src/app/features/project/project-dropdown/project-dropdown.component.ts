@@ -6,8 +6,8 @@ import { Store } from '@ngrx/store';
 import { filter, switchMap, map } from 'rxjs';
 
 import { TrimPipe } from '@shared/utils';
-import { selectCurrentWorkspace } from '@entities/workspace';
-import { ProjectListItemComponent, selectCurrentProject, selectProjectsByWorkspaceID } from '@entities/project';
+import { selectWorkspaces } from '@entities/workspace';
+import { ProjectListItemComponent, selectProjects } from '@entities/project';
 
 @Component({
     selector: 'lu-project-dropdown',
@@ -26,12 +26,12 @@ export class ProjectDropdownComponent {
     private store = inject(Store);
 
     open = false;
-    project$ = this.store.select(selectCurrentProject);
-    workspace$ = this.store.select(selectCurrentWorkspace).pipe(
+    project$ = this.store.select(selectProjects.currentProject);
+    workspace$ = this.store.select(selectWorkspaces.currentWorkspace).pipe(
         filter((workspace) => workspace !== null),
         switchMap((workspace) =>
             this.store
-                .select(selectProjectsByWorkspaceID(workspace.id))
+                .select(selectProjects.byWorkspaceId(workspace.id))
                 .pipe(map((projects) => ({ workspace, projects }))),
         ),
     );

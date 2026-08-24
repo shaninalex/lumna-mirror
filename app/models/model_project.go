@@ -13,7 +13,6 @@ import (
 type Project struct {
 	ID          uint        `gorm:"primaryKey" json:"id"`
 	Title       string      `gorm:"not null" json:"title"`
-	Key         string      `gorm:"not null" json:"key"`
 	WorkspaceID uint        `gorm:"not null;index" json:"workspace_id"`
 	OwnerID     *uint       `gorm:"null;index" json:"owner_id"`
 	Meta        ProjectMeta `gorm:"meta" json:"meta"`
@@ -70,13 +69,9 @@ func (s *ProjectMeta) Scan(value interface{}) error {
 func (s ProjectMeta) Value() (driver.Value, error) {
 	b, err := json.Marshal(s)
 	if err != nil {
-		return NewProjectMeta(), nil
+		return ProjectMeta{}, nil
 	}
 	return json.RawMessage(b).MarshalJSON()
-}
-
-func NewProjectMeta() ProjectMeta {
-	return ProjectMeta{}
 }
 
 type ProjectCreateModel struct {

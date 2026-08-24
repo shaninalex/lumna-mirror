@@ -7,9 +7,8 @@ import { of } from 'rxjs';
 import type {
     WorkspaceModel} from '@entities/workspace';
 import {
-    actionWorkspaceSetCurrent,
-    actionWorkspaceSetList,
-    selectWorkspaceList,
+    actionWorkspace,
+    selectWorkspaces,
     WorkspaceApi
 } from '@entities/workspace';
 import { parseRouteId } from '@shared/utils';
@@ -18,7 +17,7 @@ function getOrFetchWorkspaces() {
     const store = inject(Store);
     const workspaceApi = inject(WorkspaceApi);
 
-    return store.select(selectWorkspaceList).pipe(
+    return store.select(selectWorkspaces.all).pipe(
         take(1),
         switchMap((workspaces) => {
             if (workspaces && workspaces.length > 0) {
@@ -26,7 +25,7 @@ function getOrFetchWorkspaces() {
             }
             return workspaceApi.List().pipe(
                 map((list: WorkspaceModel[]) => {
-                    store.dispatch(actionWorkspaceSetList({ list }));
+                    store.dispatch(actionWorkspace.setList({ list }));
                     return list;
                 }),
             );
@@ -78,7 +77,7 @@ export const activeWorkspaceGuard: CanActivateFn = (route) => {
                 return router.createUrlTree(['/app/workspaces']);
             }
 
-            store.dispatch(actionWorkspaceSetCurrent({ id: targetWorkspace.id }));
+            store.dispatch(actionWorkspace.setCurrent({ id: targetWorkspace.id }));
             return true;
         }),
     );

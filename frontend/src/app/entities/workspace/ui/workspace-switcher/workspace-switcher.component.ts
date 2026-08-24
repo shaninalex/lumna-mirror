@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { Router, RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
-import { selectCurrentWorkspace, selectWorkspaceList } from '@entities/workspace/model';
+import { selectWorkspaces } from '@entities/workspace/model';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { filter, map, switchMap } from 'rxjs';
 
@@ -46,8 +46,8 @@ import { filter, map, switchMap } from 'rxjs';
 export class WorkspaceSwitcherComponent {
     private store = inject(Store);
     dialog = inject(Dialog);
-    workspace$ = this.store.select(selectCurrentWorkspace);
-    workspaces$ = this.store.select(selectWorkspaceList);
+    workspace$ = this.store.select(selectWorkspaces.currentWorkspace);
+    workspaces$ = this.store.select(selectWorkspaces.all);
 
     openDialog() {
         this.dialog.open(SwitchWorkspaceModal, {
@@ -83,10 +83,10 @@ export class SwitchWorkspaceModal {
     private router = inject(Router);
     private store = inject(Store);
 
-    data$ = this.store.select(selectWorkspaceList).pipe(
+    data$ = this.store.select(selectWorkspaces.all).pipe(
         filter(workspace => workspace !== null),
         switchMap((workspaces) => 
-            this.store.select(selectCurrentWorkspace).pipe(
+            this.store.select(selectWorkspaces.currentWorkspace).pipe(
                 map((currentWorkspace) => ({workspaces, currentWorkspace}))
             )
         ),

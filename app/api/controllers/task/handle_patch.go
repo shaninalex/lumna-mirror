@@ -30,7 +30,7 @@ func (s *TaskController) handlePatchTask(c *gin.Context) {
 
 	task.Title = payload.Title
 	task.Body = payload.Body
-	task.Done = payload.Done
+	task.Completed = payload.Completed
 
 	if err = s.taskService.UpdateTask(c.Request.Context(), uint(taskId), task); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)

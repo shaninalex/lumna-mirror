@@ -1,8 +1,8 @@
 import type { EntityState } from "@ngrx/entity";
 import { createEntityAdapter } from "@ngrx/entity";
 import { createFeature, createReducer, on } from "@ngrx/store";
-import { actionWorkspaceCreateSuccess, actionWorkspaceSetCurrent, actionWorkspaceSetList } from "./workspace.actions";
 import type { WorkspaceModel } from "./workspace.model";
+import { actionWorkspace } from "./workspace.actions";
 
 export interface WorkspaceState extends EntityState<WorkspaceModel> {
     currentId: number | null;
@@ -14,9 +14,9 @@ const initialState: WorkspaceState = workspaceAdapter.getInitialState({
 
 export const workspaceReducer = createReducer(
     initialState,
-    on(actionWorkspaceSetList, (state, { list }) => workspaceAdapter.setAll(list, state)),
-    on(actionWorkspaceCreateSuccess, (state, { data }) => workspaceAdapter.setOne(data, state)),
-    on(actionWorkspaceSetCurrent, (state, { id }) => ({ ...state, currentId: id }))
+    on(actionWorkspace.setList, (state, { list }) => workspaceAdapter.setAll(list, state)),
+    on(actionWorkspace.created, (state, { data }) => workspaceAdapter.setOne(data, state)),
+    on(actionWorkspace.setCurrent, (state, { id }) => ({ ...state, currentId: id }))
 );
 
 export const workspaceFeature = createFeature({

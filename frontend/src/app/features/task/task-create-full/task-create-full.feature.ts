@@ -3,12 +3,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, required } from '@angular/forms/signals';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, tap } from 'rxjs';
-
-import { selectCurrentProjectId } from '@entities/project';
-import type { TaskCreateModel} from '@entities/task';
-import { actionTaskCreateSuccess, actionTaskCreate } from '@entities/task';
+import { actionTask, type TaskCreateModel} from '@entities/task';
 import { ActivatedRoute, Router } from '@angular/router';
+import { tap } from 'rxjs';
 
 @Component({
     selector: 'lu-task-create-full-feature',
@@ -24,7 +21,6 @@ export class TaskCreateFullFeature {
 
     taskFormModel = signal<TaskCreateModel>({
         title: '',
-        project_id: 0,
         body: '',
     });
 
@@ -33,23 +29,9 @@ export class TaskCreateFullFeature {
     });
 
     constructor() {
-        this.store
-            .select(selectCurrentProjectId)
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                filter((projectId) => projectId !== null),
-                tap((projectId) => {
-                    this.taskFormModel.set({
-                        ...this.taskFormModel(),
-                        project_id: projectId,
-                    });
-                }),
-            )
-            .subscribe();
-
         this.actions$
             .pipe(
-                ofType(actionTaskCreateSuccess),
+                ofType(actionTask.createSuccess),
                 takeUntilDestroyed(this.destroyRef),
                 tap(() => {
                     this.taskFormModel.set({
@@ -68,6 +50,6 @@ export class TaskCreateFullFeature {
 
     onSubmit(event: Event): void {
         event.preventDefault();
-        this.store.dispatch(actionTaskCreate({ data: this.taskFormModel() }));
+        this.store.dispatch(actionTask.create({ data: this.taskFormModel() }));
     }
 }

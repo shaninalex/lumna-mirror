@@ -1,11 +1,11 @@
 import type { OnInit } from '@angular/core';
 import { Component, computed, inject, Input } from '@angular/core';
 import type { ProjectModel } from '@entities/project/model';
-import { selectCurrentWorkspaceId } from '@entities/workspace/model';
+import { selectWorkspaces } from '@entities/workspace/model';
 import { Store } from '@ngrx/store';
 import { RouterLink } from "@angular/router";
 import { TrimPipe } from "@shared/utils";
-import { selectTaskCountByProjectId } from '@entities/task/model/task.selectors';
+import { selectTasks } from '@entities/task/model/task.selectors';
 import type { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
@@ -33,14 +33,14 @@ export class ProjectListItemComponent implements OnInit {
     @Input() project: ProjectModel;
     private store = inject(Store);
 
-    currentWorkspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
+    currentWorkspaceId = this.store.selectSignal(selectWorkspaces.currentWorkspaceId);
     tasksCount$: Observable<number>
 
     ngOnInit(): void {
         computed(() => {
             const i = this.currentWorkspaceId();
             if (i && i > 0) {
-                this.tasksCount$ = this.store.select(selectTaskCountByProjectId(i))
+                this.tasksCount$ = this.store.select(selectTasks.countByProjectId(i))
             }
         })
     }

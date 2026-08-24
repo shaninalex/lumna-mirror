@@ -2,7 +2,7 @@ import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
 import { GlobalLayout } from '@core/layout';
 import { UiService } from '@shared/ui';
-import { selectWorkspaceList, WorkspaceCardComponent } from "@entities/workspace";
+import { selectWorkspaces, WorkspaceCardComponent } from "@entities/workspace";
 import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
 import { AsyncPipe } from '@angular/common';
@@ -16,7 +16,7 @@ export class WorkspacesPage implements OnInit {
     private ui = inject(UiService);
     private store = inject(Store);
     
-    workspaces$ = this.store.select(selectWorkspaceList);
+    workspaces$ = this.store.select(selectWorkspaces.all);
 
     ngOnInit(): void {
         this.ui.setPageTitle("Workspaces")

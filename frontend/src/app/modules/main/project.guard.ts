@@ -1,20 +1,13 @@
 import { inject } from '@angular/core';
-import type { CanActivateFn} from '@angular/router';
+import type { CanActivateFn } from '@angular/router';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, switchMap, take } from 'rxjs/operators';
 import { of } from 'rxjs';
-import type {
-    ProjectModel} from '@entities/project';
-import {
-    actionProjectSetCurrent,
-    actionProjectsSetList,
-    ProjectApi,
-    selectProjectsByWorkspaceID,
-} from '@entities/project';
-import { selectCurrentWorkspaceId } from '@entities/workspace';
+import type { ProjectModel } from '@entities/project';
+import { actionProject, ProjectApi, selectProjects } from '@entities/project';
+import { selectWorkspaces } from '@entities/workspace';
 import { parseRouteId } from '@shared/utils';
-
 
 export const activeProjectGuard: CanActivateFn = (route) => {
     const store = inject(Store);
@@ -23,7 +16,7 @@ export const activeProjectGuard: CanActivateFn = (route) => {
     const projectId = parseRouteId(route.paramMap.get('projectId'));
 
     // activeWorkspaceGuard runs on the parent route, so the current workspace is already set
-    return store.select(selectCurrentWorkspaceId).pipe(
+    return store.select(selectWorkspaces.currentWorkspaceId).pipe(
         take(1),
         switchMap((workspaceId) => {
             if (workspaceId === null) {
@@ -47,16 +40,16 @@ export const activeProjectGuard: CanActivateFn = (route) => {
                         return router.createUrlTree(['/app/w', workspaceId]);
                     }
 
-                    store.dispatch(actionProjectSetCurrent({ id: targetProject.id }));
+                    store.dispatch(actionProject.setCurrent({ id: targetProject.id }));
                     return true;
-                })
+                }),
             );
-        })
+        }),
     );
 };
 
 function getOrFetchProjects(store: Store, projectApi: ProjectApi, workspaceId: number) {
-    return store.select(selectProjectsByWorkspaceID(workspaceId)).pipe(
+    return store.select(selectProjects.byWorkspaceId(workspaceId)).pipe(
         take(1),
         switchMap((projects) => {
             if (projects && projects.length > 0) {
@@ -64,10 +57,10 @@ function getOrFetchProjects(store: Store, projectApi: ProjectApi, workspaceId: n
             }
             return projectApi.GetProjects(workspaceId).pipe(
                 map((list: ProjectModel[]) => {
-                    store.dispatch(actionProjectsSetList({ projects: list }));
+                    store.dispatch(actionProject.setList({ projects: list }));
                     return list;
-                })
+                }),
             );
-        })
+        }),
     );
 }

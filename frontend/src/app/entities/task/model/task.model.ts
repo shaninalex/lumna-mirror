@@ -22,7 +22,6 @@ export function makeListLabel(task: TaskModel): string {
 export interface TaskCreateModel {
     title: string;
     body: string;
-    project_id: number;
     order?: number;
     status_id?: number;
 }
