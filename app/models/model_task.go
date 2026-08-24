@@ -10,23 +10,17 @@ import (
 )
 
 const (
-	EventTaskCreated observer.Event = "TASK_CREATED"
+	EventTaskCreated   observer.Event = "TASK_CREATED"
+	EventTaskUpdated   observer.Event = "TASK_UPDATED"
+	EventTaskCompleted observer.Event = "TASK_COMPLETED"
 )
 
 type Task struct {
-	ID    uint   `gorm:"primaryKey" json:"id"`
-	Title string `gorm:"not null" json:"title"`
-	Code  string `json:"code"`
-
-	// Order - need for saving ordering in kanban board
-	Order *uint  `json:"order"`
-	Done  bool   `json:"done"`
-	Body  string `json:"body"`
-
-	// StatusID - Kanband Board column
-	StatusID  *uint `gorm:"not null;index" json:"status_id"`
-	ProjectID uint  `gorm:"not null;index" json:"project_id"`
-
+	ID        uint       `gorm:"primaryKey" json:"id"`
+	Title     string     `gorm:"not null" json:"title"`
+	Body      string     `json:"body"`
+	Completed bool       `json:"completed"`
+	Meta      string     `json:"meta"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
 }

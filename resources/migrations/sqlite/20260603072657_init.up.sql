@@ -132,7 +132,6 @@ CREATE TABLE projects
 (
     id           integer PRIMARY KEY AUTOINCREMENT,
     title        text    NOT NULL,
-    key          varchar not null unique,
     workspace_id integer NOT NULL,
     owner_id     integer NULL,
     meta         text    NULL,
@@ -173,6 +172,7 @@ CREATE TABLE tasks
     id          integer PRIMARY KEY AUTOINCREMENT,
     title       text NOT NULL,
     body        text,
+    completed   boolean DEFAULT false,
     meta        text,
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME
@@ -200,7 +200,7 @@ CREATE TABLE board_tasks
         ON DELETE SET NULL
 );
 
-CREATE TABLE task_history
+CREATE TABLE task_events
 (
     id          integer PRIMARY KEY AUTOINCREMENT,
     identity_id integer NULL,
