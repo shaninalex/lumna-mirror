@@ -4,9 +4,9 @@ import { MainLayout } from '@core/layout';
 import { UiService } from '@shared/ui';
 import { RouterLink } from "@angular/router";
 import { AppRoutes } from '@core';
-import { selectTasksByProject, TaskListItemComponent } from "@entities/task";
+import { selectTasks, TaskListItemComponent } from "@entities/task";
 import { Store } from '@ngrx/store';
-import { selectCurrentProjectId } from '@entities/project';
+import { selectProjects } from '@entities/project';
 import { filter, map, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
@@ -20,10 +20,10 @@ export class BacklogPage implements OnInit {
     private store = inject(Store);
     readonly appRoutes = inject(AppRoutes);
 
-    data$ = this.store.select(selectCurrentProjectId).pipe(
+    data$ = this.store.select(selectProjects.currentProjectId).pipe(
         filter((projectId) => projectId !== null),
         switchMap((projectId) => 
-            this.store.select(selectTasksByProject(projectId)).pipe(
+            this.store.select(selectTasks.byProject(projectId)).pipe(
                 map((tasks) => ({
                     projectId, 
                     tasks

@@ -1,8 +1,7 @@
 import { Component, DestroyRef, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { form, FormField, required } from "@angular/forms/signals";
-import type { WorkspaceCreateModel } from "@entities/workspace";
-import { actionWorkspaceCreate, actionWorkspaceCreateFailed } from "@entities/workspace";
+import { actionWorkspace, type WorkspaceCreateModel } from "@entities/workspace";
 import { Actions, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 
@@ -34,7 +33,7 @@ export class WorkspaceCreateFeature {
     constructor() {
         this.actions$
             .pipe(
-                ofType(actionWorkspaceCreateFailed),
+                ofType(actionWorkspace.createFailed),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((action) => console.log(action));
@@ -43,7 +42,7 @@ export class WorkspaceCreateFeature {
     onSubmit(event: Event): void {
         event.preventDefault();
         this.store.dispatch(
-            actionWorkspaceCreate({ data: this.wspFormModel() })
+            actionWorkspace.create({ data: this.wspFormModel() })
         );
     }
 }

@@ -3,7 +3,7 @@ import type { OnInit } from '@angular/core';
 import { Component, inject, input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import type { ColumnModel } from '@entities/column';
-import { actionsColumns, ColumnItemComponent, NewColumnFormComponent, selectStatuses } from '@entities/column';
+import { actionsColumns, ColumnItemComponent, NewColumnFormComponent, selectColumns } from '@entities/column';
 import { filter, type Observable } from 'rxjs';
 import { TimeAgoPipe } from '@shared/utils';
 import { selectBoard, type BoardModel } from '@entities/board';
@@ -25,6 +25,6 @@ export class BoardDetailFeature implements OnInit {
         this.board$ = this.store
             .select(selectBoard.byId(this.boardId()))
             .pipe(filter((board) => board !== null));
-        this.columns$ = this.store.select(selectStatuses.byListId(this.boardId()));
+        this.columns$ = this.store.select(selectColumns.byListId(this.boardId()));
     }
 }

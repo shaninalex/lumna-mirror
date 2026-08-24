@@ -1,9 +1,8 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, required } from '@angular/forms/signals';
-import type { ProjectCreateModel } from '@entities/project';
-import { actionProjectCreate, actionProjectCreateFailed } from '@entities/project';
-import { selectCurrentWorkspace } from '@entities/workspace';
+import { actionProject, type ProjectCreateModel } from '@entities/project';
+import { selectWorkspaces } from '@entities/workspace';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { filter, tap } from 'rxjs';
@@ -28,7 +27,7 @@ export class ProjectCreateFeature {
     private store = inject(Store);
     private actions$ = inject(Actions);
     private destroyRef = inject(DestroyRef);
-    private workspace$ = this.store.select(selectCurrentWorkspace);
+    private workspace$ = this.store.select(selectWorkspaces.currentWorkspace);
 
     pFormModel = signal<ProjectCreateModel>({ title: "", workspace_id: 0 });
     pForm = form(this.pFormModel, (schemaPath) => required(schemaPath.title));
@@ -42,7 +41,7 @@ export class ProjectCreateFeature {
 
         this.actions$
             .pipe(
-                ofType(actionProjectCreateFailed),
+                ofType(actionProject.createFailed),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((action) => console.log(action));
@@ -51,7 +50,7 @@ export class ProjectCreateFeature {
     onSubmit(event: Event): void {
         event.preventDefault();
         this.store.dispatch(
-            actionProjectCreate({ payload: this.pFormModel() })
+            actionProject.create({ payload: this.pFormModel() })
         );
     }
 }

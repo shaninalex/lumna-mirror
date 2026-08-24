@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AppRoutes } from '@core';
 import type { BoardPayloadModel } from '@entities/board';
 import { actionBoard } from '@entities/board';
-import { selectCurrentProjectId } from '@entities/project';
+import { selectProjects } from '@entities/project';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs';
@@ -37,7 +37,7 @@ export class BoardCreateFeature {
     private destroyRef = inject(DestroyRef);
     private router = inject(Router);
     private appRoutes = inject(AppRoutes);
-    private currentProjectId = this.store.selectSignal(selectCurrentProjectId);
+    private currentProjectId = this.store.selectSignal(selectProjects.currentProjectId);
 
     pFormModel = signal<BoardPayloadModel>({ title: '', project_id: 0 });
     pForm = form(this.pFormModel, (schemaPath) => required(schemaPath.title));

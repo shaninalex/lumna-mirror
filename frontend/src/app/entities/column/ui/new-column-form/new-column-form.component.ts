@@ -2,7 +2,7 @@ import type { OnInit } from '@angular/core';
 import { Component, DestroyRef, inject, Input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, form, required } from '@angular/forms/signals';
-import { selectCurrentProjectId } from '@entities/project';
+import { selectProjects } from '@entities/project';
 import { actionsColumns } from '@entities/column/model';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -75,7 +75,7 @@ export class NewColumnFormComponent implements OnInit {
 
     ngOnInit() {
         this.store
-            .select(selectCurrentProjectId)
+            .select(selectProjects.currentProjectId)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 filter((id) => id !== null),

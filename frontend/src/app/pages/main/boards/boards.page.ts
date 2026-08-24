@@ -4,7 +4,7 @@ import { UiService } from '@shared/ui';
 import { RouterLink } from "@angular/router";
 import { AppRoutes } from '@core';
 import { Store } from '@ngrx/store';
-import { selectCurrentProjectId } from '@entities/project';
+import { selectProjects } from '@entities/project';
 import { filter, switchMap } from 'rxjs';
 import { BoardListFeature } from '@features';
 import { MainLayout } from '@core/layout';
@@ -41,7 +41,7 @@ export class BoardsPage implements OnInit {
     
     readonly appRoutes = inject(AppRoutes);
 
-    boards$ = this.store.select(selectCurrentProjectId).pipe(
+    boards$ = this.store.select(selectProjects.currentProjectId).pipe(
         filter((projectId) => projectId !== null),
         switchMap((projectId) => {
             console.log('projectId: ', projectId);

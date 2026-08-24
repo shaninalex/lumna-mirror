@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { ProjectModel } from '@entities/project/model';
-import { selectCurrentWorkspaceId } from '@entities/workspace/model';
+import { selectWorkspaces } from '@entities/workspace/model';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -46,5 +46,5 @@ export class ProjectCardComponent {
     @Input() project: ProjectModel;
 
     private store = inject(Store);
-    currentWorkspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
+    currentWorkspaceId = this.store.selectSignal(selectWorkspaces.currentWorkspaceId);
 }

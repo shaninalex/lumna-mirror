@@ -3,7 +3,7 @@ import type { OnInit } from '@angular/core';
 import { Component, inject, Input } from '@angular/core';
 import type { ColumnModel } from '@entities/column/model';
 import type { TaskModel } from '@entities/task';
-import { selectTasksByStatusId, TaskCardComponent, TaskInlineForm } from '@entities/task';
+import { selectTasks, TaskCardComponent, TaskInlineForm } from '@entities/task';
 import { Store } from '@ngrx/store';
 import type { Observable } from 'rxjs';
 
@@ -40,6 +40,6 @@ export class ColumnItemComponent implements OnInit {
     tasks$: Observable<TaskModel[]>;
 
     ngOnInit(): void {
-        this.tasks$ = this.store.select(selectTasksByStatusId(this.column.id));
+        this.tasks$ = this.store.select(selectTasks.byStatusId(this.column.id));
     }
 }

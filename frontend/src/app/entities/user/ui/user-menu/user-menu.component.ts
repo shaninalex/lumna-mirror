@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { Store } from '@ngrx/store';
-import { actionSessionLoggingOut } from '@core/store/session.actions';
 import { WorkspaceSwitcherComponent } from '@entities/workspace/ui/workspace-switcher'
+import { actionSession } from '@core/store/session.actions';
 
 
 @Component({
@@ -34,6 +34,6 @@ export class UserMenuComponent {
     readonly store = inject(Store);
 
     logout(): void {
-        this.store.dispatch(actionSessionLoggingOut());
+        this.store.dispatch(actionSession.loggingOut());
     }
 }

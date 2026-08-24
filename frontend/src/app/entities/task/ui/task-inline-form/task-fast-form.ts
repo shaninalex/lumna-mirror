@@ -3,12 +3,7 @@ import { FormField, form, required } from '@angular/forms/signals';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
-import type { TaskCreateModel } from '@entities/task/model';
-import {
-    actionTaskCreate,
-    actionTaskCreateFailed,
-    actionTaskCreateSuccess,
-} from '@entities/task/model';
+import { actionTask, type TaskCreateModel } from '@entities/task/model';
 
 @Component({
     selector: 'lu-task-inline-form',
@@ -75,10 +70,10 @@ export class TaskInlineForm {
 
     constructor() {
         this.actions$
-            .pipe(ofType(actionTaskCreateSuccess), takeUntilDestroyed())
+            .pipe(ofType(actionTask.createSuccess), takeUntilDestroyed())
             .subscribe(() => this._reset());
 
-        this.actions$.pipe(ofType(actionTaskCreateFailed)).subscribe((data) => {
+        this.actions$.pipe(ofType(actionTask.createFailed)).subscribe((data) => {
             this.errors.set([data.errors.toString()]);
             this.loading.set(false);
         });
@@ -100,7 +95,7 @@ export class TaskInlineForm {
             order: this.task_count(),
             status_id: this.column_id(),
         };
-        this.store.dispatch(actionTaskCreate({ data }));
+        this.store.dispatch(actionTask.create({ data }));
         this._reset();
     }
 

@@ -1,18 +1,11 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, of } from "rxjs";
-import {
-    actionTaskCreate,
-    actionTaskCreateFailed,
-    actionTaskCreateSuccess,
-    actionTaskGetList,
-    actionTaskSetList,
-    actionTaskSetListFailed
-} from "./task.actions";
 import { TaskApi } from "@entities/task/api";
 import { switchMap } from "rxjs/operators";
 import type { HttpErrorResponse } from "@angular/common/http";
 import { fromErrorResponse } from "@shared/models";
+import { actionTask } from "./task.actions";
 
 @Injectable()
 export class TaskEffects {
@@ -21,13 +14,13 @@ export class TaskEffects {
 
     task_list$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionTaskGetList),
+            ofType(actionTask.getList),
             switchMap((action) =>
                 this.api.list(action.query).pipe(
-                    switchMap((tasks) => of(actionTaskSetList({ tasks }))),
+                    switchMap((tasks) => of(actionTask.getListSuccess({ tasks }))),
                     catchError((err: HttpErrorResponse) =>
                         of(
-                            actionTaskSetListFailed({
+                            actionTask.getListFailed({
                                 errors: fromErrorResponse(err)
                             })
                         )
@@ -39,13 +32,13 @@ export class TaskEffects {
 
     task_create$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionTaskCreate),
+            ofType(actionTask.create),
             switchMap((action) =>
                 this.api.create(action.data).pipe(
-                    switchMap((task) => of(actionTaskCreateSuccess({ task }))),
+                    switchMap((task) => of(actionTask.createSuccess({ task }))),
                     catchError((err: HttpErrorResponse) =>
                         of(
-                            actionTaskCreateFailed({
+                            actionTask.createFailed({
                                 errors: fromErrorResponse(err)
                             })
                         )

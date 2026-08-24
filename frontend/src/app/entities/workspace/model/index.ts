@@ -1,6 +1,5 @@
-export type { WorkspaceModel, WorkspaceCreateModel } from "./workspace.model";
-export * from "./workspace.store";
-export { WorkspaceEffects } from "./workspace.effects";
-export { selectWorkspace, selectWorkspaceList, selectCurrentWorkspace, selectCurrentWorkspaceId } from "./workspace.selectors";
-
-export * from "./workspace.actions";
+export * from './workspace.actions'
+export * from './workspace.effects'
+export * from './workspace.model'
+export * from './workspace.selectors'
+export * from './workspace.store'
