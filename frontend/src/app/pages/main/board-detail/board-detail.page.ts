@@ -1,10 +1,10 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MainLayout } from '@core/layout';
 import { Store } from '@ngrx/store';
 import { filter, map, type Observable } from 'rxjs';
 import { BoardDetailFeature } from "@features";
+import { MainLayout } from '@core/layout';
 
 @Component({
     selector: 'lu-board-detail-page',

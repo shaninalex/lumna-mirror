@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { MainLayout } from '@core/layout';
 import { TaskCreateFullFeature } from '@features/task';
+import { MainLayout } from '@core/layout';
 
 @Component({
     selector: 'lu-task-create-page',

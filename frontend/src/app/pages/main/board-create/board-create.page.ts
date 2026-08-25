@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { MainLayout } from '@core/layout';
 import { AppRoutes } from '@core';
 import { BoardCreateFeature } from '@features';
+import { MainLayout } from '@core/layout';
 
 @Component({
     selector: 'lu-board-create-page',

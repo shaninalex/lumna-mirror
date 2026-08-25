@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MainLayout } from "@core/layout";
+import { MainLayout } from '@core/layout';
 
 @Component({
     selector: 'lu-workspace-entry-page',

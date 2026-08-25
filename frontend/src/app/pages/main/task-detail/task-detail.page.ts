@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
-import { MainLayout } from '@core/layout';
 import { TaskDetailViewView } from '@features';
+import { MainLayout } from '@core/layout';
 
 @Component({
     selector: 'lu-task-detail-page',

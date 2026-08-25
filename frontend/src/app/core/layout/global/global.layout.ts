@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { ThemeSwitcherComponent } from '../../../shared/ui/theme-switcher';
 import { UserMenuComponent } from '@entities/user'
 import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
 import { selectWorkspaces } from '@entities/workspace';
+import { ThemeSwitcherComponent } from '@shared/ui';
 
 @Component({
     selector: 'lu-global-layout',

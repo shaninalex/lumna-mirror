@@ -6,13 +6,13 @@ import (
 )
 
 type BoardController struct {
-	listService   services.ListService
+	listService   services.BoardService
 	columnService services.ColumnService
 	taskService   services.TaskService
 }
 
 func NewListController(
-	listService services.ListService,
+	listService services.BoardService,
 	columnService services.ColumnService,
 	taskService services.TaskService,
 ) *BoardController {

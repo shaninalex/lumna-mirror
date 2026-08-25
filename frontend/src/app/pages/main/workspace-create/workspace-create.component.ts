@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { GlobalLayout } from '@core/layout';
 import { WorkspaceCreateFeature } from '@features/workspace';
+import { GlobalLayout } from '@core/layout';
 
 @Component({
     selector: 'lu-workspace-create-page',

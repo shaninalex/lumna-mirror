@@ -196,7 +196,7 @@ CREATE TABLE board_tasks
         ON DELETE CASCADE,
 
     FOREIGN KEY (board_id, column_id)
-        REFERENCES board_columns(board_id, id)
+        REFERENCES columns(board_id, id)
         ON DELETE SET NULL
 );
 

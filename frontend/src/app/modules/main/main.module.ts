@@ -15,8 +15,12 @@ import { columnFeature, ColumnApi } from '@entities/column';
 import { BoardApi, boardFeature } from '@entities/board';
 
 @NgModule({
-    declarations: [],
-    imports: [CommonModule, RouterModule.forChild(routes)],
+    declarations: [
+    ],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+    ],
     providers: [
         AppRoutes,
         WorkspaceApi,

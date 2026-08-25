@@ -9,6 +9,7 @@ import (
 
 type TaskListQuery struct {
 	ProjectID *uint
+	BoardId   *uint
 	Code      *string
 	QueryArgs []interface{}
 	OrderBy   *string
@@ -21,9 +22,11 @@ type TaskRepository interface {
 	GetByID(ctx context.Context, taskID uint) (*models.Task, error)
 	Reorder(ctx context.Context, taskID uint, statusID uint, order uint) error
 	Create(ctx context.Context, task *models.Task) error
-	CreateTaskBoard(ctx context.Context, task models.BoardTask) error
 	Update(ctx context.Context, task *models.Task) error
 	UpdateFields(ctx context.Context, taskID uint, updates map[string]any) error
+	CreateTaskBoard(ctx context.Context, boardTask models.BoardTask) error
+	GetTaskBoards(ctx context.Context, boardId uint) ([]models.BoardTask, error)
+	GetTasksByBoardId(ctx context.Context, boardId uint) ([]models.Task, error)
 }
 
 type GormTaskRepository struct {
@@ -88,20 +91,6 @@ func (r *GormTaskRepository) Create(ctx context.Context, task *models.Task) erro
 		Error
 }
 
-func (r *GormTaskRepository) CreateTaskBoard(ctx context.Context, boardTask models.BoardTask) error {
-	result := r.db.Exec(`
-        INSERT INTO board_tasks (board_id, task_id, column_id, position)
-        VALUES (?, ?, ?, ?)
-    `,
-		boardTask.BoardId,
-		boardTask.TaskId,
-		boardTask.ColumnId,
-		boardTask.Position,
-	)
-
-	return result.Error
-}
-
 func (r *GormTaskRepository) Update(ctx context.Context, task *models.Task) error {
 	return r.db.WithContext(ctx).
 		Save(task).
@@ -113,4 +102,28 @@ func (r *GormTaskRepository) UpdateFields(ctx context.Context, taskID uint, upda
 		Where("id = ?", taskID).
 		Updates(updates)
 	return result.Error
+}
+
+// CreateTaskBoard implements [TaskRepository].
+func (r *GormTaskRepository) CreateTaskBoard(ctx context.Context, boardTask models.BoardTask) error {
+	return gorm.G[models.BoardTask](r.db).Create(ctx, &boardTask)
+}
+
+// GetTaskBoards implements [TaskRepository].
+func (r *GormTaskRepository) GetTaskBoards(ctx context.Context, boardId uint) ([]models.BoardTask, error) {
+	return gorm.G[models.BoardTask](r.db).Raw(`
+        SELECT board_id, task_id, column_id, position
+		FROM board_tasks
+        WHERE board_id = ?
+    `, boardId).Find(ctx)
+}
+
+// GetTasksByBoardId implements [TaskRepository].
+func (r *GormTaskRepository) GetTasksByBoardId(ctx context.Context, boardId uint) ([]models.Task, error) {
+	return gorm.G[models.Task](r.db).Raw(`
+		SELECT id, title, body, completed, meta, created_at, updated_at
+		FROM tasks t
+		JOIN board_tasks bt ON bt.task_id = t.id
+		WHERE bt.board_id = 1;
+    `, boardId).Find(ctx)
 }

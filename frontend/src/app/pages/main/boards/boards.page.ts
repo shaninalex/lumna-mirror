@@ -7,8 +7,8 @@ import { Store } from '@ngrx/store';
 import { selectProjects } from '@entities/project';
 import { filter, switchMap } from 'rxjs';
 import { BoardListFeature } from '@features';
-import { MainLayout } from '@core/layout';
 import { selectBoard } from '@entities/board';
+import { MainLayout } from '@core/layout';
 
 @Component({
     selector: 'lu-boards-page',

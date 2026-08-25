@@ -1,11 +1,11 @@
 import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
-import { GlobalLayout } from '@core/layout';
 import { UiService } from '@shared/ui';
 import { selectWorkspaces, WorkspaceCardComponent } from "@entities/workspace";
 import { RouterLink } from "@angular/router";
 import { Store } from '@ngrx/store';
 import { AsyncPipe } from '@angular/common';
+import { GlobalLayout } from '@core/layout';
 
 @Component({
     selector: 'lu-workspaces-page',

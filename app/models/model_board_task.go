@@ -9,8 +9,12 @@ const (
 )
 
 type BoardTask struct {
-	BoardId  uint `gorm:"primaryKey" json:"board_id"`
-	TaskId   uint `gorm:"not null" json:"task_id"`
-	ColumnId uint `json:"column_id"`
-	Position uint `json:"position"`
+	BoardId  uint
+	TaskId   uint
+	ColumnId uint
+	Position uint
+}
+
+func (s BoardTask) TableName() string {
+	return "board_tasks"
 }

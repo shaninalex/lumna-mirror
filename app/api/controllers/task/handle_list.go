@@ -4,22 +4,31 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/api/adapters"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
+type TaskListQuery struct {
+	BoardId uint `form:"board_id,omitempty"`
+}
+
 func (s *TaskController) handleListTask(c *gin.Context) {
-	listQuery := services.ServiceTaskListQuery{}
-	if err := c.ShouldBindQuery(&listQuery); err != nil {
+	q := TaskListQuery{}
+	if err := c.ShouldBindQuery(&q); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	tasks, err := s.taskService.List(c.Request.Context(), listQuery)
+	tasks, boardTasks, err := s.taskService.List(c.Request.Context(), services.ServiceTaskListQuery{
+		BoardId: q.BoardId,
+	})
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	utils.Success(c, tasks)
+	result := adapters.ToTaskDtoList(tasks, boardTasks)
+
+	utils.Success(c, result)
 }

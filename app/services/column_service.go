@@ -16,13 +16,13 @@ type ColumnService interface {
 }
 
 type columnService struct {
-	statusRepository repositories.StatusRepository
-	listRepository   repositories.ListRepository
+	statusRepository repositories.ColumnRepository
+	listRepository   repositories.BoardRepository
 }
 
 func NewStatusService(
-	listRepository repositories.ListRepository,
-	statusRepository repositories.StatusRepository,
+	listRepository repositories.BoardRepository,
+	statusRepository repositories.ColumnRepository,
 ) ColumnService {
 	return &columnService{
 		listRepository:   listRepository,

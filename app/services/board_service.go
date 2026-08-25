@@ -7,7 +7,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/repositories"
 )
 
-type ListService interface {
+type BoardService interface {
 	Create(ctx context.Context, projectID uint, title string) (*models.Board, error)
 	Delete(ctx context.Context, listID uint) error
 	Update(ctx context.Context, list *models.Board) error
@@ -16,27 +16,27 @@ type ListService interface {
 	Reorder(ctx context.Context, payload *KanbanListChangeOrderPayload) error
 }
 
-type listService struct {
-	listRepository   repositories.ListRepository
+type boardService struct {
+	listRepository   repositories.BoardRepository
 	taskRepository   repositories.TaskRepository
-	statusRepository repositories.StatusRepository
+	statusRepository repositories.ColumnRepository
 }
 
-var _ ListService = (*listService)(nil)
+var _ BoardService = (*boardService)(nil)
 
 func NewListService(
-	listRepository repositories.ListRepository,
+	listRepository repositories.BoardRepository,
 	taskRepository repositories.TaskRepository,
-	statusRepository repositories.StatusRepository,
-) ListService {
-	return &listService{
+	statusRepository repositories.ColumnRepository,
+) BoardService {
+	return &boardService{
 		listRepository:   listRepository,
 		taskRepository:   taskRepository,
 		statusRepository: statusRepository,
 	}
 }
 
-func (s *listService) Create(ctx context.Context, projectID uint, title string) (*models.Board, error) {
+func (s *boardService) Create(ctx context.Context, projectID uint, title string) (*models.Board, error) {
 	list := models.Board{
 		ProjectID: projectID,
 		Title:     title,
@@ -44,19 +44,19 @@ func (s *listService) Create(ctx context.Context, projectID uint, title string) 
 	return s.listRepository.Create(ctx, &list)
 }
 
-func (s *listService) Delete(ctx context.Context, listID uint) error {
+func (s *boardService) Delete(ctx context.Context, listID uint) error {
 	return s.listRepository.Delete(ctx, listID)
 }
 
-func (s *listService) Update(ctx context.Context, list *models.Board) error {
+func (s *boardService) Update(ctx context.Context, list *models.Board) error {
 	_, err := s.listRepository.Update(ctx, list)
 	return err
 }
 
-func (s *listService) Get(ctx context.Context, listID uint) (*models.Board, error) {
+func (s *boardService) Get(ctx context.Context, listID uint) (*models.Board, error) {
 	return s.listRepository.GetByID(ctx, listID)
 }
-func (s *listService) List(ctx context.Context, projectID uint) ([]*models.Board, error) {
+func (s *boardService) List(ctx context.Context, projectID uint) ([]*models.Board, error) {
 	return s.listRepository.ListByProjectId(ctx, projectID)
 }
 
@@ -78,7 +78,7 @@ type KanbanListChangeOrderPayload struct {
 	Statuses []KColumn `json:"statuses"`
 }
 
-func (s *listService) Reorder(ctx context.Context, payload *KanbanListChangeOrderPayload) error {
+func (s *boardService) Reorder(ctx context.Context, payload *KanbanListChangeOrderPayload) error {
 	if payload.MoveType == "task" {
 		// move in a single status
 		if payload.StatusId != nil {

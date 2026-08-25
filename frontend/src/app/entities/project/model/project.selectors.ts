@@ -8,9 +8,9 @@ const entitySelectors = projectsAdapter.getSelectors();
 const selectCurrentProjectId = createSelector(feature, (state) => state.currentId ?? null);
 
 const selectCurrentProject = createSelector(
-    feature,
+    entitySelectors.selectAll,
     selectCurrentProjectId,
-    (state, currentId) => entitySelectors.selectAll(state).find((p) => p.id === currentId) ?? null,
+    (projects, currentId) => projects.find((p) => p.id === currentId) ?? null,
 );
 
 export const selectProjects = {

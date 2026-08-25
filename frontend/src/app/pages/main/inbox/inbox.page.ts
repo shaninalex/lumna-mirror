@@ -1,7 +1,7 @@
 import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
-import { MainLayout } from '@core/layout';
 import { UiService } from '@shared/ui';
+import { MainLayout } from '@core/layout';
 
 @Component({
     selector: 'lu-inbox-page',

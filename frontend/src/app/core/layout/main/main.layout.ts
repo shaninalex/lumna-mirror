@@ -9,6 +9,7 @@ import {NgClass} from '@angular/common';
     selector: 'lu-main-layout',
     imports: [SidebarComponent, HeaderComponent, NgClass],
     styleUrl: './main.layout.css',
+    standalone: true,
     template: `
         <div class="dashboard" [ngClass]="{ 'sidebar-closed': hideSidebar }">
             <div class="dashboard-header">

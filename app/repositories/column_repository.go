@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type StatusRepository interface {
+type ColumnRepository interface {
 	Repository
 	Create(ctx context.Context, status models.Column) (*models.Column, error)
 	Update(ctx context.Context, status *models.Column) (*models.Column, error)
@@ -17,21 +17,21 @@ type StatusRepository interface {
 	FilterByBoard(ctx context.Context, listId uint) []models.Column
 }
 
-type GormStatusRepository struct {
+type GormColumnRepository struct {
 	db *gorm.DB
 }
 
-func NewGormStatusRepository(db *gorm.DB) StatusRepository {
-	return &GormStatusRepository{
+func NewGormStatusRepository(db *gorm.DB) ColumnRepository {
+	return &GormColumnRepository{
 		db: db,
 	}
 }
 
-func (r *GormStatusRepository) GetDB() *gorm.DB {
+func (r *GormColumnRepository) GetDB() *gorm.DB {
 	return r.db
 }
 
-func (r *GormStatusRepository) GetByID(ctx context.Context, id uint) (*models.Column, error) {
+func (r *GormColumnRepository) GetByID(ctx context.Context, id uint) (*models.Column, error) {
 	var status models.Column
 
 	err := r.db.WithContext(ctx).
@@ -45,7 +45,7 @@ func (r *GormStatusRepository) GetByID(ctx context.Context, id uint) (*models.Co
 	return &status, nil
 }
 
-func (r *GormStatusRepository) FilterByBoard(ctx context.Context, listId uint) []models.Column {
+func (r *GormColumnRepository) FilterByBoard(ctx context.Context, listId uint) []models.Column {
 	var statuss []models.Column
 	if result := r.db.WithContext(ctx).
 		//Preload("Tasks").
@@ -56,28 +56,28 @@ func (r *GormStatusRepository) FilterByBoard(ctx context.Context, listId uint) [
 	return statuss
 }
 
-func (r *GormStatusRepository) Create(ctx context.Context, status models.Column) (*models.Column, error) {
+func (r *GormColumnRepository) Create(ctx context.Context, status models.Column) (*models.Column, error) {
 	if result := r.db.WithContext(ctx).Create(&status); result.Error != nil {
 		return nil, result.Error
 	}
 	return &status, nil
 }
 
-func (r *GormStatusRepository) Update(ctx context.Context, status *models.Column) (*models.Column, error) {
+func (r *GormColumnRepository) Update(ctx context.Context, status *models.Column) (*models.Column, error) {
 	if result := r.db.WithContext(ctx).Save(&status); result.Error != nil {
 		return nil, result.Error
 	}
 	return status, nil
 }
 
-func (r *GormStatusRepository) Delete(ctx context.Context, id uint) error {
+func (r *GormColumnRepository) Delete(ctx context.Context, id uint) error {
 	if result := r.db.WithContext(ctx).Where("id = ?", id).Delete(&models.Column{}); result.Error != nil {
 		return result.Error
 	}
 	return nil
 }
 
-func (r *GormStatusRepository) UpdateFields(ctx context.Context, statusID uint, updates map[string]any) error {
+func (r *GormColumnRepository) UpdateFields(ctx context.Context, statusID uint, updates map[string]any) error {
 	result := r.db.WithContext(ctx).Model(&models.Column{}).
 		Where("id = ?", statusID).
 		Updates(updates)
