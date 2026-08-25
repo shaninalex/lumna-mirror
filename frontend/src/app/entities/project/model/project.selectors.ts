@@ -5,26 +5,22 @@ import { projectsAdapter } from './project.store';
 const feature = createFeatureSelector<ProjectState>('project');
 const entitySelectors = projectsAdapter.getSelectors();
 
-const selectCurrentProjectId = createSelector(feature, (state) => state.currentId ?? null);
+const selectAll = createSelector(feature, entitySelectors.selectAll);
+const selectCurrentProjectId = createSelector(feature, (state) => state?.currentId ?? null);
 
 const selectCurrentProject = createSelector(
-    entitySelectors.selectAll,
+    selectAll,
     selectCurrentProjectId,
     (projects, currentId) => projects.find((p) => p.id === currentId) ?? null,
 );
 
 export const selectProjects = {
-    all: createSelector(feature, entitySelectors.selectAll),
+    all: selectAll,
     entities: createSelector(feature, entitySelectors.selectEntities),
     total: createSelector(feature, entitySelectors.selectTotal),
-    byId: (id: number) =>
-        createSelector(feature, (state: ProjectState) =>
-            entitySelectors.selectAll(state).find((p) => p.id === id),
-        ),
+    byId: (id: number) => createSelector(selectAll, (list) => list.find((p) => p.id === id)),
     byWorkspaceId: (workspaceId: number) =>
-        createSelector(feature, (state: ProjectState) =>
-            entitySelectors.selectAll(state).filter((p) => p.workspace_id === workspaceId),
-        ),
+        createSelector(selectAll, (list) => list.filter((p) => p.workspace_id === workspaceId)),
     currentProjectId: selectCurrentProjectId,
     currentProject: selectCurrentProject,
 };

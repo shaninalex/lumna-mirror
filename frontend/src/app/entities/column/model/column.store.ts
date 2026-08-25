@@ -24,8 +24,12 @@ export const statusReducer = createReducer(
     on(actionsColumns.loadByBoardIdSuccess, (state, action) =>
         statusAdapter.addMany(action.columns, state),
     ),
-    on((actionsColumns.loadByBoardIdFailed, actionsColumns.createFailed), (state, action) => ({
-        ...state,
-        errors: action.errors,
-    })),
+    on(
+        actionsColumns.loadByBoardIdFailed,
+        actionsColumns.createFailed,
+        (state, action) => ({
+            ...state,
+            errors: action.errors,
+        }),
+    ),
 );

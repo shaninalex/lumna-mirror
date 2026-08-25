@@ -5,18 +5,15 @@ import { statusAdapter } from './column.store';
 const feature = createFeatureSelector<ColumnState>('column');
 const entitySelectors = statusAdapter.getSelectors();
 
+const selectAll = createSelector(feature, entitySelectors.selectAll);
+
 export const selectColumns = {
-    all: createSelector(feature, entitySelectors.selectAll),
+    all: selectAll,
     entities: createSelector(feature, entitySelectors.selectEntities),
     total: createSelector(feature, entitySelectors.selectTotal),
-    byId: (id: number) =>
-        createSelector(feature, (state) =>
-            entitySelectors.selectAll(state).find((a) => a.id === id),
-        ),
+    byId: (id: number) => createSelector(selectAll, (list) => list.find((a) => a.id === id)),
     byListId: (listId: number) =>
-        createSelector(feature, (state) =>
-            entitySelectors.selectAll(state).filter((a) => a.board_id === listId),
-        ),
-    loading: createSelector(feature, (state) => state.loading),
-    error: createSelector(feature, (state) => state.errors),
+        createSelector(selectAll, (list) => list.filter((a) => a.board_id === listId)),
+    loading: createSelector(feature, (state) => state?.loading ?? false),
+    error: createSelector(feature, (state) => state?.errors ?? []),
 };
