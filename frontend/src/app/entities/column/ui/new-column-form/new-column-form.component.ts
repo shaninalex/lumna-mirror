@@ -121,6 +121,7 @@ export class NewColumnFormComponent implements OnInit {
         };
 
         this.store.dispatch(actionsColumns.create({ payload }));
+        this.columnForm().reset()
     }
 
     openForm(): void {

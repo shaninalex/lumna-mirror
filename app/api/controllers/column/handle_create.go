@@ -19,6 +19,7 @@ func (s *ColumnController) Create(c *gin.Context) {
 	board, err := s.columnService.Create(c.Request.Context(), payload)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
+		return
 	}
 
 	utils.Success(c, board)
