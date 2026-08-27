@@ -27,6 +27,7 @@ type TaskRepository interface {
 	CreateTaskBoard(ctx context.Context, boardTask models.BoardTask) error
 	GetTaskBoards(ctx context.Context, boardId uint) ([]models.BoardTask, error)
 	GetTasksByBoardId(ctx context.Context, boardId uint) ([]models.Task, error)
+	AddTaskToBoard(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error)
 }
 
 type GormTaskRepository struct {
@@ -126,4 +127,29 @@ func (r *GormTaskRepository) GetTasksByBoardId(ctx context.Context, boardId uint
 		JOIN board_tasks bt ON bt.task_id = t.id
 		WHERE bt.board_id = 1;
     `, boardId).Find(ctx)
+}
+
+// AddTaskToBoard implements [TaskRepository].
+func (r *GormTaskRepository) AddTaskToBoard(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error) {
+	task := models.Task{
+		Title: payload.Title,
+		Body:  payload.Body,
+	}
+
+	// TODO: <= transaction start
+	if err := r.Create(ctx, &task); err != nil {
+		return nil, err
+	}
+
+	if err := r.CreateTaskBoard(ctx, models.BoardTask{
+		TaskId:   task.ID,
+		Position: uint(0),
+		BoardId:  *payload.BoardId,
+		ColumnId: *payload.ColumnId,
+	}); err != nil {
+		return nil, err
+	}
+	// TODO: <= transaction commit
+
+	return &task, nil
 }

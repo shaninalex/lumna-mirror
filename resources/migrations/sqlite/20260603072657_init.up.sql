@@ -164,6 +164,8 @@ CREATE TABLE columns
     created_at datetime DEFAULT CURRENT_TIMESTAMP,
     updated_at datetime,
 
+    UNIQUE (board_id, id),
+
     FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE
 );
 

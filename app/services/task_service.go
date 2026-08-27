@@ -61,26 +61,13 @@ func (s *taskService) ReorderTask(ctx context.Context, taskID uint, listListID u
 }
 
 func (s *taskService) CreateTask(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error) {
-	task := models.Task{
-		Title: payload.Title,
-		Body:  payload.Body,
-	}
-
-	if err := s.repository.Create(ctx, &task); err != nil {
-		return nil, err
-	}
-
-	if err := s.repository.CreateTaskBoard(ctx, models.BoardTask{
-		TaskId:   task.ID,
-		Position: uint(0),
-		BoardId:  *payload.BoardId,
-		ColumnId: *payload.ColumnId,
-	}); err != nil {
+	task, err := s.repository.AddTaskToBoard(ctx, payload)
+	if err != nil {
 		return nil, err
 	}
 
 	s.bus.Publish(ctx, models.EventTaskCreated, task)
-	return &task, nil
+	return task, nil
 }
 
 func (s *taskService) UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error {

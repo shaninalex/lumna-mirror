@@ -20,7 +20,7 @@ export function makeListLabel(task: TaskModel): string {
 export interface TaskCreateModel {
     title: string;
     body: string;
-    order: number;
+    position: number;
     column_id: number;
     board_id: number;
 }

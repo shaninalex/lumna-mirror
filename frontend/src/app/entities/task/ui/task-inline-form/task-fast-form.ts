@@ -93,7 +93,7 @@ export class TaskInlineForm {
         const data: TaskCreateModel = {
             title: formData.title,
             body: '',
-            order: this.task_count(),
+            position: this.task_count(),
             column_id: this.column_id(),
             board_id: this.board_id(),
         };
