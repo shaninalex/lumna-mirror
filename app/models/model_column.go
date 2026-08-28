@@ -12,8 +12,8 @@ import (
 )
 
 type Column struct {
-	ID    uint   `gorm:"primaryKey" json:"id"`
-	Title string `gorm:"not null" json:"title"`
+	ID    EntityId `gorm:"primaryKey" json:"id"`
+	Title string   `gorm:"not null" json:"title"`
 
 	Meta ColumnMeta `gorm:"null" json:"meta"`
 

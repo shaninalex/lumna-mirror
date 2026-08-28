@@ -37,4 +37,5 @@ type TaskDto struct {
 	CreatedAt time.Time    `json:"created_at"`
 	UpdatedAt *time.Time   `json:"updated_at"`
 	Board     BoardTaskDto `json:"boards"`
+	ProjectId uint         `json:"project_id"`
 }

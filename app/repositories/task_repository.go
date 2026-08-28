@@ -16,6 +16,9 @@ type TaskListQuery struct {
 	Limit     *uint
 }
 
+// TaskRepository
+//
+// Deprecated: the repository interface is not flexible enough for new database schema.
 type TaskRepository interface {
 	Repository
 	List(ctx context.Context, query TaskListQuery) ([]*models.Task, error)
@@ -125,6 +128,7 @@ func (r *GormTaskRepository) GetTasksByBoardId(ctx context.Context, boardId uint
 		SELECT id, title, body, completed, meta, created_at, updated_at
 		FROM tasks t
 		JOIN board_tasks bt ON bt.task_id = t.id
+		JOIN boards b ON b.id = bt.board_id
 		WHERE bt.board_id = 1;
     `, boardId).Find(ctx)
 }
@@ -142,7 +146,7 @@ func (r *GormTaskRepository) AddTaskToBoard(ctx context.Context, payload *models
 	}
 
 	if err := r.CreateTaskBoard(ctx, models.BoardTask{
-		TaskId:   task.ID,
+		TaskId:   uint(task.ID),
 		Position: uint(0),
 		BoardId:  *payload.BoardId,
 		ColumnId: *payload.ColumnId,

@@ -16,13 +16,15 @@ const (
 )
 
 type Task struct {
-	ID        uint       `gorm:"primaryKey" json:"id"`
-	Title     string     `gorm:"not null" json:"title"`
-	Body      string     `json:"body"`
-	Completed bool       `json:"completed"`
-	Meta      string     `json:"meta"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt *time.Time `json:"updated_at"`
+	ID        EntityId `gorm:"primaryKey"`
+	Title     string   `gorm:"not null"`
+	Body      string
+	Completed bool
+	Meta      string
+	ProjectId uint       `gorm:"-"`
+	BoardIds  []EntityId `gorm:"-"`
+	CreatedAt time.Time
+	UpdatedAt *time.Time
 }
 
 func (s *Task) BeforeCreate(tx *gorm.DB) error {
