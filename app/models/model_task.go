@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/shaninalex/lumna/app/pkg/utils"
 	"gitlab.com/shaninalex/lumna/app/services/observer"
-	"gorm.io/gorm"
 )
 
 const (
@@ -16,27 +14,26 @@ const (
 )
 
 type Task struct {
-	ID        EntityId `gorm:"primaryKey"`
-	Title     string   `gorm:"not null"`
+	ID        int64
+	Title     string
 	Body      string
 	Completed bool
 	Meta      string
-	ProjectId uint       `gorm:"-"`
-	BoardIds  []EntityId `gorm:"-"`
+
+	ProjectId int64
+
+	Boards       []TaskBoard
+	OwnerId      int64
+	AssigneesIDs []int64
+
 	CreatedAt time.Time
-	UpdatedAt *time.Time
+	UpdatedAt time.Time
 }
 
-func (s *Task) BeforeCreate(tx *gorm.DB) error {
-	if s.CreatedAt.IsZero() {
-		s.CreatedAt = time.Now()
-	}
-	return nil
-}
-
-func (s *Task) BeforeUpdate(tx *gorm.DB) (err error) {
-	s.UpdatedAt = utils.Pointer(time.Now())
-	return nil
+type TaskBoard struct {
+	BoardId  int64
+	ColumnId int64
+	Position int64
 }
 
 func (s *Task) String() string {

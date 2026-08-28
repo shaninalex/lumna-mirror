@@ -6,6 +6,7 @@ type TaskRecord struct {
 	ID        int64     `gorm:"primaryKey;autoIncrement"`
 	Title     string    `gorm:"not null"`
 	Body      string    `gorm:"type:text"`
+	Meta      string    `gorm:"type:text"`
 	Completed bool      `gorm:"default:false"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`

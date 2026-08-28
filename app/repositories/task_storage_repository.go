@@ -9,21 +9,21 @@ import (
 )
 
 type TaskStorageRepositoryFilterQuery struct {
-	BoardId   *models.EntityId `json:"board_id" form:"board_id"`
-	ProjectId *models.EntityId `json:"project_id" form:"project_id"`
+	BoardId   *int64 `json:"board_id" form:"board_id"`
+	ProjectId *int64 `json:"project_id" form:"project_id"`
 }
 
 type TaskStorageRepository interface {
-	Filter(ctx context.Context, boardId models.EntityId) ([]models.Task, error)
-	FindByID(ctx context.Context, id models.EntityId) (*models.Task, error)
+	Filter(ctx context.Context, boardId int64) ([]models.Task, error)
+	FindByID(ctx context.Context, id int64) (*models.Task, error)
 
 	// Save creates or updates the entire cluster transactionally
 	Save(ctx context.Context, task *models.Task) error
 
 	// Explicit domain action optimized to bypass heavy loads when necessary
-	AssignUser(ctx context.Context, taskID models.EntityId, userID models.IdentityID) error
-	MovePosition(ctx context.Context, taskID, boardID, columnID models.EntityId, pos int64) error
-	Complete(ctx context.Context, taskID models.EntityId) error
+	AssignUser(ctx context.Context, taskID int64, userID models.IdentityID) error
+	MovePosition(ctx context.Context, taskID, boardID, columnID int64, pos int64) error
+	Complete(ctx context.Context, taskID int64) error
 }
 
 type gormTaskStorageRepository struct {
@@ -37,60 +37,148 @@ func NewGormTaskStorageRepository(db *gorm.DB) TaskStorageRepository {
 }
 
 // AssignUser implements [TaskStorageRepository].
-func (g *gormTaskStorageRepository) AssignUser(ctx context.Context, taskID models.EntityId, userID models.IdentityID) error {
+func (s *gormTaskStorageRepository) AssignUser(ctx context.Context, taskID int64, userID models.IdentityID) error {
+	// TODO: create storage.TaskAssigneeRecord
 	panic("unimplemented")
 }
 
 // Complete implements [TaskStorageRepository].
-func (g *gormTaskStorageRepository) Complete(ctx context.Context, taskID models.EntityId) error {
-	panic("unimplemented")
-}
-
-// Filter implements [TaskStorageRepository].
-func (g *gormTaskStorageRepository) Filter(ctx context.Context, boardId models.EntityId) ([]models.Task, error) {
+func (s *gormTaskStorageRepository) Complete(ctx context.Context, taskID int64) error {
+	// TODO: update storage.TaskRecord
 	panic("unimplemented")
 }
 
 // FindByID implements [TaskStorageRepository].
-func (g *gormTaskStorageRepository) FindByID(ctx context.Context, id models.EntityId) (*models.Task, error) {
-	task, err := gorm.G[storage.TaskRecord](g.db).Where("id = ?", id).First(ctx)
+func (s *gormTaskStorageRepository) FindByID(ctx context.Context, id int64) (*models.Task, error) {
+	task, err := gorm.G[storage.TaskRecord](s.db).Where("id = ?", id).First(ctx)
 	if err != nil {
 		return nil, err
 	}
-	owner, err := gorm.G[storage.TaskOwnerRecord](g.db).Where("task_id = ?", id).First(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	assignee, err := gorm.G[storage.TaskAssigneeRecord](g.db).Where("task_id = ?", id).Find(ctx)
+	owner, err := gorm.G[storage.TaskOwnerRecord](s.db).Where("task_id = ?", id).First(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	boards, err := gorm.G[storage.BoardTaskRecord](g.db).Where("task_id = ?", id).Find(ctx)
+	assignee, err := gorm.G[storage.TaskAssigneeRecord](s.db).Where("task_id = ?", id).Find(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	t := g.toDomainModel(task, owner, assignee, boards)
-	return &t, nil
+	boards, err := gorm.G[storage.BoardTaskRecord](s.db).Where("task_id = ?", id).Find(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	t := s.toDomainModels([]storage.TaskRecord{task}, []storage.TaskOwnerRecord{owner}, assignee, boards)
+	if len(t) == 0 {
+		return &models.Task{}, nil
+	}
+	return &t[0], nil
 }
 
 // MovePosition implements [TaskStorageRepository].
-func (g *gormTaskStorageRepository) MovePosition(ctx context.Context, taskID, boardID, columnID models.EntityId, pos int64) error {
+func (s *gormTaskStorageRepository) MovePosition(ctx context.Context, taskID, boardID, columnID int64, pos int64) error {
+	// TODO: update storage.TaskBoardRecord
 	panic("unimplemented")
 }
 
 // Save implements [TaskStorageRepository].
-func (g *gormTaskStorageRepository) Save(ctx context.Context, task *models.Task) error {
+func (s *gormTaskStorageRepository) Save(ctx context.Context, task *models.Task) error {
+	// TODO: get data from model and update records.
+	// Important: something might need delete and create again, depends of what we are doing - save or update
 	panic("unimplemented")
 }
 
-func (g *gormTaskStorageRepository) toDomainModel(
-	taskRecord storage.TaskRecord,
-	taskOwner storage.TaskOwnerRecord,
-	taskAssignee []storage.TaskAssigneeRecord,
+// Filter implements [TaskStorageRepository].
+func (s *gormTaskStorageRepository) Filter(ctx context.Context, boardId int64) ([]models.Task, error) {
+	tasks, err := gorm.G[storage.TaskRecord](s.db).Raw(`
+		SELECT id, title, body, completed, meta, created_at, updated_at
+		FROM tasks t
+		JOIN board_tasks bt ON bt.task_id = t.id
+		JOIN boards b ON b.id = bt.board_id
+		WHERE bt.board_id = ?;
+    `, boardId).Find(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	taskIDs := make([]int64, len(tasks))
+	for i, t := range tasks {
+		taskIDs[i] = t.ID
+	}
+
+	taskOwners, err := s.batchTaskOwnerRecord(ctx, taskIDs)
+	if err != nil {
+		return nil, err
+	}
+	taskAssignees, err := s.batchTaskAssigneeRecord(ctx, taskIDs)
+	if err != nil {
+		return nil, err
+	}
+	boardTasks, err := s.batchBoardTaskRecord(ctx, taskIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.toDomainModels(tasks, taskOwners, taskAssignees, boardTasks), nil
+}
+
+func (s *gormTaskStorageRepository) toDomainModels(
+	taskRecords []storage.TaskRecord,
+	taskOwners []storage.TaskOwnerRecord,
+	taskAssignees []storage.TaskAssigneeRecord,
 	taskBoards []storage.BoardTaskRecord,
-) models.Task {
-	return models.Task{}
+) []models.Task {
+	tasks := make([]models.Task, len(taskRecords))
+
+	for _, t := range taskRecords {
+		task := models.Task{
+			ID:           t.ID,
+			Title:        t.Title,
+			Body:         t.Body,
+			Completed:    t.Completed,
+			Boards:       []models.TaskBoard{},
+			AssigneesIDs: []int64{},
+			Meta:         t.Meta,
+			CreatedAt:    t.CreatedAt,
+			UpdatedAt:    t.UpdatedAt,
+		}
+
+		for _, o := range taskOwners {
+			if o.TaskID == task.ID {
+				task.OwnerId = o.UserID
+				break
+			}
+		}
+
+		for _, b := range taskBoards {
+			if b.TaskID == task.ID {
+				task.Boards = append(task.Boards, models.TaskBoard{
+					BoardId:  b.BoardID,
+					ColumnId: *b.ColumnID,
+					Position: b.Position,
+				})
+			}
+		}
+
+		for _, a := range taskAssignees {
+			if a.TaskID == task.ID {
+				task.AssigneesIDs = append(task.AssigneesIDs, a.UserID)
+			}
+		}
+	}
+
+	return tasks
+}
+
+func (s *gormTaskStorageRepository) batchTaskOwnerRecord(ctx context.Context, ids []int64) ([]storage.TaskOwnerRecord, error) {
+	return gorm.G[storage.TaskOwnerRecord](s.db).Where("task_id IN ?", ids).Find(ctx)
+}
+
+func (s *gormTaskStorageRepository) batchTaskAssigneeRecord(ctx context.Context, ids []int64) ([]storage.TaskAssigneeRecord, error) {
+	return gorm.G[storage.TaskAssigneeRecord](s.db).Where("task_id IN ?", ids).Find(ctx)
+}
+
+func (s *gormTaskStorageRepository) batchBoardTaskRecord(ctx context.Context, ids []int64) ([]storage.BoardTaskRecord, error) {
+	return gorm.G[storage.BoardTaskRecord](s.db).Where("task_id IN ?", ids).Find(ctx)
 }

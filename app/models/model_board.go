@@ -9,8 +9,8 @@ import (
 )
 
 type Board struct {
-	ID    EntityId `gorm:"primaryKey" json:"id"`
-	Title string   `gorm:"not null" json:"title"`
+	ID    int64  `gorm:"primaryKey" json:"id"`
+	Title string `gorm:"not null" json:"title"`
 
 	ProjectID uint `gorm:"not null;index" json:"project_id"`
 
