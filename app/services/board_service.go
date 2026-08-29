@@ -37,11 +37,14 @@ func NewListService(
 }
 
 func (s *boardService) Create(ctx context.Context, projectID uint, title string) (*models.Board, error) {
-	list := models.Board{
+	board := models.Board{
 		ProjectID: projectID,
 		Title:     title,
 	}
-	return s.listRepository.Create(ctx, &list)
+	if err := s.listRepository.Create(ctx, &board); err != nil {
+		return nil, err
+	}
+	return &board, nil
 }
 
 func (s *boardService) Delete(ctx context.Context, listID uint) error {

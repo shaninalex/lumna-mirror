@@ -99,6 +99,18 @@ CREATE TABLE workspaces
     updated_at  datetime NULL
 );
 
+CREATE TABLE identity_workspaces 
+(
+    identity_id     INTEGER NOT NULL,
+    workspace_id    INTEGER NOT NULL,
+    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (identity_id, workspace_id),
+    FOREIGN KEY (identity_id) REFERENCES identities(id) ON DELETE CASCADE,
+    FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE
+);
+
+
 -----------------------------
 -- WORK
 -----------------------------

@@ -8,8 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type IdentityID uint
-
 type Identity struct {
 	ID        uint       `gorm:"primaryKey" json:"id"`
 	FullName  string     `gorm:"not null" json:"full_name"`

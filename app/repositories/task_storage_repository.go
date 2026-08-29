@@ -21,7 +21,7 @@ type TaskStorageRepository interface {
 	Save(ctx context.Context, task *models.Task) error
 
 	// Explicit domain action optimized to bypass heavy loads when necessary
-	AssignUser(ctx context.Context, taskID int64, userID models.IdentityID) error
+	AssignUser(ctx context.Context, taskID int64, userID uint) error
 	MovePosition(ctx context.Context, taskID, boardID, columnID int64, pos int64) error
 	Complete(ctx context.Context, taskID int64) error
 }
@@ -37,7 +37,7 @@ func NewGormTaskStorageRepository(db *gorm.DB) TaskStorageRepository {
 }
 
 // AssignUser implements [TaskStorageRepository].
-func (s *gormTaskStorageRepository) AssignUser(ctx context.Context, taskID int64, userID models.IdentityID) error {
+func (s *gormTaskStorageRepository) AssignUser(ctx context.Context, taskID int64, userID uint) error {
 	// TODO: create storage.TaskAssigneeRecord
 	panic("unimplemented")
 }

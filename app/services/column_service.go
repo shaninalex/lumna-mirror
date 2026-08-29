@@ -45,11 +45,14 @@ type BoardUpdate struct {
 }
 
 func (s *columnService) Create(ctx context.Context, payload BoardUpdate) (*models.Column, error) {
-	status := models.Column{
+	column := models.Column{
 		Title:   payload.Title,
 		BoardId: payload.BoardId,
 	}
-	return s.statusRepository.Create(ctx, status)
+	if err := s.statusRepository.Create(ctx, &column); err != nil {
+		return nil, err
+	}
+	return &column, nil
 }
 
 func (s *columnService) Update(ctx context.Context, status *models.Column) (*models.Column, error) {

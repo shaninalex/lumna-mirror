@@ -9,7 +9,7 @@ import (
 
 type BoardRepository interface {
 	GetByID(ctx context.Context, id uint) (*models.Board, error)
-	Create(ctx context.Context, board *models.Board) (*models.Board, error)
+	Create(ctx context.Context, board *models.Board) error
 	Update(ctx context.Context, board *models.Board) (*models.Board, error)
 	Delete(ctx context.Context, id uint) error
 	ListByProjectId(ctx context.Context, projectId uint) ([]*models.Board, error) // TODO: make proper filter request
@@ -19,7 +19,7 @@ type GormBoardRepository struct {
 	db *gorm.DB
 }
 
-func NewGormListRepository(db *gorm.DB) BoardRepository {
+func NewGormBoardRepository(db *gorm.DB) BoardRepository {
 	return &GormBoardRepository{
 		db: db,
 	}
@@ -35,11 +35,11 @@ func (s *GormBoardRepository) GetByID(ctx context.Context, id uint) (*models.Boa
 	return board, nil
 }
 
-func (s *GormBoardRepository) Create(ctx context.Context, board *models.Board) (*models.Board, error) {
-	if result := s.db.WithContext(ctx).Create(board); result.Error != nil {
-		return nil, result.Error
+func (s *GormBoardRepository) Create(ctx context.Context, board *models.Board) error {
+	if err := s.db.WithContext(ctx).Create(board).Error; err != nil {
+		return err
 	}
-	return board, nil
+	return nil
 }
 
 func (s *GormBoardRepository) Update(ctx context.Context, board *models.Board) (*models.Board, error) {

@@ -7,9 +7,9 @@ import (
 )
 
 func Module(c *dig.Container) error {
-	_ = c.Provide(repositories.NewGormListRepository)
+	_ = c.Provide(repositories.NewGormBoardRepository)
 	_ = c.Provide(repositories.NewGormTaskRepository)
-	_ = c.Provide(repositories.NewGormStatusRepository)
+	_ = c.Provide(repositories.NewGormColumnRepository)
 	_ = c.Provide(services.NewListService)
 	_ = c.Provide(services.NewStatusService)
 	_ = c.Provide(services.NewTaskService)

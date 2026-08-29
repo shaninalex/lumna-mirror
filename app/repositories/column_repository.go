@@ -9,7 +9,7 @@ import (
 
 type ColumnRepository interface {
 	Repository
-	Create(ctx context.Context, status models.Column) (*models.Column, error)
+	Create(ctx context.Context, status *models.Column) error
 	Update(ctx context.Context, status *models.Column) (*models.Column, error)
 	UpdateFields(ctx context.Context, statusID uint, updates map[string]any) error
 	Delete(ctx context.Context, id uint) error
@@ -21,7 +21,7 @@ type GormColumnRepository struct {
 	db *gorm.DB
 }
 
-func NewGormStatusRepository(db *gorm.DB) ColumnRepository {
+func NewGormColumnRepository(db *gorm.DB) ColumnRepository {
 	return &GormColumnRepository{
 		db: db,
 	}
@@ -56,11 +56,11 @@ func (r *GormColumnRepository) FilterByBoard(ctx context.Context, listId uint) [
 	return statuss
 }
 
-func (r *GormColumnRepository) Create(ctx context.Context, status models.Column) (*models.Column, error) {
-	if result := r.db.WithContext(ctx).Create(&status); result.Error != nil {
-		return nil, result.Error
+func (r *GormColumnRepository) Create(ctx context.Context, column *models.Column) error {
+	if err := r.db.WithContext(ctx).Create(&column).Error; err != nil {
+		return err
 	}
-	return &status, nil
+	return nil
 }
 
 func (r *GormColumnRepository) Update(ctx context.Context, status *models.Column) (*models.Column, error) {

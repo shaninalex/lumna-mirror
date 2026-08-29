@@ -5,6 +5,11 @@ import (
 
 	"github.com/spf13/cobra"
 	"gitlab.com/shaninalex/lumna/app/cmd/commands"
+	"gitlab.com/shaninalex/lumna/app/cmd/commands/board"
+	"gitlab.com/shaninalex/lumna/app/cmd/commands/column"
+	"gitlab.com/shaninalex/lumna/app/cmd/commands/identity"
+	"gitlab.com/shaninalex/lumna/app/cmd/commands/project"
+	"gitlab.com/shaninalex/lumna/app/cmd/commands/workspace"
 )
 
 func NewRootCmd() (cmd *cobra.Command) {
@@ -14,13 +19,16 @@ func NewRootCmd() (cmd *cobra.Command) {
 
 	cmd.AddCommand(commands.NewRootServeCommand())
 	cmd.AddCommand(commands.NewMigrateRootCmd())
-	cmd.AddCommand(commands.NewIdentitiesRootCmd())
-	cmd.AddCommand(commands.NewProjectsRootCmd())
-	cmd.AddCommand(commands.NewBoardsRootCmd())
 	cmd.AddCommand(commands.NewStatusRootCmd())
 	cmd.AddCommand(commands.NewImportRootCmd())
 	cmd.AddCommand(commands.NewExportRootCmd())
 	cmd.AddCommand(commands.NewEmailRootCmd())
+
+	cmd.AddCommand(workspace.NewWorkspaceRootCmd())
+	cmd.AddCommand(identity.NewIdentitiesRootCmd())
+	cmd.AddCommand(project.NewProjectsRootCmd())
+	cmd.AddCommand(board.NewBoardsRootCmd())
+	cmd.AddCommand(column.NewColumnRootCmd())
 
 	cmd.PersistentFlags().String("config", "", "Configuration path. Required.")
 	_ = cmd.MarkPersistentFlagRequired("config")
