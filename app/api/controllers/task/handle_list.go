@@ -35,8 +35,11 @@ func (s *TaskController) handleListTask(c *gin.Context) {
 	}
 
 	events := []models.EntityEvent{}
-	events, _ = s.entityEventService.ListByEntityIds(c.Request.Context(), ids, "task")
+	events, err = s.entityEventService.ListByEntityIds(c.Request.Context(), ids, "task")
+	if err != nil {
+		utils.Error(c, http.StatusBadRequest, err)
+		return
+	}
 	result := adapters.ToTaskDtoList(tasks, events)
-
 	utils.Success(c, result)
 }

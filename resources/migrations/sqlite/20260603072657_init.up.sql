@@ -227,7 +227,7 @@ CREATE TABLE board_tasks
     FOREIGN KEY (board_id, column_id) REFERENCES columns (board_id, id) ON DELETE SET NULL
 );
 
-CREATE TABLE task_events
+CREATE TABLE entity_events
 (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     identity_id INTEGER NULL,

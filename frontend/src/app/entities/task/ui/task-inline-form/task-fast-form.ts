@@ -58,6 +58,7 @@ export class TaskInlineForm {
     private actions$ = inject(Actions);
 
     column_id = input.required<number>();
+    project_id = input.required<number>();
     board_id = input.required<number>();
     task_count = input.required<number>();
 
@@ -96,6 +97,7 @@ export class TaskInlineForm {
             position: this.task_count(),
             column_id: this.column_id(),
             board_id: this.board_id(),
+            project_id: this.project_id(),
         };
         this.store.dispatch(actionTask.create({ data }));
         this._reset();

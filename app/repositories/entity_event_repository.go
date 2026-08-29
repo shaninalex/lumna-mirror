@@ -25,7 +25,7 @@ func NewGormEntityEventRepository(db *gorm.DB) EntityEventRepository {
 
 // Filter implements [EntityEventRepository]
 func (s *gormEntityEventRepository) Filter(ctx context.Context, query any, args ...any) ([]models.EntityEvent, error) {
-	return gorm.G[models.EntityEvent](s.db).Where(query, args).Find(ctx)
+	return gorm.G[models.EntityEvent](s.db).Where(query, args...).Find(ctx)
 }
 
 // List implements [EntityEventRepository].

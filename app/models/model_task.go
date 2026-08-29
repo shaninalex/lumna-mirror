@@ -39,11 +39,12 @@ func (s *Task) String() string {
 }
 
 type TaskCreateOnBoard struct {
-	Title    string `json:"title"`
-	Body     string `json:"body"`
-	Position *uint  `json:"position"`
-	BoardId  *uint  `json:"board_id"`
-	ColumnId *uint  `json:"column_id"`
+	Title     string `json:"title"`
+	Body      string `json:"body"`
+	Position  int64  `json:"position"`
+	BoardId   int64  `json:"board_id"`
+	ColumnId  int64  `json:"column_id"`
+	ProjectId int64  `json:"project_id"`
 }
 
 type TaskCreateBacklog struct {

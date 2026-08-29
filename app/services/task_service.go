@@ -53,7 +53,19 @@ func (s *taskService) ReorderTask(ctx context.Context, taskID uint, listListID u
 }
 
 func (s *taskService) CreateTask(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error) {
-	task, err := s.repository.AddTaskToBoard(ctx, payload)
+	task := &models.Task{
+		Title:     payload.Title,
+		Body:      payload.Body,
+		ProjectId: payload.ProjectId,
+		Boards: []models.TaskBoard{
+			{
+				Position: int64(payload.Position),
+				BoardId:  int64(payload.BoardId),
+				ColumnId: int64(payload.ColumnId),
+			},
+		},
+	}
+	err := s.storageRepository.Save(ctx, task)
 	if err != nil {
 		return nil, err
 	}

@@ -44,5 +44,8 @@ func (s *entityEventService) ListByEntity(ctx context.Context, entityId int64, e
 
 // ListByEntityIds implements [EntityEventService].
 func (s *entityEventService) ListByEntityIds(ctx context.Context, entityIds []int64, entityType string) ([]models.EntityEvent, error) {
+	if len(entityIds) == 0 {
+		return []models.EntityEvent{}, nil
+	}
 	return s.repository.ListByEntityIds(ctx, entityIds, entityType)
 }

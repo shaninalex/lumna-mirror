@@ -148,8 +148,8 @@ func (r *GormTaskRepository) AddTaskToBoard(ctx context.Context, payload *models
 	if err := r.CreateTaskBoard(ctx, models.BoardTask{
 		TaskId:   uint(task.ID),
 		Position: uint(0),
-		BoardId:  *payload.BoardId,
-		ColumnId: *payload.ColumnId,
+		BoardId:  uint(payload.BoardId),
+		ColumnId: uint(payload.ColumnId),
 	}); err != nil {
 		return nil, err
 	}

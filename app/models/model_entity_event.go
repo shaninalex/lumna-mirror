@@ -24,6 +24,10 @@ type EntityEvent struct {
 	CreatedAt  time.Time
 }
 
+func (s EntityEvent) TableName() string {
+	return "entity_events"
+}
+
 func (s *EntityEvent) BeforeCreate(tx *gorm.DB) error {
 	if s.CreatedAt.IsZero() {
 		s.CreatedAt = time.Now()

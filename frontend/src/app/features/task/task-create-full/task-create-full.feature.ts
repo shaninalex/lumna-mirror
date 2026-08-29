@@ -25,6 +25,7 @@ export class TaskCreateFullFeature {
         position: 0,
         column_id: 0,
         board_id: 0,
+        project_id: 0, // TODO: get the value!
     });
 
     taskForm = form(this.taskFormModel, (schemaPath) => {

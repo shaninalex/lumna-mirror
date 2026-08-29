@@ -36,10 +36,10 @@ func (s TaskAssigneeRecord) TableName() string {
 }
 
 type BoardTaskRecord struct {
-	BoardID  int64  `gorm:"primaryKey"`
-	TaskID   int64  `gorm:"primaryKey"`
-	ColumnID *int64 `gorm:"default:null"`
-	Position int64  `gorm:"not null"`
+	BoardID  int64 `gorm:"primaryKey"`
+	TaskID   int64 `gorm:"primaryKey"`
+	ColumnID int64 `gorm:"default:null"`
+	Position int64 `gorm:"not null"`
 }
 
 func (s BoardTaskRecord) TableName() string {
