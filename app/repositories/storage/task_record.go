@@ -7,6 +7,7 @@ type TaskRecord struct {
 	Title     string    `gorm:"not null"`
 	Body      string    `gorm:"type:text"`
 	Meta      string    `gorm:"type:text"`
+	ProjectId int64     `gorm:"project_id"`
 	Completed bool      `gorm:"default:false"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`

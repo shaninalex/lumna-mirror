@@ -16,5 +16,8 @@ func Module(c *dig.Container) error {
 	_ = c.Provide(NewGormWorkspaceRepository)
 	_ = c.Provide(NewGormEmailRepository)
 
+	_ = c.Provide(NewGormTaskStorageRepository)
+	_ = c.Provide(NewGormEntityEventRepository)
+
 	return nil
 }

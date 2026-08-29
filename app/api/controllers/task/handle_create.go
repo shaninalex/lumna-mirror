@@ -1,8 +1,6 @@
 package task
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,21 +16,11 @@ func (s *TaskController) handleCreateTask(c *gin.Context) {
 		return
 	}
 
-	b, _ := json.Marshal(payload)
-	fmt.Println(string(b))
-
 	task, err := s.taskService.CreateTask(c.Request.Context(), &payload)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	taskDto := adapters.ToTaskDto(*task, models.BoardTask{
-		BoardId:  *payload.BoardId,
-		TaskId:   task.ID,
-		ColumnId: *payload.ColumnId,
-		Position: *payload.Position,
-	})
-
-	utils.Success(c, taskDto)
+	utils.Success(c, adapters.ToTaskDto(*task))
 }

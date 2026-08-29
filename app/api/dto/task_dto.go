@@ -7,12 +7,12 @@ import (
 )
 
 type BoardTaskDto struct {
-	BoardId  uint `json:"board_id"`
-	ColumnId uint `json:"column_id"`
-	Position uint `json:"position"`
+	BoardId  int64 `json:"board_id"`
+	ColumnId int64 `json:"column_id"`
+	Position int64 `json:"position"`
 }
 
-func ToBoardTaskDto(bt models.BoardTask) BoardTaskDto {
+func ToBoardTaskDto(bt models.TaskBoard) BoardTaskDto {
 	return BoardTaskDto{
 		BoardId:  bt.BoardId,
 		ColumnId: bt.ColumnId,
@@ -20,7 +20,7 @@ func ToBoardTaskDto(bt models.BoardTask) BoardTaskDto {
 	}
 }
 
-func ToBoardTaskDtoList(bts []models.BoardTask) []BoardTaskDto {
+func ToBoardTaskDtoList(bts []models.TaskBoard) []BoardTaskDto {
 	result := []BoardTaskDto{}
 	for _, bt := range bts {
 		result = append(result, ToBoardTaskDto(bt))
@@ -29,13 +29,17 @@ func ToBoardTaskDtoList(bts []models.BoardTask) []BoardTaskDto {
 }
 
 type TaskDto struct {
-	ID        uint         `json:"id"`
-	Title     string       `json:"title"`
-	Body      string       `json:"body"`
-	Completed bool         `json:"completed"`
-	Meta      string       `json:"meta"`
-	CreatedAt time.Time    `json:"created_at"`
-	UpdatedAt *time.Time   `json:"updated_at"`
-	Board     BoardTaskDto `json:"boards"`
-	ProjectId uint         `json:"project_id"`
+	ID           int64          `json:"id"`
+	Title        string         `json:"title"`
+	Body         string         `json:"body"`
+	Completed    bool           `json:"completed"`
+	Meta         string         `json:"meta"`
+	ProjectId    int64          `json:"project_id"`
+	Boards       []BoardTaskDto `json:"boards"`
+	OwnerId      int64          `json:"owner_id"`
+	AssigneesIDs []int64        `json:"assignees_ids"`
+	CreatedAt    time.Time      `json:"created_at"`
+	UpdatedAt    time.Time      `json:"updated_at"`
+
+	TaskEvents []EntityEventDTO `json:"task_events"`
 }

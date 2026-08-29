@@ -174,9 +174,11 @@ CREATE TABLE tasks
     title       TEXT    NOT NULL,
     body        TEXT    NULL,
     completed   BOOLEAN DEFAULT 0,
+    project_id  INTEGER NOT NULL, -- task always belongs to some project!
     meta        TEXT    NULL,
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at  DATETIME
+    updated_at  DATETIME,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
 
 CREATE TABLE user_tasks 
@@ -216,14 +218,13 @@ CREATE TABLE board_tasks
 CREATE TABLE task_events
 (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    task_id     INTEGER NOT NULL,
     identity_id INTEGER NULL,
-    event_type  TEXT    NOT NULL,
-    value_from  TEXT    NULL,
-    value_to    TEXT    NULL,
+    entity_id   INTEGER NULL,
+    entity_type TEXT NULL,
+    event_type  TEXT NOT NULL,
+    data        TEXT NULL,
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
     FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE SET NULL
 );
 

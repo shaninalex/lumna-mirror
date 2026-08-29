@@ -9,7 +9,7 @@ import (
 )
 
 type TaskService interface {
-	List(ctx context.Context, query ServiceTaskListQuery) ([]models.Task, []models.BoardTask, error)
+	List(ctx context.Context, query ServiceTaskListQuery) ([]models.Task, error)
 	GetTask(ctx context.Context, taskID uint) (*models.Task, error)
 	ReorderTask(ctx context.Context, taskID uint, listListID uint, order uint) error
 	CreateTask(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error)
@@ -17,19 +17,22 @@ type TaskService interface {
 }
 
 type taskService struct {
-	repository repositories.TaskRepository
-	bus        observer.Observer
+	repository        repositories.TaskRepository
+	storageRepository repositories.TaskStorageRepository
+	bus               observer.Observer
 }
 
 var _ TaskService = (*taskService)(nil)
 
 func NewTaskService(
 	repository repositories.TaskRepository,
+	storageRepository repositories.TaskStorageRepository,
 	bus observer.Observer,
 ) TaskService {
 	return &taskService{
-		repository: repository,
-		bus:        bus,
+		repository:        repository,
+		storageRepository: storageRepository,
+		bus:               bus,
 	}
 }
 
@@ -37,19 +40,8 @@ type ServiceTaskListQuery struct {
 	BoardId uint `form:"board_id"`
 }
 
-func (s *taskService) List(ctx context.Context, query ServiceTaskListQuery) ([]models.Task, []models.BoardTask, error) {
-	bts, err := s.repository.GetTaskBoards(ctx, query.BoardId)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	tasks, err := s.repository.GetTasksByBoardId(ctx, query.BoardId)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return tasks, bts, nil
-
+func (s *taskService) List(ctx context.Context, query ServiceTaskListQuery) ([]models.Task, error) {
+	return s.storageRepository.Filter(ctx, int64(query.BoardId))
 }
 
 func (s *taskService) GetTask(ctx context.Context, taskID uint) (*models.Task, error) {

@@ -92,10 +92,9 @@ func (s *gormTaskStorageRepository) Save(ctx context.Context, task *models.Task)
 // Filter implements [TaskStorageRepository].
 func (s *gormTaskStorageRepository) Filter(ctx context.Context, boardId int64) ([]models.Task, error) {
 	tasks, err := gorm.G[storage.TaskRecord](s.db).Raw(`
-		SELECT id, title, body, completed, meta, created_at, updated_at
+		SELECT t.id, t.title, t.body, t.completed, t.meta, t.project_id, t.created_at, t.updated_at
 		FROM tasks t
 		JOIN board_tasks bt ON bt.task_id = t.id
-		JOIN boards b ON b.id = bt.board_id
 		WHERE bt.board_id = ?;
     `, boardId).Find(ctx)
 	if err != nil {
@@ -137,6 +136,7 @@ func (s *gormTaskStorageRepository) toDomainModels(
 			Title:        t.Title,
 			Body:         t.Body,
 			Completed:    t.Completed,
+			ProjectId:    t.ProjectId,
 			Boards:       []models.TaskBoard{},
 			AssigneesIDs: []int64{},
 			Meta:         t.Meta,

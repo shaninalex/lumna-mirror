@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/adapters"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
+	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
@@ -20,7 +21,7 @@ func (s *TaskController) handleListTask(c *gin.Context) {
 		return
 	}
 
-	tasks, boardTasks, err := s.taskService.List(c.Request.Context(), services.ServiceTaskListQuery{
+	tasks, err := s.taskService.List(c.Request.Context(), services.ServiceTaskListQuery{
 		BoardId: q.BoardId,
 	})
 	if err != nil {
@@ -28,7 +29,14 @@ func (s *TaskController) handleListTask(c *gin.Context) {
 		return
 	}
 
-	result := adapters.ToTaskDtoList(tasks, boardTasks)
+	ids := make([]int64, len(tasks))
+	for i, t := range tasks {
+		ids[i] = t.ID
+	}
+
+	events := []models.EntityEvent{}
+	events, _ = s.entityEventService.ListByEntityIds(c.Request.Context(), ids, "task")
+	result := adapters.ToTaskDtoList(tasks, events)
 
 	utils.Success(c, result)
 }

@@ -14,20 +14,18 @@ const (
 )
 
 type Task struct {
-	ID        int64
-	Title     string
-	Body      string
-	Completed bool
-	Meta      string
-
-	ProjectId int64
-
-	Boards       []TaskBoard
+	ID           int64
+	Title        string
+	Body         string
+	Completed    bool
+	Meta         string
+	ProjectId    int64
 	OwnerId      int64
 	AssigneesIDs []int64
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	Boards []TaskBoard
 }
 
 type TaskBoard struct {
