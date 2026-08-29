@@ -1,38 +1,15 @@
-import { createAction, props } from '@ngrx/store';
-import { TaskModel, TaskPayloadModel } from './task.model';
-import { KanbanBoardChangeOrderPayload } from '@features/kanban-board/model';
+import { createActionGroup, props } from '@ngrx/store';
+import type { TaskCreateModel, TaskListQueryModel, TaskModel } from './task.model';
+import type { Error } from '@shared/models';
 
-export const actionTaskGetTaskById = createAction('[Task] get task]', props<{task_id: number}>());
-
-// LIST
-export const actionTaskGetTasks = createAction('[Task] get tasks', props<{ board_id: number }>());
-
-export const actionTaskSetTasks = createAction('[Task] set tasks', props<{ tasks: TaskModel[] }>());
-
-// CREATE
-export const actionTaskCreate = createAction('[Task] create', props<{ data: TaskPayloadModel }>());
-
-// Task changed
-export const actionTaskChange = createAction(
-    '[Task] change',
-    props<{ task_id: number; data: TaskModel }>(),
-);
-
-// CHANGE ORDER
-export const actionTaskChangeOrder = createAction(
-    '[Task] change order',
-    props<KanbanBoardChangeOrderPayload>(),
-);
-
-// Unified success action for create + patch
-export const actionTaskUpsert = createAction('[Task] upsert', props<{ task: TaskModel }>());
-
-// DELETE
-export const actionTaskDelete = createAction('[Task] delete', props<{ task_id: number }>());
-export const actionTaskDeleteSuccess = createAction(
-    '[Task] delete success',
-    props<{ taskId: number }>(),
-);
-
-// ERROR
-export const actionTaskFailed = createAction('[Task] failed', props<{ error: any }>());
+export const actionTask = createActionGroup({
+    source: 'Task',
+    events: {
+        'get list': props<{ query: TaskListQueryModel }>(),
+        'get list success': props<{ tasks: TaskModel[] }>(),
+        'get list failed': props<{ errors: Error[] }>(),
+        create: props<{ data: TaskCreateModel }>(),
+        'create failed': props<{ errors: Error[] }>(),
+        'create success': props<{ task: TaskModel }>(),
+    },
+});

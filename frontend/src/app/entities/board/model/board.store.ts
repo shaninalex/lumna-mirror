@@ -1,15 +1,18 @@
-import { BoardModel } from '@entities/board';
-import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import type { EntityState } from '@ngrx/entity';
+import { createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { actionBoardSetList, actionBoardUpsert, actionBoardDeleteSuccess } from './board.actions';
+import type { BoardModel } from './board.model';
+import { actionBoard } from './board.actions';
 
-export interface BoardState extends EntityState<BoardModel> {}
+export type BoardState = EntityState<BoardModel>;
 export const boardAdapter = createEntityAdapter<BoardModel>();
 const initialState = boardAdapter.getInitialState();
 
 export const boardReducer = createReducer(
     initialState,
-    on(actionBoardSetList, (state, { boards }) => boardAdapter.addMany(boards, state)),
-    on(actionBoardUpsert, (state, { board }) => boardAdapter.upsertOne(board, state)),
-    on(actionBoardDeleteSuccess, (state, { boardId }) => boardAdapter.removeOne(boardId, state)),
+    on(actionBoard.setList, (state, { boards }) => boardAdapter.addMany(boards, state)),
+    on(actionBoard.set, (state, { board }) => boardAdapter.upsertOne(board, state)),
+    on(actionBoard.createSuccess, (state, { board }) => boardAdapter.upsertOne(board, state)),
+    on(actionBoard.patchSuccess, (state, { board }) => boardAdapter.upsertOne(board, state)),
+    on(actionBoard.deleteSuccess, (state, { boardId }) => boardAdapter.removeOne(boardId, state)),
 );

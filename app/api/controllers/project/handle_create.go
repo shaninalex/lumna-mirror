@@ -19,12 +19,14 @@ func (s *ProjectController) Create(c *gin.Context) {
 	userID, err := utils.GetUserID(c)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
+		return
 	}
 
 	payload.OwnerID = pkgUtils.Pointer(userID)
 	project, err := s.projectService.Create(c.Request.Context(), payload)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
+		return
 	}
 
 	utils.Success(c, project)

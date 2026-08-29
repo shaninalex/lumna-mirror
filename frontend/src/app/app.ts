@@ -1,12 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CoreService } from '@core/core.service';
+import packageJson from "@root/package.json";
 
 @Component({
-    selector: 'app-root',
+    selector: 'lu-root',
     imports: [RouterOutlet],
-    template: `<router-outlet />`,
+    template: `
+        <router-outlet />
+        <div class="app-version">
+            v{{ version }}
+        </div>
+    `,
 })
 export class App {
-    readonly coreService = inject(CoreService);
+    version: string = packageJson.version;
 }

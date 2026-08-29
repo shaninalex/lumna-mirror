@@ -1,17 +1,31 @@
 export interface TaskModel {
     id: number;
-    column_id: number;
-    project_id: number;
     title: string;
     order: number;
-    body: string;
     done: boolean;
+    body: string;
+    code: string;
+
+    status_id: number;
+    project_id: number;
+
     created_at: Date;
     updated_at: Date;
 }
 
-export interface TaskPayloadModel {
+export function makeListLabel(task: TaskModel): string {
+    return `${task.code}  ${task.title}`;
+}
+
+export interface TaskCreateModel {
     title: string;
-    order: number;
+    body: string;
+    project_id: number;
+    position: number;
     column_id: number;
+    board_id: number;
+}
+
+export interface TaskListQueryModel {
+    board_id: number
 }

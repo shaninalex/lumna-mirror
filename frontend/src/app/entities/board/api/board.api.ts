@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { APIResponse } from '@shared/models';
+import type { Observable } from 'rxjs';
+import { map } from 'rxjs';
+import type { APIResponse } from '@shared/models';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BoardModel, BoardPayloadModel } from '../model/board.model';
+import type { BoardModel, BoardPayloadModel } from '../model/board.model';
 
 @Injectable({
     providedIn: 'root',
@@ -28,13 +29,13 @@ export class BoardApi {
 
     Get(boardId: number): Observable<BoardModel> {
         return this.http
-            .get<APIResponse<BoardModel>>(`/api/v1/board/${boardId}`, { withCredentials: true })
+            .get<APIResponse<BoardModel>>(`/api/v1/boards/${boardId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
     Delete(boardId: number): Observable<void> {
         return this.http
-            .delete<APIResponse<void>>(`/api/v1/board/${boardId}`, { withCredentials: true })
+            .delete<APIResponse<void>>(`/api/v1/boards/${boardId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
@@ -42,7 +43,7 @@ export class BoardApi {
         return this.http
             .patch<
                 APIResponse<BoardModel>
-            >(`/api/v1/board/${boardId}`, payload, { withCredentials: true })
+            >(`/api/v1/boards/${boardId}`, payload, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 }

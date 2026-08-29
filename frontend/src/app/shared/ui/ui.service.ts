@@ -1,7 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import type { Observable} from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { Title } from '@angular/platform-browser';
-import { Theme, ThemeManager } from './theme.manager';
+import type { Theme} from './theme.manager';
+import { ThemeManager } from './theme.manager'
 
 @Injectable({
     providedIn: 'root',
@@ -20,7 +22,7 @@ export class UiService {
 
     /** Page title API */
     public setPageTitle(t: string) {
-        this.pageTitle.next(t);
+        this.pageTitle.next(`${t} | Lumna`);
     }
 
     public getPageTitle(): string {

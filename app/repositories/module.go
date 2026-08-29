@@ -8,15 +8,16 @@ func Module(c *dig.Container) error {
 	_ = c.Provide(NewGormCredentialRepository)
 	_ = c.Provide(NewGormIdentityRepository)
 	_ = c.Provide(NewGormInvitationRepository)
-	_ = c.Provide(NewGormActivityLogRepository)
-	_ = c.Provide(NewGormListRepository)
-	_ = c.Provide(NewGormStatusRepository)
+	_ = c.Provide(NewGormBoardRepository)
+	_ = c.Provide(NewGormColumnRepository)
 	_ = c.Provide(NewGormProjectRepository)
 	_ = c.Provide(NewGormRefreshTokenRepository)
 	_ = c.Provide(NewGormTaskRepository)
 	_ = c.Provide(NewGormWorkspaceRepository)
 	_ = c.Provide(NewGormEmailRepository)
-	_ = c.Provide(NewGormSprintRepository)
+
+	_ = c.Provide(NewGormTaskStorageRepository)
+	_ = c.Provide(NewGormEntityEventRepository)
 
 	return nil
 }

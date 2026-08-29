@@ -7,12 +7,12 @@ import (
 
 type ProjectController struct {
 	projectService services.ProjectService
-	boardService   services.ListService
+	boardService   services.BoardService
 }
 
 func NewProjectsController(
 	projectService services.ProjectService,
-	boardService services.ListService,
+	boardService services.BoardService,
 ) *ProjectController {
 	s := &ProjectController{
 		projectService: projectService,
@@ -23,8 +23,8 @@ func NewProjectsController(
 
 func (s *ProjectController) Register(router *gin.RouterGroup) {
 	router.GET("/projects", s.List)
-	router.GET("/projects/generate-key", s.GenerateKey)
 	router.POST("/projects", s.Create)
 	router.PATCH("/projects/:id", s.Patch)
 	router.DELETE("/projects/:id", s.Delete)
+	router.GET("/projects/:id", s.Get)
 }

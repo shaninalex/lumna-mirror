@@ -1,0 +1,1 @@
+export { WorkspaceEntryPage } from './workspace-entry.page'

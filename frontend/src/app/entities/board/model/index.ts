@@ -1,4 +1,5 @@
 export * from './board.actions';
-export { boardReducer } from './board.store';
-export type { BoardState } from './board.store';
-export { BoardsEffects } from './board.effects';
+export * from './board.effects';
+export * from './board.model';
+export * from './board.selectors';
+export * from './board.store';

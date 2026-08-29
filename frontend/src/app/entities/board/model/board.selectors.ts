@@ -1,24 +1,17 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { boardAdapter, BoardState } from './board.store';
+import { boardAdapter, type BoardState } from './board.store';
 
-export const selectBoardFeature = createFeatureSelector<BoardState>('board');
+const feature = createFeatureSelector<BoardState>('board');
+const entitySelectors = boardAdapter.getSelectors();
 
-export const boardSelectors = boardAdapter.getSelectors();
+const selectAll = createSelector(feature, entitySelectors.selectAll);
 
-export const selectBoards = createSelector(selectBoardFeature, (state) =>
-    boardSelectors.selectAll(state),
-);
-
-/**
- * Select boards by project id, always sorted by `order` ASC
- */
-export const selectBoardsByProjectId = (projectId: number) =>
-    createSelector(selectBoards, (boards) => {
-        return boards.filter((b) => b.project_id === projectId);
-    });
-
-export const selectBoardById = (boardId: number) =>
-    createSelector(
-        selectBoardFeature,
-        (state) => boardSelectors.selectEntities(state)[boardId] ?? null,
-    );
+export const selectBoard = {
+    all: selectAll,
+    entities: createSelector(feature, entitySelectors.selectEntities),
+    total: createSelector(feature, entitySelectors.selectTotal),
+    byProjectId: (projectId: number) =>
+        createSelector(selectAll, (boards) => boards.filter((b) => b.project_id === projectId)),
+    byId: (listId: number) =>
+        createSelector(feature, (state) => entitySelectors.selectEntities(state)[listId] ?? null),
+};

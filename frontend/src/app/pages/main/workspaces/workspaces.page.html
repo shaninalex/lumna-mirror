@@ -1,0 +1,27 @@
+<lu-global-layout>
+    <div class="container-fluid py-4">
+
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-1">Workspaces</h2>
+                <p class="text-muted mb-0">
+                    Select a workspace to access its projects and members.
+                </p>
+            </div>
+
+            <a routerLink="/app/workspaces/create" class="btn btn-primary">
+                New Workspace
+            </a>
+        </div>
+
+        <div class="d-flex flex-column gap-3">
+            @if (workspaces$ | async; as workspaces) {
+                @for (item of workspaces; track $index) {
+                    <lu-workspace-card [workspace]="item" />
+                }
+            }
+        </div>
+    </div>
+
+</lu-global-layout>

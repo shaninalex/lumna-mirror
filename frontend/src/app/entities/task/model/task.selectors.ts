@@ -1,17 +1,21 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { taskAdapter, TaskState } from './task.store';
+import type { TaskState } from './task.store';
+import { taskAdapter } from './task.store';
 
-const selectTaskFeature = createFeatureSelector<TaskState>('task');
-const taskSelectors = taskAdapter.getSelectors();
-const selectTasks = createSelector(selectTaskFeature, (state) => taskSelectors.selectAll(state));
+const feature = createFeatureSelector<TaskState>('task');
+const entitySelectors = taskAdapter.getSelectors();
 
-export const selectTasksByColumns = (columns_id: number[]) =>
-    createSelector(selectTasks, (tasks) =>
-        tasks.filter((task) => columns_id.includes(task.column_id)),
-    );
+const selectAll = createSelector(feature, entitySelectors.selectAll);
 
-export const selectTaskById = (task_id: number) => createSelector(
-    selectTaskFeature,
-    (state) => taskSelectors.selectEntities(state)[task_id] ?? undefined,
-)
-
+export const selectTasks = {
+    all: selectAll,
+    entities: createSelector(feature, entitySelectors.selectEntities),
+    total: createSelector(feature, entitySelectors.selectTotal),
+    byId: (id: number) => createSelector(selectAll, (list) => list.find((a) => a.id === id)),
+    byProject: (projectId: number) =>
+        createSelector(selectAll, (list) => list.filter((a) => a.project_id === projectId)),
+    countByProjectId: (projectId: number) =>
+        createSelector(selectAll, (list) => list.filter((a) => a.project_id === projectId).length),
+    byStatusId: (statusId: number) =>
+        createSelector(selectAll, (list) => list.filter((a) => a.status_id === statusId)),
+};

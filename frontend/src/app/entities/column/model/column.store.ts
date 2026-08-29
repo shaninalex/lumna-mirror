@@ -1,41 +1,35 @@
-import { ColumnModel } from './column.model';
-import { createEntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import {
-    actionColumnSetList,
-    actionColumnUpsert,
-    actionColumnDeleteSuccess,
-    actionColumnChangeOrder,
-} from './column.actions';
+import { createEntityAdapter, type EntityState } from '@ngrx/entity';
+import type { Error } from '@shared/models';
+import type { ColumnModel } from './column.model';
+import { actionsColumns } from './column.actions';
 
-export interface ColumnState extends EntityState<ColumnModel> {}
-export const columnAdapter = createEntityAdapter<ColumnModel>();
-const initialState = columnAdapter.getInitialState();
+export interface ColumnState extends EntityState<ColumnModel> {
+    loading: boolean;
+    errors: Error[];
+}
 
-export const columnReducer = createReducer(
+export const statusAdapter = createEntityAdapter<ColumnModel>({
+    sortComparer: (a, b) => a.meta.order - b.meta.order,
+});
+
+const initialState: ColumnState = statusAdapter.getInitialState({
+    loading: false,
+    errors: [],
+});
+
+export const statusReducer = createReducer(
     initialState,
-
-    // Replace all columns for a board (after load)
-    on(actionColumnSetList, (state, { columns }) => columnAdapter.addMany(columns, state)),
-
-    // Create OR update a column
-    on(actionColumnUpsert, (state, { column }) => columnAdapter.upsertOne(column, state)),
-
-    // Remove column after delete success
-    on(actionColumnDeleteSuccess, (state, { columnId }) =>
-        columnAdapter.removeOne(columnId, state),
+    on(actionsColumns.createSuccess, (state, action) => statusAdapter.addOne(action.column, state)),
+    on(actionsColumns.loadByBoardIdSuccess, (state, action) =>
+        statusAdapter.addMany(action.columns, state),
     ),
-
-    // Change order for multiple columns
-    on(actionColumnChangeOrder, (state, { columns }) =>
-        columnAdapter.updateMany(
-            columns.map(
-                ({ id, order }): Update<ColumnModel> => ({
-                    id,
-                    changes: { order },
-                }),
-            ),
-            state,
-        ),
+    on(
+        actionsColumns.loadByBoardIdFailed,
+        actionsColumns.createFailed,
+        (state, action) => ({
+            ...state,
+            errors: action.errors,
+        }),
     ),
 );

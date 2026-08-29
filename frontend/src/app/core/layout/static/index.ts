@@ -1,0 +1,1 @@
+export { StaticLayout } from './static.layout'

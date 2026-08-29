@@ -9,18 +9,16 @@ import (
 )
 
 type TaskService interface {
-	List(ctx context.Context, query ServiceTaskListQuery) ([]*models.Task, error)
+	List(ctx context.Context, query ServiceTaskListQuery) ([]models.Task, error)
 	GetTask(ctx context.Context, taskID uint) (*models.Task, error)
 	ReorderTask(ctx context.Context, taskID uint, listListID uint, order uint) error
-	CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error)
+	CreateTask(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error)
 	UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error
 }
 
 type taskService struct {
 	repository        repositories.TaskRepository
-	statusRepository  repositories.StatusRepository
-	projectRepository repositories.ProjectRepository
-	projectService    ProjectService
+	storageRepository repositories.TaskStorageRepository
 	bus               observer.Observer
 }
 
@@ -28,28 +26,22 @@ var _ TaskService = (*taskService)(nil)
 
 func NewTaskService(
 	repository repositories.TaskRepository,
-	statusRepository repositories.StatusRepository,
-	projectRepository repositories.ProjectRepository,
-	projectService ProjectService,
+	storageRepository repositories.TaskStorageRepository,
 	bus observer.Observer,
 ) TaskService {
 	return &taskService{
 		repository:        repository,
-		statusRepository:  statusRepository,
-		projectRepository: projectRepository,
-		projectService:    projectService,
+		storageRepository: storageRepository,
 		bus:               bus,
 	}
 }
 
 type ServiceTaskListQuery struct {
-	ProjectID *uint `form:"project_id,omitempty"`
+	BoardId uint `form:"board_id"`
 }
 
-func (s *taskService) List(ctx context.Context, query ServiceTaskListQuery) ([]*models.Task, error) {
-	return s.repository.List(ctx, repositories.TaskListQuery{
-		ProjectID: query.ProjectID,
-	})
+func (s *taskService) List(ctx context.Context, query ServiceTaskListQuery) ([]models.Task, error) {
+	return s.storageRepository.Filter(ctx, int64(query.BoardId))
 }
 
 func (s *taskService) GetTask(ctx context.Context, taskID uint) (*models.Task, error) {
@@ -60,40 +52,26 @@ func (s *taskService) ReorderTask(ctx context.Context, taskID uint, listListID u
 	return s.repository.Reorder(ctx, taskID, listListID, order)
 }
 
-// TaskPayload - used to create/partial update task
-// TODO: add validators
-type TaskPayload struct {
-	Title     string `json:"title"`
-	ProjectID uint   `json:"project_id"`
-	Order     *uint  `json:"order"`
-	StatusID  *uint  `json:"status_id"`
-}
-
-func (s *taskService) CreateTask(ctx context.Context, payload *TaskPayload) (*models.Task, error) {
-	code, err := s.projectService.GetNewCode(ctx, payload.ProjectID, "task")
+func (s *taskService) CreateTask(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error) {
+	task := &models.Task{
+		Title:     payload.Title,
+		Body:      payload.Body,
+		ProjectId: payload.ProjectId,
+		Boards: []models.TaskBoard{
+			{
+				Position: int64(payload.Position),
+				BoardId:  int64(payload.BoardId),
+				ColumnId: int64(payload.ColumnId),
+			},
+		},
+	}
+	err := s.storageRepository.Save(ctx, task)
 	if err != nil {
 		return nil, err
 	}
 
-	task := models.Task{
-		Title:     payload.Title,
-		ProjectID: payload.ProjectID,
-		Code:      code,
-	}
-	if payload.StatusID != nil {
-		status, err := s.statusRepository.GetByID(ctx, *payload.StatusID)
-		if err != nil {
-			return nil, err
-		}
-		task.StatusID = &status.ID
-	}
-
-	if err := s.repository.Create(ctx, &task); err != nil {
-		return nil, err
-	}
-
 	s.bus.Publish(ctx, models.EventTaskCreated, task)
-	return &task, nil
+	return task, nil
 }
 
 func (s *taskService) UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error {

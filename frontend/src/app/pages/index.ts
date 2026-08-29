@@ -1,1 +1,3 @@
-export { routes } from './routes'
+export * from './auth'
+export * from './main'
+export * from './system'

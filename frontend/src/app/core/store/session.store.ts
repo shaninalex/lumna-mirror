@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import * as SessionActions from './session.actions';
+import { actionSession } from './session.actions';
 
 type SessionState = {
     authenticated: boolean;
@@ -12,11 +12,9 @@ const initialState: SessionState = {
 export const sessionReducer = createReducer(
     initialState,
     on(
-        SessionActions.actionSessionAuthenticatedSuccessfull,
-        SessionActions.actionSessionAuthenticated,
-        (state, action) => ({
-            authenticated: true,
-        }),
+        actionSession.authenticatedSuccessfull,
+        actionSession.authenticated,
+        () => ({ authenticated: true }),
     ),
-    on(SessionActions.actionSessionLoggedOut, (state, action) => ({ authenticated: false })),
+    on(actionSession.loggedOut, () => ({ authenticated: false })),
 );

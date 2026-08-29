@@ -1,17 +1,18 @@
 import { inject, Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
-import { APIResponse } from "@shared/models";
+import type { Observable } from "rxjs";
+import { map } from "rxjs";
+import type { APIResponse } from "@shared/models";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { TaskModel, TaskPayloadModel } from "@entities/task";
+import type { TaskCreateModel, TaskListQueryModel, TaskModel } from "../model/task.model";
 
-@Injectable({
-    providedIn: "root"
-})
+@Injectable()
 export class TaskApi {
-    http = inject(HttpClient);
+    private http = inject(HttpClient);
 
-    List(boardId: number): Observable<TaskModel[]> {
-        let params = new HttpParams().set("board_id", boardId);
+    list(q: TaskListQueryModel): Observable<TaskModel[]> {
+        let params = new HttpParams()
+        params = params.append("board_id", q.board_id)
+        
         return this.http
             .get<
                 APIResponse<TaskModel[]>
@@ -19,35 +20,11 @@ export class TaskApi {
             .pipe(map((response) => response.data));
     }
 
-    Create(payload: TaskPayloadModel): Observable<TaskModel> {
+    create(data: TaskCreateModel): Observable<TaskModel> {
         return this.http
             .post<
                 APIResponse<TaskModel>
-            >(`/api/v1/tasks`, payload, { withCredentials: true })
-            .pipe(map((response) => response.data));
-    }
-
-    Get(taskId: number): Observable<TaskModel> {
-        return this.http
-            .get<
-                APIResponse<TaskModel>
-            >(`/api/v1/task/${taskId}`, { withCredentials: true })
-            .pipe(map((response) => response.data));
-    }
-
-    Delete(taskId: number): Observable<void> {
-        return this.http
-            .delete<
-                APIResponse<void>
-            >(`/api/v1/task/${taskId}`, { withCredentials: true })
-            .pipe(map((response) => response.data));
-    }
-
-    Patch(taskId: number, payload: TaskModel): Observable<TaskModel> {
-        return this.http
-            .patch<
-                APIResponse<TaskModel>
-            >(`/api/v1/task/${taskId}`, payload, { withCredentials: true })
+            >(`/api/v1/tasks`, data, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 }

@@ -5,13 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/activity"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
+	list "gitlab.com/shaninalex/lumna/app/api/controllers/board"
+	status "gitlab.com/shaninalex/lumna/app/api/controllers/column"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/invitation"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/list"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/sprint"
-	"gitlab.com/shaninalex/lumna/app/api/controllers/status"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/user"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/workspace"
@@ -48,15 +46,13 @@ type ApiDeps struct {
 	dig.In
 
 	AuthController       *auth.AuthController
-	BoardController      *list.ListController
-	StatusController     *status.StatusController
+	BoardController      *list.BoardController
+	StatusController     *status.ColumnController
 	ProjectController    *project.ProjectController
 	TaskController       *task.TaskController
 	UserController       *user.UserController
-	ActivityController   *activity.ActivityController
 	InvitationController *invitation.InvitationController
 	WorkspaceController  *workspace.WorkspaceController
-	SprintController     *sprint.SprintController
 
 	AuthMiddleware middlewares.AuthMiddleware
 }
@@ -69,10 +65,7 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	router.Use(middlewares.CORSMiddleware())
 
 	setup.RegisterSetupRoute(router, config)
-
-	if config.Bool("serve.embed") {
-		web.RegisterEmbedRoute(router)
-	}
+	web.RegisterEmbedRoute(router)
 
 	authGroup := router.Group("/api/v1/auth")
 	deps.AuthController.Register(authGroup)
@@ -85,10 +78,8 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	deps.ProjectController.Register(private)
 	deps.TaskController.Register(private)
 	deps.UserController.Register(private)
-	deps.ActivityController.Register(private)
 	deps.InvitationController.Register(private)
 	deps.WorkspaceController.Register(private)
-	deps.SprintController.Register(private)
 
 	return router
 }

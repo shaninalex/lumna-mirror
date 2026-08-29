@@ -1,22 +1,30 @@
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { ProjectModel, ProjectPayload } from '@entities/project';
-import { APIResponse } from '@shared/models';
-import { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+import { map } from 'rxjs';
+import type { ProjectModel, ProjectCreateModel } from '../model/project.model';
+import type { APIResponse } from '@shared/models';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class ProjectApi {
     http = inject(HttpClient);
 
-    GetProjects(): Observable<ProjectModel[]> {
+    GetProjects(workspaceId: number): Observable<ProjectModel[]> {
         return this.http
-            .get<APIResponse<ProjectModel[]>>(`/api/v1/projects`, { withCredentials: true })
+            .get<APIResponse<ProjectModel[]>>(`/api/v1/projects`, {
+                params: new HttpParams().set('workspace_id', workspaceId),
+                withCredentials: true,
+            })
             .pipe(map((response) => response.data));
     }
 
-    CreateProject(payload: ProjectPayload): Observable<ProjectModel> {
+    GetProject(projectId: number): Observable<ProjectModel> {
+        return this.http
+            .get<APIResponse<ProjectModel>>(`/api/v1/projects/${projectId}`, { withCredentials: true })
+            .pipe(map((response) => response.data));
+    }
+
+    CreateProject(payload: ProjectCreateModel): Observable<ProjectModel> {
         return this.http
             .post<APIResponse<ProjectModel>>(`/api/v1/projects`, payload, { withCredentials: true })
             .pipe(map((response) => response.data));
@@ -24,15 +32,15 @@ export class ProjectApi {
 
     DeleteProject(projectId: number): Observable<void> {
         return this.http
-            .delete<APIResponse<void>>(`/api/v1/project/${projectId}`, { withCredentials: true })
+            .delete<APIResponse<void>>(`/api/v1/projects/${projectId}`, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 
-    Patch(projectId: number, payload: ProjectPayload): Observable<ProjectModel> {
+    Patch(projectId: number, payload: ProjectCreateModel): Observable<ProjectModel> {
         return this.http
             .patch<
                 APIResponse<ProjectModel>
-            >(`/api/v1/project/${projectId}`, payload, { withCredentials: true })
+            >(`/api/v1/projects/${projectId}`, payload, { withCredentials: true })
             .pipe(map((response) => response.data));
     }
 }

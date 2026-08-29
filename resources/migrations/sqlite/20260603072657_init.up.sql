@@ -39,26 +39,20 @@ CREATE TABLE refresh_tokens
     FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE user_auth_history
+(
+    id          integer PRIMARY KEY AUTOINCREMENT,
+    event_type  text NOT NULL,
+    created_at  datetime DEFAULT CURRENT_TIMESTAMP
+);
+
 -----------------------------
 -- SYSTEM
 -----------------------------
 
-CREATE TABLE activity_logs
-(
-    id          integer PRIMARY KEY AUTOINCREMENT,
-    summary     text    NOT NULL,
-    identity_id integer,
-    entity_id   integer NOT NULL,
-    entity_type text    NOT NULL,
-    action      text    NOT NULL,
-    created_at  datetime DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 CREATE TABLE emails
 (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    id          integer PRIMARY KEY AUTOINCREMENT,
     from_email  VARCHAR,
     to_email    VARCHAR,
     subject     VARCHAR,
@@ -105,78 +99,145 @@ CREATE TABLE workspaces
     updated_at  datetime NULL
 );
 
+CREATE TABLE identity_workspaces 
+(
+    identity_id     INTEGER NOT NULL,
+    workspace_id    INTEGER NOT NULL,
+    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (identity_id, workspace_id),
+    FOREIGN KEY (identity_id) REFERENCES identities(id) ON DELETE CASCADE,
+    FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE
+);
+
+
 -----------------------------
 -- WORK
 -----------------------------
 
+/*
+
+Core entities:
+    Workspace
+    Project
+    Board
+    Column
+    Task
+
+Relationships:
+    Project -> Workspace
+    Board -> Project
+    Column -> Board
+    Taks -> Column
+
+Events/History:
+    TaskHistory
+
+Value objects/attributes:
+    Color
+    Tag/Label
+    Badge
+    (badge is not a tag/label. Badge can have logic in it, while label is just a lable)
+*/
+
 CREATE TABLE projects
 (
-    id           integer PRIMARY KEY AUTOINCREMENT,
-    title        text    NOT NULL,
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    title        TEXT    NOT NULL,
     workspace_id INTEGER NOT NULL,
     owner_id     INTEGER NULL,
-    key          varchar not null unique,
-    created_at   datetime DEFAULT CURRENT_TIMESTAMP,
-    updated_at   datetime,
+    meta         TEXT    NULL,
+    created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at   DATETIME,
 
     FOREIGN KEY (workspace_id) REFERENCES workspaces (id) ON DELETE CASCADE,
     FOREIGN KEY (owner_id) REFERENCES identities (id) ON DELETE SET NULL
 );
 
-CREATE TABLE sprints
+CREATE TABLE boards 
 (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    title       TEXT     NOT NULL,
-    description TEXT,
-    done        INTEGER  DEFAULT 0,
-    project_id  INTEGER  NOT NULL,
-    started_at  DATETIME NULL,
-    finished_at DATETIME NULL,
-
+    title       TEXT    NOT NULL,
+    project_id  INTEGER NOT NULL,
+    meta        TEXT    NULL,
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at  DATETIME NULL,
+    updated_at  DATETIME,
 
-    FOREIGN KEY (project_id) REFERENCES projects (id)
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
 );
 
-CREATE TABLE lists
+CREATE TABLE columns
 (
-    id         integer PRIMARY KEY AUTOINCREMENT,
-    title      text    NOT NULL,
-    project_id integer NOT NULL,
-    created_at datetime DEFAULT CURRENT_TIMESTAMP,
-    updated_at datetime,
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    title       TEXT    NOT NULL,
+    board_id    INTEGER NOT NULL,
+    meta        TEXT    NULL,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME,
 
-    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE statuses
-(
-    id         integer PRIMARY KEY AUTOINCREMENT,
-    title      text    NOT NULL,
-    `order`    integer NULL,
-    project_id integer NOT NULL,
-    created_at datetime DEFAULT CURRENT_TIMESTAMP,
-    updated_at datetime,
-
-    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
+    -- Enables composite FK enforcement from board_tasks
+    UNIQUE (board_id, id),
+    FOREIGN KEY (board_id) REFERENCES boards (id) ON DELETE CASCADE
 );
 
 CREATE TABLE tasks
 (
-    id         integer PRIMARY KEY AUTOINCREMENT,
-    title      text    NOT NULL,
-    code       varchar NOT NULL UNIQUE,
-    `order`    integer,
-    done       numeric  DEFAULT 0,
-    body       text,
-    status_id  integer NULL,
-    sprint_id  integer NULL,
-    project_id integer NOT NULL,
-    created_at datetime DEFAULT CURRENT_TIMESTAMP,
-    updated_at datetime,
-
-    FOREIGN KEY (status_id) REFERENCES statuses (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (sprint_id) REFERENCES sprints (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    title       TEXT    NOT NULL,
+    body        TEXT    NULL,
+    completed   BOOLEAN DEFAULT 0,
+    project_id  INTEGER NOT NULL, -- task always belongs to some project!
+    meta        TEXT    NULL,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
+
+CREATE TABLE task_owners
+(
+    task_id     INTEGER NOT NULL,
+    user_id     INTEGER NOT NULL,
+
+    UNIQUE (task_id),
+    PRIMARY KEY (task_id, user_id),
+    FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES identities (id) ON DELETE CASCADE
+);
+
+CREATE TABLE task_assignees 
+(
+    task_id     INTEGER NOT NULL,
+    user_id     INTEGER NOT NULL,
+
+    PRIMARY KEY (task_id, user_id),
+    FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES identities (id) ON DELETE CASCADE
+);
+
+CREATE TABLE board_tasks
+(
+    board_id    INTEGER NOT NULL,
+    task_id     INTEGER NOT NULL,
+    column_id   INTEGER NULL,
+    position    INTEGER NOT NULL,
+
+    PRIMARY KEY (board_id, task_id),
+    FOREIGN KEY (board_id) REFERENCES boards (id) ON DELETE CASCADE,
+    FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
+    FOREIGN KEY (board_id, column_id) REFERENCES columns (board_id, id) ON DELETE SET NULL
+);
+
+CREATE TABLE entity_events
+(
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    identity_id INTEGER NULL,
+    entity_id   INTEGER NULL,
+    entity_type TEXT NULL,
+    event_type  TEXT NOT NULL,
+    data        TEXT NULL,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (identity_id) REFERENCES identities (id) ON DELETE SET NULL
+);
+
+CREATE INDEX idx_board_tasks_layout ON board_tasks (board_id, column_id, position); 

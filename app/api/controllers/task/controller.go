@@ -6,12 +6,14 @@ import (
 )
 
 type TaskController struct {
-	taskService services.TaskService
+	taskService        services.TaskService
+	entityEventService services.EntityEventService
 }
 
-func NewTaskController(taskService services.TaskService) *TaskController {
+func NewTaskController(taskService services.TaskService, entityEventService services.EntityEventService) *TaskController {
 	return &TaskController{
-		taskService: taskService,
+		taskService:        taskService,
+		entityEventService: entityEventService,
 	}
 }
 

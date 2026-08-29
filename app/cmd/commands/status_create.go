@@ -30,7 +30,7 @@ func NewStatusCreateCmd() *cobra.Command {
 				panic(err)
 			}
 			title := args[1]
-			column := models.Status{
+			column := models.Column{
 				Title: title,
 				//ListID: uint(listId),
 			}
@@ -43,7 +43,7 @@ func NewStatusCreateCmd() *cobra.Command {
 	return cmd
 }
 
-func createColumn(column models.Status) func(db *gorm.DB) {
+func createColumn(column models.Column) func(db *gorm.DB) {
 	return func(db *gorm.DB) {
 
 		if result := db.Create(&column); result.Error != nil {

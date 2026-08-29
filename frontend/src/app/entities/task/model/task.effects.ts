@@ -1,83 +1,49 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { TaskApi } from "../api/task.api";
-import {
-    actionTaskChange,
-    actionTaskCreate,
-    actionTaskFailed,
-    actionTaskGetTaskById,
-    actionTaskGetTasks,
-    actionTaskSetTasks,
-    actionTaskUpsert
-} from "./task.actions";
-import { catchError, EMPTY, exhaustMap, map, of, switchMap } from "rxjs";
-import { actionKanbanColumnsLoaded } from "@features/kanban-board";
+import { catchError, of } from "rxjs";
+import { TaskApi } from "@entities/task/api";
+import { switchMap } from "rxjs/operators";
+import type { HttpErrorResponse } from "@angular/common/http";
+import { fromErrorResponse } from "@shared/models";
+import { actionTask } from "./task.actions";
 
 @Injectable()
 export class TaskEffects {
     private actions$ = inject(Actions);
-    private taskApi = inject(TaskApi);
-
-    // listen for kanban effect to load columns
-    // set_list$ = createEffect(() =>
-    //     this.actions$.pipe(
-    //         ofType(actionKanbanBoardLoaded),
-    //         exhaustMap((action) => {
-    //             return of(EMPTY)
-    //         })
-    //             // this.taskApi
-    //             //     .List(action.columns)
-    //             //     .pipe(
-    //             //         switchMap((tasks) => of(actionTaskSetTasks({ tasks })))
-    //             //     )
-    //         )
-    //         // map((action) => actionTaskSetTasks({ tasks: action.tasks }))
-    //     )
-    // );
+    private api = inject(TaskApi);
 
     task_list$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionTaskGetTasks),
-            exhaustMap((action) =>
-                this.taskApi
-                    .List(action.board_id)
-                    .pipe(
-                        switchMap((tasks) => of(actionTaskSetTasks({ tasks })))
+            ofType(actionTask.getList),
+            switchMap((action) =>
+                this.api.list(action.query).pipe(
+                    switchMap((tasks) => of(actionTask.getListSuccess({ tasks }))),
+                    catchError((err: HttpErrorResponse) =>
+                        of(
+                            actionTask.getListFailed({
+                                errors: fromErrorResponse(err)
+                            })
+                        )
                     )
+                )
             )
         )
     );
 
     task_create$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionTaskCreate),
-            exhaustMap((action) =>
-                this.taskApi.Create(action.data).pipe(
-                    switchMap((task) => of(actionTaskUpsert({ task }))),
-                    catchError((error) => of(actionTaskFailed({ error })))
+            ofType(actionTask.create),
+            switchMap((action) =>
+                this.api.create(action.data).pipe(
+                    switchMap((task) => of(actionTask.createSuccess({ task }))),
+                    catchError((err: HttpErrorResponse) =>
+                        of(
+                            actionTask.createFailed({
+                                errors: fromErrorResponse(err)
+                            })
+                        )
+                    )
                 )
-            )
-        )
-    );
-
-    task_get$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(actionTaskGetTaskById),
-            exhaustMap((action) =>
-                this.taskApi
-                    .Get(action.task_id)
-                    .pipe(switchMap((task) => of(actionTaskUpsert({ task }))))
-            )
-        )
-    );
-
-    task_change$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(actionTaskChange),
-            exhaustMap((action) =>
-                this.taskApi
-                    .Patch(action.task_id, action.data)
-                    .pipe(switchMap((task) => of(actionTaskUpsert({ task }))))
             )
         )
     );

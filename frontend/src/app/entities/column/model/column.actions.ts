@@ -1,47 +1,15 @@
-import { createAction, props } from '@ngrx/store';
-import { ColumnModel, ColumnPayloadModel } from './column.model';
+import { createActionGroup, props } from '@ngrx/store';
+import type { ColumnPayloadModel, ColumnModel } from './column.model';
+import type { Error } from '@shared/models';
 
-// LIST
-export const actionColumnGetList = createAction('[Column] get list', props<{ boardId: number }>());
-
-export const actionColumnSetList = createAction(
-    '[Column] set list',
-    props<{ columns: ColumnModel[] }>(),
-);
-
-// CREATE
-export const actionColumnCreate = createAction(
-    '[Column] create',
-    props<{ data: ColumnPayloadModel }>(),
-);
-
-// PATCH
-export const actionColumnPatch = createAction(
-    '[Column] patch',
-    props<{ columnId: number; data: ColumnPayloadModel }>(),
-);
-
-// CHANGE ORDER
-export const actionColumnChangeOrder = createAction(
-    '[Column] change order',
-    props<{ columns: Array<{ id: number; order: number }> }>(),
-);
-
-// DELETE
-export const actionColumnDelete = createAction('[Column] delete', props<{ columnId: number }>());
-
-// REPLACEMENT:
-// - setList
-// - _patchSuccess
-// Unified success action for create + patch
-export const actionColumnUpsert = createAction('[Column] upsert', props<{ column: ColumnModel }>());
-
-// REPLACEMENT:
-// - _deleteSuccess
-export const actionColumnDeleteSuccess = createAction(
-    '[Column] delete success',
-    props<{ columnId: number }>(),
-);
-
-// ERROR
-export const actionColumnFailed = createAction('[Column] failed', props<{ error: any }>());
+export const actionsColumns = createActionGroup({
+    source: 'Column',
+    events: {
+        'load by board id': props<{ board_id: number }>(),
+        'load by board id success': props<{ columns: ColumnModel[] }>(),
+        'load by board id failed': props<{ errors: Error[] }>(),
+        create: props<{ payload: ColumnPayloadModel }>(),
+        'create success': props<{ column: ColumnModel }>(),
+        'create failed': props<{ errors: Error[] }>(),
+    },
+});

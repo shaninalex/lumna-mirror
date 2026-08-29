@@ -1,11 +1,12 @@
 {
-    "singleQuote": false,
-    "editor.formatOnSave": true,
-    "proseWrap": "always",
-    "tabWidth": 4,
-    "requireConfig": false,
-    "useTabs": false,
-    "trailingComma": "none",
-    "bracketSpacing": true,
-    "semi": true
+  "printWidth": 100,
+  "singleQuote": true,
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "angular"
+      }
+    }
+  ]
 }

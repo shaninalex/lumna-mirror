@@ -1,23 +1,19 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { columnAdapter, ColumnState } from './column.store';
+import type { ColumnState } from './column.store';
+import { statusAdapter } from './column.store';
 
-const selectColumnFeature = createFeatureSelector<ColumnState>('column');
+const feature = createFeatureSelector<ColumnState>('column');
+const entitySelectors = statusAdapter.getSelectors();
 
-const columnSelectors = columnAdapter.getSelectors();
+const selectAll = createSelector(feature, entitySelectors.selectAll);
 
-const selectColumns = createSelector(selectColumnFeature, (state) =>
-    columnSelectors.selectAll(state),
-);
-
-// without sorting
-export const selectColumnsByBoardIdNoSort = (boardId: number) =>
-    createSelector(selectColumns, (columns) => columns.filter((b) => b.board_id === boardId));
-
-// with sorting
-export const selectColumnsByBoardId = (boardId: number) =>
-    createSelector(selectColumns, (columns) =>
-        columns.filter((b) => b.board_id === boardId).sort((a, b) => a.order - b.order),
-    );
-
-export const selectColumnsById = (columnId: number) =>
-    createSelector(selectColumns, (columns) => columns.find((b) => b.id === columnId));
+export const selectColumns = {
+    all: selectAll,
+    entities: createSelector(feature, entitySelectors.selectEntities),
+    total: createSelector(feature, entitySelectors.selectTotal),
+    byId: (id: number) => createSelector(selectAll, (list) => list.find((a) => a.id === id)),
+    byListId: (listId: number) =>
+        createSelector(selectAll, (list) => list.filter((a) => a.board_id === listId)),
+    loading: createSelector(feature, (state) => state?.loading ?? false),
+    error: createSelector(feature, (state) => state?.errors ?? []),
+};

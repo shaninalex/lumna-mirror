@@ -1,70 +1,45 @@
-import { Injectable, inject } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { ColumnsApi } from "../api/columns.api";
-import {
-    actionColumnCreate,
-    actionColumnDelete,
-    actionColumnDeleteSuccess,
-    actionColumnGetList,
-    actionColumnPatch,
-    actionColumnSetList,
-    actionColumnUpsert
-} from "./column.actions";
-import { exhaustMap, map, of, switchMap } from "rxjs";
-import { actionKanbanColumnsLoaded } from "@features/kanban-board/model/shared.actions";
+import { catchError, of } from "rxjs";
+import { switchMap } from "rxjs/operators";
+import type { HttpErrorResponse } from "@angular/common/http";
+import { fromErrorResponse } from "@shared/models";
+import { actionsColumns } from "./column.actions";
+import { ColumnApi } from "../api";
 
 @Injectable()
 export class ColumnEffects {
     private actions$ = inject(Actions);
-    private columnsApi = inject(ColumnsApi);
+    private api = inject(ColumnApi);
 
-    // listen for kanban effect to load columns
-    set_list$ = createEffect(() =>
+    list_columns$ = createEffect(() =>
         this.actions$.pipe(
-            ofType(actionKanbanColumnsLoaded),
-            map((action) => actionColumnSetList({ columns: action.columns }))
-        )
-    );
-
-    create_column$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(actionColumnCreate),
-            exhaustMap((action) =>
-                this.columnsApi
-                    .Create(action.data)
-                    .pipe(
-                        switchMap((column) =>
-                            of(actionColumnUpsert({ column }))
-                        )
-                    )
-            )
-        )
-    );
-
-    patch_column$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(actionColumnPatch),
-            exhaustMap((action) =>
-                this.columnsApi
-                    .Patch(action.columnId, action.data)
-                    .pipe(
-                        switchMap((column) =>
-                            of(actionColumnUpsert({ column }))
-                        )
-                    )
-            )
-        )
-    );
-
-    delete_column$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(actionColumnDelete),
-            exhaustMap((action) =>
-                this.columnsApi.Delete(action.columnId).pipe(
-                    switchMap(() =>
+            ofType(actionsColumns.loadByBoardId),
+            switchMap((action) =>
+                this.api.list(action.board_id).pipe(
+                    switchMap((statuses) => of(actionsColumns.loadByBoardIdSuccess({ columns: statuses }))),
+                    catchError((err: HttpErrorResponse) =>
                         of(
-                            actionColumnDeleteSuccess({
-                                columnId: action.columnId
+                            actionsColumns.loadByBoardIdFailed({
+                                errors: fromErrorResponse(err)
+                            })
+                        )
+                    )
+                )
+            )
+        )
+    );
+
+    column_create$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionsColumns.create),
+            switchMap((action) =>
+                this.api.create(action.payload).pipe(
+                    switchMap((column) => of(actionsColumns.createSuccess({ column }))),
+                    catchError((err: HttpErrorResponse) =>
+                        of(
+                            actionsColumns.createFailed({
+                                errors: fromErrorResponse(err)
                             })
                         )
                     )
