@@ -1,3 +1,71 @@
+## 0.35.0 (2026-08-29)
+
+### Feat
+
+- create task
+- **repository**: composite task model 2
+- **repository**: composite task model
+- **db**: use dataloaders
+- status entity store
+- **ui**: load boards on set current project
+- **ui**: create board page
+- redirect after task create
+- **ui**: load tasks
+- **ui**: quality of life
+- **ui**: workspace selection
+- **ui**: create workspace
+- **ui**: load data flow
+- **auth**: authenticate users
+- **UI**: create sprint
+- **UI**: project backlog task list
+- **project**: meta-based entity code generation
+- **schema**: task codes sequence
+- **schema**: project and task keys and codes
+- **task**: inline task form, compact migrations
+- **refactor**: write interfaces for all services
+- **backend**: replace pkg with services
+- **client**: load project tasks
+- **ui**: create workspace + project, UI
+
+### Fix
+
+- list tasks
+- **task**: add task to board + db schema
+- database meta columns
+- **ci**: tests pipeline
+- **ui**: split by modules
+- **projects**: correct entity code numbering and async event context
+
+### Refactor
+
+- cmd
+- **ui**: actions and selectors
+- **datamode**: types 2
+- **datamode**: types 1
+- **db**: new datamodel
+- **db**: new datamodel
+- project dropdown
+- **ui**: task detail, utilites, linter
+- **ui**: load tasks + remove project latest task id meta field
+- **ui**: split by modules
+- **ui**: projects links, pages and redirects
+- **ui**: list and create projects
+- **ui**: preload workspaces on login
+- **db**: minify database schema #70
+- **db**: remove activity and sprints #70
+- **ui**: little fixes #69
+- **ui**: task detail page #69
+- **ui**: board and boards #69
+- **ui**: workspaces and projects #69
+- **ui**: menu, dropdown, switch layouts and projects #69
+- **ui**: toggle menu #69
+- **ui**: toggle sidebar #69
+- **ui**: layout #69
+- **ui**: pages #69
+- **ui**: layouts and routes #69
+- **ui**: add angular/cdk #69
+- **ui**: start from scratch #69
+
 ## 0.34.0 (2026-05-31)
 
 ### Feat
