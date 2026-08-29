@@ -193,7 +193,7 @@ CREATE TABLE tasks
     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
 
-CREATE TABLE user_tasks 
+CREATE TABLE task_owners
 (
     task_id     INTEGER NOT NULL,
     user_id     INTEGER NOT NULL,
@@ -204,7 +204,7 @@ CREATE TABLE user_tasks
     FOREIGN KEY (user_id) REFERENCES identities (id) ON DELETE CASCADE
 );
 
-CREATE TABLE user_assignee 
+CREATE TABLE task_assignees 
 (
     task_id     INTEGER NOT NULL,
     user_id     INTEGER NOT NULL,
