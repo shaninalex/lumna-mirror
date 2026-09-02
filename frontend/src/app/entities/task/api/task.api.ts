@@ -21,6 +21,7 @@ export class TaskApi {
     }
 
     create(data: TaskCreateModel): Observable<TaskModel> {
+        console.log('taskApi:', data)
         return this.http
             .post<
                 APIResponse<TaskModel>

@@ -10,7 +10,7 @@ type EntityEventDTO struct {
 	ID         int64     `json:"id"`
 	IdentityId *int64    `json:"identity_id,omitempty"`
 	EntityId   *int64    `json:"entity_id,omitempty"`
-	EntityType *string   `json:"entityp_type,omitempty"`
+	EntityType *string   `json:"entity_type,omitempty"`
 	EventType  string    `json:"event_type"`
 	Data       string    `json:"data"`
 	CreatedAt  time.Time `json:"created_at"`

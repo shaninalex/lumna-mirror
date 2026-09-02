@@ -7,23 +7,21 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/adapters"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/models"
-	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-type TaskListQuery struct {
-	BoardId uint `form:"board_id,omitempty"`
-}
-
 func (s *TaskController) handleListTask(c *gin.Context) {
-	q := TaskListQuery{}
-	if err := c.ShouldBindQuery(&q); err != nil {
+	q, err := adapters.ParseQueryParams(c)
+	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	tasks, err := s.taskService.List(c.Request.Context(), services.ServiceTaskListQuery{
-		BoardId: q.BoardId,
-	})
+	if q == nil {
+		utils.Error(c, http.StatusBadRequest, adapters.TaskListParseParamsError)
+		return
+	}
+
+	tasks, err := s.taskService.List(c.Request.Context(), *q)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

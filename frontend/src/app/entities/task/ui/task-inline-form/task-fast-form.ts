@@ -1,9 +1,12 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import type { OnInit} from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { actionTask, type TaskCreateModel } from '@entities/task/model';
+import { selectProjects } from '@entities/project';
+import { filter, tap } from 'rxjs';
 
 @Component({
     selector: 'lu-task-inline-form',
@@ -53,15 +56,15 @@ import { actionTask, type TaskCreateModel } from '@entities/task/model';
         }
     `,
 })
-export class TaskInlineForm {
+export class TaskInlineForm implements OnInit {
     private store = inject(Store);
     private actions$ = inject(Actions);
+    private destroyRef = inject(DestroyRef);
 
     column_id = input.required<number>();
-    project_id = input.required<number>();
+    project_id: number;
     board_id = input.required<number>();
     task_count = input.required<number>();
-
     openedForm = signal<boolean>(false);
     loading = signal(false);
     errors = signal<string[]>([]);
@@ -71,8 +74,17 @@ export class TaskInlineForm {
     });
 
     constructor() {
+        effect(() => {
+            if (!this.openedForm()) {
+                this.taskForm().value.set({ title: '' });
+                this.errors.set([]);
+            }
+        });
+    }
+
+    ngOnInit() {
         this.actions$
-            .pipe(ofType(actionTask.createSuccess), takeUntilDestroyed())
+            .pipe(ofType(actionTask.createSuccess), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this._reset());
 
         this.actions$.pipe(ofType(actionTask.createFailed)).subscribe((data) => {
@@ -80,12 +92,10 @@ export class TaskInlineForm {
             this.loading.set(false);
         });
 
-        effect(() => {
-            if (!this.openedForm()) {
-                this.taskForm().value.set({ title: '' });
-                this.errors.set([]);
-            }
-        });
+        this.store.select(selectProjects.currentProjectId).pipe(
+                filter((id) => id !== null),
+                tap(id => this.project_id = id)
+            ).subscribe();
     }
 
     submit(event: Event) {
@@ -97,8 +107,9 @@ export class TaskInlineForm {
             position: this.task_count(),
             column_id: this.column_id(),
             board_id: this.board_id(),
-            project_id: this.project_id(),
+            project_id: this.project_id,
         };
+        console.log('submit:', data)
         this.store.dispatch(actionTask.create({ data }));
         this._reset();
     }

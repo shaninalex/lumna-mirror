@@ -13,7 +13,7 @@ import { filter, type Observable } from 'rxjs';
 import { TimeAgoPipe } from '@shared/utils';
 import { selectBoard, type BoardModel } from '@entities/board';
 import type { TaskModel } from '@entities/task';
-import { actionTask } from '@entities/task';
+import { actionTask, selectTasks } from '@entities/task';
 
 @Component({
     selector: 'lu-board-detail-feature',
@@ -30,7 +30,6 @@ export class BoardDetailFeature implements OnInit {
 
     ngOnInit() {
         const _q = { board_id: this.boardId() };
-
         this.store.dispatch(actionTask.getList({ query: _q }));
         this.store.dispatch(actionsColumns.loadByBoardId(_q));
 
@@ -39,5 +38,6 @@ export class BoardDetailFeature implements OnInit {
             .pipe(filter((board) => board !== null));
 
         this.columns$ = this.store.select(selectColumns.byListId(_q.board_id));
+        this.tasks$ = this.store.select(selectTasks.byBoardId(_q.board_id));
     }
 }

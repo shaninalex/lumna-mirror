@@ -1,20 +1,32 @@
 export interface TaskModel {
     id: number;
     title: string;
-    order: number;
-    done: boolean;
     body: string;
-    code: string;
-
-    status_id: number;
+    completed: boolean;
+    meta: string;
     project_id: number;
-
+    boards: TaskBoard[];
+    owner_id: number;
+    assignees_ids: number[];
     created_at: Date;
     updated_at: Date;
+    task_events: EntityEvent[];
 }
 
-export function makeListLabel(task: TaskModel): string {
-    return `${task.code}  ${task.title}`;
+export interface EntityEvent {
+    id: number;
+    identity_id?: number;
+    entity_id?: number;
+    entity_type?: string;
+    event_type: string;
+    data: string;
+    created_at: Date;
+}
+
+export interface TaskBoard {
+    board_id: number;
+    column_id: number;
+    position: number;
 }
 
 export interface TaskCreateModel {
@@ -27,5 +39,5 @@ export interface TaskCreateModel {
 }
 
 export interface TaskListQueryModel {
-    board_id: number
+    board_id: number;
 }

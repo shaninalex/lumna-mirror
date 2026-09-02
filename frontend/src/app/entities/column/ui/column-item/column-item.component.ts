@@ -1,12 +1,9 @@
 import { AsyncPipe } from '@angular/common';
-import type { OnInit } from '@angular/core';
-import { Component, inject, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import type { ColumnModel } from '@entities/column/model';
-import { selectProjects } from '@entities/project';
 import type { TaskModel } from '@entities/task';
-import { selectTasks, TaskCardComponent, TaskInlineForm } from '@entities/task';
-import { Store } from '@ngrx/store';
-import { filter, type Observable } from 'rxjs';
+import { TaskCardComponent, TaskInlineForm } from '@entities/task';
+import { type Observable } from 'rxjs';
 
 @Component({
     selector: 'lu-column-item',
@@ -26,28 +23,16 @@ import { filter, type Observable } from 'rxjs';
                     }
                 }
 
-                @if (projectId$ | async; as projectId) {
-                    <lu-task-inline-form
-                        [column_id]="column.id"
-                        [board_id]="column.board_id"
-                        [project_id]="projectId"
-                        [task_count]="0"
-                    />
-                }
+                <lu-task-inline-form
+                    [column_id]="column.id"
+                    [board_id]="column.board_id"
+                    [task_count]="0"
+                />
             </div>
         </div>
     `,
 })
-export class ColumnItemComponent implements OnInit {
-    private store = inject(Store);
-
+export class ColumnItemComponent {
     @Input() column: ColumnModel;
     tasks$: Observable<TaskModel[]>;
-    projectId$ = this.store.select(selectProjects.currentProjectId).pipe(
-        filter((id) => id !== null)
-    );
-
-    ngOnInit(): void {
-        this.tasks$ = this.store.select(selectTasks.byStatusId(this.column.id));
-    }
 }
