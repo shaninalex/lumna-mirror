@@ -40,7 +40,7 @@ func ToTaskDto(task models.Task) dto.TaskDto {
 		Completed:    task.Completed,
 		Meta:         task.Meta,
 		ProjectId:    task.ProjectId,
-		Boards:       dto.ToBoardTaskDtoList(task.Boards),
+		Boards:       dto.ToBoardTaskDtoList(task.Boards), // should be single board!
 		OwnerId:      task.OwnerId,
 		AssigneesIDs: task.AssigneesIDs,
 		CreatedAt:    task.CreatedAt,
