@@ -9,8 +9,7 @@ import (
 
 type ColumnRepository interface {
 	Repository
-	Create(ctx context.Context, status *models.Column) error
-	Update(ctx context.Context, status *models.Column) (*models.Column, error)
+	Save(ctx context.Context, status *models.Column) error
 	UpdateFields(ctx context.Context, statusID uint, updates map[string]any) error
 	Delete(ctx context.Context, id uint) error
 	GetByID(ctx context.Context, statusID uint) (*models.Column, error)
@@ -48,7 +47,6 @@ func (r *GormColumnRepository) GetByID(ctx context.Context, id uint) (*models.Co
 func (r *GormColumnRepository) FilterByBoard(ctx context.Context, listId uint) []models.Column {
 	var statuss []models.Column
 	if result := r.db.WithContext(ctx).
-		//Preload("Tasks").
 		Where("board_id = ?", listId).
 		Find(&statuss); result.Error != nil {
 		return []models.Column{}
@@ -56,18 +54,8 @@ func (r *GormColumnRepository) FilterByBoard(ctx context.Context, listId uint) [
 	return statuss
 }
 
-func (r *GormColumnRepository) Create(ctx context.Context, column *models.Column) error {
-	if err := r.db.WithContext(ctx).Create(&column).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *GormColumnRepository) Update(ctx context.Context, status *models.Column) (*models.Column, error) {
-	if result := r.db.WithContext(ctx).Save(&status); result.Error != nil {
-		return nil, result.Error
-	}
-	return status, nil
+func (r *GormColumnRepository) Save(ctx context.Context, column *models.Column) error {
+	return r.db.WithContext(ctx).Save(&column).Error
 }
 
 func (r *GormColumnRepository) Delete(ctx context.Context, id uint) error {

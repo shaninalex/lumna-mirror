@@ -12,13 +12,11 @@ import (
 )
 
 type Column struct {
-	ID    int64  `gorm:"primaryKey" json:"id"`
-	Title string `gorm:"not null" json:"title"`
-
-	Meta ColumnMeta `gorm:"null" json:"meta"`
-
-	BoardId uint `gorm:"not null;index" json:"board_id"`
-
+	ID        int64      `gorm:"primaryKey" json:"id"`
+	Title     string     `gorm:"not null" json:"title"`
+	Meta      ColumnMeta `gorm:"null" json:"meta"`
+	BoardId   int64      `gorm:"not null;index" json:"board_id"`
+	Position  int64      `gorm:"not null;default:0" json:"position"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
 }

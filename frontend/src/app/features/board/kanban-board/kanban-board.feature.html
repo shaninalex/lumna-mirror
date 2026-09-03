@@ -28,7 +28,7 @@
         <div cdkDropListGroup class="d-flex gap-3">
             @if (kolumns$ | async; as columns) {
                 @for (c of columns; track c.id) {
-                    <div cdkDrag [cdkDragData]="c" class="card">
+                    <div cdkDrag [cdkDragData]="c" class="card board-column">
                         <div class="card-header justify-content-between d-flex">
                             <h4 class="mb-0">{{ c.title }}</h4>                            
 

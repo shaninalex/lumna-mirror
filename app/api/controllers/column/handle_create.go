@@ -5,22 +5,29 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
+	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-func (s *ColumnController) Create(c *gin.Context) {
-	payload := services.BoardUpdate{}
+func (s *Controller) Create(c *gin.Context) {
+	payload := services.BoardCreatePayload{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	board, err := s.columnService.Create(c.Request.Context(), payload)
+	column := &models.Column{
+		Title:    payload.Title,
+		BoardId:  payload.BoardId,
+		Position: payload.Order,
+	}
+
+	err := s.columnService.Save(c.Request.Context(), column)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	utils.Success(c, board)
+	utils.Success(c, column)
 }

@@ -13,7 +13,7 @@ var (
 	ErrorNoBoardProvided = errors.New("no board_id provided or it's invalid")
 )
 
-func (s *ColumnController) List(c *gin.Context) {
+func (s *Controller) List(c *gin.Context) {
 	boardId, err := strconv.Atoi(c.Query("board_id"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, ErrorNoBoardProvided)

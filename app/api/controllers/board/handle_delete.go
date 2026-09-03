@@ -9,7 +9,7 @@ import (
 )
 
 func (s *BoardController) Delete(c *gin.Context) {
-	listId, err := strconv.Atoi(c.Param("listId"))
+	listId, err := strconv.Atoi(c.Param("board_id"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
@@ -20,5 +20,5 @@ func (s *BoardController) Delete(c *gin.Context) {
 		return
 	}
 
-	utils.Success(c, nil, "List deleted")
+	utils.Success(c, nil, "Board deleted")
 }

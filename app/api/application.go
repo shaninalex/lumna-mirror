@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/auth"
-	list "gitlab.com/shaninalex/lumna/app/api/controllers/board"
-	status "gitlab.com/shaninalex/lumna/app/api/controllers/column"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/board"
+	"gitlab.com/shaninalex/lumna/app/api/controllers/column"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/invitation"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/project"
 	"gitlab.com/shaninalex/lumna/app/api/controllers/task"
@@ -16,6 +16,7 @@ import (
 	"gitlab.com/shaninalex/lumna/app/api/middlewares"
 	"gitlab.com/shaninalex/lumna/app/pkg/config"
 	"gitlab.com/shaninalex/lumna/app/web"
+	"gitlab.com/shaninalex/lumna/app/web/docs"
 	"gitlab.com/shaninalex/lumna/app/web/setup"
 	"go.uber.org/dig"
 )
@@ -46,8 +47,8 @@ type ApiDeps struct {
 	dig.In
 
 	AuthController       *auth.AuthController
-	BoardController      *list.BoardController
-	StatusController     *status.ColumnController
+	BoardController      *board.BoardController
+	StatusController     *column.Controller
 	ProjectController    *project.ProjectController
 	TaskController       *task.TaskController
 	UserController       *user.UserController
@@ -65,6 +66,7 @@ func NewApi(deps ApiDeps, config *config.Config) *gin.Engine {
 	router.Use(middlewares.CORSMiddleware())
 
 	setup.RegisterSetupRoute(router, config)
+	docs.RegisterDocsRoute(router)
 	web.RegisterEmbedRoute(router)
 
 	authGroup := router.Group("/api/v1/auth")

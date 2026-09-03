@@ -8,7 +8,7 @@ import {
     // ColumnItemComponent,
     NewColumnFormComponent,
 } from '@entities/column';
-import { filter, tap, type Observable } from 'rxjs';
+import { filter, type Observable } from 'rxjs';
 import { TimeAgoPipe } from '@shared/utils';
 import { selectBoard, type BoardModel } from '@entities/board';
 import { TaskCardComponent, actionTask, TaskInlineForm } from '@entities/task';
@@ -35,6 +35,7 @@ import { KanbanService } from './service';
         TaskInlineForm,
     ],
     templateUrl: './kanban-board.feature.html',
+    styleUrl: './kanban-board.feature.css',
     providers: [KanbanService],
 })
 export class KanbanBoardFeature implements OnInit {

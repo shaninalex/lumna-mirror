@@ -1,0 +1,1518 @@
+openapi: 3.0.3
+
+info:
+  title: Lumna API
+  version: 0.35.0
+  description: |
+    HTTP API of the Lumna server.
+
+    ## Authentication
+
+    Authentication is **cookie based**. `POST /api/v1/auth/login` responds with two
+    `Set-Cookie` headers:
+
+    | Cookie          | Lifetime | Purpose                                              |
+    | --------------- | -------- | ---------------------------------------------------- |
+    | `access_token`  | 15 min   | JWT read by the auth middleware on every private route |
+    | `refresh_token` | 30 days  | Opaque token, exchanged on `GET /api/v1/auth/refresh`  |
+
+    Both are issued `HttpOnly` and `Secure`, so they are invisible to JavaScript and
+    are attached by the browser automatically. Everything under `/api/v1` except the
+    `/api/v1/auth/*` group requires a valid `access_token`.
+
+    ## Response envelope
+
+    Every handler answers with the same envelope (`APIResponse` in
+    `app/api/utils/response.go`): `status` is `false` for any status >= 400, `data`
+    carries the payload, `messages` and `errors` are omitted when empty.
+
+    ## Trying requests from Swagger UI
+
+    The bundled UI at `/docs` is served by the API itself, so it is same-origin and
+    the browser sends your real session cookies with every "Try it out" call
+    (`withCredentials` is on). CORS is configured with
+    `Access-Control-Allow-Credentials: false`, so a UI served from any other origin
+    cannot authenticate. Use the **Session cookies** panel above the operations to
+    paste tokens into real cookies on this origin.
+
+servers:
+  - url: /
+    description: Same origin as this documentation page (send real cookies)
+  - url: http://localhost:8000
+    description: Local development server (serve.port in config.yaml)
+
+tags:
+  - name: health
+    description: Liveness probe
+  - name: auth
+    description: Login, logout and token refresh
+  - name: user
+    description: Current identity
+  - name: workspaces
+    description: Top level tenant container
+  - name: projects
+    description: Projects inside a workspace
+  - name: boards
+    description: Kanban boards of a project
+  - name: columns
+    description: Columns of a board
+  - name: tasks
+    description: Tasks placed on boards
+  - name: invitations
+    description: Email invitations
+
+security:
+  - cookieAuth: []
+
+paths:
+  /_health:
+    get:
+      tags: [health]
+      summary: Health check
+      description: Liveness probe. Not part of `/api/v1` and requires no authentication.
+      operationId: health
+      security: []
+      responses:
+        '200':
+          description: Server is up
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  version:
+                    type: string
+                    example: 0.35.0
+
+  /api/v1/auth/login:
+    post:
+      tags: [auth]
+      summary: Log in with email and password
+      description: |
+        Verifies the credentials, stores a hashed refresh token for the
+        `angular-web-app` client and sets the `access_token` (15 min) and
+        `refresh_token` (30 days) cookies.
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authenticated
+          headers:
+            Set-Cookie:
+              description: |
+                Two headers are sent:
+                `access_token=<jwt>; Path=/; Max-Age=900; HttpOnly; Secure` and
+                `refresh_token=<token>; Path=/; Max-Age=2592000; HttpOnly; Secure`.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Identity'
+                      messages:
+                        type: array
+                        items:
+                          type: string
+                        example: ["Login successfull"]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/v1/auth/logout:
+    get:
+      tags: [auth]
+      summary: Log out
+      description: |
+        Deletes the stored refresh tokens of the current identity and expires both
+        cookies.
+
+        Note: this route is registered on the public `/api/v1/auth` group, so the
+        auth middleware never runs and the user id read from the request context is
+        always `0`. Only the cookie clearing is reliable today.
+      operationId: logout
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Logged out
+          headers:
+            Set-Cookie:
+              description: Both `access_token` and `refresh_token` are sent back with `Max-Age=-1`.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+                        example: ["Logout successfull"]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/v1/auth/refresh:
+    get:
+      tags: [auth]
+      summary: Rotate the token pair
+      description: |
+        Reads the `refresh_token` cookie, looks it up by hash and issues a brand new
+        access/refresh pair as cookies. The response body carries no data.
+      operationId: refresh
+      security:
+        - refreshCookie: []
+      responses:
+        '200':
+          description: New cookies issued
+          headers:
+            Set-Cookie:
+              description: New `access_token` and `refresh_token` cookies.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Missing, empty or unknown refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /api/v1/user/me:
+    get:
+      tags: [user]
+      summary: Current identity
+      operationId: getCurrentUser
+      responses:
+        '200':
+          description: The identity behind the `access_token` cookie
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Identity'
+        '400':
+          description: No user in the request context, or the identity no longer exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/workspaces:
+    get:
+      tags: [workspaces]
+      summary: List workspaces
+      operationId: listWorkspaces
+      parameters:
+        - name: active
+          in: query
+          required: false
+          description: When set, only workspaces with this `active` flag are returned.
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Workspaces
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Workspace'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      tags: [workspaces]
+      summary: Create a workspace
+      description: Creates a workspace owned by the current identity.
+      operationId: createWorkspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceCreate'
+      responses:
+        '200':
+          description: Created workspace
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Workspace'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/projects:
+    get:
+      tags: [projects]
+      summary: List projects of a workspace
+      operationId: listProjects
+      parameters:
+        - name: workspace_id
+          in: query
+          required: true
+          description: Required. A missing or non numeric value answers 400.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Projects
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [projects]
+      summary: Create a project
+      description: '`owner_id` is ignored in the body: the server overrides it with the current identity.'
+      operationId: createProject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+      responses:
+        '200':
+          description: Created project
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/projects/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      tags: [projects]
+      summary: Get a project
+      operationId: getProject
+      responses:
+        '200':
+          description: The project
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    patch:
+      tags: [projects]
+      summary: Rename a project
+      description: Only `title` is applied; every other field is ignored.
+      operationId: patchProject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TitlePatch'
+      responses:
+        '200':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      tags: [projects]
+      summary: Delete a project
+      operationId: deleteProject
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/boards:
+    get:
+      tags: [boards]
+      summary: List boards of a project
+      operationId: listBoards
+      parameters:
+        - name: project_id
+          in: query
+          required: true
+          description: Required. A missing or non numeric value answers 400.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Boards
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Board'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [boards]
+      summary: Create a board
+      operationId: createBoard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardCreate'
+      responses:
+        '200':
+          description: Created board
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Board'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/boards/{board_id}:
+    parameters:
+      - $ref: '#/components/parameters/BoardId'
+    get:
+      tags: [boards]
+      summary: Get a board
+      operationId: getBoard
+      responses:
+        '200':
+          description: The board
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Board'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    patch:
+      tags: [boards]
+      summary: Rename a board
+      description: |
+        Only `title` is applied; `project_id` is accepted but ignored.
+      operationId: patchBoard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardCreate'
+      responses:
+        '200':
+          description: Updated board
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Board'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      tags: [boards]
+      summary: Delete a board
+      operationId: deleteBoard
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+                        example: ["Board deleted"]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/boards/{board_id}/order:
+    parameters:
+      - $ref: '#/components/parameters/BoardId'
+    patch:
+      tags: [boards]
+      summary: Reorder tasks and columns of a board
+      description: |
+        Persists the new positions after a drag and drop.
+
+        * `move_type: "task"` with `status_id` set - tasks moved inside one column,
+          only `tasks` is applied.
+        * `move_type: "task"` without `status_id` - tasks moved across columns.
+        * any other `move_type` - `statuses` is applied.
+
+        The `board_id` path parameter is not read by the handler; the payload is
+        self contained.
+      operationId: reorderBoard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardReorderRequest'
+      responses:
+        '200':
+          description: Order persisted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/columns:
+    get:
+      tags: [columns]
+      summary: List columns of a board
+      operationId: listColumns
+      parameters:
+        - name: board_id
+          in: query
+          required: true
+          description: Required. A missing or non numeric value answers 400 with `no board_id provided or it's invalid`.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Columns, ordered by position
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Column'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [columns]
+      summary: Create a column
+      operationId: createColumn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ColumnCreate'
+      responses:
+        '200':
+          description: Created column
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Column'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/columns/reorder:
+    post:
+      tags: [columns]
+      summary: Reorder columns
+      description: |
+        Not implemented yet: the handler body is empty, so the route answers 200
+        with an empty response body and changes nothing. Use
+        `PATCH /api/v1/boards/{board_id}/order` in the meantime.
+      operationId: reorderColumns
+      responses:
+        '200':
+          description: Empty body, nothing was persisted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/columns/{column_id}:
+    parameters:
+      - $ref: '#/components/parameters/ColumnId'
+    patch:
+      tags: [columns]
+      summary: Update a column
+      description: |
+        Only `title` and `position` are applied; `meta` and the timestamps are
+        ignored.
+      operationId: patchColumn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Column'
+      responses:
+        '200':
+          description: Updated column
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Column'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      tags: [columns]
+      summary: Delete a column
+      operationId: deleteColumn
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+                        example: ["Column deleted"]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/tasks:
+    get:
+      tags: [tasks]
+      summary: List tasks of a board
+      description: Each task is returned with the entity events recorded for it.
+      operationId: listTasks
+      parameters:
+        - name: board_id
+          in: query
+          required: true
+          description: Required. Without it the request fails with `no query parameters`.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Tasks
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [tasks]
+      summary: Create a task on a board
+      operationId: createTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+      responses:
+        '200':
+          description: Created task, with an empty `task_events` list
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/tasks/{task_id}:
+    parameters:
+      - $ref: '#/components/parameters/TaskId'
+    get:
+      tags: [tasks]
+      summary: Get a task
+      description: |
+        Unlike the list and create operations this returns the raw `models.Task`,
+        which carries no JSON tags, so the keys are Go field names
+        (`ID`, `Title`, `ProjectId`, ...) instead of snake_case.
+      operationId: getTask
+      responses:
+        '200':
+          description: The task
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TaskModel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    patch:
+      tags: [tasks]
+      summary: Update a task
+      description: |
+        Only `Title`, `Body` and `Completed` are applied. The request is decoded
+        into `models.Task`, which has no JSON tags, so keys are matched against Go
+        field names - `title` works (Go matches case insensitively) but `project_id`
+        does not. The response uses the same Go field names.
+      operationId: patchTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskPatch'
+      responses:
+        '200':
+          description: Updated task
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TaskModel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/invitations:
+    get:
+      tags: [invitations]
+      summary: List invitations
+      operationId: listInvitations
+      responses:
+        '200':
+          description: Invitations
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: Listing failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    post:
+      tags: [invitations]
+      summary: Invite somebody by email
+      description: |
+        Creates a pending invitation and queues the invitation email. The token
+        itself is never returned; only its hash is stored.
+      operationId: createInvitation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvitationCreate'
+      responses:
+        '200':
+          description: Created invitation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Invitation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: access_token
+      description: |
+        Short lived JWT issued by `POST /api/v1/auth/login`. The cookie is
+        `HttpOnly`, so a browser attaches it automatically and scripts cannot read
+        or write it - the Authorize dialog of Swagger UI cannot set it either
+        (browsers forbid scripted `Cookie` headers). Use the **Session cookies**
+        panel on the documentation page, which writes a real cookie on this origin.
+    refreshCookie:
+      type: apiKey
+      in: cookie
+      name: refresh_token
+      description: Long lived opaque token, only used by `GET /api/v1/auth/refresh`.
+
+  parameters:
+    ProjectId:
+      name: id
+      in: path
+      required: true
+      description: Project id
+      schema:
+        type: integer
+        format: int64
+    BoardId:
+      name: board_id
+      in: path
+      required: true
+      description: Board id
+      schema:
+        type: integer
+        format: int64
+    ColumnId:
+      name: column_id
+      in: path
+      required: true
+      description: Column id
+      schema:
+        type: integer
+        format: int64
+    TaskId:
+      name: task_id
+      in: path
+      required: true
+      description: Task id
+      schema:
+        type: integer
+        format: int64
+
+  responses:
+    BadRequest:
+      description: Invalid payload, invalid parameter or a rejected operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+    Unauthorized:
+      description: Missing, expired or unparseable `access_token` cookie
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+          example:
+            status: false
+            errors:
+              - message: unauthorized
+                code: GENERIC_ERROR
+                meta: null
+    InternalError:
+      description: Unexpected server side failure
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+
+  schemas:
+
+    ApiResponse:
+      type: object
+      description: Envelope shared by every endpoint. Empty members are omitted.
+      required: [status]
+      properties:
+        status:
+          type: boolean
+          description: '`true` for 2xx responses, `false` for anything >= 400.'
+          example: true
+        data:
+          description: Operation payload. Omitted when the handler returns nothing.
+        messages:
+          type: array
+          description: Human readable notes attached by the handler.
+          items:
+            type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiError'
+
+    ApiErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            status:
+              type: boolean
+              example: false
+            errors:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiError'
+
+    ApiError:
+      type: object
+      required: [message, code]
+      properties:
+        message:
+          type: string
+          example: unauthorized
+        code:
+          type: string
+          description: Always `GENERIC_ERROR` for errors built from a plain Go error.
+          example: GENERIC_ERROR
+        meta:
+          description: |
+            Free form details, `null` unless the handler filled it in. Untyped on
+            purpose - it is an `any` on the Go side.
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: owner@example.com
+        password:
+          type: string
+          format: password
+          example: correct-horse-battery-staple
+
+    Identity:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        full_name:
+          type: string
+          example: Ada Lovelace
+        email:
+          type: string
+          format: email
+          example: owner@example.com
+        active:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    Workspace:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: Acme
+        active:
+          type: boolean
+          example: true
+        owner_email:
+          type: string
+          format: email
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    WorkspaceCreate:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: Acme
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: Website redesign
+        workspace_id:
+          type: integer
+          format: int64
+          example: 1
+        owner_id:
+          type: integer
+          format: int64
+          nullable: true
+        meta:
+          type: object
+          description: Reserved for project settings, currently always empty.
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    ProjectCreate:
+      type: object
+      required: [title, workspace_id]
+      properties:
+        title:
+          type: string
+          example: Website redesign
+        workspace_id:
+          type: integer
+          format: int64
+          example: 1
+        owner_id:
+          type: integer
+          format: int64
+          nullable: true
+          description: Ignored - overwritten with the authenticated identity.
+
+    TitlePatch:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+          example: New title
+
+    Board:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: Sprint 12
+        project_id:
+          type: integer
+          format: int64
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    BoardCreate:
+      type: object
+      required: [project_id, title]
+      properties:
+        project_id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: Sprint 12
+
+    BoardReorderRequest:
+      type: object
+      required: [move_type]
+      properties:
+        move_type:
+          type: string
+          description: '`task` reorders tasks, anything else reorders columns.'
+          example: task
+        status_id:
+          type: integer
+          format: int64
+          nullable: true
+          description: Set when the tasks stayed inside a single column.
+          example: 3
+        tasks:
+          type: array
+          description: New task positions, applied when `move_type` is `task`.
+          items:
+            $ref: '#/components/schemas/TaskPosition'
+        statuses:
+          type: array
+          description: New column positions with their tasks, applied for other move types.
+          items:
+            $ref: '#/components/schemas/ColumnPosition'
+
+    TaskPosition:
+      type: object
+      required: [id, order]
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 42
+        order:
+          type: integer
+          format: int64
+          example: 0
+
+    ColumnPosition:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 3
+        order:
+          type: integer
+          format: int64
+          nullable: true
+          example: 1
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskPosition'
+
+    Column:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 3
+        title:
+          type: string
+          example: In progress
+        meta:
+          $ref: '#/components/schemas/ColumnMeta'
+        board_id:
+          type: integer
+          format: int64
+          example: 1
+        position:
+          type: integer
+          format: int64
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    ColumnMeta:
+      type: object
+      description: Presentation settings, stored as a JSON column.
+      properties:
+        color:
+          type: string
+          example: '#4f46e5'
+        icon:
+          type: string
+          example: play
+        expanded:
+          type: boolean
+          example: true
+
+    ColumnCreate:
+      type: object
+      required: [title, board_id]
+      properties:
+        title:
+          type: string
+          example: In progress
+        board_id:
+          type: integer
+          format: int64
+          example: 1
+        order:
+          type: integer
+          format: int64
+          description: Stored as the column `position`.
+          example: 1
+
+    Task:
+      type: object
+      description: Task as returned by the list and create operations (`dto.TaskDto`).
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 42
+        title:
+          type: string
+          example: Draft the landing page
+        body:
+          type: string
+          example: Copy and hero image
+        completed:
+          type: boolean
+          example: false
+        meta:
+          type: string
+          description: Opaque JSON string.
+          example: ''
+        project_id:
+          type: integer
+          format: int64
+          example: 1
+        boards:
+          type: array
+          description: Placements of this task; a task on a kanban board has exactly one.
+          items:
+            $ref: '#/components/schemas/TaskBoard'
+        owner_id:
+          type: integer
+          format: int64
+          example: 1
+        assignees_ids:
+          type: array
+          items:
+            type: integer
+            format: int64
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        task_events:
+          type: array
+          description: Entity events recorded for this task, empty on create.
+          items:
+            $ref: '#/components/schemas/EntityEvent'
+
+    TaskBoard:
+      type: object
+      properties:
+        board_id:
+          type: integer
+          format: int64
+          example: 1
+        column_id:
+          type: integer
+          format: int64
+          example: 3
+        position:
+          type: integer
+          format: int64
+          example: 0
+
+    TaskModel:
+      type: object
+      description: |
+        Raw `models.Task`. It declares no JSON tags, so keys are Go field names.
+        Returned by `GET` and `PATCH /api/v1/tasks/{task_id}`.
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: 42
+        Title:
+          type: string
+        Body:
+          type: string
+        Completed:
+          type: boolean
+        Meta:
+          type: string
+        ProjectId:
+          type: integer
+          format: int64
+        OwnerId:
+          type: integer
+          format: int64
+        AssigneesIDs:
+          type: array
+          nullable: true
+          items:
+            type: integer
+            format: int64
+        CreatedAt:
+          type: string
+          format: date-time
+        UpdatedAt:
+          type: string
+          format: date-time
+        Boards:
+          type: array
+          nullable: true
+          items:
+            type: object
+            properties:
+              BoardId:
+                type: integer
+                format: int64
+              ColumnId:
+                type: integer
+                format: int64
+              Position:
+                type: integer
+                format: int64
+
+    TaskCreate:
+      type: object
+      required: [title, board_id, column_id, project_id]
+      properties:
+        title:
+          type: string
+          example: Draft the landing page
+        body:
+          type: string
+          example: Copy and hero image
+        position:
+          type: integer
+          format: int64
+          example: 0
+        board_id:
+          type: integer
+          format: int64
+          example: 1
+        column_id:
+          type: integer
+          format: int64
+          example: 3
+        project_id:
+          type: integer
+          format: int64
+          example: 1
+
+    TaskPatch:
+      type: object
+      description: Keys are matched against Go field names; only these three are applied.
+      properties:
+        Title:
+          type: string
+          example: Draft the landing page
+        Body:
+          type: string
+          example: Copy and hero image
+        Completed:
+          type: boolean
+          example: true
+
+    EntityEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        identity_id:
+          type: integer
+          format: int64
+          nullable: true
+        entity_id:
+          type: integer
+          format: int64
+          nullable: true
+        entity_type:
+          type: string
+          nullable: true
+          example: task
+        event_type:
+          type: string
+          enum: [task/created, task/updated, task/completed]
+          example: task/created
+        data:
+          type: string
+          description: Opaque JSON string with the event details.
+        created_at:
+          type: string
+          format: date-time
+
+    Invitation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        email:
+          type: string
+          format: email
+        state:
+          type: string
+          enum: [pending, sent, accepted, validated, revoked]
+          example: pending
+        role:
+          type: string
+          example: member
+        created_at:
+          type: string
+          format: date-time
+        valid_until:
+          type: string
+          format: date-time
+        meta:
+          type: object
+          nullable: true
+          additionalProperties: true
+
+    InvitationCreate:
+      type: object
+      required: [email, role]
+      properties:
+        email:
+          type: string
+          format: email
+          example: teammate@example.com
+        role:
+          type: string
+          example: member
