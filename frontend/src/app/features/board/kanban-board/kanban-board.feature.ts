@@ -5,22 +5,17 @@ import { Store } from '@ngrx/store';
 import type { ColumnModel } from '@entities/column';
 import {
     actionsColumns,
-    ColumnItemComponent,
+    // ColumnItemComponent,
     NewColumnFormComponent,
 } from '@entities/column';
 import { filter, tap, type Observable } from 'rxjs';
 import { TimeAgoPipe } from '@shared/utils';
 import { selectBoard, type BoardModel } from '@entities/board';
-import { TaskCardComponent, actionTask } from '@entities/task';
+import { TaskCardComponent, actionTask, TaskInlineForm } from '@entities/task';
 
 import type { CdkDragDrop } from '@angular/cdk/drag-drop';
-import {
-    CdkDrag,
-    CdkDragHandle,
-    CdkDropList,
-    CdkDropListGroup,
-} from '@angular/cdk/drag-drop';
-import { CdkContextMenuTrigger } from '@angular/cdk/menu';
+import { CdkDrag, CdkDragHandle, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
+// import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import type { KanbanCard, KanbanColumn } from './model/kanban.models';
 import { KanbanService } from './service';
 
@@ -34,9 +29,10 @@ import { KanbanService } from './service';
         AsyncPipe,
         NewColumnFormComponent,
         TimeAgoPipe,
-        ColumnItemComponent,
-        CdkContextMenuTrigger,
+        // ColumnItemComponent,
+        // CdkContextMenuTrigger,
         TaskCardComponent,
+        TaskInlineForm,
     ],
     templateUrl: './kanban-board.feature.html',
     providers: [KanbanService],
@@ -47,9 +43,6 @@ export class KanbanBoardFeature implements OnInit {
 
     boardId = input.required<number>();
     board$: Observable<BoardModel>;
-
-    columnsWithTasks$!: Observable<(ColumnModel & { tasks: KanbanCard[] })[]>;
-
     kolumns$: Observable<KanbanColumn[]> = this.kanban.boardData();
 
     constructor() {
@@ -65,10 +58,6 @@ export class KanbanBoardFeature implements OnInit {
         this.board$ = this.store
             .select(selectBoard.byId(_q.board_id))
             .pipe(filter((board) => board !== null));
-
-        this.kolumns$.pipe(
-            tap((data) => console.log(data))
-        ).subscribe()
     }
 
     dropColumn(event: CdkDragDrop<ColumnModel[]>): void {}

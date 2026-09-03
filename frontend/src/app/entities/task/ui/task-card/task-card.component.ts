@@ -8,11 +8,11 @@ import type { TaskModel } from '@entities/task/model';
     template: `
         <a routerLink="/app/w/1/task" class="card text-decoration-none text-body">
             <div class="card-body">
-                <div class="d-flex justify-content-between mb-2">
+                <!-- <div class="d-flex justify-content-between mb-2">
                     <span class="badge text-bg-primary"> Feature </span>
 
                     <small class="text-muted"> #FEAT-212 </small>
-                </div>
+                </div> -->
                 <h6 class="mb-2">{{ task.title }}</h6>
                 <p class="small text-muted mb-3">Add Google and GitHub authentication.</p>
                 <div class="d-flex justify-content-between align-items-center">

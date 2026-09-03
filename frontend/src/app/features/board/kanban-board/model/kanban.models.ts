@@ -3,10 +3,4 @@ import type { TaskModel } from '@entities/task';
 
 export type KanbanColumn = ColumnModel & { tasks: KanbanCard[] };
 
-export interface KanbanCard {
-    id: number;
-    column: number;
-    position: number;
-
-    task: TaskModel;
-}
+export type KanbanCard = TaskModel & { column: number; position: number };

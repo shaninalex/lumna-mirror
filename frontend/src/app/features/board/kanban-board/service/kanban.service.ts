@@ -1,11 +1,11 @@
-import type { OnDestroy} from '@angular/core';
+import type { OnDestroy } from '@angular/core';
 import { inject, Injectable, signal } from '@angular/core';
 import { selectColumns } from '@entities/column';
 import { selectTasks } from '@entities/task';
 import { Store } from '@ngrx/store';
-import type { Observable} from 'rxjs';
+import type { Observable } from 'rxjs';
 import { BehaviorSubject, combineLatest, filter, Subscription, switchMap, tap } from 'rxjs';
-import type { KanbanCard, KanbanColumn } from '../model/kanban.models';
+import type { KanbanColumn } from '../model/kanban.models';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable()
@@ -24,11 +24,7 @@ export class KanbanService implements OnDestroy {
         switchMap((id) => this.store.select(selectTasks.byBoardId(id))),
     );
 
-    private data: BehaviorSubject<KanbanColumn[]> = new BehaviorSubject<KanbanColumn[]>([])
-
-    constructor() {
-        console.log('Create KanbanService');
-    }
+    private data: BehaviorSubject<KanbanColumn[]> = new BehaviorSubject<KanbanColumn[]>([]);
 
     ngOnDestroy(): void {
         this.sub.unsubscribe();
@@ -40,25 +36,24 @@ export class KanbanService implements OnDestroy {
             combineLatest([this.columns$, this.tasks$])
                 .pipe(
                     tap(([columns, tasks]) => {
+                        const kolumns: KanbanColumn[] = []
                         columns.forEach((col) => {
                             const kolumn: KanbanColumn = { ...col, tasks: [] };
-                            // TODO: There are something incorrect here.
                             tasks.forEach((t) => {
-                                const boardIndex = t.boards.findIndex((b) => b.column_id === col.id && b.board_id === col.board_id);
-                                if (boardIndex > 0) {
-                                    const kard: KanbanCard = {
-                                        id: t.id,
+                                const boardIndex = t.boards.findIndex(
+                                    (b) => b.column_id === col.id && b.board_id === boardId,
+                                );
+                                if (boardIndex >= 0) {
+                                    kolumn.tasks.push({
+                                        ...t,
                                         column: col.id,
                                         position: t.boards[boardIndex].position,
-                                        task: t,
-                                    };
-                                    kolumn.tasks.push(kard);
+                                    });
                                 }
                             });
-                            const v = this.data.value;
-                            v.push(kolumn)
-                            this.data.next(v)
+                            kolumns.push(kolumn);
                         });
+                        this.data.next(kolumns);
                     }),
                 )
                 .subscribe(),
