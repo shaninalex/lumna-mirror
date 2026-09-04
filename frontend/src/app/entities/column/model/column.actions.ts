@@ -11,5 +11,6 @@ export const actionsColumns = createActionGroup({
         create: props<{ payload: ColumnPayloadModel }>(),
         'create success': props<{ column: ColumnModel }>(),
         'create failed': props<{ errors: Error[] }>(),
+        'reorder failed': props<{ errors: Error[] }>(),
     },
 });

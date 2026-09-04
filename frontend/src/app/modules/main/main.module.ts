@@ -13,6 +13,7 @@ import { UserApi, userFeature } from '@entities/user';
 import { TaskApi, taskFeature } from '@entities/task';
 import { columnFeature, ColumnApi } from '@entities/column';
 import { BoardApi, boardFeature } from '@entities/board';
+import { KanbanApi } from '@features/board/kanban-board/api';
 
 @NgModule({
     declarations: [
@@ -29,8 +30,10 @@ import { BoardApi, boardFeature } from '@entities/board';
         TaskApi,
         BoardApi,
         ColumnApi,
+        KanbanApi,
 
         provideEffects(mainEffects),
+        
         provideState(workspaceFeature),
         provideState(projectFeature),
         provideState(userFeature),

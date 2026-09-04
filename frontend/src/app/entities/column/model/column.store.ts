@@ -10,7 +10,7 @@ export interface ColumnState extends EntityState<ColumnModel> {
 }
 
 export const statusAdapter = createEntityAdapter<ColumnModel>({
-    sortComparer: (a, b) => a.meta.order - b.meta.order,
+    sortComparer: (a, b) => a.position - b.position,
 });
 
 const initialState: ColumnState = statusAdapter.getInitialState({

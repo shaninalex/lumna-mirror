@@ -63,4 +63,12 @@ export class KanbanService implements OnDestroy {
     public boardData(): Observable<KanbanColumn[]> {
         return this.data.asObservable();
     }
+
+    public setData(d: KanbanColumn[]): void {
+        return this.data.next(d);
+    }
+
+    public getData(): KanbanColumn[] {
+        return this.data.getValue();
+    }
 }

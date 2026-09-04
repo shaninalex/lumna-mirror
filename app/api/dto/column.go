@@ -27,3 +27,11 @@ func ColumnDTOToModel(c ColumnDTO) models.Column {
 		UpdatedAt: c.UpdatedAt,
 	}
 }
+
+type ColumnReorderingDto struct {
+	ColumnID      int64   `json:"id"`
+	PreviousIndex int64   `json:"previous_index"`
+	CurrentIndex  int64   `json:"current_index"`
+	BoardId       int64   `json:"board_id"`
+	ColumnsOrder  []int64 `json:"columns_order"`
+}

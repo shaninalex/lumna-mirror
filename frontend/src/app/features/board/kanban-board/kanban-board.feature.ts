@@ -2,22 +2,22 @@ import { AsyncPipe } from '@angular/common';
 import type { OnInit } from '@angular/core';
 import { Component, effect, inject, input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import type { ColumnModel } from '@entities/column';
-import {
-    actionsColumns,
-    // ColumnItemComponent,
-    NewColumnFormComponent,
-} from '@entities/column';
+import { actionsColumns, NewColumnFormComponent } from '@entities/column';
 import { filter, type Observable } from 'rxjs';
 import { TimeAgoPipe } from '@shared/utils';
 import { selectBoard, type BoardModel } from '@entities/board';
 import { TaskCardComponent, actionTask, TaskInlineForm } from '@entities/task';
-
 import type { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { CdkDrag, CdkDragHandle, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
-// import { CdkContextMenuTrigger } from '@angular/cdk/menu';
+import {
+    CdkDrag,
+    CdkDragHandle,
+    CdkDropList,
+    CdkDropListGroup,
+    moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import type { KanbanCard, KanbanColumn } from './model/kanban.models';
 import { KanbanService } from './service';
+import { actionKanban } from './model';
 
 @Component({
     selector: 'lu-kanban-board-feature',
@@ -29,8 +29,6 @@ import { KanbanService } from './service';
         AsyncPipe,
         NewColumnFormComponent,
         TimeAgoPipe,
-        // ColumnItemComponent,
-        // CdkContextMenuTrigger,
         TaskCardComponent,
         TaskInlineForm,
     ],
@@ -61,6 +59,23 @@ export class KanbanBoardFeature implements OnInit {
             .pipe(filter((board) => board !== null));
     }
 
-    dropColumn(event: CdkDragDrop<ColumnModel[]>): void {}
-    dropTask(event: CdkDragDrop<KanbanCard[]>, column: ColumnModel): void {}
+    dropColumn(event: CdkDragDrop<KanbanColumn[]>): void {
+        const data = this.kanban.getData();
+        moveItemInArray(data, event.previousIndex, event.currentIndex);
+        this.store.dispatch(
+            actionKanban.dropColumn({
+                event: {
+                    id: event.item.data.id,
+                    previous_ndex: event.previousIndex,
+                    current_index: event.currentIndex,
+                    board_id: this.boardId(),
+                    columns_order: data.map((c) => c.id)
+                },
+            }),
+        );
+    }
+
+    dropTask(event: CdkDragDrop<KanbanCard[]>, column: KanbanColumn): void {
+        this.store.dispatch(actionKanban.dropTask({ event, column }));
+    }
 }

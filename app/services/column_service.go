@@ -2,9 +2,14 @@ package services
 
 import (
 	"context"
+	"errors"
 
 	"gitlab.com/shaninalex/lumna/app/models"
 	"gitlab.com/shaninalex/lumna/app/repositories"
+)
+
+var (
+	EmptyColumnListError error = errors.New("empty column list")
 )
 
 type BoardCreatePayload struct {
@@ -18,6 +23,7 @@ type ColumnService interface {
 	Get(ctx context.Context, columnId uint) (*models.Column, error)
 	Save(ctx context.Context, column *models.Column) error
 	Delete(ctx context.Context, id uint) error
+	Reorder(ctx context.Context, ids []int64) error
 }
 
 type columnService struct {
@@ -49,4 +55,24 @@ func (s *columnService) Save(ctx context.Context, column *models.Column) error {
 
 func (s *columnService) Delete(ctx context.Context, id uint) error {
 	return s.statusRepository.Delete(ctx, id)
+}
+
+// Reorder implements [ColumnService].
+func (s *columnService) Reorder(ctx context.Context, columnIds []int64) error {
+	if len(columnIds) == 0 {
+		return EmptyColumnListError
+	}
+
+	for i, columnId := range columnIds {
+		column, err := s.Get(ctx, uint(columnId))
+		if err != nil {
+			return err
+		}
+		column.Position = int64(i)
+		if err := s.Save(ctx, column); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
