@@ -57,7 +57,7 @@ type RearangeTask struct {
 }
 
 type TransferTaskBetweenColumns struct {
-	BoardId int64
+	BoardId int64        `json:"board_id"`
 	From    RearangeTask `json:"from"`
 	To      RearangeTask `json:"to"`
 }

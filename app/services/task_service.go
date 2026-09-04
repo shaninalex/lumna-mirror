@@ -99,7 +99,7 @@ func (s *taskService) Transfer(ctx context.Context, transfer models.TransferTask
 	}
 
 	for i, t := range transfer.To.Tasks {
-		if err := s.storageRepository.MovePosition(ctx, int64(t), transfer.BoardId, int64(transfer.From.ColumnId), int64(i)); err != nil {
+		if err := s.storageRepository.MovePosition(ctx, int64(t), transfer.BoardId, int64(transfer.To.ColumnId), int64(i)); err != nil {
 			return err
 		}
 	}
