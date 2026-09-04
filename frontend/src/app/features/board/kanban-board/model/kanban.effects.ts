@@ -6,6 +6,7 @@ import { KanbanApi } from '../api';
 import { actionsColumns } from '@entities/column';
 import type { HttpErrorResponse } from '@angular/common/http';
 import { fromErrorResponse } from '@shared/models';
+import { actionTask } from '@entities/task';
 
 @Injectable()
 export class KanbanEffects {
@@ -20,6 +21,35 @@ export class KanbanEffects {
                     map((columns) => actionsColumns.loadByBoardIdSuccess({ columns })),
                     catchError((err: HttpErrorResponse) =>
                         of(actionsColumns.reorderFailed({ errors: fromErrorResponse(err) })),
+                    ),
+                ),
+            ),
+        ),
+    );
+
+    onTaskMoveEffect$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionKanban.moveTask),
+            exhaustMap((action) =>
+                this.kanbanApi.MoveTask(action.event).pipe(
+                    map((tasks) => actionTask.getListSuccess({ tasks })),
+                    catchError((err: HttpErrorResponse) =>
+                        of(actionTask.getListFailed({ errors: fromErrorResponse(err) })),
+                    ),
+                ),
+            ),
+        ),
+    );
+
+
+    onTaskTrasferEffect$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(actionKanban.transferTask),
+            exhaustMap((action) =>
+                this.kanbanApi.TransferTask(action.event).pipe(
+                    map((tasks) => actionTask.getListSuccess({ tasks })),
+                    catchError((err: HttpErrorResponse) =>
+                        of(actionTask.getListFailed({ errors: fromErrorResponse(err) })),
                     ),
                 ),
             ),

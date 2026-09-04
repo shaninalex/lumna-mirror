@@ -14,6 +14,7 @@ import {
     CdkDropList,
     CdkDropListGroup,
     moveItemInArray,
+    transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import type { KanbanCard, KanbanColumn } from './model/kanban.models';
 import { KanbanService } from './service';
@@ -69,13 +70,47 @@ export class KanbanBoardFeature implements OnInit {
                     previous_ndex: event.previousIndex,
                     current_index: event.currentIndex,
                     board_id: this.boardId(),
-                    columns_order: data.map((c) => c.id)
+                    columns_order: data.map((c) => c.id),
                 },
             }),
         );
     }
 
     dropTask(event: CdkDragDrop<KanbanCard[]>, column: KanbanColumn): void {
-        this.store.dispatch(actionKanban.dropTask({ event, column }));
+        const isSameList = event.previousContainer === event.container;
+
+        if (isSameList) {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            this.store.dispatch(
+                actionKanban.moveTask({
+                    event: {
+                        board_id: this.boardId(),
+                        column_id: column.id,
+                        tasks: event.container.data.map((t) => t.id),
+                    },
+                }),
+            );
+        } else {
+            transferArrayItem(
+                event.previousContainer.data,
+                event.container.data,
+                event.previousIndex,
+                event.currentIndex,
+            );
+            const data = {
+                event: {
+                    board_id: this.boardId(),
+                    from: {
+                        column_id: event.item.data.column,
+                        tasks: event.previousContainer.data.map((t) => t.id),
+                    },
+                    to: {
+                        column_id: column.id,
+                        tasks: event.container.data.map((t) => t.id),
+                    },
+                },
+            };
+            this.store.dispatch(actionKanban.transferTask(data));
+        }
     }
 }

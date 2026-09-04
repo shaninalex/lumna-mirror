@@ -43,3 +43,8 @@ type TaskDto struct {
 
 	TaskEvents []EntityEventDTO `json:"task_events"`
 }
+
+type KanbanMoveTaskDto struct {
+	BoardId int `json:"board_id"`
+	models.RearangeTask
+}

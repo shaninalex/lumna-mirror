@@ -51,6 +51,8 @@ export class KanbanService implements OnDestroy {
                                     });
                                 }
                             });
+
+                            kolumn.tasks.sort((a, b) => a.position - b.position)
                             kolumns.push(kolumn);
                         });
                         this.data.next(kolumns);

@@ -20,6 +20,8 @@ func NewTaskController(taskService services.TaskService, entityEventService serv
 func (s *TaskController) Register(router *gin.RouterGroup) {
 	router.POST("tasks", s.handleCreateTask)
 	router.GET("tasks", s.handleListTask)
+	router.POST("tasks/move", s.handleMoveTask)
+	router.POST("tasks/transfer", s.handletransferTask)
 	router.GET("tasks/:task_id", s.handleGetTask)
 	router.PATCH("tasks/:task_id", s.handlePatchTask)
 }

@@ -11,9 +11,11 @@ import (
 type TaskService interface {
 	List(ctx context.Context, query ServiceTaskListQuery) ([]models.Task, error)
 	GetTask(ctx context.Context, taskID uint) (*models.Task, error)
-	ReorderTask(ctx context.Context, taskID uint, listListID uint, order uint) error
 	CreateTask(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error)
 	UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error
+
+	Move(ctx context.Context, boardId int64, rearange models.RearangeTask) error
+	Transfer(ctx context.Context, transfer models.TransferTaskBetweenColumns) error
 }
 
 type taskService struct {
@@ -48,10 +50,6 @@ func (s *taskService) GetTask(ctx context.Context, taskID uint) (*models.Task, e
 	return s.repository.GetByID(ctx, taskID)
 }
 
-func (s *taskService) ReorderTask(ctx context.Context, taskID uint, listListID uint, order uint) error {
-	return s.repository.Reorder(ctx, taskID, listListID, order)
-}
-
 func (s *taskService) CreateTask(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error) {
 	task := &models.Task{
 		Title:     payload.Title,
@@ -79,4 +77,32 @@ func (s *taskService) UpdateTask(ctx context.Context, taskID uint, payload *mode
 		return err
 	}
 	return s.repository.Update(ctx, payload)
+}
+
+// Move implements [TaskService].
+func (s *taskService) Move(ctx context.Context, boardId int64, rearange models.RearangeTask) error {
+	for i, t := range rearange.Tasks {
+		if err := s.storageRepository.MovePosition(ctx, int64(t), boardId, int64(rearange.ColumnId), int64(i)); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// Transfer implements [TaskService].
+func (s *taskService) Transfer(ctx context.Context, transfer models.TransferTaskBetweenColumns) error {
+	for i, t := range transfer.From.Tasks {
+		if err := s.storageRepository.MovePosition(ctx, int64(t), transfer.BoardId, int64(transfer.From.ColumnId), int64(i)); err != nil {
+			return err
+		}
+	}
+
+	for i, t := range transfer.To.Tasks {
+		if err := s.storageRepository.MovePosition(ctx, int64(t), transfer.BoardId, int64(transfer.From.ColumnId), int64(i)); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

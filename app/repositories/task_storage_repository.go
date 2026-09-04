@@ -112,15 +112,11 @@ func (s *gormTaskStorageRepository) FindByID(ctx context.Context, id int64) (*mo
 
 // MovePosition implements [TaskStorageRepository].
 func (s *gormTaskStorageRepository) MovePosition(ctx context.Context, taskID, boardID, columnID int64, pos int64) error {
-	record := storage.BoardTaskRecord{Position: pos}
-	if columnID != 0 {
-		record.ColumnID = columnID
-	}
-
-	rows, err := gorm.G[storage.BoardTaskRecord](s.db).
+	rows, err := gorm.G[map[string]any](s.db).
+		Table("board_tasks").
 		Where("task_id = ? AND board_id = ?", taskID, boardID).
 		Select("column_id", "position").
-		Updates(ctx, record)
+		Updates(ctx, map[string]any{"board_id": boardID, "task_id": taskID, "column_id": columnID, "position": pos})
 	if err != nil {
 		return err
 	}
