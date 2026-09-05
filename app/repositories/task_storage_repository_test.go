@@ -165,11 +165,14 @@ func Test_TaskStorageRepository_MovePosition(t *testing.T) {
 	assert.Equal(t, int64(other.ID), placement.ColumnID)
 	assert.Equal(t, int64(0), placement.Position, "position 0 is written, not skipped as a zero value")
 
-	require.NoError(t, repo.MovePosition(ctx, fixture.task.ID, int64(fixture.board.ID), 0, 3))
+	newColumn := &models.Column{Title: "New Column", BoardId: fixture.board.ID}
+	db.WithContext(ctx).Create(newColumn)
+
+	require.NoError(t, repo.MovePosition(ctx, fixture.task.ID, int64(fixture.board.ID), int64(newColumn.ID), 3))
 
 	placement, err = gorm.G[storage.BoardTaskRecord](db).Where("task_id = ?", fixture.task.ID).First(ctx)
 	require.NoError(t, err)
-	assert.Nil(t, placement.ColumnID, "a zero column detaches the task from its column")
+	assert.Equal(t, placement.ColumnID, newColumn.ID)
 	assert.Equal(t, int64(3), placement.Position)
 
 	err = repo.MovePosition(ctx, fixture.task.ID, 999999, int64(other.ID), 1)
