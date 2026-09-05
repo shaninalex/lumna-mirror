@@ -15,12 +15,9 @@ import {
     CdkDragHandle,
     CdkDropList,
     CdkDropListGroup,
-    moveItemInArray,
-    transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import type { KanbanCard, KanbanColumn } from './model/kanban.models';
 import { KanbanService } from './service';
-import { actionKanban } from './model';
 
 @Component({
     selector: 'lu-kanban-board-feature',
@@ -73,66 +70,20 @@ export class KanbanBoardFeature implements OnInit {
     }
 
     dropColumn(event: CdkDragDrop<KanbanColumn[]>): void {
-        const data = [...this.kanban.getData()];
-        moveItemInArray(data, event.previousIndex, event.currentIndex);
-        this.kanban.setData(data);
-        this.store.dispatch(
-            actionKanban.dropColumn({
-                event: {
-                    id: event.item.data.id,
-                    previous_index: event.previousIndex,
-                    current_index: event.currentIndex,
-                    board_id: this.boardId(),
-                    columns_order: data.map((c) => c.id),
-                },
-            }),
-        );
+        this.kanban.dropColumn(event, this.boardId());
     }
 
     dropTask(event: CdkDragDrop<KanbanCard[]>, column: KanbanColumn): void {
         const isSameList = event.previousContainer === event.container;
 
         if (isSameList) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-            this.store.dispatch(
-                actionKanban.moveTask({
-                    event: {
-                        board_id: this.boardId(),
-                        column_id: column.id,
-                        tasks: event.container.data.map((t) => t.id),
-                    },
-                }),
-            );
+            this.kanban.moveTask(event, column, this.boardId());
         } else {
-            const card: KanbanCard = event.item.data;
-            const fromColumnId = card.column;
-            transferArrayItem(
-                event.previousContainer.data,
-                event.container.data,
-                event.previousIndex,
-                event.currentIndex,
-            );
-            // the card object is moved by reference, so re-stamp its column,
-            // otherwise a second drag would report the original column as source
-            card.column = column.id;
-            const data = {
-                event: {
-                    board_id: this.boardId(),
-                    from: {
-                        column_id: fromColumnId,
-                        tasks: event.previousContainer.data.map((t) => t.id),
-                    },
-                    to: {
-                        column_id: column.id,
-                        tasks: event.container.data.map((t) => t.id),
-                    },
-                },
-            };
-            this.store.dispatch(actionKanban.transferTask(data));
+            this.kanban.transferTask(event, column, this.boardId());
         }
     }
 
     public columnsAmount(): number {
-        return this.kanban.getColumnsLength()
+        return this.kanban.getColumnsLength();
     }
 }

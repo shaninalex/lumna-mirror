@@ -1,6 +1,8 @@
 package task
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
 	"gitlab.com/shaninalex/lumna/app/models"
@@ -19,14 +21,12 @@ func (s *TaskController) handletransferTask(c *gin.Context) {
 		return
 	}
 
-	// NOTE: ideally would be great just return all the tasks by id. But it does not metter for now
-	tasks, err := s.taskService.List(c.Request.Context(), services.ServiceTaskListQuery{
+	result, err := s.queryTaskList(c.Request.Context(), services.ServiceTaskListQuery{
 		BoardId: uint(data.BoardId),
 	})
 	if err != nil {
-		utils.Error(c, 400, err)
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
-
-	utils.Success(c, tasks)
+	utils.Success(c, result)
 }

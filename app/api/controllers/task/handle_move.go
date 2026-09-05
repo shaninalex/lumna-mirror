@@ -1,6 +1,8 @@
 package task
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/dto"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
@@ -23,15 +25,12 @@ func (s *TaskController) handleMoveTask(c *gin.Context) {
 		utils.Error(c, 400, err)
 		return
 	}
-
-	tasks, err := s.taskService.List(c.Request.Context(), services.ServiceTaskListQuery{
+	result, err := s.queryTaskList(c.Request.Context(), services.ServiceTaskListQuery{
 		BoardId: uint(data.BoardId),
 	})
-
 	if err != nil {
-		utils.Error(c, 400, err)
+		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
-
-	utils.Success(c, tasks)
+	utils.Success(c, result)
 }
