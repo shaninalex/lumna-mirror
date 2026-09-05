@@ -1,9 +1,11 @@
 import { AsyncPipe } from '@angular/common';
 import type { OnInit } from '@angular/core';
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { actionsColumns, NewColumnFormComponent } from '@entities/column';
-import { filter, type Observable } from 'rxjs';
+import { filter, tap, type Observable } from 'rxjs';
 import { TimeAgoPipe } from '@shared/utils';
 import { selectBoard, type BoardModel } from '@entities/board';
 import { TaskCardComponent, actionTask, TaskInlineForm } from '@entities/task';
@@ -39,6 +41,8 @@ import { actionKanban } from './model';
 })
 export class KanbanBoardFeature implements OnInit {
     private store = inject(Store);
+    private actions$ = inject(Actions);
+    private destroyRef = inject(DestroyRef);
     private kanban = inject(KanbanService);
 
     boardId = input.required<number>();
@@ -58,16 +62,25 @@ export class KanbanBoardFeature implements OnInit {
         this.board$ = this.store
             .select(selectBoard.byId(_q.board_id))
             .pipe(filter((board) => board !== null));
+
+        this.actions$
+            .pipe(
+                ofType(actionsColumns.reorderFailed),
+                takeUntilDestroyed(this.destroyRef),
+                tap(() => this.store.dispatch(actionsColumns.loadByBoardId(_q))),
+            )
+            .subscribe();
     }
 
     dropColumn(event: CdkDragDrop<KanbanColumn[]>): void {
-        const data = this.kanban.getData();
+        const data = [...this.kanban.getData()];
         moveItemInArray(data, event.previousIndex, event.currentIndex);
+        this.kanban.setData(data);
         this.store.dispatch(
             actionKanban.dropColumn({
                 event: {
                     id: event.item.data.id,
-                    previous_ndex: event.previousIndex,
+                    previous_index: event.previousIndex,
                     current_index: event.currentIndex,
                     board_id: this.boardId(),
                     columns_order: data.map((c) => c.id),
@@ -91,17 +104,22 @@ export class KanbanBoardFeature implements OnInit {
                 }),
             );
         } else {
+            const card: KanbanCard = event.item.data;
+            const fromColumnId = card.column;
             transferArrayItem(
                 event.previousContainer.data,
                 event.container.data,
                 event.previousIndex,
                 event.currentIndex,
             );
+            // the card object is moved by reference, so re-stamp its column,
+            // otherwise a second drag would report the original column as source
+            card.column = column.id;
             const data = {
                 event: {
                     board_id: this.boardId(),
                     from: {
-                        column_id: event.item.data.column,
+                        column_id: fromColumnId,
                         tasks: event.previousContainer.data.map((t) => t.id),
                     },
                     to: {

@@ -22,7 +22,7 @@ export interface KanbanTransferTask {
 
 export interface KanbanMoveColumn {
     id: number;
-    previous_ndex: number;
+    previous_index: number;
     current_index: number;
     board_id: number;
     columns_order: number[];

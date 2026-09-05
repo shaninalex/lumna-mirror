@@ -88,15 +88,21 @@ export class TaskInlineForm implements OnInit {
             .pipe(ofType(actionTask.createSuccess), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this._reset());
 
-        this.actions$.pipe(ofType(actionTask.createFailed)).subscribe((data) => {
-            this.errors.set([data.errors.toString()]);
-            this.loading.set(false);
-        });
+        this.actions$
+            .pipe(ofType(actionTask.createFailed), takeUntilDestroyed(this.destroyRef))
+            .subscribe((data) => {
+                this.errors.set([data.errors.toString()]);
+                this.loading.set(false);
+            });
 
-        this.store.select(selectProjects.currentProjectId).pipe(
+        this.store
+            .select(selectProjects.currentProjectId)
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
                 filter((id) => id !== null),
-                tap(id => this.project_id = id)
-            ).subscribe();
+                tap((id) => (this.project_id = id)),
+            )
+            .subscribe();
     }
 
     submit(event: Event) {
@@ -110,7 +116,6 @@ export class TaskInlineForm implements OnInit {
             board_id: this.board_id(),
             project_id: this.project_id,
         };
-        console.log('submit:', data)
         this.store.dispatch(actionTask.create({ data }));
         this._reset();
     }

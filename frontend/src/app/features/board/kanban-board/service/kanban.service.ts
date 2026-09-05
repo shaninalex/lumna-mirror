@@ -14,28 +14,26 @@ export class KanbanService implements OnDestroy {
     private boardId = signal<number | undefined>(undefined);
     private sub = new Subscription();
 
-    columns$ = toObservable(this.boardId).pipe(
+    private boardId$ = toObservable(this.boardId).pipe(
         filter((id): id is number => id !== undefined),
+    );
+
+    columns$ = this.boardId$.pipe(
         switchMap((id) => this.store.select(selectColumns.byListId(id))),
     );
 
-    tasks$ = toObservable(this.boardId).pipe(
-        filter((id): id is number => id !== undefined),
+    tasks$ = this.boardId$.pipe(
         switchMap((id) => this.store.select(selectTasks.byBoardId(id))),
     );
 
     private data: BehaviorSubject<KanbanColumn[]> = new BehaviorSubject<KanbanColumn[]>([]);
 
-    ngOnDestroy(): void {
-        this.sub.unsubscribe();
-    }
-
-    public setBoardId(boardId: number) {
-        this.boardId.set(boardId);
+    constructor() {
         this.sub.add(
             combineLatest([this.columns$, this.tasks$])
                 .pipe(
                     tap(([columns, tasks]) => {
+                        const boardId = this.boardId();
                         const kolumns: KanbanColumn[] = []
                         columns.forEach((col) => {
                             const kolumn: KanbanColumn = { ...col, tasks: [] };
@@ -52,8 +50,7 @@ export class KanbanService implements OnDestroy {
                                 }
                             });
 
-                            kolumn.tasks.sort((a, b) => a.position - b.position)
-                            kolumn.tasks.reverse()
+                            kolumn.tasks.sort((a, b) => b.position - a.position)
                             kolumns.push(kolumn);
                         });
                         this.data.next(kolumns);
@@ -61,6 +58,14 @@ export class KanbanService implements OnDestroy {
                 )
                 .subscribe(),
         );
+    }
+
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
+    }
+
+    public setBoardId(boardId: number) {
+        this.boardId.set(boardId);
     }
 
     public boardData(): Observable<KanbanColumn[]> {
