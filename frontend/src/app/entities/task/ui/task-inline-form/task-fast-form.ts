@@ -19,6 +19,7 @@ import { filter, tap } from 'rxjs';
                         class="form-control form-control-sm w-full"
                         placeholder="Column name"
                         [formField]="taskForm.title"
+                        [autocomplete]="false"
                         [autofocus]="true"
                     />
                     @if (taskForm.title().touched() && taskForm.title().errors().length) {

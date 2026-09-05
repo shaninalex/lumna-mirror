@@ -113,4 +113,8 @@ export class KanbanBoardFeature implements OnInit {
             this.store.dispatch(actionKanban.transferTask(data));
         }
     }
+
+    public columnsAmount(): number {
+        return this.kanban.getColumnsLength()
+    }
 }

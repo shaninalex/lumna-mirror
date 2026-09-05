@@ -1,13 +1,11 @@
-import type { OnInit } from '@angular/core';
-import { Component, DestroyRef, inject, Input, signal } from '@angular/core';
+import { OnInit, Component, DestroyRef, inject, Input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, form, required } from '@angular/forms/signals';
-import { selectProjects } from '@entities/project';
 import { actionsColumns } from '@entities/column/model';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import type { Error } from '@shared/models';
-import { filter, tap } from 'rxjs';
+import { Error } from '@shared/models';
+import { tap } from 'rxjs';
 
 @Component({
     selector: 'lu-new-column-form',
@@ -61,9 +59,9 @@ export class NewColumnFormComponent implements OnInit {
     private actions$ = inject(Actions);
     private store = inject(Store);
     private destroyRef = inject(DestroyRef);
-    private projectId: number = 0;
 
     @Input() board_id: number;
+    @Input() position: number;
 
     openedForm = signal<boolean>(false);
     loading = signal(false);
@@ -74,15 +72,6 @@ export class NewColumnFormComponent implements OnInit {
     });
 
     ngOnInit() {
-        this.store
-            .select(selectProjects.currentProjectId)
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                filter((id) => id !== null),
-                tap((id) => (this.projectId = id)),
-            )
-            .subscribe();
-
         this.actions$
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
@@ -117,11 +106,11 @@ export class NewColumnFormComponent implements OnInit {
         const payload = {
             title: formData.title,
             board_id: this.board_id,
-            order: 0,
+            order: this.position,
         };
 
         this.store.dispatch(actionsColumns.create({ payload }));
-        this.columnForm().reset()
+        this.columnForm().reset();
     }
 
     openForm(): void {

@@ -53,6 +53,7 @@ export class KanbanService implements OnDestroy {
                             });
 
                             kolumn.tasks.sort((a, b) => a.position - b.position)
+                            kolumn.tasks.reverse()
                             kolumns.push(kolumn);
                         });
                         this.data.next(kolumns);
@@ -72,5 +73,9 @@ export class KanbanService implements OnDestroy {
 
     public getData(): KanbanColumn[] {
         return this.data.getValue();
+    }
+
+    public getColumnsLength(): number {
+        return this.data.getValue().length;
     }
 }
