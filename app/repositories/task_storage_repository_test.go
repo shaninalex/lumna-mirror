@@ -95,7 +95,7 @@ func Test_TaskStorageRepository_Save(t *testing.T) {
 	boards, err = gorm.G[storage.BoardTaskRecord](db).Where("task_id = ?", task.ID).Find(ctx)
 	require.NoError(t, err)
 	require.Len(t, boards, 1)
-	assert.Nil(t, boards[0].ColumnID)
+	assert.Equal(t, int64(0), boards[0].ColumnID)
 	assert.Equal(t, int64(5), boards[0].Position)
 
 	tasks, err := gorm.G[storage.TaskRecord](db).Where("project_id = ?", project.ID).Find(ctx)
