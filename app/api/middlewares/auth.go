@@ -60,7 +60,7 @@ func ProvideAuthMiddleware(
 		ctx := c.Request.Context()
 
 		// set identity in context
-		identity, err := identityRepository.GetIdentityByID(ctx, uint(userID))
+		identity, err := identityRepository.GetIdentityByID(ctx, userID)
 		if err != nil {
 			utils.Error(c, http.StatusUnauthorized, ErrorIdentityNotFound)
 			c.Abort()
@@ -68,7 +68,7 @@ func ProvideAuthMiddleware(
 		}
 		ctx = context.WithValue(ctx, pkg.ContextIdentity, identity)
 
-		c.Set(pkg.ContextUserID, uint(userID))
+		c.Set(pkg.ContextUserID, userID)
 		c.Request = c.Request.WithContext(ctx)
 		c.Next()
 	}

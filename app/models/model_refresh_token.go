@@ -7,8 +7,8 @@ import (
 )
 
 type RefreshToken struct {
-	ID         uint   `gorm:"primaryKey"`
-	IdentityID uint   `gorm:"not null;index"`
+	ID         int    `gorm:"primaryKey"`
+	IdentityID int    `gorm:"not null;index"`
 	Hash       string `gorm:"type:text;not null;uniqueIndex"`
 	ClientID   string
 	Scopes     string

@@ -22,7 +22,7 @@ func (s *ProjectController) Patch(c *gin.Context) {
 		return
 	}
 
-	project, err := s.projectService.Get(c.Request.Context(), uint(id))
+	project, err := s.projectService.Get(c.Request.Context(), id)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

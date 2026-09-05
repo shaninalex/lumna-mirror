@@ -22,7 +22,7 @@ func (s *Controller) Patch(c *gin.Context) {
 		return
 	}
 
-	column, err := s.columnService.Get(c.Request.Context(), uint(columnId))
+	column, err := s.columnService.Get(c.Request.Context(), columnId)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

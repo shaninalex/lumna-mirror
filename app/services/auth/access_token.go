@@ -15,7 +15,7 @@ type AccessClaims struct {
 }
 
 // GenerateAccessJWTToken - generate jwt access token
-func GenerateAccessJWTToken(userID uint, scopes string, ttl time.Duration) (string, error) {
+func GenerateAccessJWTToken(userID int, scopes string, ttl time.Duration) (string, error) {
 	claims := jwt.MapClaims{
 		"iss":   "lumna-api",
 		"aud":   "lumna-web-client",

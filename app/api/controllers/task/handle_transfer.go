@@ -22,7 +22,7 @@ func (s *TaskController) handletransferTask(c *gin.Context) {
 	}
 
 	result, err := s.queryTaskList(c.Request.Context(), services.ServiceTaskListQuery{
-		BoardId: uint(data.BoardId),
+		BoardId: data.BoardId,
 	})
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)

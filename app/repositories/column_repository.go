@@ -10,10 +10,10 @@ import (
 type ColumnRepository interface {
 	Repository
 	Save(ctx context.Context, status *models.Column) error
-	UpdateFields(ctx context.Context, statusID uint, updates map[string]any) error
-	Delete(ctx context.Context, id uint) error
-	GetByID(ctx context.Context, statusID uint) (*models.Column, error)
-	FilterByBoard(ctx context.Context, listId uint) []models.Column
+	UpdateFields(ctx context.Context, statusID int, updates map[string]any) error
+	Delete(ctx context.Context, id int) error
+	GetByID(ctx context.Context, statusID int) (*models.Column, error)
+	FilterByBoard(ctx context.Context, listId int) []models.Column
 }
 
 type GormColumnRepository struct {
@@ -30,7 +30,7 @@ func (r *GormColumnRepository) GetDB() *gorm.DB {
 	return r.db
 }
 
-func (r *GormColumnRepository) GetByID(ctx context.Context, id uint) (*models.Column, error) {
+func (r *GormColumnRepository) GetByID(ctx context.Context, id int) (*models.Column, error) {
 	var status models.Column
 
 	err := r.db.WithContext(ctx).
@@ -44,7 +44,7 @@ func (r *GormColumnRepository) GetByID(ctx context.Context, id uint) (*models.Co
 	return &status, nil
 }
 
-func (r *GormColumnRepository) FilterByBoard(ctx context.Context, listId uint) []models.Column {
+func (r *GormColumnRepository) FilterByBoard(ctx context.Context, listId int) []models.Column {
 	var statuss []models.Column
 	if result := r.db.WithContext(ctx).
 		Where("board_id = ?", listId).
@@ -58,14 +58,14 @@ func (r *GormColumnRepository) Save(ctx context.Context, column *models.Column) 
 	return r.db.WithContext(ctx).Save(&column).Error
 }
 
-func (r *GormColumnRepository) Delete(ctx context.Context, id uint) error {
+func (r *GormColumnRepository) Delete(ctx context.Context, id int) error {
 	if result := r.db.WithContext(ctx).Where("id = ?", id).Delete(&models.Column{}); result.Error != nil {
 		return result.Error
 	}
 	return nil
 }
 
-func (r *GormColumnRepository) UpdateFields(ctx context.Context, statusID uint, updates map[string]any) error {
+func (r *GormColumnRepository) UpdateFields(ctx context.Context, statusID int, updates map[string]any) error {
 	result := r.db.WithContext(ctx).Model(&models.Column{}).
 		Where("id = ?", statusID).
 		Updates(updates)

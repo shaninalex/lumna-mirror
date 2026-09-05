@@ -15,7 +15,7 @@ func (s *Controller) Delete(c *gin.Context) {
 		return
 	}
 
-	if err := s.columnService.Delete(c.Request.Context(), uint(columnId)); err != nil {
+	if err := s.columnService.Delete(c.Request.Context(), columnId); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}

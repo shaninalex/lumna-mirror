@@ -17,7 +17,7 @@ func (s *TaskController) handleMoveTask(c *gin.Context) {
 		return
 	}
 
-	err := s.taskService.Move(c.Request.Context(), int64(data.BoardId), models.RearangeTask{
+	err := s.taskService.Move(c.Request.Context(), data.BoardId, models.RearangeTask{
 		ColumnId: data.ColumnId,
 		Tasks:    data.Tasks,
 	})
@@ -26,7 +26,7 @@ func (s *TaskController) handleMoveTask(c *gin.Context) {
 		return
 	}
 	result, err := s.queryTaskList(c.Request.Context(), services.ServiceTaskListQuery{
-		BoardId: uint(data.BoardId),
+		BoardId: data.BoardId,
 	})
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)

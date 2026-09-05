@@ -20,6 +20,6 @@ func (s *Controller) List(c *gin.Context) {
 		return
 	}
 
-	columns := s.columnService.Filter(c.Request.Context(), uint(boardId))
+	columns := s.columnService.Filter(c.Request.Context(), boardId)
 	utils.Success(c, columns)
 }

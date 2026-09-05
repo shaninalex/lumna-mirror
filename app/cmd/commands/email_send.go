@@ -73,7 +73,7 @@ func NewEmailCreateCmd() *cobra.Command {
 	return cmd
 }
 
-func waitForEmail(ctx context.Context, repo repositories.EmailRepository, id uint) error {
+func waitForEmail(ctx context.Context, repo repositories.EmailRepository, id int) error {
 	ticker := time.NewTicker(200 * time.Millisecond)
 	defer ticker.Stop()
 

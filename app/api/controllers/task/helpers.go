@@ -15,7 +15,7 @@ func (s *TaskController) queryTaskList(ctx context.Context, q services.ServiceTa
 		return nil, err
 	}
 
-	ids := make([]int64, len(tasks))
+	ids := make([]int, len(tasks))
 	for i, t := range tasks {
 		ids[i] = t.ID
 	}

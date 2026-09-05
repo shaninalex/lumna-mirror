@@ -9,11 +9,11 @@ import (
 
 type InvitationRepository interface {
 	List(ctx context.Context) ([]models.Invitation, error)
-	GetById(ctx context.Context, id uint) (*models.Invitation, error)
+	GetById(ctx context.Context, id int) (*models.Invitation, error)
 	GetByHash(ctx context.Context, hash string) (*models.Invitation, error)
 	Create(ctx context.Context, invitation *models.Invitation) error
 	Update(ctx context.Context, invitation *models.Invitation) error
-	Delete(ctx context.Context, id uint) error
+	Delete(ctx context.Context, id int) error
 }
 
 type GormInvitationRepository struct {
@@ -38,7 +38,7 @@ func (r *GormInvitationRepository) List(ctx context.Context) ([]models.Invitatio
 	return invitations, nil
 }
 
-func (r *GormInvitationRepository) GetById(ctx context.Context, id uint) (*models.Invitation, error) {
+func (r *GormInvitationRepository) GetById(ctx context.Context, id int) (*models.Invitation, error) {
 	var invitation models.Invitation
 
 	err := r.db.WithContext(ctx).
@@ -80,7 +80,7 @@ func (r *GormInvitationRepository) Update(ctx context.Context, invitation *model
 		Error
 }
 
-func (r *GormInvitationRepository) Delete(ctx context.Context, id uint) error {
+func (r *GormInvitationRepository) Delete(ctx context.Context, id int) error {
 	return r.db.WithContext(ctx).
 		Where("id = ?", id).
 		Delete(&models.Invitation{}).

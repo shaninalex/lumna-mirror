@@ -12,7 +12,7 @@ var (
 )
 
 type Workspace struct {
-	ID         uint       `gorm:"primaryKey" json:"id"`
+	ID         int        `gorm:"primaryKey" json:"id"`
 	Title      string     `json:"title"`
 	Active     bool       `json:"active"`
 	OwnerEmail string     `json:"owner_email"`

@@ -36,11 +36,11 @@ func Test_TaskStorageRepository_Save(t *testing.T) {
 	task := &models.Task{
 		Title:        "task",
 		Body:         "body",
-		ProjectId:    int64(project.ID),
-		OwnerId:      int64(owner.ID),
-		AssigneesIDs: []int64{int64(assignee.ID), int64(assignee.ID)},
+		ProjectId:    project.ID,
+		OwnerId:      owner.ID,
+		AssigneesIDs: []int{assignee.ID, assignee.ID},
 		Boards: []models.TaskBoard{
-			{BoardId: int64(board.ID), ColumnId: int64(column.ID), Position: 1},
+			{BoardId: board.ID, ColumnId: column.ID, Position: 1},
 		},
 	}
 
@@ -56,7 +56,7 @@ func Test_TaskStorageRepository_Save(t *testing.T) {
 	owners, err := gorm.G[storage.TaskOwnerRecord](db).Where("task_id = ?", task.ID).Find(ctx)
 	require.NoError(t, err)
 	require.Len(t, owners, 1)
-	assert.Equal(t, int64(owner.ID), owners[0].UserID)
+	assert.Equal(t, owner.ID, owners[0].UserID)
 
 	assignees, err := gorm.G[storage.TaskAssigneeRecord](db).Where("task_id = ?", task.ID).Find(ctx)
 	require.NoError(t, err)
@@ -66,8 +66,8 @@ func Test_TaskStorageRepository_Save(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, boards, 1)
 	require.NotNil(t, boards[0].ColumnID)
-	assert.Equal(t, int64(column.ID), boards[0].ColumnID)
-	assert.Equal(t, int64(1), boards[0].Position)
+	assert.Equal(t, column.ID, boards[0].ColumnID)
+	assert.Equal(t, 1, boards[0].Position)
 
 	// Second save updates in place and replaces the related rows.
 	task.Title = "renamed"
@@ -95,8 +95,8 @@ func Test_TaskStorageRepository_Save(t *testing.T) {
 	boards, err = gorm.G[storage.BoardTaskRecord](db).Where("task_id = ?", task.ID).Find(ctx)
 	require.NoError(t, err)
 	require.Len(t, boards, 1)
-	assert.Equal(t, int64(0), boards[0].ColumnID)
-	assert.Equal(t, int64(5), boards[0].Position)
+	assert.Equal(t, 0, boards[0].ColumnID)
+	assert.Equal(t, 5, boards[0].Position)
 
 	tasks, err := gorm.G[storage.TaskRecord](db).Where("project_id = ?", project.ID).Find(ctx)
 	require.NoError(t, err)
@@ -120,15 +120,15 @@ func Test_TaskStorageRepository_AssignUser(t *testing.T) {
 	repo := repositories.NewGormTaskStorageRepository(db)
 	fixture := seedTask(t, ctx, db, repo)
 
-	require.NoError(t, repo.AssignUser(ctx, fixture.task.ID, uint(fixture.user.ID)))
-	require.NoError(t, repo.AssignUser(ctx, fixture.task.ID, uint(fixture.user.ID)), "assigning twice is a no-op")
+	require.NoError(t, repo.AssignUser(ctx, fixture.task.ID, fixture.user.ID))
+	require.NoError(t, repo.AssignUser(ctx, fixture.task.ID, fixture.user.ID), "assigning twice is a no-op")
 
 	assignees, err := gorm.G[storage.TaskAssigneeRecord](db).Where("task_id = ?", fixture.task.ID).Find(ctx)
 	require.NoError(t, err)
 	require.Len(t, assignees, 1)
-	assert.Equal(t, int64(fixture.user.ID), assignees[0].UserID)
+	assert.Equal(t, fixture.user.ID, assignees[0].UserID)
 
-	assert.Error(t, repo.AssignUser(ctx, 999999, uint(fixture.user.ID)), "unknown task is rejected by the foreign key")
+	assert.Error(t, repo.AssignUser(ctx, 999999, fixture.user.ID), "unknown task is rejected by the foreign key")
 }
 
 func Test_TaskStorageRepository_Complete(t *testing.T) {
@@ -157,25 +157,25 @@ func Test_TaskStorageRepository_MovePosition(t *testing.T) {
 	other := &models.Column{Title: "other column", BoardId: fixture.board.ID}
 	require.NoError(t, db.WithContext(ctx).Create(other).Error)
 
-	require.NoError(t, repo.MovePosition(ctx, fixture.task.ID, int64(fixture.board.ID), int64(other.ID), 0))
+	require.NoError(t, repo.MovePosition(ctx, fixture.task.ID, fixture.board.ID, other.ID, 0))
 
 	placement, err := gorm.G[storage.BoardTaskRecord](db).Where("task_id = ?", fixture.task.ID).First(ctx)
 	require.NoError(t, err)
 	require.NotNil(t, placement.ColumnID)
-	assert.Equal(t, int64(other.ID), placement.ColumnID)
-	assert.Equal(t, int64(0), placement.Position, "position 0 is written, not skipped as a zero value")
+	assert.Equal(t, other.ID, placement.ColumnID)
+	assert.Equal(t, 0, placement.Position, "position 0 is written, not skipped as a zero value")
 
 	newColumn := &models.Column{Title: "New Column", BoardId: fixture.board.ID}
 	db.WithContext(ctx).Create(newColumn)
 
-	require.NoError(t, repo.MovePosition(ctx, fixture.task.ID, int64(fixture.board.ID), int64(newColumn.ID), 3))
+	require.NoError(t, repo.MovePosition(ctx, fixture.task.ID, fixture.board.ID, newColumn.ID, 3))
 
 	placement, err = gorm.G[storage.BoardTaskRecord](db).Where("task_id = ?", fixture.task.ID).First(ctx)
 	require.NoError(t, err)
 	assert.Equal(t, placement.ColumnID, newColumn.ID)
-	assert.Equal(t, int64(3), placement.Position)
+	assert.Equal(t, 3, placement.Position)
 
-	err = repo.MovePosition(ctx, fixture.task.ID, 999999, int64(other.ID), 1)
+	err = repo.MovePosition(ctx, fixture.task.ID, 999999, other.ID, 1)
 	assert.ErrorIs(t, err, gorm.ErrRecordNotFound, "a board the task is not placed on")
 }
 
@@ -202,9 +202,9 @@ func seedTask(t *testing.T, ctx context.Context, db *gorm.DB, repo repositories.
 
 	task := &models.Task{
 		Title:     "task",
-		ProjectId: int64(project.ID),
+		ProjectId: project.ID,
 		Boards: []models.TaskBoard{
-			{BoardId: int64(board.ID), ColumnId: int64(column.ID), Position: 1},
+			{BoardId: board.ID, ColumnId: column.ID, Position: 1},
 		},
 	}
 	require.NoError(t, repo.Save(ctx, task))

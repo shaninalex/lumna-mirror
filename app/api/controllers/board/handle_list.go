@@ -15,7 +15,7 @@ func (s *BoardController) List(c *gin.Context) {
 		return
 	}
 
-	list, err := s.listService.List(c.Request.Context(), uint(projectId))
+	list, err := s.listService.List(c.Request.Context(), projectId)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

@@ -28,8 +28,8 @@ func NewProjectsCreateCommand() *cobra.Command {
 
 			project := &models.Project{
 				Title:       flags.title,
-				WorkspaceID: uint(flags.workspaceId),
-				OwnerID:     utils.Pointer(uint(flags.ownerId)),
+				WorkspaceID: flags.workspaceId,
+				OwnerID:     utils.Pointer(flags.ownerId),
 			}
 			if err := projectRepository.Create(ctx, project); err != nil {
 				panic(err)

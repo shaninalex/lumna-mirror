@@ -8,11 +8,11 @@ import (
 )
 
 type BoardRepository interface {
-	GetByID(ctx context.Context, id uint) (*models.Board, error)
+	GetByID(ctx context.Context, id int) (*models.Board, error)
 	Create(ctx context.Context, board *models.Board) error
 	Update(ctx context.Context, board *models.Board) (*models.Board, error)
-	Delete(ctx context.Context, id uint) error
-	ListByProjectId(ctx context.Context, projectId uint) ([]*models.Board, error) // TODO: make proper filter request
+	Delete(ctx context.Context, id int) error
+	ListByProjectId(ctx context.Context, projectId int) ([]*models.Board, error) // TODO: make proper filter request
 }
 
 type GormBoardRepository struct {
@@ -25,7 +25,7 @@ func NewGormBoardRepository(db *gorm.DB) BoardRepository {
 	}
 }
 
-func (s *GormBoardRepository) GetByID(ctx context.Context, id uint) (*models.Board, error) {
+func (s *GormBoardRepository) GetByID(ctx context.Context, id int) (*models.Board, error) {
 	board := &models.Board{}
 	if result := s.db.WithContext(ctx).
 		Where("id = ?", id).
@@ -49,14 +49,14 @@ func (s *GormBoardRepository) Update(ctx context.Context, board *models.Board) (
 	return board, nil
 }
 
-func (s *GormBoardRepository) Delete(ctx context.Context, id uint) error {
+func (s *GormBoardRepository) Delete(ctx context.Context, id int) error {
 	if result := s.db.WithContext(ctx).Where("id = ?", id).Delete(&models.Board{}); result.Error != nil {
 		return result.Error
 	}
 	return nil
 }
 
-func (s *GormBoardRepository) ListByProjectId(ctx context.Context, projectId uint) ([]*models.Board, error) {
+func (s *GormBoardRepository) ListByProjectId(ctx context.Context, projectId int) ([]*models.Board, error) {
 	boards := make([]*models.Board, 0)
 	if result := s.db.WithContext(ctx).
 		Where("project_id = ?", projectId).

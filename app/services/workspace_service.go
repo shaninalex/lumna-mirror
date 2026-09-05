@@ -10,10 +10,10 @@ import (
 )
 
 type WorkspaceManager interface {
-	Get(ctx context.Context, id uint) (*models.Workspace, error)
+	Get(ctx context.Context, id int) (*models.Workspace, error)
 	Create(ctx context.Context, title string) (*models.Workspace, error)
 	CreateWithOwner(ctx context.Context, title string, idn *models.Identity) (*models.Workspace, error)
-	Update(ctx context.Context, id uint, payload map[string]any) error
+	Update(ctx context.Context, id int, payload map[string]any) error
 	List(ctx context.Context, params map[string]any) ([]*models.Workspace, error)
 }
 
@@ -66,12 +66,12 @@ func (s *workspaceService) CreateWithOwner(ctx context.Context, title string, id
 	return workspace, nil
 }
 
-func (s *workspaceService) Get(ctx context.Context, id uint) (*models.Workspace, error) {
+func (s *workspaceService) Get(ctx context.Context, id int) (*models.Workspace, error) {
 	return s.repository.GetByID(ctx, id)
 
 }
 
-func (s *workspaceService) Update(ctx context.Context, id uint, payload map[string]any) error {
+func (s *workspaceService) Update(ctx context.Context, id int, payload map[string]any) error {
 	return s.repository.Update(ctx, id, payload)
 }
 

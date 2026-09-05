@@ -8,12 +8,12 @@ import (
 )
 
 type TaskListQuery struct {
-	ProjectID *uint
-	BoardId   *uint
+	ProjectID *int
+	BoardId   *int
 	Code      *string
 	QueryArgs []interface{}
 	OrderBy   *string
-	Limit     *uint
+	Limit     *int
 }
 
 // TaskRepository
@@ -22,14 +22,14 @@ type TaskListQuery struct {
 type TaskRepository interface {
 	Repository
 	List(ctx context.Context, query TaskListQuery) ([]*models.Task, error)
-	GetByID(ctx context.Context, taskID uint) (*models.Task, error)
-	Reorder(ctx context.Context, taskID uint, statusID uint, order uint) error
+	GetByID(ctx context.Context, taskID int) (*models.Task, error)
+	Reorder(ctx context.Context, taskID int, statusID int, order int) error
 	Create(ctx context.Context, task *models.Task) error
 	Update(ctx context.Context, task *models.Task) error
-	UpdateFields(ctx context.Context, taskID uint, updates map[string]any) error
+	UpdateFields(ctx context.Context, taskID int, updates map[string]any) error
 	CreateTaskBoard(ctx context.Context, boardTask models.BoardTask) error
-	GetTaskBoards(ctx context.Context, boardId uint) ([]models.BoardTask, error)
-	GetTasksByBoardId(ctx context.Context, boardId uint) ([]models.Task, error)
+	GetTaskBoards(ctx context.Context, boardId int) ([]models.BoardTask, error)
+	GetTasksByBoardId(ctx context.Context, boardId int) ([]models.Task, error)
 	AddTaskToBoard(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error)
 }
 
@@ -57,7 +57,7 @@ func (r *GormTaskRepository) List(ctx context.Context, query TaskListQuery) ([]*
 	}
 
 	if query.Limit != nil {
-		db = db.Limit(int(*query.Limit))
+		db = db.Limit(*query.Limit)
 	}
 	if err := db.Find(&tasks).Error; err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (r *GormTaskRepository) List(ctx context.Context, query TaskListQuery) ([]*
 	return tasks, nil
 }
 
-func (r *GormTaskRepository) GetByID(ctx context.Context, taskID uint) (*models.Task, error) {
+func (r *GormTaskRepository) GetByID(ctx context.Context, taskID int) (*models.Task, error) {
 	var task models.Task
 
 	if err := r.db.WithContext(ctx).
@@ -79,7 +79,7 @@ func (r *GormTaskRepository) GetByID(ctx context.Context, taskID uint) (*models.
 	return &task, nil
 }
 
-func (r *GormTaskRepository) Reorder(ctx context.Context, taskID uint, statusID uint, order uint) error {
+func (r *GormTaskRepository) Reorder(ctx context.Context, taskID int, statusID int, order int) error {
 	return r.db.WithContext(ctx).
 		Model(&models.Task{}).
 		Where("id = ?", taskID).
@@ -101,7 +101,7 @@ func (r *GormTaskRepository) Update(ctx context.Context, task *models.Task) erro
 		Error
 }
 
-func (r *GormTaskRepository) UpdateFields(ctx context.Context, taskID uint, updates map[string]any) error {
+func (r *GormTaskRepository) UpdateFields(ctx context.Context, taskID int, updates map[string]any) error {
 	result := r.db.WithContext(ctx).Model(&models.Task{}).
 		Where("id = ?", taskID).
 		Updates(updates)
@@ -114,7 +114,7 @@ func (r *GormTaskRepository) CreateTaskBoard(ctx context.Context, boardTask mode
 }
 
 // GetTaskBoards implements [TaskRepository].
-func (r *GormTaskRepository) GetTaskBoards(ctx context.Context, boardId uint) ([]models.BoardTask, error) {
+func (r *GormTaskRepository) GetTaskBoards(ctx context.Context, boardId int) ([]models.BoardTask, error) {
 	return gorm.G[models.BoardTask](r.db).Raw(`
         SELECT board_id, task_id, column_id, position
 		FROM board_tasks
@@ -123,7 +123,7 @@ func (r *GormTaskRepository) GetTaskBoards(ctx context.Context, boardId uint) ([
 }
 
 // GetTasksByBoardId implements [TaskRepository].
-func (r *GormTaskRepository) GetTasksByBoardId(ctx context.Context, boardId uint) ([]models.Task, error) {
+func (r *GormTaskRepository) GetTasksByBoardId(ctx context.Context, boardId int) ([]models.Task, error) {
 	return gorm.G[models.Task](r.db).Raw(`
 		SELECT id, title, body, completed, meta, created_at, updated_at
 		FROM tasks t
@@ -146,10 +146,10 @@ func (r *GormTaskRepository) AddTaskToBoard(ctx context.Context, payload *models
 	}
 
 	if err := r.CreateTaskBoard(ctx, models.BoardTask{
-		TaskId:   uint(task.ID),
-		Position: uint(0),
-		BoardId:  uint(payload.BoardId),
-		ColumnId: uint(payload.ColumnId),
+		TaskId:   task.ID,
+		Position: 0,
+		BoardId:  payload.BoardId,
+		ColumnId: payload.ColumnId,
 	}); err != nil {
 		return nil, err
 	}

@@ -11,10 +11,10 @@ import (
 )
 
 type Project struct {
-	ID          uint        `gorm:"primaryKey" json:"id"`
+	ID          int         `gorm:"primaryKey" json:"id"`
 	Title       string      `gorm:"not null" json:"title"`
-	WorkspaceID uint        `gorm:"not null;index" json:"workspace_id"`
-	OwnerID     *uint       `gorm:"null;index" json:"owner_id"`
+	WorkspaceID int         `gorm:"not null;index" json:"workspace_id"`
+	OwnerID     *int        `gorm:"null;index" json:"owner_id"`
 	Meta        ProjectMeta `gorm:"meta" json:"meta"`
 	CreatedAt   time.Time   `json:"created_at"`
 	UpdatedAt   *time.Time  `json:"updated_at"`
@@ -76,6 +76,6 @@ func (s ProjectMeta) Value() (driver.Value, error) {
 
 type ProjectCreateModel struct {
 	Title       string `json:"title"`
-	WorkspaceID uint   `json:"workspace_id"`
-	OwnerID     *uint  `json:"owner_id,omitempty"`
+	WorkspaceID int    `json:"workspace_id"`
+	OwnerID     *int   `json:"owner_id,omitempty"`
 }

@@ -16,7 +16,7 @@ import (
 )
 
 type InvitationEmailMeta struct {
-	InvitationID uint `json:"invitation_id"`
+	InvitationID int `json:"invitation_id"`
 }
 
 var (
@@ -28,8 +28,8 @@ type Service interface {
 	Get(ctx context.Context, hash string) (*models.Invitation, error)                                        // TODO: rename into GetByHash
 	Accept(ctx context.Context, token string) error
 	Validate(ctx context.Context, token string) error
-	Delete(ctx context.Context, invitationId uint) error
-	Reset(ctx context.Context, invitationId uint) (string, error)
+	Delete(ctx context.Context, invitationId int) error
+	Reset(ctx context.Context, invitationId int) (string, error)
 	List(ctx context.Context) ([]models.Invitation, error)
 }
 
@@ -156,11 +156,11 @@ func (s *service) Get(ctx context.Context, token string) (*models.Invitation, er
 	return invitation, nil
 }
 
-func (s *service) Delete(ctx context.Context, invitationId uint) error {
+func (s *service) Delete(ctx context.Context, invitationId int) error {
 	return s.repository.Delete(ctx, invitationId)
 }
 
-func (s *service) Reset(ctx context.Context, invitationId uint) (string, error) {
+func (s *service) Reset(ctx context.Context, invitationId int) (string, error) {
 	invitation, err := s.repository.GetById(ctx, invitationId)
 	if err != nil {
 		return "", err

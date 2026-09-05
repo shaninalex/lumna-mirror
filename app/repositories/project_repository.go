@@ -8,11 +8,11 @@ import (
 )
 
 type ProjectRepository interface {
-	GetByID(ctx context.Context, id uint) (*models.Project, error)
+	GetByID(ctx context.Context, id int) (*models.Project, error)
 	List(ctx context.Context, options ...ProjectRepositoryOptions) ([]models.Project, error)
 	Create(ctx context.Context, project *models.Project) error
 	Update(ctx context.Context, project *models.Project) error
-	DeleteByID(ctx context.Context, id uint) error
+	DeleteByID(ctx context.Context, id int) error
 }
 
 type GormProjectRepository struct {
@@ -23,7 +23,7 @@ func NewGormProjectRepository(db *gorm.DB) ProjectRepository {
 	return &GormProjectRepository{db: db}
 }
 
-func (r *GormProjectRepository) GetByID(ctx context.Context, id uint) (*models.Project, error) {
+func (r *GormProjectRepository) GetByID(ctx context.Context, id int) (*models.Project, error) {
 	var project models.Project
 
 	err := r.db.WithContext(ctx).
@@ -72,7 +72,7 @@ func (r *GormProjectRepository) Update(ctx context.Context, project *models.Proj
 		Error
 }
 
-func (r *GormProjectRepository) DeleteByID(ctx context.Context, id uint) error {
+func (r *GormProjectRepository) DeleteByID(ctx context.Context, id int) error {
 	return r.db.WithContext(ctx).
 		Where("id = ?", id).
 		Delete(&models.Project{}).

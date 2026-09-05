@@ -18,6 +18,6 @@ func (s *Controller) handleReorder(c *gin.Context) {
 		return
 	}
 
-	columns := s.columnService.Filter(c.Request.Context(), uint(data.BoardId))
+	columns := s.columnService.Filter(c.Request.Context(), data.BoardId)
 	utils.Success(c, columns)
 }

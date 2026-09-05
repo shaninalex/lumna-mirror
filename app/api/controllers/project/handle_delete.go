@@ -14,7 +14,7 @@ func (s *ProjectController) Delete(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
-	if err := s.projectService.Delete(c.Request.Context(), uint(id)); err != nil {
+	if err := s.projectService.Delete(c.Request.Context(), id); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}

@@ -15,7 +15,7 @@ func (s *TaskController) handleGetTask(c *gin.Context) {
 		return
 	}
 
-	task, err := s.taskService.GetTask(c.Request.Context(), uint(taskId))
+	task, err := s.taskService.GetTask(c.Request.Context(), taskId)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

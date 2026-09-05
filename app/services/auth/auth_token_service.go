@@ -8,8 +8,8 @@ import (
 )
 
 type TokenService interface {
-	CreateRefreshToken(ctx context.Context, identityID uint, rt *models.RefreshToken) error
-	DeleteRefreshToken(ctx context.Context, identityID uint) error
+	CreateRefreshToken(ctx context.Context, identityID int, rt *models.RefreshToken) error
+	DeleteRefreshToken(ctx context.Context, identityID int) error
 	GetByHash(ctx context.Context, hash string) (*models.RefreshToken, error)
 }
 
@@ -25,7 +25,7 @@ func NewAuthTokenService(repository repositories.RefreshTokenRepository) TokenSe
 	}
 }
 
-func (s *authTokenService) CreateRefreshToken(ctx context.Context, identityID uint, rt *models.RefreshToken) error {
+func (s *authTokenService) CreateRefreshToken(ctx context.Context, identityID int, rt *models.RefreshToken) error {
 	if err := s.repository.DeleteByIdentityID(ctx, identityID); err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func (s *authTokenService) CreateRefreshToken(ctx context.Context, identityID ui
 	return nil
 }
 
-func (s *authTokenService) DeleteRefreshToken(ctx context.Context, identityID uint) error {
+func (s *authTokenService) DeleteRefreshToken(ctx context.Context, identityID int) error {
 	return s.repository.DeleteByIdentityID(ctx, identityID)
 }
 

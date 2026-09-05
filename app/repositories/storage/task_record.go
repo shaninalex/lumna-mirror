@@ -3,11 +3,11 @@ package storage
 import "time"
 
 type TaskRecord struct {
-	ID        int64     `gorm:"primaryKey;autoIncrement"`
+	ID        int       `gorm:"primaryKey;autoIncrement"`
 	Title     string    `gorm:"not null"`
 	Body      string    `gorm:"type:text"`
 	Meta      string    `gorm:"type:text"`
-	ProjectId int64     `gorm:"project_id"`
+	ProjectId int       `gorm:"project_id"`
 	Completed bool      `gorm:"default:false"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`
@@ -18,8 +18,8 @@ func (s TaskRecord) TableName() string {
 }
 
 type TaskOwnerRecord struct {
-	TaskID int64 `gorm:"primaryKey"`
-	UserID int64 `gorm:"primaryKey"`
+	TaskID int `gorm:"primaryKey"`
+	UserID int `gorm:"primaryKey"`
 }
 
 func (s TaskOwnerRecord) TableName() string {
@@ -27,8 +27,8 @@ func (s TaskOwnerRecord) TableName() string {
 }
 
 type TaskAssigneeRecord struct {
-	TaskID int64 `gorm:"primaryKey"`
-	UserID int64 `gorm:"primaryKey"`
+	TaskID int `gorm:"primaryKey"`
+	UserID int `gorm:"primaryKey"`
 }
 
 func (s TaskAssigneeRecord) TableName() string {
@@ -36,10 +36,10 @@ func (s TaskAssigneeRecord) TableName() string {
 }
 
 type BoardTaskRecord struct {
-	BoardID  int64 `gorm:"primaryKey"`
-	TaskID   int64 `gorm:"primaryKey"`
-	ColumnID int64 `gorm:"default:null"`
-	Position int64 `gorm:"not null"`
+	BoardID  int `gorm:"primaryKey"`
+	TaskID   int `gorm:"primaryKey"`
+	ColumnID int `gorm:"default:null"`
+	Position int `gorm:"not null"`
 }
 
 func (s BoardTaskRecord) TableName() string {
