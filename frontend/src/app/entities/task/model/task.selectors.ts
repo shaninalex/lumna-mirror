@@ -16,6 +16,6 @@ export const selectTasks = {
         createSelector(selectAll, (list) => list.filter((a) => a.project_id === projectId)),
     countByProjectId: (projectId: number) =>
         createSelector(selectAll, (list) => list.filter((a) => a.project_id === projectId).length),
-    byStatusId: (statusId: number) =>
-        createSelector(selectAll, (list) => list.filter((a) => a.status_id === statusId)),
+    byBoardId: (boardId: number) =>
+        createSelector(selectAll, (tasks) => tasks.filter((tasks) => tasks.boards.find((b) => b.board_id === boardId))),
 };

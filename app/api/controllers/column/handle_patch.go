@@ -5,35 +5,36 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gitlab.com/shaninalex/lumna/app/api/dto"
 	"gitlab.com/shaninalex/lumna/app/api/utils"
-	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-func (s *ColumnController) Patch(c *gin.Context) {
-	statusId, err := strconv.Atoi(c.Param("status_id"))
+func (s *Controller) Patch(c *gin.Context) {
+	columnId, err := strconv.Atoi(c.Param("column_id"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
-	payload := services.BoardUpdate{}
 
+	payload := dto.ColumnDTO{}
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	status, err := s.columnService.Get(c.Request.Context(), uint(statusId))
+	column, err := s.columnService.Get(c.Request.Context(), uint(columnId))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	status.Title = payload.Title
+	column.Title = payload.Title
+	column.Position = payload.Position
 
-	if _, err := s.columnService.Update(c.Request.Context(), status); err != nil {
+	if err := s.columnService.Save(c.Request.Context(), column); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	utils.Success(c, status)
+	utils.Success(c, column)
 }

@@ -5,21 +5,22 @@ import (
 	"gitlab.com/shaninalex/lumna/app/services"
 )
 
-type ColumnController struct {
+type Controller struct {
 	columnService services.ColumnService
 }
 
-func NewStatusController(columnService services.ColumnService) *ColumnController {
-	s := &ColumnController{
+func NewStatusController(columnService services.ColumnService) *Controller {
+	s := &Controller{
 		columnService: columnService,
 	}
 
 	return s
 }
 
-func (s *ColumnController) Register(router *gin.RouterGroup) {
+func (s *Controller) Register(router *gin.RouterGroup) {
 	router.GET("columns", s.List)
 	router.POST("columns", s.Create)
-	router.DELETE("columns/:columnId", s.Delete)
-	router.PATCH("columns/:columnId", s.Patch)
+	router.POST("columns/reorder", s.handleReorder)
+	router.DELETE("columns/:column_id", s.Delete)
+	router.PATCH("columns/:column_id", s.Patch)
 }

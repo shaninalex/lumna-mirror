@@ -1,3 +1,17 @@
+## 0.36.0 (2026-09-05)
+
+### Feat
+
+- transfer cards
+- move tasks in single column
+- reordering columns
+- **kanban**: display board with cards
+- kanban service
+
+### Fix
+
+- selecting and creating tasks
+
 ## 0.35.0 (2026-08-29)
 
 ### Feat

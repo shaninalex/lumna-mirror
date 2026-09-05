@@ -50,3 +50,14 @@ type TaskCreateOnBoard struct {
 type TaskCreateBacklog struct {
 	Title string `json:"title"`
 }
+
+type RearangeTask struct {
+	ColumnId int   `json:"column_id"`
+	Tasks    []int `json:"tasks"`
+}
+
+type TransferTaskBetweenColumns struct {
+	BoardId int64        `json:"board_id"`
+	From    RearangeTask `json:"from"`
+	To      RearangeTask `json:"to"`
+}

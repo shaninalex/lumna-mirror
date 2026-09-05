@@ -9,7 +9,7 @@ import (
 )
 
 func (s *BoardController) Get(c *gin.Context) {
-	listId, err := strconv.Atoi(c.Param("listId"))
+	listId, err := strconv.Atoi(c.Param("board_id"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

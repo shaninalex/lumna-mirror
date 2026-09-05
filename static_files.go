@@ -8,6 +8,7 @@ import (
 
 //go:embed all:resources/assets
 //go:embed all:resources/migrations
+//go:embed all:resources/openapi
 var resourcesFS embed.FS
 
 // StaticFS returns the embedded static files rooted at p.

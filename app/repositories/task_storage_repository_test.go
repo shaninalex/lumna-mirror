@@ -30,7 +30,7 @@ func Test_TaskStorageRepository_Save(t *testing.T) {
 	require.NoError(t, db.WithContext(ctx).Create(project).Error)
 	board := &models.Board{Title: "board", ProjectID: project.ID}
 	require.NoError(t, db.WithContext(ctx).Create(board).Error)
-	column := &models.Column{Title: "column", BoardId: uint(board.ID)}
+	column := &models.Column{Title: "column", BoardId: board.ID}
 	require.NoError(t, db.WithContext(ctx).Create(column).Error)
 
 	task := &models.Task{
@@ -154,7 +154,7 @@ func Test_TaskStorageRepository_MovePosition(t *testing.T) {
 	repo := repositories.NewGormTaskStorageRepository(db)
 	fixture := seedTask(t, ctx, db, repo)
 
-	other := &models.Column{Title: "other column", BoardId: uint(fixture.board.ID)}
+	other := &models.Column{Title: "other column", BoardId: fixture.board.ID}
 	require.NoError(t, db.WithContext(ctx).Create(other).Error)
 
 	require.NoError(t, repo.MovePosition(ctx, fixture.task.ID, int64(fixture.board.ID), int64(other.ID), 0))
@@ -194,7 +194,7 @@ func seedTask(t *testing.T, ctx context.Context, db *gorm.DB, repo repositories.
 	require.NoError(t, db.WithContext(ctx).Create(project).Error)
 	board := &models.Board{Title: "board", ProjectID: project.ID}
 	require.NoError(t, db.WithContext(ctx).Create(board).Error)
-	column := &models.Column{Title: "column", BoardId: uint(board.ID)}
+	column := &models.Column{Title: "column", BoardId: board.ID}
 	require.NoError(t, db.WithContext(ctx).Create(column).Error)
 
 	task := &models.Task{

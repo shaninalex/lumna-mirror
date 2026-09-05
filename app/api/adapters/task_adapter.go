@@ -1,9 +1,36 @@
 package adapters
 
 import (
+	"errors"
+
+	"github.com/gin-gonic/gin"
 	"gitlab.com/shaninalex/lumna/app/api/dto"
 	"gitlab.com/shaninalex/lumna/app/models"
+	"gitlab.com/shaninalex/lumna/app/services"
 )
+
+type TaskListQuery struct {
+	BoardId *uint `form:"board_id,omitempty"`
+}
+
+var (
+	TaskListParseParamsError = errors.New("no query parameters")
+)
+
+func ParseQueryParams(c *gin.Context) (*services.ServiceTaskListQuery, error) {
+	q := TaskListQuery{}
+	if err := c.ShouldBindQuery(&q); err != nil {
+		return nil, err
+	}
+
+	if q.BoardId == nil {
+		return nil, TaskListParseParamsError
+	}
+
+	return &services.ServiceTaskListQuery{
+		BoardId: *q.BoardId,
+	}, nil
+}
 
 func ToTaskDto(task models.Task) dto.TaskDto {
 	return dto.TaskDto{
@@ -13,7 +40,7 @@ func ToTaskDto(task models.Task) dto.TaskDto {
 		Completed:    task.Completed,
 		Meta:         task.Meta,
 		ProjectId:    task.ProjectId,
-		Boards:       dto.ToBoardTaskDtoList(task.Boards),
+		Boards:       dto.ToBoardTaskDtoList(task.Boards), // should be single board!
 		OwnerId:      task.OwnerId,
 		AssigneesIDs: task.AssigneesIDs,
 		CreatedAt:    task.CreatedAt,

@@ -1,8 +1,9 @@
 export interface ColumnModel {
     id: number;
     title: number;
-    board_id: number;
     meta: ColumnMeta;
+    board_id: number;
+    position: number;
     created_at: Date;
     update_at: Date;
 }

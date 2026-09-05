@@ -67,10 +67,10 @@ export default tseslint.config(
                 },
             ],
             'import-x/no-restricted-paths': ['error', { zones: layerZones }],
-            '@typescript-eslint/consistent-type-imports': [
-                'error',
-                { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
-            ],
+            // '@typescript-eslint/consistent-type-imports': [
+            //     'error',
+            //     { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
+            // ],
             '@typescript-eslint/naming-convention': [
                 'error',
                 { selector: 'typeLike', format: ['PascalCase'] },

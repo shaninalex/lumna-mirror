@@ -172,6 +172,7 @@ CREATE TABLE columns
     title       TEXT    NOT NULL,
     board_id    INTEGER NOT NULL,
     meta        TEXT    NULL,
+    position    INTEGER NOT NULL DEFAULT 0,
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME,
 

@@ -3,17 +3,17 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { filter, map, type Observable } from 'rxjs';
-import { BoardDetailFeature } from "@features";
+import { KanbanBoardFeature } from "@features";
 import { MainLayout } from '@core/layout';
 
 @Component({
     selector: 'lu-board-detail-page',
-    imports: [MainLayout, AsyncPipe, BoardDetailFeature],
+    imports: [MainLayout, AsyncPipe, KanbanBoardFeature],
     template: `
         <lu-main-layout>
             @if (boardId$ | async; as boardId) {
                 <div class="container-fluid py-4 h-100 d-flex flex-column">
-                    <lu-board-detail-feature [boardId]="boardId" />
+                    <lu-kanban-board-feature [boardId]="boardId" />
                 </div>
             }
         </lu-main-layout>

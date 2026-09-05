@@ -10,7 +10,7 @@ import (
 )
 
 func (s *TaskController) handlePatchTask(c *gin.Context) {
-	taskId, err := strconv.Atoi(c.Param("taskId"))
+	taskId, err := strconv.Atoi(c.Param("task_id"))
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
