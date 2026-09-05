@@ -8,11 +8,11 @@ import (
 )
 
 type BoardService interface {
-	Create(ctx context.Context, projectID uint, title string) (*models.Board, error)
-	Delete(ctx context.Context, listID uint) error
+	Create(ctx context.Context, projectID int, title string) (*models.Board, error)
+	Delete(ctx context.Context, listID int) error
 	Update(ctx context.Context, list *models.Board) error
-	Get(ctx context.Context, listID uint) (*models.Board, error)
-	List(ctx context.Context, projectID uint) ([]*models.Board, error)
+	Get(ctx context.Context, listID int) (*models.Board, error)
+	List(ctx context.Context, projectID int) ([]*models.Board, error)
 	Reorder(ctx context.Context, payload *KanbanListChangeOrderPayload) error
 }
 
@@ -36,7 +36,7 @@ func NewListService(
 	}
 }
 
-func (s *boardService) Create(ctx context.Context, projectID uint, title string) (*models.Board, error) {
+func (s *boardService) Create(ctx context.Context, projectID int, title string) (*models.Board, error) {
 	board := models.Board{
 		ProjectID: projectID,
 		Title:     title,
@@ -47,7 +47,7 @@ func (s *boardService) Create(ctx context.Context, projectID uint, title string)
 	return &board, nil
 }
 
-func (s *boardService) Delete(ctx context.Context, listID uint) error {
+func (s *boardService) Delete(ctx context.Context, listID int) error {
 	return s.listRepository.Delete(ctx, listID)
 }
 
@@ -56,27 +56,27 @@ func (s *boardService) Update(ctx context.Context, list *models.Board) error {
 	return err
 }
 
-func (s *boardService) Get(ctx context.Context, listID uint) (*models.Board, error) {
+func (s *boardService) Get(ctx context.Context, listID int) (*models.Board, error) {
 	return s.listRepository.GetByID(ctx, listID)
 }
-func (s *boardService) List(ctx context.Context, projectID uint) ([]*models.Board, error) {
+func (s *boardService) List(ctx context.Context, projectID int) ([]*models.Board, error) {
 	return s.listRepository.ListByProjectId(ctx, projectID)
 }
 
 type KTask struct {
-	Id    uint `json:"id"`
-	Order uint `json:"order"`
+	Id    int `json:"id"`
+	Order int `json:"order"`
 }
 
 type KColumn struct {
-	Id    uint    `json:"id"`
-	Order *uint   `json:"order"`
+	Id    int     `json:"id"`
+	Order *int    `json:"order"`
 	Tasks []KTask `json:"tasks"`
 }
 
 type KanbanListChangeOrderPayload struct {
 	MoveType string    `json:"move_type"`
-	StatusId *uint     `json:"status_id"`
+	StatusId *int      `json:"status_id"`
 	Tasks    []KTask   `json:"tasks"`
 	Statuses []KColumn `json:"statuses"`
 }

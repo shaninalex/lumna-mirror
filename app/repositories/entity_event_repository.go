@@ -9,8 +9,8 @@ import (
 
 type EntityEventRepository interface {
 	Filter(ctx context.Context, query any, args ...any) ([]models.EntityEvent, error)
-	ListByEntity(ctx context.Context, entityId int64, entityType string) ([]models.EntityEvent, error)
-	ListByEntityIds(ctx context.Context, entityIds []int64, entityType string) ([]models.EntityEvent, error)
+	ListByEntity(ctx context.Context, entityId int, entityType string) ([]models.EntityEvent, error)
+	ListByEntityIds(ctx context.Context, entityIds []int, entityType string) ([]models.EntityEvent, error)
 }
 
 type gormEntityEventRepository struct {
@@ -29,7 +29,7 @@ func (s *gormEntityEventRepository) Filter(ctx context.Context, query any, args 
 }
 
 // List implements [EntityEventRepository].
-func (s *gormEntityEventRepository) ListByEntity(ctx context.Context, entityId int64, entityType string) ([]models.EntityEvent, error) {
+func (s *gormEntityEventRepository) ListByEntity(ctx context.Context, entityId int, entityType string) ([]models.EntityEvent, error) {
 	return gorm.G[models.EntityEvent](s.db).
 		Where("entity_id = ?", entityId).
 		Where("entity_type = ?", entityType).
@@ -38,7 +38,7 @@ func (s *gormEntityEventRepository) ListByEntity(ctx context.Context, entityId i
 }
 
 // List implements [EntityEventRepository].
-func (s *gormEntityEventRepository) ListByEntityIds(ctx context.Context, entityIds []int64, entityType string) ([]models.EntityEvent, error) {
+func (s *gormEntityEventRepository) ListByEntityIds(ctx context.Context, entityIds []int, entityType string) ([]models.EntityEvent, error) {
 	return gorm.G[models.EntityEvent](s.db).
 		Where("entity_id IN ?", entityIds).
 		Where("entity_type = ?", entityType).

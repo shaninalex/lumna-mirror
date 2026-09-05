@@ -7,7 +7,7 @@ import (
 )
 
 type Email struct {
-	ID         uint              `json:"id"`
+	ID         int               `json:"id"`
 	FromEmail  string            `json:"from_email"`
 	ToEmail    string            `json:"to_email"`
 	Subject    string            `json:"subject"`

@@ -15,7 +15,7 @@ func (s *BoardController) Delete(c *gin.Context) {
 		return
 	}
 
-	if err := s.listService.Delete(c.Request.Context(), uint(listId)); err != nil {
+	if err := s.listService.Delete(c.Request.Context(), listId); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}

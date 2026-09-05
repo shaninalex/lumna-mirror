@@ -42,7 +42,7 @@ func NewColumnCreateCmd() *cobra.Command {
 
 			column := &models.Column{
 				Title:   title,
-				BoardId: int64(boardID),
+				BoardId: boardID,
 			}
 
 			if err := wpRepository.Save(ctx, column); err != nil {

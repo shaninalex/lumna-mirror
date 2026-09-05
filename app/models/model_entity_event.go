@@ -15,9 +15,9 @@ const (
 )
 
 type EntityEvent struct {
-	ID         int64  `gorm:"primaryKey"`
-	IdentityId *int64 `gorm:"null"`
-	EntityId   *int64
+	ID         int  `gorm:"primaryKey"`
+	IdentityId *int `gorm:"null"`
+	EntityId   *int
 	EntityType *string
 	EventType  EntityEventType
 	Data       string

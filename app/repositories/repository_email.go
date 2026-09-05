@@ -10,9 +10,9 @@ import (
 type EmailRepository interface {
 	ListPending(context.Context) []models.Email
 	List(context.Context, map[string]any) []models.Email
-	Get(context.Context, uint) (*models.Email, error)
+	Get(context.Context, int) (*models.Email, error)
 	Update(context.Context, *models.Email) error
-	Delete(context.Context, uint) error
+	Delete(context.Context, int) error
 	Create(context.Context, *models.Email) error
 }
 
@@ -31,12 +31,12 @@ func (g *GormEmailRepository) Create(ctx context.Context, email *models.Email) e
 }
 
 // Delete implements [EmailRepository].
-func (g *GormEmailRepository) Delete(ctx context.Context, id uint) error {
+func (g *GormEmailRepository) Delete(ctx context.Context, id int) error {
 	return g.db.WithContext(ctx).Where("id = ?", id).Delete(&models.Email{}).Error
 }
 
 // Get implements [EmailRepository].
-func (g *GormEmailRepository) Get(ctx context.Context, id uint) (*models.Email, error) {
+func (g *GormEmailRepository) Get(ctx context.Context, id int) (*models.Email, error) {
 	var email models.Email
 	if err := g.db.WithContext(ctx).Where("id = ?", id).First(&email).Error; err != nil {
 		return nil, err

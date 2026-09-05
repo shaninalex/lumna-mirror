@@ -5,8 +5,8 @@ import (
 )
 
 type IdentityWorkspace struct {
-	IdentityId  uint `gorm:"primaryKey"`
-	WorkspaceId uint `gorm:"primaryKey"`
+	IdentityId  int `gorm:"primaryKey"`
+	WorkspaceId int `gorm:"primaryKey"`
 
 	// CreatedAt - when user was joined to the workspace
 	CreatedAt time.Time

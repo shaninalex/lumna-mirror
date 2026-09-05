@@ -14,14 +14,14 @@ const (
 )
 
 type Task struct {
-	ID           int64
+	ID           int
 	Title        string
 	Body         string
 	Completed    bool
 	Meta         string
-	ProjectId    int64
-	OwnerId      int64
-	AssigneesIDs []int64
+	ProjectId    int
+	OwnerId      int
+	AssigneesIDs []int
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 
@@ -29,9 +29,9 @@ type Task struct {
 }
 
 type TaskBoard struct {
-	BoardId  int64
-	ColumnId int64
-	Position int64
+	BoardId  int
+	ColumnId int
+	Position int
 }
 
 func (s *Task) String() string {
@@ -41,10 +41,10 @@ func (s *Task) String() string {
 type TaskCreateOnBoard struct {
 	Title     string `json:"title"`
 	Body      string `json:"body"`
-	Position  int64  `json:"position"`
-	BoardId   int64  `json:"board_id"`
-	ColumnId  int64  `json:"column_id"`
-	ProjectId int64  `json:"project_id"`
+	Position  int    `json:"position"`
+	BoardId   int    `json:"board_id"`
+	ColumnId  int    `json:"column_id"`
+	ProjectId int    `json:"project_id"`
 }
 
 type TaskCreateBacklog struct {
@@ -57,7 +57,7 @@ type RearangeTask struct {
 }
 
 type TransferTaskBetweenColumns struct {
-	BoardId int64        `json:"board_id"`
+	BoardId int          `json:"board_id"`
 	From    RearangeTask `json:"from"`
 	To      RearangeTask `json:"to"`
 }

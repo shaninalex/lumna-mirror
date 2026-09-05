@@ -9,11 +9,11 @@ import (
 
 type WorkspaceRepository interface {
 	List(ctx context.Context, query map[string]any) ([]*models.Workspace, error)
-	GetByID(ctx context.Context, workspaceID uint) (*models.Workspace, error)
+	GetByID(ctx context.Context, workspaceID int) (*models.Workspace, error)
 	Create(ctx context.Context, workspace *models.Workspace) error
-	Update(ctx context.Context, workspaceID uint, updates map[string]any) error
+	Update(ctx context.Context, workspaceID int, updates map[string]any) error
 	// Before implement this method - we should understand what exactly will be deleted
-	// ScheduleDelete(ctx context.Context, workspaceID uint) error
+	// ScheduleDelete(ctx context.Context, workspaceID int) error
 }
 
 type GormWorkspaceRepository struct {
@@ -32,7 +32,7 @@ func (s *GormWorkspaceRepository) List(ctx context.Context, query map[string]any
 	return workspaces, nil
 }
 
-func (s *GormWorkspaceRepository) GetByID(ctx context.Context, workspaceId uint) (*models.Workspace, error) {
+func (s *GormWorkspaceRepository) GetByID(ctx context.Context, workspaceId int) (*models.Workspace, error) {
 	var workspace models.Workspace
 	if err := s.db.WithContext(ctx).
 		Where("id = ?", workspaceId).
@@ -49,7 +49,7 @@ func (s *GormWorkspaceRepository) Create(ctx context.Context, workspace *models.
 		Error
 }
 
-func (s *GormWorkspaceRepository) Update(ctx context.Context, workspaceId uint, updates map[string]any) error {
+func (s *GormWorkspaceRepository) Update(ctx context.Context, workspaceId int, updates map[string]any) error {
 	result := s.db.WithContext(ctx).Model(&models.Workspace{}).
 		Where("id = ?", workspaceId).
 		Updates(updates)

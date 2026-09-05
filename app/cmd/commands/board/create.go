@@ -26,7 +26,7 @@ func NewBoardsCreateCmd() *cobra.Command {
 
 			board := models.Board{
 				Title:     flags.title,
-				ProjectID: uint(flags.projectId),
+				ProjectID: flags.projectId,
 			}
 
 			repository := repositories.NewGormBoardRepository(db)

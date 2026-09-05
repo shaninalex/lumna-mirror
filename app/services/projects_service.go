@@ -9,11 +9,11 @@ import (
 )
 
 type ProjectService interface {
-	Get(ctx context.Context, id uint) (*models.Project, error)
-	List(ctx context.Context, workspaceID uint) ([]models.Project, error)
+	Get(ctx context.Context, id int) (*models.Project, error)
+	List(ctx context.Context, workspaceID int) ([]models.Project, error)
 	Create(ctx context.Context, data models.ProjectCreateModel) (*models.Project, error)
 	Update(ctx context.Context, project *models.Project) error
-	Delete(ctx context.Context, id uint) error
+	Delete(ctx context.Context, id int) error
 }
 
 type projectService struct {
@@ -39,11 +39,11 @@ func NewProjectService(
 func (s *projectService) init() {
 }
 
-func (s *projectService) Get(ctx context.Context, id uint) (*models.Project, error) {
+func (s *projectService) Get(ctx context.Context, id int) (*models.Project, error) {
 	return s.repository.GetByID(ctx, id)
 }
 
-func (s *projectService) List(ctx context.Context, workspaceId uint) ([]models.Project, error) {
+func (s *projectService) List(ctx context.Context, workspaceId int) ([]models.Project, error) {
 	return s.repository.List(ctx, models.Project{WorkspaceID: workspaceId})
 }
 
@@ -64,6 +64,6 @@ func (s *projectService) Update(ctx context.Context, project *models.Project) er
 	return s.repository.Update(ctx, project)
 }
 
-func (s *projectService) Delete(ctx context.Context, id uint) error {
+func (s *projectService) Delete(ctx context.Context, id int) error {
 	return s.repository.DeleteByID(ctx, id)
 }

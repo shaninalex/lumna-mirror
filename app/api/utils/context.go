@@ -15,13 +15,13 @@ var (
 	ErrorIdentityNotInContext error = errors.New("identity not found in context")
 )
 
-func GetUserID(c *gin.Context) (uint, error) {
+func GetUserID(c *gin.Context) (int, error) {
 	userIDAny, ok := c.Get(pkg.ContextUserID)
 	if !ok {
 		return 0, ErrorUserIDNotInContext
 	}
 
-	userID, ok := userIDAny.(uint)
+	userID, ok := userIDAny.(int)
 	if !ok {
 		return 0, ErrorInvalidUserID
 	}

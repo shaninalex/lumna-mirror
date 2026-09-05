@@ -15,7 +15,7 @@ func (s *BoardController) Patch(c *gin.Context) {
 		return
 	}
 	payload := struct {
-		ProjectId uint   `json:"project_id"`
+		ProjectId int    `json:"project_id"`
 		Title     string `json:"title"`
 	}{}
 
@@ -24,7 +24,7 @@ func (s *BoardController) Patch(c *gin.Context) {
 		return
 	}
 
-	list, err := s.listService.Get(c.Request.Context(), uint(listId))
+	list, err := s.listService.Get(c.Request.Context(), listId)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

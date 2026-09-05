@@ -10,11 +10,11 @@ import (
 
 type TaskService interface {
 	List(ctx context.Context, query ServiceTaskListQuery) ([]models.Task, error)
-	GetTask(ctx context.Context, taskID uint) (*models.Task, error)
+	GetTask(ctx context.Context, taskID int) (*models.Task, error)
 	CreateTask(ctx context.Context, payload *models.TaskCreateOnBoard) (*models.Task, error)
-	UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error
+	UpdateTask(ctx context.Context, taskID int, payload *models.Task) error
 
-	Move(ctx context.Context, boardId int64, rearange models.RearangeTask) error
+	Move(ctx context.Context, boardId int, rearange models.RearangeTask) error
 	Transfer(ctx context.Context, transfer models.TransferTaskBetweenColumns) error
 }
 
@@ -39,14 +39,14 @@ func NewTaskService(
 }
 
 type ServiceTaskListQuery struct {
-	BoardId uint `form:"board_id"`
+	BoardId int `form:"board_id"`
 }
 
 func (s *taskService) List(ctx context.Context, query ServiceTaskListQuery) ([]models.Task, error) {
-	return s.storageRepository.Filter(ctx, int64(query.BoardId))
+	return s.storageRepository.Filter(ctx, query.BoardId)
 }
 
-func (s *taskService) GetTask(ctx context.Context, taskID uint) (*models.Task, error) {
+func (s *taskService) GetTask(ctx context.Context, taskID int) (*models.Task, error) {
 	return s.repository.GetByID(ctx, taskID)
 }
 
@@ -57,9 +57,9 @@ func (s *taskService) CreateTask(ctx context.Context, payload *models.TaskCreate
 		ProjectId: payload.ProjectId,
 		Boards: []models.TaskBoard{
 			{
-				Position: int64(payload.Position),
-				BoardId:  int64(payload.BoardId),
-				ColumnId: int64(payload.ColumnId),
+				Position: payload.Position,
+				BoardId:  payload.BoardId,
+				ColumnId: payload.ColumnId,
 			},
 		},
 	}
@@ -72,7 +72,7 @@ func (s *taskService) CreateTask(ctx context.Context, payload *models.TaskCreate
 	return task, nil
 }
 
-func (s *taskService) UpdateTask(ctx context.Context, taskID uint, payload *models.Task) error {
+func (s *taskService) UpdateTask(ctx context.Context, taskID int, payload *models.Task) error {
 	if _, err := s.GetTask(ctx, taskID); err != nil {
 		return err
 	}
@@ -80,9 +80,9 @@ func (s *taskService) UpdateTask(ctx context.Context, taskID uint, payload *mode
 }
 
 // Move implements [TaskService].
-func (s *taskService) Move(ctx context.Context, boardId int64, rearange models.RearangeTask) error {
+func (s *taskService) Move(ctx context.Context, boardId int, rearange models.RearangeTask) error {
 	for i, t := range rearange.Tasks {
-		if err := s.storageRepository.MovePosition(ctx, int64(t), boardId, int64(rearange.ColumnId), int64(i)); err != nil {
+		if err := s.storageRepository.MovePosition(ctx, t, boardId, rearange.ColumnId, i); err != nil {
 			return err
 		}
 	}
@@ -93,13 +93,13 @@ func (s *taskService) Move(ctx context.Context, boardId int64, rearange models.R
 // Transfer implements [TaskService].
 func (s *taskService) Transfer(ctx context.Context, transfer models.TransferTaskBetweenColumns) error {
 	for i, t := range transfer.From.Tasks {
-		if err := s.storageRepository.MovePosition(ctx, int64(t), transfer.BoardId, int64(transfer.From.ColumnId), int64(i)); err != nil {
+		if err := s.storageRepository.MovePosition(ctx, t, transfer.BoardId, transfer.From.ColumnId, i); err != nil {
 			return err
 		}
 	}
 
 	for i, t := range transfer.To.Tasks {
-		if err := s.storageRepository.MovePosition(ctx, int64(t), transfer.BoardId, int64(transfer.To.ColumnId), int64(i)); err != nil {
+		if err := s.storageRepository.MovePosition(ctx, t, transfer.BoardId, transfer.To.ColumnId, i); err != nil {
 			return err
 		}
 	}

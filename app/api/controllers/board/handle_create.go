@@ -9,7 +9,7 @@ import (
 
 func (s *BoardController) Create(c *gin.Context) {
 	payload := struct {
-		ProjectId uint   `json:"project_id"`
+		ProjectId int    `json:"project_id"`
 		Title     string `json:"title"`
 	}{}
 

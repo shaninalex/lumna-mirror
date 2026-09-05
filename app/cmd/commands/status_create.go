@@ -32,7 +32,7 @@ func NewStatusCreateCmd() *cobra.Command {
 			title := args[1]
 			column := models.Column{
 				Title: title,
-				//ListID: uint(listId),
+				//ListID: int(listId),
 			}
 			if err := c.Invoke(createColumn(column)); err != nil {
 				panic(err)

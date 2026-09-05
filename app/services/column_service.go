@@ -14,16 +14,16 @@ var (
 
 type BoardCreatePayload struct {
 	Title   string `json:"title"`
-	Order   int64  `json:"order"`
-	BoardId int64  `json:"board_id"`
+	Order   int    `json:"order"`
+	BoardId int    `json:"board_id"`
 }
 
 type ColumnService interface {
-	Filter(ctx context.Context, boardId uint) []models.Column
-	Get(ctx context.Context, columnId uint) (*models.Column, error)
+	Filter(ctx context.Context, boardId int) []models.Column
+	Get(ctx context.Context, columnId int) (*models.Column, error)
 	Save(ctx context.Context, column *models.Column) error
-	Delete(ctx context.Context, id uint) error
-	Reorder(ctx context.Context, ids []int64) error
+	Delete(ctx context.Context, id int) error
+	Reorder(ctx context.Context, ids []int) error
 }
 
 type columnService struct {
@@ -41,11 +41,11 @@ func NewStatusService(
 	}
 }
 
-func (s *columnService) Filter(ctx context.Context, boardId uint) []models.Column {
+func (s *columnService) Filter(ctx context.Context, boardId int) []models.Column {
 	return s.statusRepository.FilterByBoard(ctx, boardId)
 }
 
-func (s *columnService) Get(ctx context.Context, columnId uint) (*models.Column, error) {
+func (s *columnService) Get(ctx context.Context, columnId int) (*models.Column, error) {
 	return s.statusRepository.GetByID(ctx, columnId)
 }
 
@@ -53,22 +53,22 @@ func (s *columnService) Save(ctx context.Context, column *models.Column) error {
 	return s.statusRepository.Save(ctx, column)
 }
 
-func (s *columnService) Delete(ctx context.Context, id uint) error {
+func (s *columnService) Delete(ctx context.Context, id int) error {
 	return s.statusRepository.Delete(ctx, id)
 }
 
 // Reorder implements [ColumnService].
-func (s *columnService) Reorder(ctx context.Context, columnIds []int64) error {
+func (s *columnService) Reorder(ctx context.Context, columnIds []int) error {
 	if len(columnIds) == 0 {
 		return EmptyColumnListError
 	}
 
 	for i, columnId := range columnIds {
-		column, err := s.Get(ctx, uint(columnId))
+		column, err := s.Get(ctx, columnId)
 		if err != nil {
 			return err
 		}
-		column.Position = int64(i)
+		column.Position = i
 		if err := s.Save(ctx, column); err != nil {
 			return err
 		}

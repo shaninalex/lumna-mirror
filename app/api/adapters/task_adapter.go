@@ -10,7 +10,7 @@ import (
 )
 
 type TaskListQuery struct {
-	BoardId *uint `form:"board_id,omitempty"`
+	BoardId *int `form:"board_id,omitempty"`
 }
 
 var (

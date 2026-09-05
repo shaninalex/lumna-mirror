@@ -28,7 +28,7 @@ var (
 )
 
 type Invitation struct {
-	ID         uint              `gorm:"primaryKey" json:"id"`
+	ID         int               `gorm:"primaryKey" json:"id"`
 	Email      string            `gorm:"unique" json:"email"`
 	TokenHash  string            `gorm:"uniqueIndex" json:"-"`
 	State      InvitationState   `json:"state"`

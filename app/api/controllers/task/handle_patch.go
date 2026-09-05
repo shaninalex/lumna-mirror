@@ -16,7 +16,7 @@ func (s *TaskController) handlePatchTask(c *gin.Context) {
 		return
 	}
 
-	task, err := s.taskService.GetTask(c.Request.Context(), uint(taskId))
+	task, err := s.taskService.GetTask(c.Request.Context(), taskId)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
@@ -32,7 +32,7 @@ func (s *TaskController) handlePatchTask(c *gin.Context) {
 	task.Body = payload.Body
 	task.Completed = payload.Completed
 
-	if err = s.taskService.UpdateTask(c.Request.Context(), uint(taskId), task); err != nil {
+	if err = s.taskService.UpdateTask(c.Request.Context(), taskId, task); err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}

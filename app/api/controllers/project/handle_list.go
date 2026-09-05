@@ -14,7 +14,7 @@ func (s *ProjectController) List(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, err)
 		return
 	}
-	projects, err := s.projectService.List(c.Request.Context(), uint(id))
+	projects, err := s.projectService.List(c.Request.Context(), id)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

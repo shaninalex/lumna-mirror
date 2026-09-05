@@ -7,11 +7,11 @@ import (
 )
 
 type ColumnDTO struct {
-	ID        int64             `json:"id"`
+	ID        int               `json:"id"`
 	Title     string            `json:"title"`
 	Meta      models.ColumnMeta `json:"meta"`
-	BoardId   int64             `json:"board_id"`
-	Position  int64             `json:"position"`
+	BoardId   int               `json:"board_id"`
+	Position  int               `json:"position"`
 	CreatedAt time.Time         `json:"created_at"`
 	UpdatedAt *time.Time        `json:"updated_at"`
 }
@@ -29,9 +29,9 @@ func ColumnDTOToModel(c ColumnDTO) models.Column {
 }
 
 type ColumnReorderingDto struct {
-	ColumnID      int64   `json:"id"`
-	PreviousIndex int64   `json:"previous_index"`
-	CurrentIndex  int64   `json:"current_index"`
-	BoardId       int64   `json:"board_id"`
-	ColumnsOrder  []int64 `json:"columns_order"`
+	ColumnID      int   `json:"id"`
+	PreviousIndex int   `json:"previous_index"`
+	CurrentIndex  int   `json:"current_index"`
+	BoardId       int   `json:"board_id"`
+	ColumnsOrder  []int `json:"columns_order"`
 }

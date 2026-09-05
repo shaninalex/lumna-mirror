@@ -53,7 +53,7 @@ func NewIdentitiesCreateCmd() *cobra.Command {
 			}
 			identityWorkspace := models.IdentityWorkspace{
 				IdentityId:  user.ID,
-				WorkspaceId: uint(flags.workspaceId),
+				WorkspaceId: flags.workspaceId,
 			}
 			if err := gorm.G[models.IdentityWorkspace](db).Create(ctx, &identityWorkspace); err != nil {
 				panic(err)

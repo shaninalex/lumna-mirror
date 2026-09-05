@@ -15,7 +15,7 @@ func (s *BoardController) Get(c *gin.Context) {
 		return
 	}
 
-	list, err := s.listService.Get(c.Request.Context(), uint(listId))
+	list, err := s.listService.Get(c.Request.Context(), listId)
 	if err != nil {
 		utils.Error(c, http.StatusBadRequest, err)
 		return

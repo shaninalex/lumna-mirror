@@ -12,11 +12,11 @@ import (
 )
 
 type Column struct {
-	ID        int64      `gorm:"primaryKey" json:"id"`
+	ID        int        `gorm:"primaryKey" json:"id"`
 	Title     string     `gorm:"not null" json:"title"`
 	Meta      ColumnMeta `gorm:"null" json:"meta"`
-	BoardId   int64      `gorm:"not null;index" json:"board_id"`
-	Position  int64      `gorm:"not null;default:0" json:"position"`
+	BoardId   int        `gorm:"not null;index" json:"board_id"`
+	Position  int        `gorm:"not null;default:0" json:"position"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
 }
@@ -51,7 +51,7 @@ func (j *ColumnMeta) Scan(value interface{}) error {
 
 	result := ColumnMeta{}
 	err := json.Unmarshal(bytes, &result)
-	*j = ColumnMeta(result)
+	*j = result
 	return err
 }
 

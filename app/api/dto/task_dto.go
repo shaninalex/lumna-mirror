@@ -7,9 +7,9 @@ import (
 )
 
 type BoardTaskDto struct {
-	BoardId  int64 `json:"board_id"`
-	ColumnId int64 `json:"column_id"`
-	Position int64 `json:"position"`
+	BoardId  int `json:"board_id"`
+	ColumnId int `json:"column_id"`
+	Position int `json:"position"`
 }
 
 func ToBoardTaskDto(bt models.TaskBoard) BoardTaskDto {
@@ -29,15 +29,15 @@ func ToBoardTaskDtoList(bts []models.TaskBoard) []BoardTaskDto {
 }
 
 type TaskDto struct {
-	ID           int64          `json:"id"`
+	ID           int            `json:"id"`
 	Title        string         `json:"title"`
 	Body         string         `json:"body"`
 	Completed    bool           `json:"completed"`
 	Meta         string         `json:"meta"`
-	ProjectId    int64          `json:"project_id"`
+	ProjectId    int            `json:"project_id"`
 	Boards       []BoardTaskDto `json:"boards"`
-	OwnerId      int64          `json:"owner_id"`
-	AssigneesIDs []int64        `json:"assignees_ids"`
+	OwnerId      int            `json:"owner_id"`
+	AssigneesIDs []int          `json:"assignees_ids"`
 	CreatedAt    time.Time      `json:"created_at"`
 	UpdatedAt    time.Time      `json:"updated_at"`
 

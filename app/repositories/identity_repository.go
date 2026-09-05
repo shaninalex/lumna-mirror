@@ -8,7 +8,7 @@ import (
 )
 
 type IdentityRepository interface {
-	GetIdentityByID(ctx context.Context, userID uint) (*models.Identity, error)
+	GetIdentityByID(ctx context.Context, userID int) (*models.Identity, error)
 	List(ctx context.Context) ([]*models.Identity, error)
 }
 
@@ -22,7 +22,7 @@ func NewGormIdentityRepository(db *gorm.DB) IdentityRepository {
 	}
 }
 
-func (r *GormIdentityRepository) GetIdentityByID(ctx context.Context, userID uint) (*models.Identity, error) {
+func (r *GormIdentityRepository) GetIdentityByID(ctx context.Context, userID int) (*models.Identity, error) {
 	var identity models.Identity
 
 	err := r.db.WithContext(ctx).

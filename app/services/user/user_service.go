@@ -8,7 +8,7 @@ import (
 )
 
 type Service interface {
-	Identity(ctx context.Context, userID uint) (*models.Identity, error)
+	Identity(ctx context.Context, userID int) (*models.Identity, error)
 	List(ctx context.Context) ([]*models.Identity, error)
 }
 
@@ -24,7 +24,7 @@ func NewUserService(repository repositories.IdentityRepository) Service {
 	}
 }
 
-func (s *service) Identity(ctx context.Context, userID uint) (*models.Identity, error) {
+func (s *service) Identity(ctx context.Context, userID int) (*models.Identity, error) {
 	return s.repository.GetIdentityByID(ctx, userID)
 }
 

@@ -9,7 +9,7 @@ import (
 
 type RefreshTokenRepository interface {
 	Create(ctx context.Context, rt *models.RefreshToken) error
-	DeleteByIdentityID(ctx context.Context, identityID uint) error
+	DeleteByIdentityID(ctx context.Context, identityID int) error
 	GetByHash(ctx context.Context, hash string) (*models.RefreshToken, error)
 }
 
@@ -30,7 +30,7 @@ func (r *GormRefreshTokenRepository) Create(
 
 func (r *GormRefreshTokenRepository) DeleteByIdentityID(
 	ctx context.Context,
-	identityID uint,
+	identityID int,
 ) error {
 	return r.db.WithContext(ctx).
 		Where("identity_id = ?", identityID).

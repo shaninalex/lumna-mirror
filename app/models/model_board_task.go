@@ -9,10 +9,10 @@ const (
 )
 
 type BoardTask struct {
-	BoardId  uint
-	TaskId   uint
-	ColumnId uint
-	Position uint
+	BoardId  int
+	TaskId   int
+	ColumnId int
+	Position int
 }
 
 func (s BoardTask) TableName() string {
